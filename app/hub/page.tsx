@@ -30,7 +30,8 @@ import {
   Trash2,
   Plus,
 } from "lucide-react"
-import { newsFeeds, sharedFiles as initialSharedFiles, votingPolls as initialVotingPolls } from "../../src/config"
+import { newsFeeds, sharedFiles as initialSharedFiles } from "../../src/config"
+import type { Poll } from "@/lib/polls"
 import Navigation from "../../components/Navigation"
 
 export default function HubPage() {
@@ -40,7 +41,7 @@ export default function HubPage() {
   const [sharedFiles, setSharedFiles] = useState(initialSharedFiles)
   const [fileSearchTerm, setFileSearchTerm] = useState("")
   const [fileTypeFilter, setFileTypeFilter] = useState("all")
-  const [votingPolls, setVotingPolls] = useState(initialVotingPolls)
+  const [votingPolls, setVotingPolls] = useState<Poll[]>([])
   const [userVotes, setUserVotes] = useState<Record<string, string>>({})
   const [isCreatePollOpen, setIsCreatePollOpen] = useState(false)
 
@@ -80,30 +81,40 @@ export default function HubPage() {
     setSharedFiles((prev) => prev.filter((file) => file.id !== fileId))
   }
 
-  const handleVote = (pollId: string, optionId: string) => {
-    // Update user votes
-    setUserVotes((prev) => ({ ...prev, [pollId]: optionId }))
+  useEffect(() => {
+    const fetchPolls = async () => {
+      const res = await fetch("/api/polls")
+      if (res.ok) {
+        const data = await res.json()
+        setVotingPolls(data)
+      }
+    }
+    fetchPolls()
+  }, [])
 
-    // Update poll data
-    setVotingPolls((prev) =>
-      prev.map((poll) => {
-        if (poll.id === pollId) {
-          const updatedOptions = poll.options.map((option) =>
-            option.id === optionId ? { ...option, votes: option.votes + 1 } : option,
-          )
-          return {
-            ...poll,
-            options: updatedOptions,
-            totalVotes: poll.totalVotes + 1,
-          }
-        }
-        return poll
-      }),
-    )
+  const handleVote = async (pollId: string, optionId: string) => {
+    setUserVotes((prev) => ({ ...prev, [pollId]: optionId }))
+    const res = await fetch(`/api/polls/${pollId}/vote`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ optionId }),
+    })
+    if (res.ok) {
+      const updated = await res.json()
+      setVotingPolls((prev) => prev.map((p) => (p.id === pollId ? updated : p)))
+    }
   }
 
-  const handleCreatePoll = (newPoll: any) => {
-    setVotingPolls((prev) => [newPoll, ...prev])
+  const handleCreatePoll = async (newPoll: Poll) => {
+    const res = await fetch("/api/polls", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newPoll),
+    })
+    if (res.ok) {
+      const created = await res.json()
+      setVotingPolls((prev) => [created, ...prev])
+    }
   }
 
   const getFileIcon = (type: string) => {
