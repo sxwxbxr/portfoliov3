@@ -36,8 +36,6 @@ export default function AdminPage() {
   const [users, setUsers] = useState(initialUsers)
   const [searchTerm, setSearchTerm] = useState("")
   const [roleFilter, setRoleFilter] = useState("all")
-  const [isCreateUserOpen, setIsCreateUserOpen] = useState(false)
-  const [editingUser, setEditingUser] = useState<any>(null)
 
   useEffect(() => {
     if (!isAuthenticated) {

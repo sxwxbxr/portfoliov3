@@ -87,7 +87,7 @@ export function SkillProgress() {
             <div className="space-y-4">
               {skills
                 .filter((skill) => skill.category === category)
-                .map((skill, index) => {
+                .map((skill) => {
                   const skillIndex = skills.findIndex((s) => s.name === skill.name)
                   return (
                     <div
