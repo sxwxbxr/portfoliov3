@@ -63,6 +63,19 @@ export default function HubPage() {
     }
   }, [isAuthenticated, router])
 
+  useEffect(() => {
+    if (!isAuthenticated) return
+
+    const fetchPolls = async () => {
+      const res = await fetch("/api/polls")
+      if (res.ok) {
+        const data = await res.json()
+        setVotingPolls(data)
+      }
+    }
+    fetchPolls()
+  }, [isAuthenticated])
+
   if (!isAuthenticated) {
     return null
   }
@@ -92,17 +105,6 @@ export default function HubPage() {
   const handleFileDelete = (fileId: string) => {
     setSharedFiles((prev) => prev.filter((file) => file.id !== fileId))
   }
-
-  useEffect(() => {
-    const fetchPolls = async () => {
-      const res = await fetch("/api/polls")
-      if (res.ok) {
-        const data = await res.json()
-        setVotingPolls(data)
-      }
-    }
-    fetchPolls()
-  }, [])
 
   const handleVote = async (pollId: string, optionId: string) => {
     setUserVotes((prev) => ({ ...prev, [pollId]: optionId }))
