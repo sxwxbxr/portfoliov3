@@ -18,7 +18,7 @@ export default function TestimonialCard({ quote, name, role, company, avatar }: 
         </div>
       </div>
 
-      <blockquote className="text-card-foreground leading-relaxed mb-6 pt-4 italic">"{quote}"</blockquote>
+      <blockquote className="text-card-foreground leading-relaxed mb-6 pt-4 italic">&quot;{quote}&quot;</blockquote>
 
       <div className="flex items-center gap-4">
         <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center overflow-hidden">

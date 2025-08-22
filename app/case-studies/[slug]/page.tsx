@@ -24,7 +24,7 @@ export default function CaseStudy({ params }: CaseStudyPageProps) {
         <PageLayout>
           <div className="text-center space-y-4">
             <h1 className="text-4xl font-bold">Case Study Not Found</h1>
-            <p className="text-muted-foreground">The case study you're looking for doesn't exist.</p>
+            <p className="text-muted-foreground">The case study you&apos;re looking for doesn&apos;t exist.</p>
             <Link href="/case-studies" className="inline-flex items-center gap-2 text-primary hover:underline">
               <ArrowLeft className="w-4 h-4" />
               Back to Case Studies
@@ -119,7 +119,7 @@ export default function CaseStudy({ params }: CaseStudyPageProps) {
                 <FadeInSection>
                   <div className="bg-primary/5 border border-primary/20 rounded-xl p-8">
                     <Quote className="w-8 h-8 text-primary mb-4" />
-                    <blockquote className="text-lg italic mb-4">"{study.testimonial.quote}"</blockquote>
+                    <blockquote className="text-lg italic mb-4">&quot;{study.testimonial.quote}&quot;</blockquote>
                     <div className="text-sm text-muted-foreground">
                       <p className="font-medium">{study.testimonial.author}</p>
                       <p>{study.testimonial.company}</p>
