@@ -14,7 +14,7 @@ export default function About() {
               <div className="md:col-span-2 space-y-6">
                 <div className="bg-card border border-border rounded-xl p-8 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                   <p className="text-lg leading-relaxed text-card-foreground">
-                    I'm a Software & Digitalization Project Lead at Telsonic, creating customer specific automation
+                    I&apos;m a Software & Digitalization Project Lead at Telsonic, creating customer specific automation
                     workflows in business-critical systems.
                   </p>
                 </div>
@@ -28,7 +28,7 @@ export default function About() {
 
                 <div className="bg-card border border-border rounded-xl p-8 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                   <p className="text-lg leading-relaxed text-card-foreground">
-                    I'm passionate about leveraging technology to drive efficiency and improve user experiences.
+                    I&apos;m passionate about leveraging technology to drive efficiency and improve user experiences.
                   </p>
                 </div>
 

@@ -16,10 +16,10 @@ export default function Contact() {
           <FadeInSection>
             <div className="text-center space-y-4">
               <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                Let's Work Together
+                Let&apos;s Work Together
               </h1>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto font-serif">
-                Ready to bring your project to life? I'd love to hear about your ideas and discuss how we can make them
+                Ready to bring your project to life? I&apos;d love to hear about your ideas and discuss how we can make them
                 reality.
               </p>
             </div>
@@ -33,7 +33,7 @@ export default function Contact() {
                     <div>
                       <h3 className="text-2xl font-semibold mb-6">Get in Touch</h3>
                       <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                        I'm always interested in discussing new opportunities, innovative projects, or simply connecting
+                        I&apos;m always interested in discussing new opportunities, innovative projects, or simply connecting
                         with fellow professionals in the tech industry.
                       </p>
                     </div>
@@ -116,7 +116,7 @@ export default function Contact() {
             <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-8 text-center">
               <h3 className="text-2xl font-bold mb-4">Prefer a Quick Chat?</h3>
               <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-                Sometimes it's easier to discuss projects over a call. I'm available for brief consultations to
+                Sometimes it&apos;s easier to discuss projects over a call. I&apos;m available for brief consultations to
                 understand your needs better.
               </p>
               <button className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-all duration-300 hover:scale-105 glow-effect">
