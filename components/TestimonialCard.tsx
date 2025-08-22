@@ -1,4 +1,5 @@
 import { Quote } from "lucide-react"
+import Image from "next/image"
 
 interface TestimonialCardProps {
   quote: string
@@ -21,12 +22,14 @@ export default function TestimonialCard({ quote, name, role, company, avatar }: 
 
       <div className="flex items-center gap-4">
         <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center overflow-hidden">
-          <img
+          <Image
             src={avatar || "/placeholder.svg"}
             alt={name}
+            width={48}
+            height={48}
             className="w-full h-full object-cover"
             onError={(e) => {
-              const target = e.target as HTMLImageElement
+              const target = e.currentTarget
               target.style.display = "none"
               target.nextElementSibling!.classList.remove("hidden")
             }}

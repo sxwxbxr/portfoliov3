@@ -7,6 +7,7 @@ import FadeInSection from "../../../components/FadeInSection"
 import { caseStudies } from "../../../src/config"
 import Link from "next/link"
 import { ArrowLeft, Users, Clock, Building, CheckCircle, Quote } from "lucide-react"
+import Image from "next/image"
 
 interface CaseStudyPageProps {
   params: Promise<{ slug: string }>
@@ -74,9 +75,11 @@ export default function CaseStudy({ params }: CaseStudyPageProps) {
 
           <FadeInSection>
             <div className="mb-12">
-              <img
+              <Image
                 src={`/abstract-geometric-shapes.png?height=400&width=800&query=${encodeURIComponent(study.title)}`}
                 alt={study.title}
+                width={800}
+                height={400}
                 className="w-full h-64 md:h-96 object-cover rounded-xl"
               />
             </div>
