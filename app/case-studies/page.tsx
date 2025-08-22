@@ -29,7 +29,7 @@ export default function CaseStudies() {
 
           <FadeInSection>
             <div className="grid gap-12">
-              {caseStudies.map((study, index) => (
+              {caseStudies.map((study) => (
                 <InteractiveCard key={study.id}>
                   <div className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300">
                     <div className="md:flex">
