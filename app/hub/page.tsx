@@ -33,6 +33,7 @@ import {
 import { newsFeeds, sharedFiles as initialSharedFiles } from "../../src/config"
 import type { Poll } from "@/lib/polls"
 import Navigation from "../../components/Navigation"
+import Image from "next/image"
 
 export default function HubPage() {
   const { user, isAuthenticated, isAdmin } = useAuth()
@@ -268,11 +269,12 @@ export default function HubPage() {
                       </div>
 
                       {post.image && (
-                        <div className="rounded-lg overflow-hidden">
-                          <img
+                        <div className="relative w-full h-48 rounded-lg overflow-hidden">
+                          <Image
                             src={post.image || "/placeholder.svg"}
                             alt={post.title}
-                            className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
+                            fill
+                            className="object-cover hover:scale-105 transition-transform duration-300"
                           />
                         </div>
                       )}

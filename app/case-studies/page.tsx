@@ -7,6 +7,7 @@ import { InteractiveCard } from "../../components/InteractiveCard"
 import { caseStudies } from "../../src/config"
 import Link from "next/link"
 import { ArrowRight, Users, Clock, Building } from "lucide-react"
+import Image from "next/image"
 
 export default function CaseStudies() {
   return (
@@ -34,9 +35,11 @@ export default function CaseStudies() {
                     <div className="md:flex">
                       <div className="md:w-2/5">
                         <div className="h-64 md:h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
-                          <img
+                          <Image
                             src={`/abstract-geometric-shapes.png?height=400&width=600&query=${encodeURIComponent(study.title)}`}
                             alt={study.title}
+                            width={600}
+                            height={400}
                             className="w-full h-full object-cover"
                           />
                         </div>

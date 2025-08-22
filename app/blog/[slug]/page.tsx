@@ -8,6 +8,7 @@ import { JsonLd } from "../../../components/JsonLd"
 import { blogPosts } from "../../../src/config"
 import Link from "next/link"
 import { Calendar, Clock, ArrowLeft, Share2 } from "lucide-react"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 
 interface BlogPostPageProps {
@@ -127,9 +128,11 @@ export default function BlogPost({ params }: BlogPostPageProps) {
 
           <FadeInSection>
             <div className="mb-12">
-              <img
+              <Image
                 src={`/abstract-geometric-shapes.png?height=400&width=800&query=${encodeURIComponent(post.title)}`}
                 alt={post.title}
+                width={800}
+                height={400}
                 className="w-full h-64 md:h-96 object-cover rounded-xl"
               />
             </div>

@@ -7,6 +7,7 @@ import { InteractiveCard } from "../../components/InteractiveCard"
 import { blogPosts } from "../../src/config"
 import Link from "next/link"
 import { Calendar, Clock, ArrowRight } from "lucide-react"
+import Image from "next/image"
 
 export default function Blog() {
   return (
@@ -34,9 +35,11 @@ export default function Blog() {
                     <div className="md:flex">
                       <div className="md:w-1/3">
                         <div className="h-64 md:h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
-                          <img
+                          <Image
                             src={`/abstract-geometric-shapes.png?height=300&width=400&query=${encodeURIComponent(post.title)}`}
                             alt={post.title}
+                            width={400}
+                            height={300}
                             className="w-full h-full object-cover"
                           />
                         </div>
