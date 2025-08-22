@@ -25,7 +25,7 @@ export default function Home() {
                 </div>
               </div>
               <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent leading-tight animate-in fade-in slide-in-from-bottom-4 duration-1000">
-                Hi, I'm Seya Weber
+                Hi, I&apos;m Seya Weber
               </h1>
               <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed font-serif animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-200">
                 Project Manager Software and Digitalisation in St. Gallen, Switzerland.
@@ -117,7 +117,7 @@ export default function Home() {
                   className="group bg-card border border-border rounded-xl p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 block"
                 >
                   <h3 className="text-xl font-semibold mb-4 group-hover:text-primary transition-colors">Projects</h3>
-                  <p className="text-muted-foreground mb-4">Discover the projects I've worked on and their impact.</p>
+                  <p className="text-muted-foreground mb-4">Discover the projects I&apos;ve worked on and their impact.</p>
                   <ArrowRight className="w-5 h-5 text-primary group-hover:translate-x-2 transition-transform duration-300" />
                 </Link>
               </InteractiveCard>
