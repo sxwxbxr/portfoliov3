@@ -26,7 +26,7 @@ export default function BlogPost({ params }: BlogPostPageProps) {
         <PageLayout>
           <div className="text-center space-y-4">
             <h1 className="text-4xl font-bold">Post Not Found</h1>
-            <p className="text-muted-foreground">The blog post you're looking for doesn't exist.</p>
+            <p className="text-muted-foreground">The blog post you&apos;re looking for doesn&apos;t exist.</p>
             <Link href="/blog" className="inline-flex items-center gap-2 text-primary hover:underline">
               <ArrowLeft className="w-4 h-4" />
               Back to Blog

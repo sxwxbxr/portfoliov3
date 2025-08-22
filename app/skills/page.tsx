@@ -20,7 +20,7 @@ export default function Skills() {
                 Skills & Expertise
               </h1>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto font-serif">
-                Technical expertise and competencies I've developed throughout my career in software development and
+                Technical expertise and competencies I&apos;ve developed throughout my career in software development and
                 project management.
               </p>
             </div>

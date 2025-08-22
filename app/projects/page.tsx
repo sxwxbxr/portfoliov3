@@ -44,7 +44,7 @@ export default function Projects() {
                 My Projects
               </h1>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto font-serif">
-                Explore the projects I've worked on and their impact on business operations and digital transformation.
+                Explore the projects I&apos;ve worked on and their impact on business operations and digital transformation.
               </p>
             </div>
           </FadeInSection>
@@ -76,7 +76,7 @@ export default function Projects() {
                     </div>
                     <h3 className="text-xl font-semibold mb-2">No projects found</h3>
                     <p className="text-muted-foreground">
-                      Try adjusting your search terms or filters to find what you're looking for.
+                      Try adjusting your search terms or filters to find what you&apos;re looking for.
                     </p>
                   </div>
                 )}
@@ -88,7 +88,7 @@ export default function Projects() {
             <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-8 text-center">
               <h3 className="text-2xl font-bold mb-4">Have a Project in Mind?</h3>
               <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-                I'm always excited to work on new challenges. Let's discuss how I can help bring your ideas to life.
+                I&apos;m always excited to work on new challenges. Let&apos;s discuss how I can help bring your ideas to life.
               </p>
               <button className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-all duration-300 hover:scale-105 glow-effect">
                 Start a Conversation

@@ -131,7 +131,7 @@ export function ContactForm() {
           <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
         </div>
         <h3 className="text-xl font-semibold mb-2">Message Sent Successfully!</h3>
-        <p className="text-muted-foreground mb-6">Thank you for reaching out. I'll get back to you within 24 hours.</p>
+        <p className="text-muted-foreground mb-6">Thank you for reaching out. I&apos;ll get back to you within 24 hours.</p>
         <Button onClick={() => setIsSubmitted(false)} variant="outline">
           Send Another Message
         </Button>
@@ -227,7 +227,7 @@ export function ContactForm() {
                 <SelectItem value="25k-50k">$25,000 - $50,000</SelectItem>
                 <SelectItem value="50k-100k">$50,000 - $100,000</SelectItem>
                 <SelectItem value="over-100k">Over $100,000</SelectItem>
-                <SelectItem value="discuss">Let's discuss</SelectItem>
+                <SelectItem value="discuss">Let&apos;s discuss</SelectItem>
               </SelectContent>
             </Select>
           </div>
