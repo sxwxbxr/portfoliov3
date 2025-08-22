@@ -5,7 +5,7 @@ import { useState, useRef } from "react"
 import { Button } from "./ui/button"
 import { Card, CardContent } from "./ui/card"
 import { Progress } from "./ui/progress"
-import { Upload, File, ImageIcon, FileText, Code } from "lucide-react"
+import { Upload } from "lucide-react"
 import { useAuth } from "./AuthProvider"
 import type { SharedFile } from "@/app/hub/page"
 
@@ -19,13 +19,6 @@ export function FileUpload({ onFileUploaded }: FileUploadProps) {
   const [isUploading, setIsUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { user } = useAuth()
-
-  const getFileIcon = (type: string) => {
-    if (type.startsWith("image/")) return <ImageIcon className="h-8 w-8 text-blue-500" />
-    if (type.includes("pdf") || type.includes("document")) return <FileText className="h-8 w-8 text-red-500" />
-    if (type.includes("code") || type.includes("text")) return <Code className="h-8 w-8 text-green-500" />
-    return <File className="h-8 w-8 text-gray-500" />
-  }
 
   const formatFileSize = (bytes: number) => {
     if (bytes === 0) return "0 Bytes"
