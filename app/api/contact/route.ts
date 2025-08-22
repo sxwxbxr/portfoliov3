@@ -25,8 +25,9 @@ export async function POST(req: Request) {
     messages.push({ ...data, createdAt: new Date().toISOString() })
     await fs.writeFile(dataFile, JSON.stringify(messages, null, 2))
     return NextResponse.json({ success: true })
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("contact error", err)
-    return NextResponse.json({ success: false, error: err.message ?? "Invalid request" }, { status: 400 })
+    const message = err instanceof Error ? err.message : "Invalid request"
+    return NextResponse.json({ success: false, error: message }, { status: 400 })
   }
 }

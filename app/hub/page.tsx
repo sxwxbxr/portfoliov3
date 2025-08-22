@@ -34,11 +34,22 @@ import { newsFeeds, sharedFiles as initialSharedFiles } from "../../src/config"
 import type { Poll } from "@/lib/polls"
 import Navigation from "../../components/Navigation"
 
+export interface SharedFile {
+  id: string
+  name: string
+  size: string
+  type: string
+  uploadedBy: string
+  uploadedAt: string
+  downloads: number
+  url: string
+}
+
 export default function HubPage() {
   const { user, isAuthenticated, isAdmin } = useAuth()
   const router = useRouter()
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set())
-  const [sharedFiles, setSharedFiles] = useState(initialSharedFiles)
+  const [sharedFiles, setSharedFiles] = useState<SharedFile[]>(initialSharedFiles as SharedFile[])
   const [fileSearchTerm, setFileSearchTerm] = useState("")
   const [fileTypeFilter, setFileTypeFilter] = useState("all")
   const [votingPolls, setVotingPolls] = useState<Poll[]>([])
@@ -67,7 +78,7 @@ export default function HubPage() {
     })
   }
 
-  const handleFileUploaded = (newFile: any) => {
+  const handleFileUploaded = (newFile: SharedFile) => {
     setSharedFiles((prev) => [newFile, ...prev])
   }
 

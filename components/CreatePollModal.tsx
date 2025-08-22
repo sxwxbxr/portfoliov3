@@ -9,11 +9,12 @@ import { Label } from "./ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 import { X, Plus, Trash2 } from "lucide-react"
 import { useAuth } from "./AuthProvider"
+import type { Poll, PollOption } from "@/lib/polls"
 
 interface CreatePollModalProps {
   isOpen: boolean
   onClose: () => void
-  onCreatePoll: (poll: any) => void
+  onCreatePoll: (poll: Poll) => void
 }
 
 export function CreatePollModal({ isOpen, onClose, onCreatePoll }: CreatePollModalProps) {
@@ -53,14 +54,14 @@ export function CreatePollModal({ isOpen, onClose, onCreatePoll }: CreatePollMod
     const endDate = new Date()
     endDate.setDate(endDate.getDate() + Number.parseInt(duration))
 
-    const newPoll = {
+    const newPoll: Poll = {
       id: Date.now().toString(),
       question: question.trim(),
       options: options.map((opt, index) => ({
         id: String.fromCharCode(97 + index), // a, b, c, etc.
         text: opt.trim(),
         votes: 0,
-      })),
+      })) as PollOption[],
       createdBy: user?.name || "Unknown",
       createdAt: new Date().toISOString(),
       endsAt: endDate.toISOString(),

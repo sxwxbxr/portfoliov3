@@ -1,16 +1,16 @@
 "use client"
 
 import type React from "react"
-
 import { useState, useRef } from "react"
 import { Button } from "./ui/button"
 import { Card, CardContent } from "./ui/card"
 import { Progress } from "./ui/progress"
 import { Upload, File, ImageIcon, FileText, Code } from "lucide-react"
 import { useAuth } from "./AuthProvider"
+import type { SharedFile } from "@/app/hub/page"
 
 interface FileUploadProps {
-  onFileUploaded: (file: any) => void
+  onFileUploaded: (file: SharedFile) => void
 }
 
 export function FileUpload({ onFileUploaded }: FileUploadProps) {
@@ -46,7 +46,7 @@ export function FileUpload({ onFileUploaded }: FileUploadProps) {
           setIsUploading(false)
 
           // Create file object and add to shared files
-          const newFile = {
+          const newFile: SharedFile = {
             id: Date.now().toString(),
             name: file.name,
             size: formatFileSize(file.size),
