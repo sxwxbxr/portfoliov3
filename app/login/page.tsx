@@ -30,7 +30,7 @@ export default function LoginPage() {
       const user = authenticateUser(email, password)
       if (user) {
         login(user)
-        router.push("/hub")
+        router.push("/admin")
       } else {
         setError("Invalid email or password")
       }
@@ -48,7 +48,7 @@ export default function LoginPage() {
           <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
             Welcome Back
           </CardTitle>
-          <CardDescription className="text-muted-foreground">Sign in to access your Hub</CardDescription>
+          <CardDescription className="text-muted-foreground">Sign in to manage your portfolio</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -101,7 +101,6 @@ export default function LoginPage() {
           <div className="mt-6 text-center text-sm text-muted-foreground">
             <p>Demo Credentials:</p>
             <p>Admin: admin@seyaweber.com / admin123</p>
-            <p>User: user@example.com / user123</p>
           </div>
         </CardContent>
       </Card>

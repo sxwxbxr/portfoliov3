@@ -1,10 +1,8 @@
-import { users } from "../src/config"
-
 export interface User {
   id: string
   email: string
   name: string
-  role: "admin" | "user"
+  role: "admin"
   avatar: string
 }
 
@@ -14,16 +12,19 @@ export interface AuthState {
 }
 
 // Simple authentication functions (in production, use proper auth service)
+const ADMIN_USER = {
+  id: "1",
+  email: "admin@seyaweber.com",
+  password: "admin123", // In production, use a secure auth service
+  name: "Seya Weber",
+  role: "admin" as const,
+  avatar: "/professional-headshot.png",
+}
+
 export const authenticateUser = (email: string, password: string): User | null => {
-  const user = users.find((u) => u.email === email && u.password === password)
-  if (user) {
-    return {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      role: user.role,
-      avatar: user.avatar,
-    }
+  if (email === ADMIN_USER.email && password === ADMIN_USER.password) {
+    const { password: _pw, ...user } = ADMIN_USER
+    return user
   }
   return null
 }

@@ -7,7 +7,6 @@ const navLinks = [
   { name: "Education", href: "/education" },
   { name: "Skills", href: "/skills" },
   { name: "Contact", href: "/contact" },
-  { name: "Hub", href: "/hub" },
   { name: "Admin", href: "/admin" },
   { name: "Login", href: "/login" },
 ]
@@ -324,170 +323,6 @@ const caseStudies = [
 
 const ideas = []
 
-const users = [
-  {
-    id: "1",
-    email: "admin@seyaweber.com",
-    password: "admin123", // In production, this would be hashed
-    role: "admin",
-    name: "Seya Weber",
-    avatar: "/professional-headshot.png",
-  },
-  {
-    id: "2",
-    email: "user@example.com",
-    password: "user123",
-    role: "user",
-    name: "Demo User",
-    avatar: "/placeholder.svg?height=40&width=40",
-  },
-]
-
-const newsFeeds = [
-  {
-    id: "1",
-    title: "New Minecraft Server is Live! 🎮",
-    content:
-      "Just set up our new modded Minecraft server with Create mod and some tech mods. Server IP and modpack details in the files section. Let's build something epic together!",
-    author: "Seya Weber",
-    timestamp: "2024-01-20T10:30:00Z",
-    likes: 8,
-    comments: 12,
-    image: "/minecraft-server-spawn.jpg",
-  },
-  {
-    id: "2",
-    title: "LAN Party Planning - February 3rd Weekend",
-    content:
-      "Planning our next LAN party for February 3rd weekend at my place. Thinking CS2, Age of Empires 2, and maybe some co-op games. Who's in? Drop a comment below!",
-    author: "Seya Weber",
-    timestamp: "2024-01-18T14:15:00Z",
-    likes: 15,
-    comments: 8,
-  },
-  {
-    id: "3",
-    title: "Game Night Results: Among Us Tournament",
-    content:
-      "What a night! Congrats to Alex for winning our Among Us tournament. The final round was intense - 3 impostors vs 4 crewmates. Next week: Jackbox Games!",
-    author: "Seya Weber",
-    timestamp: "2024-01-15T09:45:00Z",
-    likes: 12,
-    comments: 6,
-    image: "/among-us-tournament.jpg",
-  },
-  {
-    id: "4",
-    title: "Discord Bot Update - New Features",
-    content:
-      "Updated our Discord bot with music commands and game server status. You can now check if the Minecraft server is online with !mcstatus. More features coming soon!",
-    author: "Seya Weber",
-    timestamp: "2024-01-12T16:20:00Z",
-    likes: 6,
-    comments: 4,
-  },
-]
-
-const sharedFiles = [
-  {
-    id: "1",
-    name: "Minecraft_Modpack_v2.3.zip",
-    size: "145 MB",
-    type: "archive",
-    uploadedBy: "Seya Weber",
-    uploadedAt: "2024-01-20T08:30:00Z",
-    downloads: 8,
-    url: "#",
-  },
-  {
-    id: "2",
-    name: "LAN_Party_Game_List.pdf",
-    size: "2.1 MB",
-    type: "pdf",
-    uploadedBy: "Seya Weber",
-    uploadedAt: "2024-01-18T16:20:00Z",
-    downloads: 12,
-    url: "#",
-  },
-  {
-    id: "3",
-    name: "Server_Setup_Guide.md",
-    size: "25 KB",
-    type: "document",
-    uploadedBy: "Seya Weber",
-    uploadedAt: "2024-01-15T11:10:00Z",
-    downloads: 6,
-    url: "#",
-  },
-  {
-    id: "4",
-    name: "Discord_Bot_Commands.txt",
-    size: "8 KB",
-    type: "document",
-    uploadedBy: "Seya Weber",
-    uploadedAt: "2024-01-12T14:45:00Z",
-    downloads: 15,
-    url: "#",
-  },
-  {
-    id: "5",
-    name: "Tournament_Bracket_Template.xlsx",
-    size: "156 KB",
-    type: "document",
-    uploadedBy: "Alex",
-    uploadedAt: "2024-01-10T19:30:00Z",
-    downloads: 9,
-    url: "#",
-  },
-]
-
-const votingPolls = [
-  {
-    id: "1",
-    question: "What game should we play at the next LAN party?",
-    options: [
-      { id: "a", text: "Counter-Strike 2", votes: 12 },
-      { id: "b", text: "Age of Empires 2", votes: 8 },
-      { id: "c", text: "Rocket League", votes: 15 },
-      { id: "d", text: "Valheim Co-op", votes: 6 },
-    ],
-    createdBy: "Seya Weber",
-    createdAt: "2024-01-20T12:00:00Z",
-    endsAt: "2024-01-27T12:00:00Z",
-    totalVotes: 41,
-    isActive: true,
-  },
-  {
-    id: "2",
-    question: "Best day for weekly game nights?",
-    options: [
-      { id: "a", text: "Friday Evening", votes: 18 },
-      { id: "b", text: "Saturday Evening", votes: 22 },
-      { id: "c", text: "Sunday Afternoon", votes: 5 },
-    ],
-    createdBy: "Seya Weber",
-    createdAt: "2024-01-15T10:00:00Z",
-    endsAt: "2024-01-22T10:00:00Z",
-    totalVotes: 45,
-    isActive: false,
-  },
-  {
-    id: "3",
-    question: "Should we add more mods to the Minecraft server?",
-    options: [
-      { id: "a", text: "Yes, more tech mods!", votes: 14 },
-      { id: "b", text: "Add some magic mods", votes: 7 },
-      { id: "c", text: "Keep it simple", votes: 4 },
-      { id: "d", text: "Add exploration mods", votes: 9 },
-    ],
-    createdBy: "Mike",
-    createdAt: "2024-01-18T15:30:00Z",
-    endsAt: "2024-01-25T15:30:00Z",
-    totalVotes: 34,
-    isActive: true,
-  },
-]
-
 export {
   navLinks,
   toggles,
@@ -496,8 +331,4 @@ export {
   blogPosts,
   caseStudies,
   ideas,
-  users,
-  newsFeeds,
-  sharedFiles,
-  votingPolls,
 }

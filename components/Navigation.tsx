@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Menu, X, LogOut, User } from "lucide-react"
@@ -13,9 +13,18 @@ export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
   const { user, logout, isAuthenticated, isAdmin } = useAuth()
+  const [pages, setPages] = useState<{ title: string; slug: string }[]>([])
 
-  const filteredNavLinks = navLinks.filter((link) => {
-    if (link.href === "/hub" && !isAuthenticated) return false
+  useEffect(() => {
+    fetch("/api/pages")
+      .then((res) => res.json())
+      .then((data) => setPages(data))
+      .catch(() => setPages([]))
+  }, [])
+
+  const dynamicLinks = pages.map((p) => ({ name: p.title, href: `/pages/${p.slug}` }))
+
+  const filteredNavLinks = [...navLinks, ...dynamicLinks].filter((link) => {
     if (link.href === "/admin" && !isAdmin) return false
     if (link.href === "/login" && isAuthenticated) return false
     return true
