@@ -29,7 +29,7 @@ export default function Blog() {
 
           <FadeInSection>
             <div className="grid gap-8">
-              {blogPosts.map((post) => (
+              {blogPosts?.map((post) => (
                 <InteractiveCard key={post.id}>
                   <article className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300">
                     <div className="md:flex">
