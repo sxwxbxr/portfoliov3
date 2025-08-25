@@ -9,29 +9,6 @@ const navLinks = [
   { name: "Contact", href: "/contact" },
 ]
 
-const toggles = {
-  testimonials: true,
-  darkMode: true,
-}
-
-const testimonials = [
-  {
-    name: "John Doe",
-    role: "Senior Developer",
-    company: "Tech Corp",
-    content:
-      "Seya's technical expertise and project management skills are exceptional. He consistently delivers high-quality solutions on time.",
-    avatar: "/professional-headshot.png",
-  },
-  {
-    name: "Jane Smith",
-    role: "Product Manager",
-    company: "Innovation Labs",
-    content:
-      "Working with Seya was a pleasure. His ability to bridge technical and business requirements is outstanding.",
-    avatar: "/professional-headshot.png",
-  },
-]
 
 const projects = [
   {
@@ -318,15 +295,9 @@ const caseStudies = [
     },
   },
 ]
-
-const ideas = []
-
 export {
   navLinks,
-  toggles,
-  testimonials,
   projects,
   blogPosts,
   caseStudies,
-  ideas,
 }
