@@ -7,8 +7,6 @@ const navLinks = [
   { name: "Education", href: "/education" },
   { name: "Skills", href: "/skills" },
   { name: "Contact", href: "/contact" },
-  { name: "Admin", href: "/admin" },
-  { name: "Login", href: "/login" },
 ]
 
 const toggles = {

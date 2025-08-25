@@ -7,7 +7,6 @@ import { ThemeProvider } from "@/components/ThemeProvider"
 import { ScrollProgress } from "@/components/ScrollProgress"
 import { Analytics } from "@/components/Analytics"
 import { JsonLd } from "@/components/JsonLd"
-import { AuthProvider } from "@/components/AuthProvider"
 import { Suspense } from "react"
 
 const geist = Geist({
@@ -153,11 +152,9 @@ export default function RootLayout({
       <body className="font-sans">
         <Suspense fallback={null}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-            <AuthProvider>
-              <ScrollProgress />
-              <Analytics />
-              {children}
-            </AuthProvider>
+            <ScrollProgress />
+            <Analytics />
+            {children}
           </ThemeProvider>
         </Suspense>
       </body>

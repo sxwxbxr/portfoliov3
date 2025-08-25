@@ -1,39 +1,23 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Menu, X, LogOut, User } from "lucide-react"
+import { Menu, X } from "lucide-react"
 import { navLinks } from "../src/config"
 import { ThemeToggle } from "./ThemeToggle"
-import { useAuth } from "./AuthProvider"
-import { Button } from "./ui/button"
+import pages from "@/data/pages.json"
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
-  const { user, logout, isAuthenticated, isAdmin } = useAuth()
-  const [pages, setPages] = useState<{ title: string; slug: string }[]>([])
 
-  useEffect(() => {
-    fetch("/api/pages")
-      .then((res) => res.json())
-      .then((data) => setPages(data))
-      .catch(() => setPages([]))
-  }, [])
+  const dynamicLinks = (pages as { title: string; slug: string }[]).map((p) => ({
+    name: p.title,
+    href: `/pages/${p.slug}`,
+  }))
 
-  const dynamicLinks = pages.map((p) => ({ name: p.title, href: `/pages/${p.slug}` }))
-
-  const filteredNavLinks = [...navLinks, ...dynamicLinks].filter((link) => {
-    if (link.href === "/admin" && !isAdmin) return false
-    if (link.href === "/login" && isAuthenticated) return false
-    return true
-  })
-
-  const handleLogout = () => {
-    logout()
-    setIsOpen(false)
-  }
+  const filteredNavLinks = [...navLinks, ...dynamicLinks]
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
@@ -59,22 +43,6 @@ export default function Navigation() {
                 {link.name}
               </Link>
             ))}
-            {isAuthenticated && (
-              <div className="flex items-center space-x-2">
-                <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                  <User className="w-4 h-4" />
-                  <span>{user?.name}</span>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleLogout}
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  <LogOut className="w-4 h-4" />
-                </Button>
-              </div>
-            )}
             <ThemeToggle />
           </div>
 
@@ -103,23 +71,6 @@ export default function Navigation() {
                   {link.name}
                 </Link>
               ))}
-              {isAuthenticated && (
-                <div className="pt-2 border-t border-border">
-                  <div className="flex items-center space-x-2 text-sm text-muted-foreground mb-2">
-                    <User className="w-4 w-4" />
-                    <span>{user?.name}</span>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleLogout}
-                    className="text-muted-foreground hover:text-foreground"
-                  >
-                    <LogOut className="w-4 h-4 mr-2" />
-                    Logout
-                  </Button>
-                </div>
-              )}
             </div>
           </div>
         )}
