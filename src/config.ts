@@ -54,6 +54,11 @@ const blogPosts = [
     title: "Digital Transformation in Healthcare: Lessons from the Field",
     excerpt:
       "Migrating sensitive clinical data at scale taught me what truly matters: people, process, and privacy.",
+    publishedAt: "2024-01-15",
+    readTime: "6 min read",
+    author: "Seya Weber",
+    tags: ["Healthcare", "Data Migration", "GDPR"],
+    image: "/abstract-geometric-shapes.png",
     content: `
 # Digital Transformation in Healthcare: Lessons from the Field
 
@@ -82,6 +87,11 @@ When you move mission-critical clinical data across borders, technology is only 
     title: "From Electrical Planner to Software Developer: What Helped Most",
     excerpt:
       "Switching fields is less about starting over and more about transferring habits.",
+    publishedAt: "2024-02-10",
+    readTime: "4 min read",
+    author: "Seya Weber",
+    tags: ["Career", "Software Development", "Learning"],
+    image: "/abstract-geometric-shapes.png",
     content: `
 # From Electrical Planner to Software Developer: What Helped Most
 
