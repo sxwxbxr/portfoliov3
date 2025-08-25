@@ -9,32 +9,40 @@ const navLinks = [
   { name: "Contact", href: "/contact" },
 ]
 
-
 const projects = [
   {
-    title: "Automation Workflow System",
-    description: "Custom automation workflows for business-critical systems at Telsonic",
-    image: "/automation-dashboard.png",
-    tags: ["C#", ".NET", "Automation", "Workflow"],
-    slug: "automation-workflow",
-    github: "#",
-    demo: "#",
-  },
-  {
-    title: "Medical Data Management",
-    description: "Switched the Patient Management System to a new platform",
+    title: "Medical Database Migration — France & Belgium",
+    description: "Led the end-to-end migration of a large medical database in France and Belgium with strict GDPR compliance and zero downtime.",
     image: "/medical-data-dashboard.png",
-    tags: ["Database", "Management", "Healthcare"],
-    slug: "medical-system",
+    tags: ["C#", ".NET", "MSSQL", "Data Migration", "GDPR"],
+    slug: "medical-db-migration-fr-be",
     github: "#",
     demo: "#",
   },
   {
-    title: "Questionnaire Automation",
-    description: "Implemented comprehensive questionnaire automation for a patient management system",
+    title: "Patient Questionnaire Automation",
+    description: "Implemented comprehensive questionnaire automation for a patient management system to reduce manual admin and standardize data collection.",
     image: "/testing-automation-interface.png",
     tags: [".NET", "Automation", "Templates"],
     slug: "questionnaire-automation",
+    github: "#",
+    demo: "#",
+  },
+  {
+    title: "Energy Optimization Portfolio — Swiss Bank",
+    description: "Managed and optimized energy usage across 150+ properties, achieving about 10–20% efficiency improvements and measurable cost savings.",
+    image: "/energy-optimization.png",
+    tags: ["Energy", "Monitoring", "Reporting", "Facility Management"],
+    slug: "energy-optimization-cs",
+    github: "#",
+    demo: "#",
+  },
+  {
+    title: "Luxury Villa Electrical Planning",
+    description: "End-to-end electrical planning and implementation for a complex villa project in Switzerland, coordinating multiple subsystems.",
+    image: "/villa-project.png",
+    tags: ["Electrical", "Planning", "Project Management"],
+    slug: "villa-project",
     github: "#",
     demo: "#",
   },
@@ -42,76 +50,132 @@ const projects = [
 
 const blogPosts = [
   {
-    id: "template-blog-post",
-    title: "Template Blog Post #1",
+    id: "healthcare-transformation-lessons",
+    title: "Digital Transformation in Healthcare: Lessons from the Field",
     excerpt:
-      "Template Excerpt for a blog post about challenges I faced and conquered",
+      "Migrating sensitive clinical data at scale taught me what truly matters: people, process, and privacy.",
     content: `
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vel urna vitae erat aliquet varius. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.
+# Digital Transformation in Healthcare: Lessons from the Field
 
-Curabitur at sapien ac massa gravida posuere. Nulla facilisi. Sed euismod, velit sed imperdiet sollicitudin, velit dui fermentum elit, vitae pretium lorem velit id nisi. Phasellus eget diam sit amet velit congue viverra.
+When you move mission-critical clinical data across borders, technology is only half the story. The other half is trust, workflow fit, and governance.
 
-Praesent id dolor in metus dictum luctus. Quisque euismod felis a massa porttitor, at dapibus erat tincidunt. Aliquam erat volutpat. Donec at nunc in arcu vehicula convallis sit amet ut velit.
-    `,
-    author: "Seya Weber",
-    publishedAt: "2025-08-25",
-    readTime: "8 min read",
-    tags: ["Template", "Digital Transformation", "Data Management"],
-    image: "/blog-healthcare-transformation.jpg",
-  }
+## The Challenge
+- Highly regulated data (GDPR) with zero tolerance for loss or downtime
+- Heterogeneous legacy systems and fragmented data ownership
+- Clinical staff under time pressure and skeptical of change
+
+## What Worked
+1. **Stakeholder workshops** to map real workflows before writing code.
+2. **Phased cutovers** with parallel runs and rollback plans.
+3. **Auditability by default** with clear logs and access trails.
+4. **Test data parity** checks before, during, and after migration.
+5. **On-site champions** who could translate clinical needs into actionable tickets.
+
+## Outcomes
+- Successful large-scale migration in France and Belgium
+- Standardized templates and automation to reduce manual entry
+- A roadmap for continuous improvements beyond go-live
+`,
+  },
+  {
+    id: "from-electrical-to-software",
+    title: "From Electrical Planner to Software Developer: What Helped Most",
+    excerpt:
+      "Switching fields is less about starting over and more about transferring habits.",
+    content: `
+# From Electrical Planner to Software Developer: What Helped Most
+
+## Transferable Skills
+- **Systems thinking** from electrical planning translated well to architecture and integration.
+- **Documentation discipline** improved code reviews and onboarding.
+- **Project pragmatism** kept scope realistic and delivery predictable.
+
+## Practical Tips
+- Pair learning with a real project (migration, automation, or an internal tool).
+- Use code templates and checklists to standardize repetitive tasks.
+- Track measurable outcomes (downtime avoided, minutes saved per workflow).
+
+## Closing Thought
+The tools change. The habits scale.
+`,
+  },
 ]
 
 const caseStudies = [
   {
-    id: "motocom-app",
-    title: "Motocom App Development",
-    client: "Motocom",
-    industry: "Transportation",
-    duration: "6 months",
-    team: "2 developers, 1 PM",
-    challenge:
-      "Developing a community oriented app for motorcycle enthusiasts",
-    solution:
-      "Creating a mobile app with social features, event management, and ride tracking.",
-    results: [
-      "In early stages of development"
-    ],
-    technologies: ["Python", "Typescript", "Docker", "Kubernetes", "JavaScript"],
-    image: "/case-study-telsonic.jpg",
-    testimonial: {
-      quote:
-        "The app has brought together a community of motorcycle enthusiasts like never before.",
-      author: "An Enthusiast",
-      company: "Motocom",
-    },
-  },
-  {
-    id: "healthcare-data-sync",
-    title: "Medical Data Synchronization Platform",
-    client: "Healthcare Network France",
+    title: "Healthcare Data Migration Platform",
+    client: "INNOFORCE Est.",
     industry: "Healthcare",
-    duration: "8 months",
-    team: "4 developers, 2 PMs, 1 compliance officer",
+    duration: "Nov 2023 – Mar 2024",
+    team: "1 developer (project lead) with cross-team support",
     challenge:
-      "A healthcare network needed to synchronize patient data across multiple locations in France while maintaining strict GDPR compliance and ensuring data integrity.",
+      "Migrate a large clinical database while maintaining full GDPR compliance, data integrity, and uninterrupted access for clinicians.",
     solution:
-      "Developed a secure, real-time data synchronization platform with automated conflict resolution, audit trails, and comprehensive security measures.",
+      "Designed and executed a phased migration plan with automated validation, audit logging, and contingency rollbacks. Coordinated with clinical stakeholders to minimize disruption.",
     results: [
-      "95% improvement in data accuracy",
-      "60% reduction in manual data entry",
-      "100% GDPR compliance maintained",
-      "Zero data security incidents",
+      "Successful migration in France and Belgium",
+      "Zero unplanned downtime during cutover windows",
+      "Data integrity verified with automated parity checks",
+      "GDPR compliance maintained with audit trails and access controls",
     ],
-    technologies: ["C#", "PostgreSQL", "Redis", "Docker", "Azure Service Bus"],
+    technologies: ["C#", ".NET", "MSSQL", "ETL", "Docker"],
     image: "/case-study-healthcare.jpg",
     testimonial: {
       quote:
-        "This system revolutionized how we manage patient data across our network. The synchronization is seamless and secure.",
+        "The migration was seamless for our staff and improved the consistency of our data. We could trust the system at every step.",
       author: "IT Director",
-      company: "Healthcare Network France",
+      company: "Healthcare Network",
+    },
+  },
+  {
+    title: "Energy Efficiency Program for Swiss Bank Portfolio",
+    client: "Credit Suisse (portfolio management)",
+    industry: "Real Estate / Facility Management",
+    duration: "Jun 2021 – Dec 2021",
+    team: "1 planner, cross-functional partners",
+    challenge:
+      "Reduce energy consumption across a diverse portfolio without major capex and with minimal operational disruption.",
+    solution:
+      "Introduced monitoring, reporting, and targeted optimizations; coordinated with facility teams to implement quick-win measures first.",
+    results: [
+      "Approx. 10–20% efficiency gains across managed properties",
+      "Transparent reporting to stakeholders with actionable insights",
+      "Foundation for continuous improvement beyond the initial phase",
+    ],
+    technologies: ["Energy Monitoring", "Reporting", "Process Optimization"],
+    image: "/case-study-energy.jpg",
+    testimonial: {
+      quote:
+        "Clear reporting and practical measures delivered tangible savings without slowing operations.",
+      author: "Facility Program Lead",
+      company: "Credit Suisse",
+    },
+  },
+  {
+    title: "Luxury Villa Electrical Planning and Delivery",
+    client: "Private",
+    industry: "Residential Construction",
+    duration: "Jan 2022 – Apr 2022",
+    team: "1 planner coordinating subcontractors",
+    challenge:
+      "Integrate complex subsystems (lighting, security, HVAC) into a cohesive and reliable electrical plan on a tight schedule.",
+    solution:
+      "Produced a detailed plan set, coordinated suppliers, and validated on-site installations to de-risk handover.",
+    results: [
+      "On-time delivery with high client satisfaction",
+      "Reliable operation and reduced rework",
+    ],
+    technologies: ["Electrical Planning", "Documentation", "On-site QA"],
+    image: "/case-study-villa.jpg",
+    testimonial: {
+      quote:
+        "The project ran smoothly from planning to handover thanks to clear coordination and documentation.",
+      author: "Project Owner",
+      company: "Private",
     },
   },
 ]
+
 export {
   navLinks,
   projects,
