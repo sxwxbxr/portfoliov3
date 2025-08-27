@@ -11,12 +11,12 @@ interface Skill {
 }
 
 const skills: Skill[] = [
-  { name: "C#/.NET", level: 95, category: "Backend" },
-  { name: "TypeScript", level: 88, category: "Frontend" },
-  { name: "SQL Server", level: 92, category: "Database" },
-  { name: "Azure", level: 85, category: "Cloud" },
-  { name: "React", level: 82, category: "Frontend" },
-  { name: "Docker", level: 78, category: "DevOps" },
+  { name: "C#/.NET", level: 45, category: "Backend" },
+  { name: "TypeScript", level: 35, category: "Frontend" },
+  { name: "SQL Server", level: 30, category: "Database" },
+  { name: "Azure", level: 10, category: "Cloud" },
+  { name: "React", level: 50, category: "Frontend" },
+  { name: "Docker", level: 25, category: "DevOps" },
 ]
 
 export function SkillProgress() {
