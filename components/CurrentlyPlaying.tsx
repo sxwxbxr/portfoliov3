@@ -2,14 +2,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 export function CurrentlyPlaying() {
   return (
-    <Card className="overflow-hidden">
-      <CardHeader className="pb-0">
+    <Card className="overflow-hidden border-none bg-transparent p-0 shadow-none">
+      <CardHeader className="px-0 pb-4">
         <CardTitle className="text-base">Demon Slayer × Spotify Playlist</CardTitle>
         <CardDescription>
           Stream the soundtrack that&apos;s fueling my current focus sessions.
         </CardDescription>
       </CardHeader>
-      <CardContent className="px-0 pb-6">
+      <CardContent className="px-0 pb-0">
         <iframe
           title="Demon Slayer × Spotify Playlist"
           src="https://open.spotify.com/embed/playlist/3JsgfcruuxFw2jqZYsVPGN?utm_source=generator"
@@ -19,7 +19,7 @@ export function CurrentlyPlaying() {
           allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
           loading="lazy"
           allowFullScreen
-          className="mt-4 w-full"
+          className="mt-4 w-full rounded-xl"
         >
           Your browser does not support iframes.
         </iframe>
