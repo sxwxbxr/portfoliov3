@@ -184,6 +184,57 @@ const caseStudies = [
       company: "Private",
     },
   },
+  {
+    title: "MultiScreenKiosk Application",
+    client: "Private",
+    industry: "Fair / Events",
+    duration: "Aug 2025 - Sep 2025",
+    team: "1 developer",
+    challenge:
+      "Create an interactive kiosk application to visualize multiple applications or browser instances in a 2x2 Grid for Event display purposes.",
+    solution:
+      "Developed a relatively simple Python solution using PyQt6 to create a 2x2 grid layout, allowing users to easily switch between different applications or browser instances. As well as Live Logs and integrated Task Manager to force embedding of applications.",
+    results: [
+      "Easy to use and intuitive interface with minimal training required",
+      "Reliable operation and good documentation",
+    ],
+    technologies: ["Python", "PyQt6", "UI/UX Design"],
+    image: "/case-study-villa.jpg", // Placeholder image needs to be changed to multiscreenkiosk image
+    testimonial: {
+      quote:
+        "Easy to setup and use, the application worked flawlessly during our events.",
+      author: "Tester",
+      company: "Private",
+    },
+  },
+  {
+    title: "CashTrack Application",
+    client: "Private",
+    industry: "Private Consumer",
+    duration: "Sep 2025",
+    team: "1 developer",
+    challenge:
+      "Create an application to track personal finances, visualize spending habits, improve budget planning and generate reports.",
+    solution:
+      "Developed a modern Next.js and React application with a clean and intuitive user interface. The application allows users to easily input and categorize their expenses, view visualizations of their spending habits, set budget goals, and generate detailed reports. The whole application runs completely local but can be synchronized via an exposed IP and Port with other devices in the same network.",
+    results: [
+      "Visually appealing and user-friendly interface",
+      "Reliable operation and good documentation",
+      "Improved budget planning and spending awareness",
+      "Data export and report generation capabilities",
+      "Multi-device synchronization within the same network",
+      "Secure local data storage with optional network sync",
+    ],
+    technologies: ["Next.js", "React", "UI/UX Design"],
+    image: "/case-study-villa.jpg", // Placeholder image needs to be changed to CashTrack image
+    testimonial: {
+      quote:
+        "Easy to setup and use, the application helped me to get a better overview of my finances.",
+      author: "Friend of developer",
+      company: "N.a.",
+    },
+  }
+  
 ]
 
 export {
