@@ -1,8 +1,6 @@
-"use client"
-
-import { use } from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { notFound } from "next/navigation"
 import { ArrowLeft, Building, CheckCircle, Clock, ExternalLink, Github, Quote, Users } from "lucide-react"
 
 import FadeInSection from "../../../components/FadeInSection"
@@ -11,30 +9,16 @@ import PageLayout from "../../../components/PageLayout"
 import { caseStudies, projects } from "../../../src/config"
 
 interface ProjectPageProps {
-  params: Promise<{ slug: string }>
+  params: { slug: string } | Promise<{ slug: string }>
 }
 
-export default function ProjectDetails({ params }: ProjectPageProps) {
-  const { slug } = use(params)
+export default async function ProjectDetails({ params }: ProjectPageProps) {
+  const { slug } = await params
   const project = projects.find((item) => item.slug === slug)
   const study = caseStudies.find((item) => item.slug === slug)
 
   if (!project) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Navigation />
-        <PageLayout>
-          <div className="text-center space-y-4">
-            <h1 className="text-4xl font-bold">Project Not Found</h1>
-            <p className="text-muted-foreground">The project you&apos;re looking for doesn&apos;t exist.</p>
-            <Link href="/projects" className="inline-flex items-center gap-2 text-primary hover:underline">
-              <ArrowLeft className="w-4 h-4" />
-              Back to Projects
-            </Link>
-          </div>
-        </PageLayout>
-      </div>
-    )
+    notFound()
   }
 
   const heroImage = (study?.image ?? project.image ?? "/abstract-geometric-shapes.png").trim()
@@ -44,6 +28,11 @@ export default function ProjectDetails({ params }: ProjectPageProps) {
 
   const hasDemoLink = Boolean(project.demo && project.demo !== "#")
   const hasRepoLink = Boolean(project.github && project.github !== "#")
+
+  const descriptionParagraphs = project.description
+    .split(/\n+/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean)
 
   return (
     <div className="min-h-screen bg-background">
@@ -63,17 +52,7 @@ export default function ProjectDetails({ params }: ProjectPageProps) {
               <div className="space-y-5">
                 {study?.client && <p className="text-primary font-medium">{study.client}</p>}
                 <h1 className="text-4xl md:text-5xl font-bold leading-tight">{project.title}</h1>
-                <p className="text-xl text-muted-foreground leading-relaxed font-serif">{project.description}</p>
-
-                {project.tags?.length ? (
-                  <div className="flex flex-wrap gap-2">
-                    {project.tags.map((tag) => (
-                      <span key={tag} className="px-3 py-1 bg-secondary/10 text-secondary rounded-full text-sm">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                ) : null}
+                <p className="text-xl text-muted-foreground leading-relaxed font-serif">{project.shortDescription}</p>
 
                 {(hasDemoLink || hasRepoLink) && (
                   <div className="flex flex-wrap gap-4 pt-2">
@@ -116,6 +95,38 @@ export default function ProjectDetails({ params }: ProjectPageProps) {
                 priority
               />
             </div>
+          </FadeInSection>
+
+          <FadeInSection>
+            <section className="bg-card border border-border rounded-xl p-8 space-y-6">
+              <div className="space-y-4">
+                <h2 className="text-2xl font-bold">Project Overview</h2>
+                {descriptionParagraphs.length ? (
+                  descriptionParagraphs.map((paragraph, index) => (
+                    <p key={index} className="text-muted-foreground leading-relaxed">
+                      {paragraph}
+                    </p>
+                  ))
+                ) : (
+                  <p className="text-muted-foreground leading-relaxed">{project.description}</p>
+                )}
+              </div>
+
+              {project.tags?.length ? (
+                <div>
+                  <h3 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground mb-3">
+                    Key Technologies &amp; Focus Areas
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {project.tags.map((tag) => (
+                      <span key={tag} className="px-3 py-1 bg-secondary/10 text-secondary rounded-full text-sm">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+            </section>
           </FadeInSection>
 
           {study ? (
@@ -187,26 +198,14 @@ export default function ProjectDetails({ params }: ProjectPageProps) {
                 </div>
               </FadeInSection>
             </div>
-          ) : (
-            <FadeInSection>
-              <div className="bg-card border border-border rounded-xl p-8 space-y-4">
-                <h2 className="text-2xl font-bold">Project Overview</h2>
-                <p className="text-muted-foreground leading-relaxed">{project.description}</p>
-                {project.tags?.length ? (
-                  <div className="flex flex-wrap gap-2">
-                    {project.tags.map((tag) => (
-                      <span key={tag} className="px-3 py-1 bg-secondary/10 text-secondary rounded-full text-sm">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                ) : null}
-              </div>
-            </FadeInSection>
-          )}
+          ) : null}
         </div>
       </PageLayout>
     </div>
   )
+}
+
+export function generateStaticParams() {
+  return projects.map((project) => ({ slug: project.slug }))
 }
 
