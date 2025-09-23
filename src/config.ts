@@ -113,6 +113,7 @@ The tools change. The habits scale.
 
 const caseStudies = [
   {
+    slug: "medical-db-migration-fr-be",
     title: "Healthcare Data Migration Platform",
     client: "INNOFORCE Est.",
     industry: "Healthcare",
@@ -138,6 +139,32 @@ const caseStudies = [
     },
   },
   {
+    slug: "questionnaire-automation",
+    title: "Patient Questionnaire Automation",
+    client: "INNOFORCE Est.",
+    industry: "Healthcare",
+    duration: "Apr 2024 – Jul 2024",
+    team: "1 developer working with clinical operations",
+    challenge:
+      "Manual patient intake questionnaires varied by location, produced inconsistent data, and required significant administrative follow-up.",
+    solution:
+      "Implemented a rules-driven automation layer that generated questionnaires from standardized templates, integrated validation, and synchronized responses with downstream systems.",
+    results: [
+      "Consistent digital questionnaires across all supported clinics",
+      "Administrative preparation time reduced by more than half",
+      "Structured data available immediately for downstream workflows",
+    ],
+    technologies: [".NET", "Automation", "Templates"],
+    image: "/testing-automation-interface.png",
+    testimonial: {
+      quote:
+        "Automation freed our team from repetitive paperwork and gave physicians better information before each visit.",
+      author: "Clinical Operations Lead",
+      company: "Healthcare Network",
+    },
+  },
+  {
+    slug: "energy-optimization-cs",
     title: "Energy Efficiency Program for Swiss Bank Portfolio",
     client: "Credit Suisse (portfolio management)",
     industry: "Real Estate / Facility Management",
@@ -162,6 +189,7 @@ const caseStudies = [
     },
   },
   {
+    slug: "villa-project",
     title: "Luxury Villa Electrical Planning and Delivery",
     client: "Private",
     industry: "Residential Construction",
@@ -185,6 +213,7 @@ const caseStudies = [
     },
   },
   {
+    slug: "multi-screen-kiosk",
     title: "MultiScreenKiosk Application",
     client: "Private",
     industry: "Fair / Events",
@@ -208,6 +237,7 @@ const caseStudies = [
     },
   },
   {
+    slug: "cashtrack-application",
     title: "CashTrack Application",
     client: "Private",
     industry: "Private Consumer",

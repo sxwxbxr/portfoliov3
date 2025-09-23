@@ -15,7 +15,7 @@ interface CaseStudyPageProps {
 
 export default function CaseStudy({ params }: CaseStudyPageProps) {
   const { slug } = use(params)
-  const study = caseStudies.find((s) => s.id === slug)
+  const study = caseStudies.find((s) => s.slug === slug)
 
   if (!study) {
     return (

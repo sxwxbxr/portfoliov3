@@ -30,7 +30,7 @@ export default function CaseStudies() {
           <FadeInSection>
             <div className="grid gap-12">
               {caseStudies.map((study) => (
-                <InteractiveCard key={study.id}>
+                <InteractiveCard key={study.slug}>
                   <div className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300">
                     <div className="md:flex">
                       <div className="md:w-2/5">
@@ -97,7 +97,7 @@ export default function CaseStudies() {
                           </div>
 
                           <Link
-                            href={`/case-studies/${study.id}`}
+                            href={`/case-studies/${study.slug}`}
                             className="flex items-center gap-2 text-primary hover:gap-3 transition-all duration-200 font-medium"
                           >
                             View Details
