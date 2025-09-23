@@ -65,12 +65,12 @@ export default function Home() {
             <div className="grid md:grid-cols-3 gap-8 text-center">
               <div className="space-y-2">
                 <Users className="w-8 h-8 text-primary mx-auto mb-4" />
-                <AnimatedCounter end={50} suffix="+" />
+                <AnimatedCounter end={6} suffix="+" />
                 <p className="text-muted-foreground">Projects Completed</p>
               </div>
               <div className="space-y-2">
                 <Award className="w-8 h-8 text-primary mx-auto mb-4" />
-                <AnimatedCounter end={5} suffix="+" />
+                <AnimatedCounter end={1} suffix="+" />
                 <p className="text-muted-foreground">Years Experience</p>
               </div>
               <div className="space-y-2">
