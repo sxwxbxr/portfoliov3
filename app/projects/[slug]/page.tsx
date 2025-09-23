@@ -1,8 +1,6 @@
-"use client"
-
-import { use } from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { notFound } from "next/navigation"
 import { ArrowLeft, Building, CheckCircle, Clock, ExternalLink, Github, Quote, Users } from "lucide-react"
 
 import FadeInSection from "../../../components/FadeInSection"
@@ -11,30 +9,16 @@ import PageLayout from "../../../components/PageLayout"
 import { caseStudies, projects } from "../../../src/config"
 
 interface ProjectPageProps {
-  params: Promise<{ slug: string }>
+  params: { slug: string }
 }
 
 export default function ProjectDetails({ params }: ProjectPageProps) {
-  const { slug } = use(params)
+  const { slug } = params
   const project = projects.find((item) => item.slug === slug)
   const study = caseStudies.find((item) => item.slug === slug)
 
   if (!project) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Navigation />
-        <PageLayout>
-          <div className="text-center space-y-4">
-            <h1 className="text-4xl font-bold">Project Not Found</h1>
-            <p className="text-muted-foreground">The project you&apos;re looking for doesn&apos;t exist.</p>
-            <Link href="/projects" className="inline-flex items-center gap-2 text-primary hover:underline">
-              <ArrowLeft className="w-4 h-4" />
-              Back to Projects
-            </Link>
-          </div>
-        </PageLayout>
-      </div>
-    )
+    notFound()
   }
 
   const heroImage = (study?.image ?? project.image ?? "/abstract-geometric-shapes.png").trim()
@@ -208,5 +192,9 @@ export default function ProjectDetails({ params }: ProjectPageProps) {
       </PageLayout>
     </div>
   )
+}
+
+export function generateStaticParams() {
+  return projects.map((project) => ({ slug: project.slug }))
 }
 
