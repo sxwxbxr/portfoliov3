@@ -46,6 +46,24 @@ const projects = [
     github: "#",
     demo: "#",
   },
+  {
+    title: "MultiScreenKiosk Application",
+    description: "MultiScreenKiosk focuses on visualizing multiple local applications or browser instances in a simple 2x2 Grid on one monitor for Event display purposes. I developed a relatively simple Python solution using PyQt6 to create a 2x2 grid layout, allowing users to easily switch between different applications or browser instances. It's features include customizable grid layouts, easy application switching, changeable shortcuts, and logging functionality. The project is open-source and available on GitHub.",
+    image: "/multi-screen-kiosk.png",
+    tags: ["Kiosk", "UI/UX", "Web Development", "Python", "PyQt6", "Open Source", "Logging"],
+    slug: "multi-screen-kiosk",
+    github: "https://github.com/sxwxbxr/MultiScreenKiosk",
+    demo: "#",
+  },
+  {
+    title: "CashTrack Application",
+    description: "CashTrack aims to simplify personal finance management by providing an intuitive interface for tracking income, expenses, and budgets. I developed a user-friendly application using Next.js, React, SQLite and Iron-Session. Due to its offline-first architecture, it does not require an internet connection and all data is stored locally with the ability to sync it across devices in the same network via an exposed IP and Port. It allows users to easily input and categorize their financial transactions. The application includes features such as expense categorization, budget tracking, and data visualization through charts and graphs. CashTrack is designed to help users gain better control over their finances and make informed financial decisions. The project is open-source and available on GitHub.",
+    image: "/cashtrack.png",
+    tags: ["Finance", "Next.js", "React", "SQLite", "Open Source"],
+    slug: "cashtrack",
+    github: "https://github.com/sxwxbxr/CashTrack",
+    demo: "#",
+  },
 ]
 
 const blogPosts = [
@@ -113,6 +131,7 @@ The tools change. The habits scale.
 
 const caseStudies = [
   {
+    slug: "medical-db-migration-fr-be",
     title: "Healthcare Data Migration Platform",
     client: "INNOFORCE Est.",
     industry: "Healthcare",
@@ -138,6 +157,32 @@ const caseStudies = [
     },
   },
   {
+    slug: "questionnaire-automation",
+    title: "Patient Questionnaire Automation",
+    client: "INNOFORCE Est.",
+    industry: "Healthcare",
+    duration: "Apr 2024 – Jul 2024",
+    team: "1 developer working with clinical operations",
+    challenge:
+      "Manual patient intake questionnaires varied by location, produced inconsistent data, and required significant administrative follow-up.",
+    solution:
+      "Implemented a rules-driven automation layer that generated questionnaires from standardized templates, integrated validation, and synchronized responses with downstream systems.",
+    results: [
+      "Consistent digital questionnaires across all supported clinics",
+      "Administrative preparation time reduced by more than half",
+      "Structured data available immediately for downstream workflows",
+    ],
+    technologies: [".NET", "Automation", "Templates"],
+    image: "/testing-automation-interface.png",
+    testimonial: {
+      quote:
+        "Automation freed our team from repetitive paperwork and gave physicians better information before each visit.",
+      author: "Clinical Operations Lead",
+      company: "Healthcare Network",
+    },
+  },
+  {
+    slug: "energy-optimization-cs",
     title: "Energy Efficiency Program for Swiss Bank Portfolio",
     client: "Credit Suisse (portfolio management)",
     industry: "Real Estate / Facility Management",
@@ -162,6 +207,7 @@ const caseStudies = [
     },
   },
   {
+    slug: "villa-project",
     title: "Luxury Villa Electrical Planning and Delivery",
     client: "Private",
     industry: "Residential Construction",
@@ -184,57 +230,6 @@ const caseStudies = [
       company: "Private",
     },
   },
-  {
-    title: "MultiScreenKiosk Application",
-    client: "Private",
-    industry: "Fair / Events",
-    duration: "Aug 2025 - Sep 2025",
-    team: "1 developer",
-    challenge:
-      "Create an interactive kiosk application to visualize multiple applications or browser instances in a 2x2 Grid for Event display purposes.",
-    solution:
-      "Developed a relatively simple Python solution using PyQt6 to create a 2x2 grid layout, allowing users to easily switch between different applications or browser instances. As well as Live Logs and integrated Task Manager to force embedding of applications.",
-    results: [
-      "Easy to use and intuitive interface with minimal training required",
-      "Reliable operation and good documentation",
-    ],
-    technologies: ["Python", "PyQt6", "UI/UX Design"],
-    image: "/case-study-villa.jpg", // Placeholder image needs to be changed to multiscreenkiosk image
-    testimonial: {
-      quote:
-        "Easy to setup and use, the application worked flawlessly during our events.",
-      author: "Tester",
-      company: "Private",
-    },
-  },
-  {
-    title: "CashTrack Application",
-    client: "Private",
-    industry: "Private Consumer",
-    duration: "Sep 2025",
-    team: "1 developer",
-    challenge:
-      "Create an application to track personal finances, visualize spending habits, improve budget planning and generate reports.",
-    solution:
-      "Developed a modern Next.js and React application with a clean and intuitive user interface. The application allows users to easily input and categorize their expenses, view visualizations of their spending habits, set budget goals, and generate detailed reports. The whole application runs completely local but can be synchronized via an exposed IP and Port with other devices in the same network.",
-    results: [
-      "Visually appealing and user-friendly interface",
-      "Reliable operation and good documentation",
-      "Improved budget planning and spending awareness",
-      "Data export and report generation capabilities",
-      "Multi-device synchronization within the same network",
-      "Secure local data storage with optional network sync",
-    ],
-    technologies: ["Next.js", "React", "UI/UX Design"],
-    image: "/case-study-villa.jpg", // Placeholder image needs to be changed to CashTrack image
-    testimonial: {
-      quote:
-        "Easy to setup and use, the application helped me to get a better overview of my finances.",
-      author: "Friend of developer",
-      company: "N.a.",
-    },
-  }
-  
 ]
 
 export {
