@@ -23,6 +23,7 @@ export default function Projects() {
     return projects.filter((project) => {
       const matchesSearch =
         project.title.toLowerCase().includes(filters.search.toLowerCase()) ||
+        project.shortDescription.toLowerCase().includes(filters.search.toLowerCase()) ||
         project.description.toLowerCase().includes(filters.search.toLowerCase()) ||
         project.tags.some((tag) => tag.toLowerCase().includes(filters.search.toLowerCase()))
 

@@ -12,7 +12,10 @@ const navLinks = [
 const projects = [
   {
     title: "Medical Database Migration — France & Belgium",
-    description: "Led the end-to-end migration of a large medical database in France and Belgium with strict GDPR compliance and zero downtime.",
+    shortDescription:
+      "Led the end-to-end migration of a large medical database across France and Belgium with GDPR compliance and zero downtime.",
+    description:
+      "Planned and delivered a phased migration for a multi-country clinical database while coordinating GDPR reviews and stakeholder alignment. Automated validation and rollback steps kept clinicians online the entire time and preserved data fidelity. The engagement produced reusable templates that now guide future migrations across the network.",
     image: "/medical-data-dashboard.png",
     tags: ["C#", ".NET", "MSSQL", "Data Migration", "GDPR"],
     slug: "medical-db-migration-fr-be",
@@ -21,7 +24,10 @@ const projects = [
   },
   {
     title: "Patient Questionnaire Automation",
-    description: "Implemented comprehensive questionnaire automation for a patient management system to reduce manual admin and standardize data collection.",
+    shortDescription:
+      "Implemented questionnaire automation to reduce manual admin and standardize patient data collection.",
+    description:
+      "Built a rules-driven automation layer that generates digital questionnaires from standardized templates and validates responses in real time. Collaborated with clinical teams to smooth adoption and cut preparation work by more than half. The result delivers consistent intake data to downstream systems and frees staff for higher-value patient interactions.",
     image: "/testing-automation-interface.png",
     tags: [".NET", "Automation", "Templates"],
     slug: "questionnaire-automation",
@@ -30,7 +36,10 @@ const projects = [
   },
   {
     title: "Energy Optimization Portfolio — Swiss Bank",
-    description: "Managed and optimized energy usage across 150+ properties, achieving about 10–20% efficiency improvements and measurable cost savings.",
+    shortDescription:
+      "Managed energy optimization across 150+ properties, unlocking 10–20% efficiency gains and measurable savings.",
+    description:
+      "Oversaw monitoring and reporting for a Swiss banking property portfolio spanning more than 150 locations to uncover actionable efficiency opportunities. Partnered with facility teams to prioritize quick-win measures that minimized disruption while improving energy performance. Transparent dashboards kept stakeholders aligned and laid the groundwork for ongoing optimization.",
     image: "/energy-optimization.png",
     tags: ["Energy", "Monitoring", "Reporting", "Facility Management"],
     slug: "energy-optimization-cs",
@@ -39,7 +48,10 @@ const projects = [
   },
   {
     title: "Luxury Villa Electrical Planning",
-    description: "End-to-end electrical planning and implementation for a complex villa project in Switzerland, coordinating multiple subsystems.",
+    shortDescription:
+      "Delivered end-to-end electrical planning for a complex Swiss villa while coordinating multiple subsystems.",
+    description:
+      "Produced comprehensive electrical schematics that unified lighting, security, HVAC, and specialty systems into a cohesive plan. Coordinated suppliers and subcontractors to keep installations on schedule and ensure seamless handover. On-site validation minimized rework and gave the client confidence in long-term reliability.",
     image: "/villa-project.png",
     tags: ["Electrical", "Planning", "Project Management"],
     slug: "villa-project",
@@ -48,7 +60,10 @@ const projects = [
   },
   {
     title: "MultiScreenKiosk Application",
-    description: "MultiScreenKiosk focuses on visualizing multiple local applications or browser instances in a simple 2x2 Grid on one monitor for Event display purposes. I developed a relatively simple Python solution using PyQt6 to create a 2x2 grid layout, allowing users to easily switch between different applications or browser instances. It's features include customizable grid layouts, easy application switching, changeable shortcuts, and logging functionality. The project is open-source and available on GitHub.",
+    shortDescription:
+      "Created a PyQt6 kiosk app that arranges multiple applications in a customizable 2×2 grid for event displays.",
+    description:
+      "MultiScreenKiosk makes it easy to pin local applications or browser windows into a configurable 2×2 grid on a single monitor. I built the desktop UI with PyQt6, adding fast shortcuts, layout presets, and logging so operators can react quickly during live events. The project is open source, giving venues a lightweight alternative to complex digital signage suites.",
     image: "/multi-screen-kiosk.png",
     tags: ["Kiosk", "UI/UX", "Web Development", "Python", "PyQt6", "Open Source", "Logging"],
     slug: "multi-screen-kiosk",
@@ -57,7 +72,10 @@ const projects = [
   },
   {
     title: "CashTrack Application",
-    description: "CashTrack aims to simplify personal finance management by providing an intuitive interface for tracking income, expenses, and budgets. I developed a user-friendly application using Next.js, React, SQLite and Iron-Session. Due to its offline-first architecture, it does not require an internet connection and all data is stored locally with the ability to sync it across devices in the same network via an exposed IP and Port. It allows users to easily input and categorize their financial transactions. The application includes features such as expense categorization, budget tracking, and data visualization through charts and graphs. CashTrack is designed to help users gain better control over their finances and make informed financial decisions. The project is open-source and available on GitHub.",
+    shortDescription:
+      "Built an offline-first personal finance tracker with Next.js and SQLite for quick budgeting on any network.",
+    description:
+      "CashTrack offers an intuitive interface for capturing income, expenses, and budgets without relying on the cloud. I combined Next.js, React, SQLite, and iron-session to store data locally while enabling optional syncing across devices on the same network. Users can categorize transactions, monitor budgets, and explore charts that reveal spending trends—all from an open-source codebase.",
     image: "/cashtrack.png",
     tags: ["Finance", "Next.js", "React", "SQLite", "Open Source"],
     slug: "cashtrack",
