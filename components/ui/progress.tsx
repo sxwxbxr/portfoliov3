@@ -9,7 +9,10 @@ const Progress = React.forwardRef<
   React.ElementRef<typeof ProgressPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>
 >(({ className, value = 0, ...props }, ref) => {
-  const clampedValue = Math.min(100, Math.max(0, value))
+  const numericValue = Number(value)
+  const clampedValue = Number.isFinite(numericValue)
+    ? Math.min(100, Math.max(0, numericValue))
+    : 0
 
   return (
     <ProgressPrimitive.Root
@@ -19,8 +22,8 @@ const Progress = React.forwardRef<
       {...props}
     >
       <ProgressPrimitive.Indicator
-        className="h-full bg-gradient-to-r from-primary to-secondary transition-all"
-        style={{ width: `${clampedValue}%` }}
+        className="h-full w-full bg-gradient-to-r from-primary to-secondary transition-transform duration-300 ease-out"
+        style={{ transform: `translateX(-${100 - clampedValue}%)` }}
       />
     </ProgressPrimitive.Root>
   )
