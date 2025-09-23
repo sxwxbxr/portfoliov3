@@ -22,8 +22,8 @@ const Progress = React.forwardRef<
       {...props}
     >
       <ProgressPrimitive.Indicator
-        className="h-full bg-gradient-to-r from-primary to-secondary transition-[width] duration-300 ease-out"
-        style={{ width: `${clampedValue}%` }}
+        className="h-full origin-left rounded-full bg-gradient-to-r from-primary to-secondary transition-transform duration-300 ease-out"
+        style={{ transform: `scaleX(${clampedValue / 100})`, transformOrigin: "left" }}
       />
     </ProgressPrimitive.Root>
   )

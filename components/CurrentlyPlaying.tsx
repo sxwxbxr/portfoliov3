@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 export function CurrentlyPlaying() {
   return (
-    <Card className="overflow-hidden border-none bg-transparent gap-4 pb-0 shadow-none">
+    <Card className="overflow-hidden gap-4 pb-0">
       <CardHeader className="pb-0">
         <CardTitle className="text-base">Demon Slayer × Spotify Playlist</CardTitle>
         <CardDescription>
