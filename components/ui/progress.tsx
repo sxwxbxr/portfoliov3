@@ -18,11 +18,11 @@ const Progress = React.forwardRef<
     <ProgressPrimitive.Root
       ref={ref}
       value={clampedValue}
-      className={cn("relative h-4 w-full overflow-hidden rounded-full bg-secondary", className)}
+      className={cn("relative h-4 w-full overflow-hidden rounded-full bg-muted", className)}
       {...props}
     >
       <ProgressPrimitive.Indicator
-        className="h-full origin-left rounded-full bg-gradient-to-r from-primary to-secondary transition-transform duration-300 ease-out"
+        className="h-full origin-left rounded-full bg-gradient-to-r from-primary via-primary/80 to-primary/60 transition-transform duration-300 ease-out"
         style={{ transform: `scaleX(${clampedValue / 100})`, transformOrigin: "left" }}
       />
     </ProgressPrimitive.Root>
