@@ -12,7 +12,7 @@ export function CurrentlyPlaying() {
       <CardContent className="px-0 pb-0">
         <iframe
           title="Demon Slayer × Spotify Playlist"
-          src="https://open.spotify.com/embed/playlist/3JsgfcruuxFw2jqZYsVPGN?utm_source=generator"
+          src="https://open.spotify.com/embed/playlist/37i9dQZF1DX48OvCv93avz?utm_source=generator"
           width="100%"
           height="352"
           frameBorder="0"
