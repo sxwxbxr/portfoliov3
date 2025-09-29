@@ -1,5 +1,6 @@
 import Link from "next/link"
-import { ExternalLink, Github } from "lucide-react"
+import { ExternalLink } from "lucide-react"
+import { SiGithub } from "react-icons/si"
 
 interface ProjectCardProps {
   title: string
@@ -36,7 +37,7 @@ export default function ProjectCard({ title, shortDescription, slug, demo, githu
                 rel="noopener noreferrer"
                 className="p-2 bg-white/90 hover:bg-white rounded-lg transition-colors group/btn"
               >
-                <Github className="w-4 h-4 text-gray-700 group-hover/btn:text-primary transition-colors" />
+                <SiGithub className="w-4 h-4 text-gray-700 group-hover/btn:text-primary transition-colors" />
               </a>
             )}
           </div>
