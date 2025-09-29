@@ -2,8 +2,7 @@
 
 import PageLayout from "../../components/PageLayout"
 import FadeInSection from "../../components/FadeInSection"
-import { Mail, Phone } from "lucide-react"
-import { SiGithub, SiLinkedin } from "react-icons/si"
+import { Mail, Github, Linkedin } from "lucide-react"
 
 export default function About() {
   return (
@@ -68,43 +67,16 @@ export default function About() {
 
                 <div className="bg-card border border-border rounded-xl p-6">
                   <h3 className="font-semibold text-lg mb-4">Connect</h3>
-                  <div className="grid grid-cols-2 gap-3">
-                    <a
-                      href="mailto:swbr@sweber.dev"
-                      className="flex items-center justify-center gap-2 p-3 border border-border rounded-lg hover:bg-card transition-colors"
-                      aria-label="Email Seya Weber"
-                    >
-                      <Mail className="w-5 h-5" />
-                      <span className="text-sm font-medium">Email</span>
-                    </a>
-                    <a
-                      href="https://github.com/sxwxbxr"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 p-3 border border-border rounded-lg hover:bg-card transition-colors"
-                      aria-label="Visit GitHub profile"
-                    >
-                      <SiGithub className="w-5 h-5" />
-                      <span className="text-sm font-medium">GitHub</span>
-                    </a>
-                    <a
-                      href="https://linkedin.com/placeholder"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 p-3 border border-border rounded-lg hover:bg-card transition-colors"
-                      aria-label="Connect on LinkedIn"
-                    >
-                      <SiLinkedin className="w-5 h-5" />
-                      <span className="text-sm font-medium">LinkedIn</span>
-                    </a>
-                    <a
-                      href="tel:+41798991112"
-                      className="flex items-center justify-center gap-2 p-3 border border-border rounded-lg hover:bg-card transition-colors"
-                      aria-label="Call Seya Weber"
-                    >
-                      <Phone className="w-5 h-5" />
-                      <span className="text-sm font-medium">Call</span>
-                    </a>
+                  <div className="flex gap-3">
+                    <button className="flex-1 p-3 border border-border rounded-lg hover:bg-card transition-colors">
+                      <Mail className="w-5 h-5 mx-auto" />
+                    </button>
+                    <button className="flex-1 p-3 border border-border rounded-lg hover:bg-card transition-colors">
+                      <Github className="w-5 h-5 mx-auto" />
+                    </button>
+                    <button className="flex-1 p-3 border border-border rounded-lg hover:bg-card transition-colors">
+                      <Linkedin className="w-5 h-5 mx-auto" />
+                    </button>
                   </div>
                 </div>
               </div>
