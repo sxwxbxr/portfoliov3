@@ -14,8 +14,8 @@ export default function About() {
               <div className="md:col-span-2 space-y-6">
                 <div className="bg-card border border-border rounded-xl p-8 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                   <p className="text-lg leading-relaxed text-card-foreground">
-                    I&apos;m a Software & Digitalization Project Lead at Telsonic, creating customer specific automation
-                    workflows in business-critical systems.
+                    I&apos;m a Software & Digitalization Project Manager at Telsonic, creating customer specific automation
+                    workflows in business-critical systems. Founder and owner of Weber Development, developing custom software for various companies.
                   </p>
                 </div>
 
@@ -52,7 +52,7 @@ export default function About() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Experience</span>
-                      <span>3+ Years</span>
+                      <span>1+ Years</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Focus</span>

@@ -82,6 +82,18 @@ const projects = [
     github: "https://github.com/sxwxbxr/CashTrack",
     demo: "#",
   },
+  {
+    title: "SchulzMedia SaaS Solution",
+    shortDescription:
+      "Developed a SaaS platform for companies to implement a customizable AI Whatsapp chatbot for customer inquiries.",
+    description:
+      "SchulzMedia provides businesses with an AI-powered WhatsApp chatbot that can be tailored to handle customer inquiries efficiently. I led the development of the platform using Next.js, React, Clerk for authentication, Stripe for billing, Fastify for the backend, and Supabase for data storage. The solution enables companies to enhance customer engagement and streamline support processes through intelligent automation.",
+    image: "/schulzmedia.png",
+    tags: ["SaaS", "AI", "Chatbot", "WhatsApp", "Next.js", "React", "Clerk", "Stripe", "Fastify", "Supabase"],
+    slug: "schulzmedia",
+    github: "#",
+    demo: "#",
+  },
 ]
 
 const blogPosts = [
