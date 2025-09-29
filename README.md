@@ -16,6 +16,15 @@ Your project is live at:
 
 **[https://www.sweber.dev](https://www.sweber.dev)**
 
+## Translation configuration
+
+The in-app language selector uses on-demand translation requests. Configure the following environment variables when deploying:
+
+- `LIBRE_TRANSLATE_API_KEY` – API key for your LibreTranslate instance (required to enable automatic machine translation).
+- `LIBRE_TRANSLATE_ENDPOINT` – optional custom endpoint if you host your own LibreTranslate server. Defaults to `https://libretranslate.com/translate`.
+
+Without an API key the UI will fall back to curated translations for common interface elements and keep English content for everything else.
+
 ## Build your app
 
 Continue building your app on:

@@ -7,8 +7,10 @@ import { ThemeProvider } from "@/components/ThemeProvider"
 import { ScrollProgress } from "@/components/ScrollProgress"
 import { Analytics } from "@/components/Analytics"
 import { JsonLd } from "@/components/JsonLd"
-import { Suspense } from "react"
 import { Footer } from "@/components/Footer"
+import { I18nProvider } from "@/components/i18n/I18nProvider"
+import { DomTranslator } from "@/components/i18n/DomTranslator"
+import { LanguageSelector } from "@/components/i18n/LanguageSelector"
 
 const geist = Geist({
   subsets: ["latin"],
@@ -151,8 +153,10 @@ export default function RootLayout({
         <meta name="color-scheme" content="light dark" />
       </head>
       <body className="font-sans">
-        <Suspense fallback={null}>
+        <I18nProvider>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+            <DomTranslator />
+            <LanguageSelector />
             <ScrollProgress />
             <Analytics />
             <div className="flex min-h-screen flex-col">
@@ -160,7 +164,7 @@ export default function RootLayout({
               <Footer />
             </div>
           </ThemeProvider>
-        </Suspense>
+        </I18nProvider>
       </body>
     </html>
   )
