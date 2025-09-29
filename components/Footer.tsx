@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { Mail, MapPin, Linkedin, Github } from "lucide-react"
+import { SiGithub, SiLinkedin } from "react-icons/si"
 
 const quickLinks = [
   { name: "Projects", href: "/projects" },
@@ -12,8 +13,8 @@ const contactItems = [
   {
     icon: Mail,
     label: "Email",
-    value: "hello@seyaweber.com",
-    href: "mailto:hello@seyaweber.com",
+    value: "swbr@sweber.dev",
+    href: "mailto:swbr@sweber.dev",
   },
   {
     icon: MapPin,
@@ -24,12 +25,12 @@ const contactItems = [
 
 const socialLinks = [
   {
-    icon: Linkedin,
+    icon: SiLinkedin,
     label: "LinkedIn",
-    href: "https://linkedin.com/in/seyaweber",
+    href: "https://ch.linkedin.com/in/seya-weber-06a592256",
   },
   {
-    icon: Github,
+    icon: SiGithub,
     label: "GitHub",
     href: "https://github.com/sxwxbxr",
   },

@@ -50,7 +50,7 @@ export default function Home() {
                 Hi, I&apos;m Seya Weber
               </h1>
               <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed font-serif animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-200">
-                Project Manager Software and Digitalisation in St. Gallen, Switzerland.
+                Project Manager Software and Digitalisation and Founder / Owner of Weber Development in St. Gallen, Switzerland.
               </p>
             </div>
 
@@ -87,7 +87,7 @@ export default function Home() {
             <div className="grid md:grid-cols-3 gap-8 text-center">
               <div className="space-y-2">
                 <Users className="w-8 h-8 text-primary mx-auto mb-4" />
-                <AnimatedCounter end={6} suffix="+" />
+                <AnimatedCounter end={projects.length} suffix="+" />
                 <p className="text-muted-foreground">Projects Completed</p>
               </div>
               <div className="space-y-2">
