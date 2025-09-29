@@ -9,7 +9,9 @@ import { Analytics } from "@/components/Analytics"
 import { JsonLd } from "@/components/JsonLd"
 import { Suspense } from "react"
 import { Footer } from "@/components/Footer"
-import { LanguageDetector } from "@/components/LanguageDetector"
+import { I18nProvider } from "@/components/i18n/I18nProvider"
+import { DomTranslator } from "@/components/i18n/DomTranslator"
+import { LanguageSelector } from "@/components/i18n/LanguageSelector"
 
 const geist = Geist({
   subsets: ["latin"],
@@ -153,15 +155,18 @@ export default function RootLayout({
       </head>
       <body className="font-sans">
         <Suspense fallback={null}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-            <LanguageDetector />
-            <ScrollProgress />
-            <Analytics />
-            <div className="flex min-h-screen flex-col">
-              <div className="flex-1">{children}</div>
-              <Footer />
-            </div>
-          </ThemeProvider>
+          <I18nProvider>
+            <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+              <DomTranslator />
+              <LanguageSelector />
+              <ScrollProgress />
+              <Analytics />
+              <div className="flex min-h-screen flex-col">
+                <div className="flex-1">{children}</div>
+                <Footer />
+              </div>
+            </ThemeProvider>
+          </I18nProvider>
         </Suspense>
       </body>
     </html>
