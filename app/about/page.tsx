@@ -88,7 +88,7 @@ export default function About() {
                       <span className="text-sm font-medium">GitHub</span>
                     </a>
                     <a
-                      href="https://linkedin.com/placeholder"
+                      href="https://ch.linkedin.com/in/seya-weber-06a592256"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center justify-center gap-2 p-3 border border-border rounded-lg hover:bg-card transition-colors"

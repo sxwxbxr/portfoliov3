@@ -128,7 +128,7 @@ export default function Contact() {
                         </InteractiveCard>
                         <InteractiveCard>
                           <a
-                            href="https://linkedin.com/placeholder"
+                            href="https://ch.linkedin.com/in/seya-weber-06a592256"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center justify-center gap-2 p-3 bg-card border border-border rounded-lg hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-105"
