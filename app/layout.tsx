@@ -7,7 +7,6 @@ import { ThemeProvider } from "@/components/ThemeProvider"
 import { ScrollProgress } from "@/components/ScrollProgress"
 import { Analytics } from "@/components/Analytics"
 import { JsonLd } from "@/components/JsonLd"
-import { Suspense } from "react"
 import { Footer } from "@/components/Footer"
 import { I18nProvider } from "@/components/i18n/I18nProvider"
 import { DomTranslator } from "@/components/i18n/DomTranslator"
@@ -154,20 +153,18 @@ export default function RootLayout({
         <meta name="color-scheme" content="light dark" />
       </head>
       <body className="font-sans">
-        <Suspense fallback={null}>
-          <I18nProvider>
-            <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-              <DomTranslator />
-              <LanguageSelector />
-              <ScrollProgress />
-              <Analytics />
-              <div className="flex min-h-screen flex-col">
-                <div className="flex-1">{children}</div>
-                <Footer />
-              </div>
-            </ThemeProvider>
-          </I18nProvider>
-        </Suspense>
+        <I18nProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+            <DomTranslator />
+            <LanguageSelector />
+            <ScrollProgress />
+            <Analytics />
+            <div className="flex min-h-screen flex-col">
+              <div className="flex-1">{children}</div>
+              <Footer />
+            </div>
+          </ThemeProvider>
+        </I18nProvider>
       </body>
     </html>
   )
