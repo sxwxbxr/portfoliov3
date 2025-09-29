@@ -9,6 +9,7 @@ import { Analytics } from "@/components/Analytics"
 import { JsonLd } from "@/components/JsonLd"
 import { Suspense } from "react"
 import { Footer } from "@/components/Footer"
+import { LanguageDetector } from "@/components/LanguageDetector"
 
 const geist = Geist({
   subsets: ["latin"],
@@ -153,6 +154,7 @@ export default function RootLayout({
       <body className="font-sans">
         <Suspense fallback={null}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+            <LanguageDetector />
             <ScrollProgress />
             <Analytics />
             <div className="flex min-h-screen flex-col">
