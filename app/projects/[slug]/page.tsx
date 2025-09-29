@@ -1,7 +1,8 @@
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { ArrowLeft, Building, CheckCircle, Clock, ExternalLink, Github, Quote, Users } from "lucide-react"
+import { ArrowLeft, Building, CheckCircle, Clock, ExternalLink, Quote, Users } from "lucide-react"
+import { SiGithub } from "react-icons/si"
 
 import FadeInSection from "../../../components/FadeInSection"
 import Navigation from "../../../components/Navigation"
@@ -74,7 +75,7 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 px-4 py-2 border border-border rounded-lg font-medium hover:bg-muted transition-colors"
                       >
-                        <Github className="w-4 h-4" />
+                        <SiGithub className="w-4 h-4" />
                         View Source
                       </a>
                     )}

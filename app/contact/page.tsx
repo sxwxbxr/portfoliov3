@@ -5,7 +5,8 @@ import PageLayout from "../../components/PageLayout"
 import FadeInSection from "../../components/FadeInSection"
 import { ContactForm } from "../../components/ContactForm"
 import { InteractiveCard } from "../../components/InteractiveCard"
-import { Mail, Github, Linkedin, MapPin, Clock, MessageSquare } from "lucide-react"
+import { Mail, MapPin, Clock, Phone } from "lucide-react"
+import { SiGithub, SiLinkedin } from "react-icons/si"
 
 export default function Contact() {
   return (
@@ -42,15 +43,19 @@ export default function Contact() {
                   <FadeInSection>
                     <div className="space-y-4">
                       <InteractiveCard>
-                        <div className="flex items-center gap-4 p-4 bg-card border border-border rounded-lg hover:shadow-md transition-all duration-300">
+                        <a
+                          href="mailto:swbr@sweber.dev"
+                          className="flex items-center gap-4 p-4 bg-card border border-border rounded-lg hover:shadow-md transition-all duration-300"
+                          aria-label="Email swbr@sweber.dev"
+                        >
                           <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
                             <Mail className="w-6 h-6 text-primary" />
                           </div>
                           <div>
                             <h4 className="font-medium">Email</h4>
-                            <p className="text-muted-foreground">seya.weber@example.com</p>
+                            <p className="text-muted-foreground">swbr@sweber.dev</p>
                           </div>
-                        </div>
+                        </a>
                       </InteractiveCard>
 
                       <InteractiveCard>
@@ -76,27 +81,72 @@ export default function Contact() {
                           </div>
                         </div>
                       </InteractiveCard>
+
+                      <InteractiveCard>
+                        <a
+                          href="tel:+41798991112"
+                          className="flex items-center gap-4 p-4 bg-card border border-border rounded-lg hover:shadow-md transition-all duration-300"
+                          aria-label="Call +41 79 899 11 12"
+                        >
+                          <div className="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center">
+                            <Phone className="w-6 h-6 text-secondary" />
+                          </div>
+                          <div>
+                            <h4 className="font-medium">Phone</h4>
+                            <p className="text-muted-foreground">+41 79 899 11 12</p>
+                          </div>
+                        </a>
+                      </InteractiveCard>
                     </div>
                   </FadeInSection>
 
                   <FadeInSection>
                     <div>
                       <h4 className="font-medium mb-4">Connect on Social</h4>
-                      <div className="flex gap-4">
+                      <div className="grid grid-cols-2 gap-4">
                         <InteractiveCard>
-                          <button className="p-3 bg-card border border-border rounded-lg hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-105">
-                            <Github className="w-6 h-6" />
-                          </button>
+                          <a
+                            href="mailto:swbr@sweber.dev"
+                            className="flex items-center justify-center gap-2 p-3 bg-card border border-border rounded-lg hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-105"
+                            aria-label="Email swbr@sweber.dev"
+                          >
+                            <Mail className="w-6 h-6" />
+                            <span className="text-sm font-medium">Email</span>
+                          </a>
                         </InteractiveCard>
                         <InteractiveCard>
-                          <button className="p-3 bg-card border border-border rounded-lg hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-105">
-                            <Linkedin className="w-6 h-6" />
-                          </button>
+                          <a
+                            href="https://github.com/sxwxbxr"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center gap-2 p-3 bg-card border border-border rounded-lg hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-105"
+                            aria-label="Visit GitHub profile"
+                          >
+                            <SiGithub className="w-6 h-6" />
+                            <span className="text-sm font-medium">GitHub</span>
+                          </a>
                         </InteractiveCard>
                         <InteractiveCard>
-                          <button className="p-3 bg-card border border-border rounded-lg hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-105">
-                            <MessageSquare className="w-6 h-6" />
-                          </button>
+                          <a
+                            href="https://linkedin.com/placeholder"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center gap-2 p-3 bg-card border border-border rounded-lg hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-105"
+                            aria-label="Connect on LinkedIn"
+                          >
+                            <SiLinkedin className="w-6 h-6" />
+                            <span className="text-sm font-medium">LinkedIn</span>
+                          </a>
+                        </InteractiveCard>
+                        <InteractiveCard>
+                          <a
+                            href="tel:+41798991112"
+                            className="flex items-center justify-center gap-2 p-3 bg-card border border-border rounded-lg hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-105"
+                            aria-label="Call +41 79 899 11 12"
+                          >
+                            <Phone className="w-6 h-6" />
+                            <span className="text-sm font-medium">Call</span>
+                          </a>
                         </InteractiveCard>
                       </div>
                     </div>
@@ -119,9 +169,13 @@ export default function Contact() {
                 Sometimes it&apos;s easier to discuss projects over a call. I&apos;m available for brief consultations to
                 understand your needs better.
               </p>
-              <button className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-all duration-300 hover:scale-105 glow-effect">
+              <a
+                href="tel:+41798991112"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-all duration-300 hover:scale-105 glow-effect"
+                aria-label="Call +41 79 899 11 12"
+              >
                 Schedule a Call
-              </button>
+              </a>
             </div>
           </FadeInSection>
         </div>
