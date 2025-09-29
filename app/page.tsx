@@ -6,7 +6,29 @@ import FadeInSection from "../components/FadeInSection"
 import { ParticleBackground } from "../components/ParticleBackground"
 import { AnimatedCounter } from "../components/AnimatedCounter"
 import { InteractiveCard } from "../components/InteractiveCard"
-import { ArrowDown, MapPin, ArrowRight, Users, Award, Calendar } from "lucide-react"
+import { projects, blogPosts, caseStudies } from "../src/config"
+import { ArrowDown, MapPin, ArrowRight, Users, Award, Calendar, Quote } from "lucide-react"
+
+const featuredProjects = projects.slice(0, 3)
+const featuredTestimonials = caseStudies.filter((study) => study.testimonial).slice(0, 2)
+const latestWriting = blogPosts.slice(0, 2)
+const servicePreview = [
+  {
+    title: "Digital transformation leadership",
+    description:
+      "Fractional leadership for complex software migrations, workflow automation, and cross-team programs with measurable outcomes.",
+  },
+  {
+    title: "Product & delivery coaching",
+    description:
+      "Hands-on support to align discovery, delivery, and stakeholder communication so your roadmap ships on time and on budget.",
+  },
+  {
+    title: "Technical implementation",
+    description:
+      "Execution for .NET, C#, and automation initiatives—from proof of concept to production with documentation and training."
+  },
+]
 
 export default function Home() {
   return (
@@ -121,6 +143,176 @@ export default function Home() {
                   <ArrowRight className="w-5 h-5 text-primary group-hover:translate-x-2 transition-transform duration-300" />
                 </Link>
               </InteractiveCard>
+            </div>
+          </FadeInSection>
+        </div>
+      </section>
+
+      <section className="py-24 px-4 bg-card/40">
+        <div className="max-w-6xl mx-auto space-y-12">
+          <FadeInSection>
+            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+              <div>
+                <h2 className="text-3xl md:text-4xl font-bold">Featured Projects</h2>
+                <p className="text-muted-foreground max-w-2xl">
+                  A snapshot of multidisciplinary engagements that span software delivery, automation, and operations.
+                </p>
+              </div>
+              <Link
+                href="/projects"
+                className="inline-flex items-center gap-2 text-primary font-medium hover:gap-3 transition-all"
+              >
+                Explore all projects
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </FadeInSection>
+
+          <FadeInSection>
+            <div className="grid gap-6 md:grid-cols-3">
+              {featuredProjects.map((project) => (
+                <InteractiveCard key={project.slug}>
+                  <Link
+                    href={`/projects/${project.slug}`}
+                    className="group flex h-full flex-col rounded-xl border border-border bg-card p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
+                  >
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      {project.tags.slice(0, 2).map((tag) => (
+                        <span key={tag} className="rounded-full bg-primary/10 px-3 py-1 text-primary">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <h3 className="mt-6 text-2xl font-semibold leading-snug group-hover:text-primary transition-colors">
+                      {project.title}
+                    </h3>
+                    <p className="mt-4 text-muted-foreground leading-relaxed">{project.shortDescription}</p>
+                    <div className="mt-auto flex items-center gap-2 pt-6 text-sm font-medium text-primary">
+                      View case details
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </div>
+                  </Link>
+                </InteractiveCard>
+              ))}
+            </div>
+          </FadeInSection>
+        </div>
+      </section>
+
+      <section className="py-24 px-4">
+        <div className="max-w-6xl mx-auto space-y-12">
+          <FadeInSection>
+            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+              <div>
+                <h2 className="text-3xl md:text-4xl font-bold">Services at a Glance</h2>
+                <p className="text-muted-foreground max-w-2xl">
+                  Partner with me for strategy, delivery, and implementation support tailored to your product or transformation initiative.
+                </p>
+              </div>
+              <Link
+                href="/services"
+                className="inline-flex items-center gap-2 text-primary font-medium hover:gap-3 transition-all"
+              >
+                View full services
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </FadeInSection>
+
+          <FadeInSection>
+            <div className="grid gap-6 md:grid-cols-3">
+              {servicePreview.map((service) => (
+                <InteractiveCard key={service.title}>
+                  <div className="h-full rounded-xl border border-border bg-card p-6">
+                    <h3 className="text-xl font-semibold">{service.title}</h3>
+                    <p className="mt-4 text-muted-foreground leading-relaxed">{service.description}</p>
+                  </div>
+                </InteractiveCard>
+              ))}
+            </div>
+          </FadeInSection>
+        </div>
+      </section>
+
+      <section className="py-24 px-4 bg-muted/40">
+        <div className="max-w-6xl mx-auto space-y-12">
+          <FadeInSection>
+            <h2 className="text-3xl md:text-4xl font-bold text-center">What partners say</h2>
+            <p className="text-muted-foreground text-center max-w-3xl mx-auto">
+              Real feedback from engagements across healthcare, finance, and residential projects.
+            </p>
+          </FadeInSection>
+
+          <FadeInSection>
+            <div className="grid gap-6 md:grid-cols-2">
+              {featuredTestimonials.map((testimonial) => (
+                <InteractiveCard key={testimonial.slug}>
+                  <div className="flex h-full flex-col rounded-xl border border-border bg-card p-8">
+                    <Quote className="h-10 w-10 text-primary" aria-hidden="true" />
+                    <blockquote className="mt-6 flex-1 text-lg italic leading-relaxed">“{testimonial.testimonial?.quote}”</blockquote>
+                    <div className="mt-6 text-sm text-muted-foreground">
+                      <p className="font-semibold text-foreground">{testimonial.testimonial?.author}</p>
+                      <p>{testimonial.testimonial?.company}</p>
+                    </div>
+                    <Link
+                      href={`/case-studies/${testimonial.slug}`}
+                      className="mt-6 inline-flex items-center gap-2 text-primary font-medium hover:gap-3 transition-all"
+                    >
+                      Read the full story
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </div>
+                </InteractiveCard>
+              ))}
+            </div>
+          </FadeInSection>
+        </div>
+      </section>
+
+      <section className="py-24 px-4">
+        <div className="max-w-6xl mx-auto space-y-12">
+          <FadeInSection>
+            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+              <div>
+                <h2 className="text-3xl md:text-4xl font-bold">Latest writing</h2>
+                <p className="text-muted-foreground max-w-2xl">
+                  Essays and notes on moving complex initiatives from idea to production without losing momentum.
+                </p>
+              </div>
+              <Link
+                href="/blog"
+                className="inline-flex items-center gap-2 text-primary font-medium hover:gap-3 transition-all"
+              >
+                Visit the blog
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </FadeInSection>
+
+          <FadeInSection>
+            <div className="grid gap-6 md:grid-cols-2">
+              {latestWriting.map((post) => (
+                <InteractiveCard key={post.id}>
+                  <Link
+                    href={`/blog/${post.id}`}
+                    className="group flex h-full flex-col rounded-xl border border-border bg-card p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+                  >
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
+                      <span>•</span>
+                      <span>{post.readTime}</span>
+                    </div>
+                    <h3 className="mt-4 text-2xl font-semibold leading-snug group-hover:text-primary transition-colors">
+                      {post.title}
+                    </h3>
+                    <p className="mt-4 flex-1 text-muted-foreground leading-relaxed">{post.excerpt}</p>
+                    <div className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-primary">
+                      Read article
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </div>
+                  </Link>
+                </InteractiveCard>
+              ))}
             </div>
           </FadeInSection>
         </div>

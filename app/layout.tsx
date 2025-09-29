@@ -8,6 +8,7 @@ import { ScrollProgress } from "@/components/ScrollProgress"
 import { Analytics } from "@/components/Analytics"
 import { JsonLd } from "@/components/JsonLd"
 import { Suspense } from "react"
+import { Footer } from "@/components/Footer"
 
 const geist = Geist({
   subsets: ["latin"],
@@ -154,7 +155,10 @@ export default function RootLayout({
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
             <ScrollProgress />
             <Analytics />
-            {children}
+            <div className="flex min-h-screen flex-col">
+              <div className="flex-1">{children}</div>
+              <Footer />
+            </div>
           </ThemeProvider>
         </Suspense>
       </body>
