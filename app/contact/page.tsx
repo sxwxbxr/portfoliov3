@@ -44,16 +44,16 @@ export default function Contact() {
                     <div className="space-y-4">
                       <InteractiveCard>
                         <a
-                          href="mailto:swbr@sweber.dev"
+                          href="mailto:info@sweber.dev"
                           className="flex items-center gap-4 p-4 bg-card border border-border rounded-lg hover:shadow-md transition-all duration-300"
-                          aria-label="Email swbr@sweber.dev"
+                          aria-label="Email info@sweber.dev"
                         >
                           <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
                             <Mail className="w-6 h-6 text-primary" />
                           </div>
                           <div>
                             <h4 className="font-medium">Email</h4>
-                            <p className="text-muted-foreground">swbr@sweber.dev</p>
+                            <p className="text-muted-foreground">info@sweber.dev</p>
                           </div>
                         </a>
                       </InteractiveCard>
@@ -106,9 +106,9 @@ export default function Contact() {
                       <div className="grid grid-cols-2 gap-4">
                         <InteractiveCard>
                           <a
-                            href="mailto:swbr@sweber.dev"
+                            href="mailto:info@sweber.dev"
                             className="flex items-center justify-center gap-2 p-3 bg-card border border-border rounded-lg hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-105"
-                            aria-label="Email swbr@sweber.dev"
+                            aria-label="Email info@sweber.dev"
                           >
                             <Mail className="w-6 h-6" />
                             <span className="text-sm font-medium">Email</span>

@@ -70,7 +70,7 @@ export default function About() {
                   <h3 className="font-semibold text-lg mb-4">Connect</h3>
                   <div className="grid grid-cols-2 gap-3">
                     <a
-                      href="mailto:swbr@sweber.dev"
+                      href="mailto:info@sweber.dev"
                       className="flex items-center justify-center gap-2 p-3 border border-border rounded-lg hover:bg-card transition-colors"
                       aria-label="Email Seya Weber"
                     >

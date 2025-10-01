@@ -13,8 +13,8 @@ const contactItems = [
   {
     icon: Mail,
     label: "Email",
-    value: "swbr@sweber.dev",
-    href: "mailto:swbr@sweber.dev",
+    value: "info@sweber.dev",
+    href: "mailto:info@sweber.dev",
   },
   {
     icon: MapPin,

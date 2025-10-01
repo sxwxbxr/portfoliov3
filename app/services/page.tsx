@@ -162,7 +162,7 @@ export default function Services() {
                   <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
-                  href="mailto:swbr@sweber.dev"
+                  href="mailto:info@sweber.dev"
                   className="inline-flex items-center gap-2 rounded-lg border border-border px-6 py-3 font-medium transition-colors hover:bg-card"
                 >
                   Email me directly
