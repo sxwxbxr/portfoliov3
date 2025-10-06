@@ -154,13 +154,13 @@ export default function RootLayout({
         <Suspense fallback={null}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
             <ScrollProgress />
-            <Analytics />
             <div className="flex min-h-screen flex-col">
               <div className="flex-1">{children}</div>
               <Footer />
             </div>
           </ThemeProvider>
         </Suspense>
+        <Analytics />
       </body>
     </html>
   )

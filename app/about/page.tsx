@@ -44,6 +44,18 @@ export default function About() {
               </div>
 
               <div className="space-y-6">
+                <div className="bg-card border border-border rounded-xl p-6">
+                  <h3 className="font-semibold text-lg mb-4">Introduce Yourself</h3>
+                  <div className="space-y-4">
+                    <div className="aspect-square w-full rounded-lg border-2 border-dashed border-muted-foreground/40 bg-muted/20 flex items-center justify-center text-muted-foreground">
+                      <span className="text-sm font-medium">Add your photo here</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Use this space to share a brief introduction and highlight the stories you want visitors to remember.
+                    </p>
+                  </div>
+                </div>
+
                 <div className="bg-gradient-to-br from-primary/10 to-secondary/10 border border-primary/20 rounded-xl p-6">
                   <h3 className="font-semibold text-lg mb-4">Quick Facts</h3>
                   <div className="space-y-3 text-sm">
