@@ -93,11 +93,15 @@ export default function Skills() {
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="font-medium">German</span>
-                      <span className="text-sm text-muted-foreground bg-secondary/10 px-2 py-1 rounded">Native</span>
+                      <span className="text-sm text-muted-foreground bg-secondary/10 px-2 py-1 rounded">
+                        Native
+                      </span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="font-medium">French</span>
-                      <span className="text-sm text-muted-foreground bg-secondary/10 px-2 py-1 rounded">B2</span>
+                      <span className="text-sm text-muted-foreground bg-secondary/10 px-2 py-1 rounded">
+                        B2
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -108,12 +112,8 @@ export default function Skills() {
                   <h3 className="text-xl font-semibold mb-6 text-accent">Certifications</h3>
                   <div className="space-y-3">
                     <div className="p-3 bg-accent/5 border border-accent/20 rounded-lg">
-                      <h4 className="font-medium text-sm">Microsoft Certified</h4>
-                      <p className="text-xs text-muted-foreground">Azure Developer Associate</p>
-                    </div>
-                    <div className="p-3 bg-accent/5 border border-accent/20 rounded-lg">
-                      <h4 className="font-medium text-sm">Scrum Master</h4>
-                      <p className="text-xs text-muted-foreground">Certified ScrumMaster (CSM)</p>
+                      <h4 className="font-medium text-sm">N.a.</h4>
+                      <p className="text-xs text-muted-foreground">A thoroughly planned Certification Roadmap is set for 2025/26</p>
                     </div>
                   </div>
                 </div>
@@ -188,7 +188,7 @@ export default function Skills() {
                       <div className="w-2 h-2 bg-secondary rounded-full mt-2 flex-shrink-0"></div>
                       <div>
                         <span className="font-medium">System Architecture</span>
-                        <p className="text-sm text-muted-foreground">Scalable design patterns and microservices</p>
+                        <p className="text-sm text-muted-foreground">Usage of GO4 patterns and microservices</p>
                       </div>
                     </li>
                   </ul>
