@@ -94,7 +94,7 @@ const projects = [
     tags: ["SaaS", "AI", "Chatbot", "WhatsApp", "Next.js", "React", "Clerk", "Stripe", "Fastify", "Supabase"],
     slug: "schulzmedia",
     github: "#",
-    demo: "#",
+    demo: "https://flowlychat.vercel.app",
   },
 ]
 
