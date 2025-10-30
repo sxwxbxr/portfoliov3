@@ -96,6 +96,27 @@ const projects = [
     github: "#",
     demo: "https://flowlychat.vercel.app",
   },
+  {
+    title: "Chr0no Terminal Time Tracker",
+    shortDescription:
+      "Designed a terminal-native time tracking platform that keeps developers in their flow while logging focused work sessions.",
+    description:
+      "Chr0no is a developer-first time tracker built with Next.js, React, and Supabase that mirrors the feel of a command-line companion. I led the end-to-end experience—from the live tracking dashboard and automatic break deductions to configurable preferences and exportable work logs—so engineers can monitor progress without breaking concentration.",
+    image: "/chr0no.png",
+    tags: [
+      "Time Tracking",
+      "Developer Tools",
+      "Terminal UI",
+      "Next.js",
+      "React",
+      "Supabase",
+      "Tailwind CSS",
+      "TypeScript",
+    ],
+    slug: "chr0no",
+    github: "https://github.com/sxwxbxr/chr0no",
+    demo: "https://chr0no.vercel.app/",
+  }
 ]
 
 const blogPosts = [
