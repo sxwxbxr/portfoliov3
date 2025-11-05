@@ -113,7 +113,7 @@ export default function Skills() {
                   <div className="space-y-3">
                     <div className="p-3 bg-accent/5 border border-accent/20 rounded-lg">
                       <h4 className="font-medium text-sm">N.a.</h4>
-                      <p className="text-xs text-muted-foreground">A thoroughly planned Certification Roadmap is set for 2025/26</p>
+                      <p className="text-xs text-muted-foreground">Small workshops and courses are planned within 2025/26</p>
                     </div>
                   </div>
                 </div>

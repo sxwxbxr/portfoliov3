@@ -121,6 +121,97 @@ const projects = [
 
 const blogPosts = [
   {
+  id: "preparation-bsc-ai",
+  title: "Preparation and Roadmap for the BsC Artificial Intelligence",
+  excerpt:
+    "My personal Guide on how I prepared for the Bachelor of Science in Artificial Intelligence.",
+  publishedAt: "2024-01-15",
+  readTime: "8 min read",
+  author: "Seya Weber",
+  tags: ["Preparation", "Artificial Intelligence", "Roadmap", "Bachelor"],
+  image: "/abstract-geometric-shapes.png",
+  content: `
+# Preparation and Roadmap for the BsC Artificial Intelligence
+
+**Ready to take on a Bachelor in Artificial Intelligence? Here&apos;s my hands-on roadmap, study plan, and practical project ideas—including useful links and websites to get started.**
+
+---
+
+## Why Preparation Matters
+
+Jumping straight into AI isn&apos;t just about coding or math—today&apos;s AI study requires a mix of analytical thinking, software know-how, and creativity. The right preparation eliminates surprises and gets you from theory to hands-on projects faster.
+
+---
+
+## Study Roadmap
+
+### 1. Strengthen the Foundations
+- Mathematics – Linear Algebra & Statistics:  
+  Brush up via [Khan Academy](https://www.khanacademy.org/math/linear-algebra) or [3Blue1Brown (YouTube)](https://www.youtube.com/c/3blue1brown).
+- Python Programming:  
+  Start with [Python.org Tutorials](https://docs.python.org/3/tutorial/index.html), learn interactively at [DataCamp](https://www.datacamp.com/) or [Codecademy](https://www.codecademy.com/learn/learn-python-3).
+  Try [Jupyter Notebooks](https://jupyter.org/) for interactive coding.
+
+### 2. Master Machine Learning Concepts
+- Basic Algorithms:  
+  Follow [Andrew Ng&apos;s Machine Learning course (Coursera)](https://www.coursera.org/learn/machine-learning), or test yourself with [Kaggle](https://www.kaggle.com/learn/overview) micro-courses.
+- Deep Learning:  
+  Learn using [TensorFlow tutorials](https://www.tensorflow.org/tutorials), [PyTorch tutorials](https://pytorch.org/tutorials/), or [fast.ai](https://course.fast.ai/).
+  Find open datasets at [Kaggle Datasets](https://www.kaggle.com/datasets).
+
+### 3. Data & Automation Skills
+- Data Handling:  
+  Try [Pandas documentation](https://pandas.pydata.org/docs/) for manipulation, or [Matplotlib](https://matplotlib.org/stable/tutorials/) for visualization.
+  Cloud basics: [Google Cloud AI Platform](https://cloud.google.com/products/ai) or [AWS Machine Learning](https://aws.amazon.com/machine-learning/).
+- API Integration:  
+  Practice with [OpenAI API docs](https://platform.openai.com/docs/api-reference/introduction), or discover [HuggingFace API](https://huggingface.co/docs/api-inference/index).
+
+### 4. Essential Tools and Mindset
+- Version Control:  
+  [GitHub Guides](https://docs.github.com/en/get-started/quickstart) to get started.
+- AI Ethics:  
+  Read [AI Ethics (Google)](https://ai.google/responsibilities/responsible-ai-practices/) or [AI Ethics Guide (Algorithm Watch)](https://algorithmwatch.org/en/project/ai-ethics-guides/).
+
+---
+
+## Project Ideas for Your AI Portfolio
+
+### Build, Document, and Share—That&apos;s How You Learn Best!
+
+1. Personal AI Assistant:  
+   Build with [OpenAI API](https://platform.openai.com/docs/), add integrations using [SpeechRecognition](https://pypi.org/project/SpeechRecognition/) or [Google Calendar API](https://developers.google.com/calendar).
+2. Image Classifier: 
+   Use [TensorFlow](https://www.tensorflow.org/tutorials/images/classification) or [PyTorch](https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html). Try public datasets like [CIFAR-10](https://www.cs.toronto.edu/~kriz/cifar.html).
+3. Sentiment Analysis:  
+   Scrape data with [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/), analyze with [NLTK](https://www.nltk.org/) or [Transformers (HuggingFace)](https://huggingface.co/docs/transformers/index).
+4. Recommendation Engine:  
+   Build web apps with [Streamlit](https://streamlit.io/) or [Flask](https://flask.palletsprojects.com/en/2.0.x/). Learn about [Collaborative Filtering](https://towardsdatascience.com/how-to-build-a-recommendation-system-in-python-3b20b394b7b7).
+5. Forecast Dashboard:  
+   Visualize with [Plotly](https://plotly.com/python/) or Streamlit; use external data sources from [Yahoo Finance API](https://pypi.org/project/yahoo-finance/), [OpenWeatherMap](https://openweathermap.org/api).
+
+---
+
+## Pro Tips
+
+- Document your learning: Use [GitHub](https://github.com/) to share code and track progress.
+- Connect with the community: Try out [Kaggle competitions](https://www.kaggle.com/competitions), join [AI Meetups](https://www.meetup.com/topics/artificial-intelligence/), or exchange ideas in [Stack Overflow](https://stackoverflow.com/questions/tagged/artificial-intelligence).
+- Reflect on obstacles: Read success/fail stories on [Medium&apos;s AI tag](https://medium.com/tag/artificial-intelligence).
+
+---
+
+## Outcomes
+
+- You start your Artificial Intelligence degree with solid math and coding skills.
+- Your portfolio showcases hands-on AI projects—valuable for internships and building a professional network.
+- You&apos;re confident to tackle both technical and ethical AI challenges from day one.
+
+---
+
+Practice, share, and connect—and your AI journey will be both smooth and impactful!
+`
+}
+,
+  {
     id: "healthcare-transformation-lessons",
     title: "Digital Transformation in Healthcare: Lessons from the Field",
     excerpt:
@@ -141,11 +232,11 @@ When you move mission-critical clinical data across borders, technology is only 
 - Clinical staff under time pressure and skeptical of change
 
 ## What Worked
-1. **Stakeholder workshops** to map real workflows before writing code.
-2. **Phased cutovers** with parallel runs and rollback plans.
-3. **Auditability by default** with clear logs and access trails.
-4. **Test data parity** checks before, during, and after migration.
-5. **On-site champions** who could translate clinical needs into actionable tickets.
+1. Stakeholder workshops to map real workflows before writing code.
+2. Phased cutovers with parallel runs and rollback plans.
+3. Auditability by default with clear logs and access trails.
+4. Test data parity checks before, during, and after migration.
+5. On-site champions who could translate clinical needs into actionable tickets.
 
 ## Outcomes
 - Successful large-scale migration in France and Belgium

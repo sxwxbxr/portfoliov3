@@ -17,6 +17,37 @@ export default function Experience() {
                 <div className="absolute -left-4 top-8 w-8 h-8 bg-primary rounded-full border-4 border-background"></div>
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
                   <h3 className="text-xl font-semibold text-card-foreground">
+                    Bachelor of Science in Computer Science, specialising in Artificial Intelligence
+                  </h3>
+                  <span className="text-sm text-muted-foreground bg-primary/10 px-3 py-1 rounded-full">
+                    09/2026 – 2029/30
+                  </span>
+                </div>
+                <p className="text-primary font-medium mb-4">OST Ostschweizer Fachhochschule</p>
+                <ul className="space-y-2 text-card-foreground">
+                  <li className="flex items-start gap-2">
+                    <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                    AI Technologies and Algorithms
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                    Machine Learning
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                    Deep Learning
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                    Natural Language Processing
+                  </li>
+                </ul>
+              </div>
+
+              <div className="relative bg-card border border-border rounded-xl p-8 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                <div className="absolute -left-4 top-8 w-8 h-8 bg-primary rounded-full border-4 border-background"></div>
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                  <h3 className="text-xl font-semibold text-card-foreground">
                     Project Manager Software and Digitalisation
                   </h3>
                   <span className="text-sm text-muted-foreground bg-primary/10 px-3 py-1 rounded-full">
