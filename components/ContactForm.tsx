@@ -40,7 +40,7 @@ export function ContactForm() {
 
   const [errors, setErrors] = useState<FormErrors>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {}
@@ -96,8 +96,6 @@ export function ContactForm() {
         throw new Error("Failed to submit form")
       }
 
-      setIsSubmitted(true)
-
       setFormData({
         name: "",
         email: "",
@@ -108,6 +106,8 @@ export function ContactForm() {
         message: "",
         newsletter: false,
       })
+
+      setShowSuccessModal(true)
     } catch (error) {
       console.error("Form submission error:", error)
     } finally {
@@ -124,23 +124,8 @@ export function ContactForm() {
     }
   }
 
-  if (isSubmitted) {
-    return (
-      <div className="bg-card border border-border rounded-xl p-8 text-center">
-        <div className="w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
-          <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
-        </div>
-        <h3 className="text-xl font-semibold mb-2">Message Sent Successfully!</h3>
-        <p className="text-muted-foreground mb-6">Thank you for reaching out. I&apos;ll get back to you within 24 hours.</p>
-        <Button onClick={() => setIsSubmitted(false)} variant="outline">
-          Send Another Message
-        </Button>
-      </div>
-    )
-  }
-
   return (
-    <div className="bg-card border border-border rounded-xl p-8">
+    <div className="relative bg-card border border-border rounded-xl p-8">
       <h3 className="text-xl font-semibold mb-6">Send a Message</h3>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid md:grid-cols-2 gap-6">
@@ -297,6 +282,36 @@ export function ContactForm() {
           )}
         </Button>
       </form>
+
+      {showSuccessModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur"
+          onClick={() => setShowSuccessModal(false)}
+        >
+          <div
+            role="alertdialog"
+            aria-modal="true"
+            className="bg-card border border-border rounded-2xl shadow-xl max-w-md w-full mx-4 p-8 text-center space-y-6"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="flex items-center justify-center">
+              <div className="h-24 w-24 rounded-full border-2 border-dashed border-primary/40 flex flex-col items-center justify-center gap-1 bg-primary/5 text-primary">
+                <CheckCircle className="h-8 w-8" />
+                <span className="text-xs font-medium text-primary/80">Animation Placeholder</span>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-2xl font-semibold">Message Sent!</h3>
+              <p className="text-muted-foreground">
+                Thank you for reaching out. I&apos;ll get back to you within 24 hours. Replace this placeholder with the Lottie animation.
+              </p>
+            </div>
+            <Button className="w-full" onClick={() => setShowSuccessModal(false)}>
+              Close
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
