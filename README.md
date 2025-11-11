@@ -32,6 +32,7 @@ CONTACT_RECIPIENT=your-destination@example.com
 
 > Deployments on Vercel should define the same variables in the project settings so the API route can deliver emails in production.
 
+
 ## Contact success animation
 
 The contact form success modal loads a Lottie animation from `public/animations/checkmark.lottie`. Drop your exported `.lottie` file into that directory (or replace the placeholder file path with a CDN URL if you prefer hosting it elsewhere). The player automatically keeps the final frame visible and falls back to an icon if the asset is missing or fails to load.
