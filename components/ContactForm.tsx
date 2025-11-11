@@ -9,7 +9,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
-import { AlertCircle, CheckCircle, Send, Loader2 } from "lucide-react"
+import { AlertCircle, Send, Loader2 } from "lucide-react"
+import { CheckmarkAnimation } from "@/components/CheckmarkAnimation"
 
 interface FormData {
   name: string
@@ -267,7 +268,7 @@ export function ContactForm() {
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300 hover:scale-105 glow-effect"
+          className="w-full bg-primary text-primary-foreground transition-all duration-300 hover:bg-primary/90 hover:scale-105 glow-effect"
         >
           {isSubmitting ? (
             <>
@@ -295,15 +296,12 @@ export function ContactForm() {
             onClick={(event) => event.stopPropagation()}
           >
             <div className="flex items-center justify-center">
-              <div className="h-24 w-24 rounded-full border-2 border-dashed border-primary/40 flex flex-col items-center justify-center gap-1 bg-primary/5 text-primary">
-                <CheckCircle className="h-8 w-8" />
-                <span className="text-xs font-medium text-primary/80">Animation Placeholder</span>
-              </div>
+              <CheckmarkAnimation />
             </div>
             <div className="space-y-2">
               <h3 className="text-2xl font-semibold">Message Sent!</h3>
               <p className="text-muted-foreground">
-                Thank you for reaching out. I&apos;ll get back to you within 24 hours. Replace this placeholder with the Lottie animation.
+                Thank you for reaching out. I&apos;ll get back to you within 24 hours. Replace the default art by uploading your own <code>checkmark.lottie</code> file.
               </p>
             </div>
             <Button className="w-full" onClick={() => setShowSuccessModal(false)}>
