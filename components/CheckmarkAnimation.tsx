@@ -94,7 +94,7 @@ export function CheckmarkAnimation({ className }: CheckmarkAnimationProps) {
   return (
     <div
       className={cn(
-        "flex h-24 w-24 items-center justify-center rounded-full border-2 border-dashed border-primary/40 bg-primary/5 p-3",
+        "flex h-24 w-24 items-center justify-center overflow-visible rounded-full border-2 border-dashed border-primary/40 bg-primary/5 p-3",
         className,
       )}
     >
@@ -111,7 +111,12 @@ export function CheckmarkAnimation({ className }: CheckmarkAnimationProps) {
           loop={false}
           mode="normal"
           src={ANIMATION_PATH}
-          style={{ width: "100%", height: "100%" }}
+          style={{
+            width: "110%",
+            height: "110%",
+            transform: "scale(1.35)",
+            transformOrigin: "center",
+          }}
         />
       ) : (
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
