@@ -301,7 +301,7 @@ export function ContactForm() {
             <div className="space-y-2">
               <h3 className="text-2xl font-semibold">Message Sent!</h3>
               <p className="text-muted-foreground">
-                Thank you for reaching out. I&apos;ll get back to you within 24 hours. Replace the default art by uploading your own <code>checkmark.lottie</code> file.
+                Thank you for reaching out. I&apos;ll get back to you within 24 hours.
               </p>
             </div>
             <Button className="w-full" onClick={() => setShowSuccessModal(false)}>
