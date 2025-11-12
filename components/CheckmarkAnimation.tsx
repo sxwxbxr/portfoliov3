@@ -9,8 +9,10 @@ import { cn } from "@/lib/utils"
 const ANIMATION_PATH = "/animations/checkmark.lottie"
 
 type DotLottiePlayerElement = HTMLElement & {
+  load?: (src: string) => void
   play?: () => void
   pause?: () => void
+  src?: string
 }
 
 interface CheckmarkAnimationProps {
@@ -25,17 +27,29 @@ export function CheckmarkAnimation({ className }: CheckmarkAnimationProps) {
   useEffect(() => {
     let cancelled = false
 
-    fetch(ANIMATION_PATH, { method: "HEAD" })
-      .then((response) => {
-        if (!cancelled && !response.ok) {
-          setHasError(true)
+    const registerPlayer = async () => {
+      if (typeof window === "undefined") {
+        return
+      }
+
+      if (!window.customElements.get("dotlottie-player")) {
+        try {
+          await import("@dotlottie/player-component/dist/dotlottie-player.mjs")
+        } catch (error) {
+          if (!cancelled) {
+            console.error("[CheckmarkAnimation] Failed to load dotlottie player", error)
+            setHasError(true)
+          }
+          return
         }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setHasError(true)
-        }
-      })
+      }
+
+      if (!cancelled) {
+        setIsReady(true)
+      }
+    }
+
+    void registerPlayer()
 
     return () => {
       cancelled = true
@@ -43,23 +57,37 @@ export function CheckmarkAnimation({ className }: CheckmarkAnimationProps) {
   }, [])
 
   useEffect(() => {
-    import("@dotlottie/player-component")
-      .then(() => setIsReady(true))
-      .catch(() => setHasError(true))
-  }, [])
-
-  useEffect(() => {
-    if (!playerRef.current || hasError) {
+    if (!playerRef.current || hasError || !isReady) {
       return
     }
 
     const node = playerRef.current
-    const handleError = () => setHasError(true)
+    let cancelled = false
+
+    const handleError = () => {
+      if (!cancelled) {
+        setHasError(true)
+      }
+    }
+    const handleReady = () => {
+      node.play?.()
+    }
 
     node.addEventListener("error", handleError)
+    node.addEventListener("ready", handleReady)
+    node.addEventListener("load", handleReady)
+
+    if (node.load) {
+      node.load(ANIMATION_PATH).catch(handleError)
+    } else {
+      node.src = ANIMATION_PATH
+    }
 
     return () => {
+      cancelled = true
       node.removeEventListener("error", handleError)
+      node.removeEventListener("ready", handleReady)
+      node.removeEventListener("load", handleReady)
     }
   }, [hasError, isReady])
 
