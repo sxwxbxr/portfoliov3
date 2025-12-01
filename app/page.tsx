@@ -1,322 +1,437 @@
 "use client"
 
 import Link from "next/link"
-import Navigation from "../components/Navigation"
-import FadeInSection from "../components/FadeInSection"
-import { ParticleBackground } from "../components/ParticleBackground"
-import { AnimatedCounter } from "../components/AnimatedCounter"
-import { InteractiveCard } from "../components/InteractiveCard"
-import { projects, blogPosts, caseStudies } from "../src/config"
-import { ArrowDown, MapPin, ArrowRight, Users, Award, Calendar, Quote } from "lucide-react"
+import { useTheme } from "@/lib/theme-context"
+import { ClassicLayout } from "@/components/classic/classic-layout"
+import { ClassicSection } from "@/components/classic/classic-section"
+import { IdeLayout } from "@/components/ide/ide-layout"
+import { IdeEditor } from "@/components/ide/ide-editor"
+import { SyntaxHighlight, CodeBlock } from "@/components/ide/code-block"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Mail, MapPin, Briefcase, Rocket, Newspaper } from "lucide-react"
+import {
+  personalInfo,
+  experiences,
+  projects,
+  caseStudies,
+  blogPosts,
+  services,
+  skillStacks,
+} from "@/src/content"
 
 const featuredProjects = projects.slice(0, 3)
-const featuredTestimonials = caseStudies.filter((study) => study.testimonial).slice(0, 2)
-const latestWriting = blogPosts.slice(0, 2)
-const servicePreview = [
-  {
-    title: "Digital transformation leadership",
-    description:
-      "Fractional leadership for complex software migrations, workflow automation, and cross-team programs with measurable outcomes.",
-  },
-  {
-    title: "Product & delivery coaching",
-    description:
-      "Hands-on support to align discovery, delivery, and stakeholder communication so your roadmap ships on time and on budget.",
-  },
-  {
-    title: "Technical implementation",
-    description:
-      "Execution for .NET, C#, and automation initiatives—from proof of concept to production with documentation and training."
-  },
-]
+const featuredCases = caseStudies.slice(0, 2)
+const featuredPosts = blogPosts.slice(0, 2)
 
 export default function Home() {
-  return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
+  const { theme } = useTheme()
 
-      <section className="relative min-h-screen flex items-center justify-center gradient-bg overflow-hidden pt-16">
-        <ParticleBackground />
-        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-        <FadeInSection>
-          <div className="text-center space-y-8 px-4 max-w-4xl mx-auto relative z-10">
-            <div className="space-y-4">
-              <div className="inline-block p-3 rounded-full bg-primary/10 mb-6 float-animation glow-effect">
-                <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center hover:scale-110 transition-transform duration-300 cursor-pointer">
-                  <span className="text-2xl font-bold text-primary">SW</span>
-                </div>
-              </div>
-              <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent leading-tight animate-in fade-in slide-in-from-bottom-4 duration-1000">
-                Hi, I&apos;m Seya Weber
-              </h1>
-              <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed font-serif animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-200">
-                Project Manager Software and Digitalisation and Founder / Owner of Weber Development in St. Gallen, Switzerland.
-              </p>
+  if (theme === "classic") {
+    return (
+      <ClassicLayout>
+        <section className="py-20">
+          <div className="space-y-6 max-w-3xl">
+            <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">{personalInfo.location}</p>
+            <h1 className="text-5xl font-bold text-balance">{personalInfo.name}</h1>
+            <p className="text-xl text-muted-foreground leading-relaxed">{personalInfo.summary}</p>
+            <div className="flex flex-wrap gap-3 pt-2">
+              <Badge variant="outline">Project leadership</Badge>
+              <Badge variant="outline">Automation</Badge>
+              <Badge variant="outline">Migrations</Badge>
             </div>
-
-            <div className="flex items-center justify-center gap-2 text-muted-foreground animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
-              <MapPin className="w-4 h-4" />
-              <span>St. Gallen, Switzerland</span>
-            </div>
-
-            <div className="flex gap-4 justify-center animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
-              <Link
-                href="/contact"
-                className="px-8 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-all duration-300 hover:scale-105 glow-effect hover:shadow-lg hover:shadow-primary/25"
-              >
-                Get in Touch
-              </Link>
-              <Link
-                href="/projects"
-                className="px-8 py-3 border border-border rounded-lg font-medium hover:bg-card transition-all duration-300 hover:scale-105 hover:shadow-lg"
-              >
-                View Projects
-              </Link>
-            </div>
-
-            <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-              <ArrowDown className="w-6 h-6 text-muted-foreground hover:text-primary transition-colors cursor-pointer" />
+            <div className="flex gap-4 pt-4 flex-wrap">
+              <Button asChild size="lg">
+                <Link href="/contact">Book a call</Link>
+              </Button>
+              <Button asChild size="lg" variant="outline">
+                <Link href="/projects">View projects</Link>
+              </Button>
             </div>
           </div>
-        </FadeInSection>
-      </section>
+        </section>
 
-      <section className="py-16 px-4 bg-card/50">
-        <div className="max-w-6xl mx-auto">
-          <FadeInSection>
-            <div className="grid md:grid-cols-3 gap-8 text-center">
-              <div className="space-y-2">
-                <Users className="w-8 h-8 text-primary mx-auto mb-4" />
-                <AnimatedCounter end={projects.length} suffix="+" />
-                <p className="text-muted-foreground">Projects Completed</p>
-              </div>
-              <div className="space-y-2">
-                <Award className="w-8 h-8 text-primary mx-auto mb-4" />
-                <AnimatedCounter end={1} suffix="+" />
-                <p className="text-muted-foreground">Years Experience</p>
-              </div>
-              <div className="space-y-2">
-                <Calendar className="w-8 h-8 text-primary mx-auto mb-4" />
-                <AnimatedCounter end={100} suffix="%" />
-                <p className="text-muted-foreground">Client Satisfaction</p>
-              </div>
-            </div>
-          </FadeInSection>
-        </div>
-      </section>
-
-      <section className="py-24 px-4">
-        <div className="max-w-6xl mx-auto">
-          <FadeInSection>
-            <div className="grid md:grid-cols-3 gap-8">
-              <InteractiveCard>
-                <Link
-                  href="/about"
-                  className="group bg-card border border-border rounded-xl p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 block"
-                >
-                  <h3 className="text-xl font-semibold mb-4 group-hover:text-primary transition-colors">About Me</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Learn more about my background and passion for technology.
-                  </p>
-                  <ArrowRight className="w-5 h-5 text-primary group-hover:translate-x-2 transition-transform duration-300" />
-                </Link>
-              </InteractiveCard>
-
-              <InteractiveCard>
-                <Link
-                  href="/experience"
-                  className="group bg-card border border-border rounded-xl p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 block"
-                >
-                  <h3 className="text-xl font-semibold mb-4 group-hover:text-primary transition-colors">Experience</h3>
-                  <p className="text-muted-foreground mb-4">Explore my professional journey and key achievements.</p>
-                  <ArrowRight className="w-5 h-5 text-primary group-hover:translate-x-2 transition-transform duration-300" />
-                </Link>
-              </InteractiveCard>
-
-              <InteractiveCard>
-                <Link
-                  href="/projects"
-                  className="group bg-card border border-border rounded-xl p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 block"
-                >
-                  <h3 className="text-xl font-semibold mb-4 group-hover:text-primary transition-colors">Projects</h3>
-                  <p className="text-muted-foreground mb-4">Discover the projects I&apos;ve worked on and their impact.</p>
-                  <ArrowRight className="w-5 h-5 text-primary group-hover:translate-x-2 transition-transform duration-300" />
-                </Link>
-              </InteractiveCard>
-            </div>
-          </FadeInSection>
-        </div>
-      </section>
-
-      <section className="py-24 px-4 bg-card/40">
-        <div className="max-w-6xl mx-auto space-y-12">
-          <FadeInSection>
-            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-              <div>
-                <h2 className="text-3xl md:text-4xl font-bold">Featured Projects</h2>
-                <p className="text-muted-foreground max-w-2xl">
-                  A snapshot of multidisciplinary engagements that span software delivery, automation, and operations.
+        <ClassicSection title="About" id="about">
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="space-y-4">
+              {personalInfo.about.map((paragraph) => (
+                <p key={paragraph} className="text-muted-foreground leading-relaxed">
+                  {paragraph}
                 </p>
-              </div>
-              <Link
-                href="/projects"
-                className="inline-flex items-center gap-2 text-primary font-medium hover:gap-3 transition-all"
-              >
-                Explore all projects
-                <ArrowRight className="w-4 h-4" />
-              </Link>
+              ))}
             </div>
-          </FadeInSection>
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <MapPin className="h-5 w-5" />
+                  Based in {personalInfo.location}
+                </CardTitle>
+                <CardDescription>Focused on efficiency, clarity, and trustworthy delivery.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Mail className="h-4 w-4" />
+                  <a className="hover:underline" href={`mailto:${personalInfo.contact.email}`}>
+                    {personalInfo.contact.email}
+                  </a>
+                </div>
+                <p className="text-sm text-muted-foreground">Response time: {personalInfo.contact.responseTime}</p>
+              </CardContent>
+            </Card>
+          </div>
+        </ClassicSection>
 
-          <FadeInSection>
-            <div className="grid gap-6 md:grid-cols-3">
+        <ClassicSection title="Experience" id="experience">
+          <div className="space-y-6">
+            {experiences.map((experience) => (
+              <Card key={experience.role}>
+                <CardHeader>
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <CardTitle>{experience.role}</CardTitle>
+                      <CardDescription>
+                        {experience.company} • {experience.period}
+                      </CardDescription>
+                    </div>
+                    <Briefcase className="h-5 w-5 text-muted-foreground" />
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-2 text-muted-foreground">
+                  {experience.highlights.map((highlight) => (
+                    <p key={highlight} className="leading-relaxed">
+                      {highlight}
+                    </p>
+                  ))}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </ClassicSection>
+
+        <ClassicSection title="Projects" id="projects">
+          <div className="grid md:grid-cols-2 gap-6">
+            {featuredProjects.map((project) => (
+              <Card key={project.slug} className="h-full">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Rocket className="h-5 w-5" />
+                    {project.title}
+                  </CardTitle>
+                  <CardDescription>{project.shortDescription}</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex flex-wrap gap-2">
+                    {project.tags.slice(0, 4).map((tag) => (
+                      <Badge key={tag} variant="outline">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                  <Link className="text-primary text-sm font-medium hover:underline" href={`/projects/${project.slug}`}>
+                    View details
+                  </Link>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          <div className="pt-6">
+            <Button asChild variant="ghost">
+              <Link href="/projects">Browse all projects</Link>
+            </Button>
+          </div>
+        </ClassicSection>
+
+        <ClassicSection title="Case Studies" id="case-studies">
+          <div className="grid md:grid-cols-2 gap-6">
+            {featuredCases.map((study) => (
+              <Card key={study.slug} className="h-full">
+                <CardHeader>
+                  <CardTitle>{study.title}</CardTitle>
+                  <CardDescription>{study.industry} • {study.duration}</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-2 text-muted-foreground">
+                  <p>{study.challenge}</p>
+                  <Link className="text-primary text-sm font-medium hover:underline" href={`/case-studies/${study.slug}`}>
+                    Read more
+                  </Link>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </ClassicSection>
+
+        <ClassicSection title="Latest Writing" id="blog">
+          <div className="grid md:grid-cols-2 gap-6">
+            {featuredPosts.map((post) => (
+              <Card key={post.id} className="h-full">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Newspaper className="h-5 w-5" />
+                    {post.title}
+                  </CardTitle>
+                  <CardDescription>
+                    {post.publishedAt} • {post.readTime}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground leading-relaxed">{post.excerpt}</p>
+                  <Link className="text-primary text-sm font-medium hover:underline" href={`/blog/${post.id}`}>
+                    Continue reading
+                  </Link>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </ClassicSection>
+
+        <ClassicSection title="Services" id="services">
+          <div className="grid md:grid-cols-3 gap-6">
+            {services.map((service) => (
+              <Card key={service.title} className="h-full">
+                <CardHeader>
+                  <CardTitle>{service.title}</CardTitle>
+                  <CardDescription>{service.description}</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  {service.outcomes.map((outcome) => (
+                    <p key={outcome} className="text-muted-foreground text-sm">
+                      • {outcome}
+                    </p>
+                  ))}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </ClassicSection>
+
+        <ClassicSection title="Skills" id="skills">
+          <div className="grid md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Technical</CardTitle>
+                <CardDescription>Stacks I rely on for delivery</CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-wrap gap-2">
+                {skillStacks.skills.map((skill) => (
+                  <Badge key={skill}>{skill}</Badge>
+                ))}
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Languages</CardTitle>
+                <CardDescription>Working across teams</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                {skillStacks.languages.map((language) => (
+                  <div key={language.name} className="flex items-center justify-between text-sm">
+                    <span className="font-medium">{language.name}</span>
+                    <span className="text-muted-foreground">{language.level}</span>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+        </ClassicSection>
+
+        <ClassicSection title="Contact" id="contact">
+          <Card className="max-w-2xl">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Mail className="h-5 w-5" />
+                Let&apos;s talk
+              </CardTitle>
+              <CardDescription>Share what you need and I&apos;ll respond within a day.</CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
+              <p>
+                Email me at {" "}
+                <a className="text-primary hover:underline" href={`mailto:${personalInfo.contact.email}`}>
+                  {personalInfo.contact.email}
+                </a>{" "}
+                to start a conversation.
+              </p>
+              <p>Location: {personalInfo.location}</p>
+            </CardContent>
+          </Card>
+        </ClassicSection>
+      </ClassicLayout>
+    )
+  }
+
+  return (
+    <IdeLayout>
+      <IdeEditor>
+        <div className="space-y-8 max-w-4xl">
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-[var(--ide-text-muted)] text-sm">
+              <span>1</span>
+              <SyntaxHighlight comment>{"// portfolio/about.ts"}</SyntaxHighlight>
+            </div>
+            <CodeBlock>
+              <div className="space-y-1">
+                <div>
+                  <SyntaxHighlight keyword>export</SyntaxHighlight> <SyntaxHighlight keyword>const</SyntaxHighlight>{" "}
+                  <SyntaxHighlight variable>developer</SyntaxHighlight> = {"{"}
+                </div>
+                <div className="pl-4">
+                  <SyntaxHighlight property>name</SyntaxHighlight>:{" "}
+                  <SyntaxHighlight string>{`"${personalInfo.name}"`}</SyntaxHighlight>,
+                </div>
+                <div className="pl-4">
+                  <SyntaxHighlight property>role</SyntaxHighlight>:{" "}
+                  <SyntaxHighlight string>{`"${personalInfo.title}"`}</SyntaxHighlight>,
+                </div>
+                <div className="pl-4">
+                  <SyntaxHighlight property>location</SyntaxHighlight>:{" "}
+                  <SyntaxHighlight string>{`"${personalInfo.location}"`}</SyntaxHighlight>,
+                </div>
+                <div className="pl-4">
+                  <SyntaxHighlight property>summary</SyntaxHighlight>:{" "}
+                  <SyntaxHighlight string>{`"${personalInfo.summary}"`}</SyntaxHighlight>,
+                </div>
+                <div>{"}"}</div>
+              </div>
+            </CodeBlock>
+            <p className="text-[var(--ide-text)] leading-relaxed">{personalInfo.about[0]}</p>
+            <p className="text-[var(--ide-text)] leading-relaxed">{personalInfo.about[1]}</p>
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-[var(--ide-text-muted)] text-sm">
+              <span>28</span>
+              <SyntaxHighlight comment>{"// portfolio/skills.ts"}</SyntaxHighlight>
+            </div>
+            <CodeBlock>
+              <div className="space-y-1">
+                <div>
+                  <SyntaxHighlight keyword>const</SyntaxHighlight> <SyntaxHighlight variable>skills</SyntaxHighlight> = [
+                </div>
+                <div className="pl-4">
+                  {skillStacks.skills.map((skill, index) => (
+                    <span key={skill} className="pr-2">
+                      <SyntaxHighlight string>{`"${skill}"`}</SyntaxHighlight>
+                      {index < skillStacks.skills.length - 1 ? "," : ""}
+                    </span>
+                  ))}
+                </div>
+                <div>]</div>
+              </div>
+            </CodeBlock>
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-[var(--ide-text-muted)] text-sm">
+              <span>46</span>
+              <SyntaxHighlight comment>{"// portfolio/experience.tsx"}</SyntaxHighlight>
+            </div>
+            <div className="space-y-4">
+              {experiences.map((experience) => (
+                <Card key={experience.role} className="bg-[var(--ide-sidebar)] border-[var(--ide-border)]">
+                  <CardHeader>
+                    <CardTitle className="text-[var(--ide-text)] flex items-center justify-between gap-2">
+                      <span>{experience.role}</span>
+                      <span className="text-xs text-[var(--ide-text-muted)]">{experience.period}</span>
+                    </CardTitle>
+                    <CardDescription className="text-[var(--ide-text-muted)]">{experience.company}</CardDescription>
+                  </CardHeader>
+                  <CardContent className="text-[var(--ide-text)] space-y-1 text-sm">
+                    {experience.highlights.map((highlight) => (
+                      <p key={highlight}>• {highlight}</p>
+                    ))}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-[var(--ide-text-muted)] text-sm">
+              <span>82</span>
+              <SyntaxHighlight comment>{"// portfolio/projects.tsx"}</SyntaxHighlight>
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
               {featuredProjects.map((project) => (
-                <InteractiveCard key={project.slug}>
-                  <Link
-                    href={`/projects/${project.slug}`}
-                    className="group flex h-full flex-col rounded-xl border border-border bg-card p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
-                  >
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      {project.tags.slice(0, 2).map((tag) => (
-                        <span key={tag} className="rounded-full bg-primary/10 px-3 py-1 text-primary">
+                <Card key={project.slug} className="bg-[var(--ide-sidebar)] border-[var(--ide-border)]">
+                  <CardHeader>
+                    <CardTitle className="text-[var(--ide-text)] flex items-center gap-2">
+                      <Rocket className="h-5 w-5 text-[var(--ide-success)]" />
+                      {project.title}
+                    </CardTitle>
+                    <CardDescription className="text-[var(--ide-text-muted)]">
+                      {project.shortDescription}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex flex-wrap gap-2">
+                      {project.tags.slice(0, 3).map((tag) => (
+                        <Badge key={tag} className="bg-[var(--ide-accent)] text-white">
                           {tag}
-                        </span>
+                        </Badge>
                       ))}
                     </div>
-                    <h3 className="mt-6 text-2xl font-semibold leading-snug group-hover:text-primary transition-colors">
-                      {project.title}
-                    </h3>
-                    <p className="mt-4 text-muted-foreground leading-relaxed">{project.shortDescription}</p>
-                    <div className="mt-auto flex items-center gap-2 pt-6 text-sm font-medium text-primary">
-                      View case details
-                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </div>
-                  </Link>
-                </InteractiveCard>
-              ))}
-            </div>
-          </FadeInSection>
-        </div>
-      </section>
-
-      <section className="py-24 px-4">
-        <div className="max-w-6xl mx-auto space-y-12">
-          <FadeInSection>
-            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-              <div>
-                <h2 className="text-3xl md:text-4xl font-bold">Services at a Glance</h2>
-                <p className="text-muted-foreground max-w-2xl">
-                  Partner with me for strategy, delivery, and implementation support tailored to your product or transformation initiative.
-                </p>
-              </div>
-              <Link
-                href="/services"
-                className="inline-flex items-center gap-2 text-primary font-medium hover:gap-3 transition-all"
-              >
-                View full services
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-          </FadeInSection>
-
-          <FadeInSection>
-            <div className="grid gap-6 md:grid-cols-3">
-              {servicePreview.map((service) => (
-                <InteractiveCard key={service.title}>
-                  <div className="h-full rounded-xl border border-border bg-card p-6">
-                    <h3 className="text-xl font-semibold">{service.title}</h3>
-                    <p className="mt-4 text-muted-foreground leading-relaxed">{service.description}</p>
-                  </div>
-                </InteractiveCard>
-              ))}
-            </div>
-          </FadeInSection>
-        </div>
-      </section>
-
-      <section className="py-24 px-4 bg-muted/40">
-        <div className="max-w-6xl mx-auto space-y-12">
-          <FadeInSection>
-            <h2 className="text-3xl md:text-4xl font-bold text-center">What partners say</h2>
-            <p className="text-muted-foreground text-center max-w-3xl mx-auto">
-              Real feedback from engagements across healthcare, finance, and residential projects.
-            </p>
-          </FadeInSection>
-
-          <FadeInSection>
-            <div className="grid gap-6 md:grid-cols-2">
-              {featuredTestimonials.map((testimonial) => (
-                <InteractiveCard key={testimonial.slug}>
-                  <div className="flex h-full flex-col rounded-xl border border-border bg-card p-8">
-                    <Quote className="h-10 w-10 text-primary" aria-hidden="true" />
-                    <blockquote className="mt-6 flex-1 text-lg italic leading-relaxed">“{testimonial.testimonial?.quote}”</blockquote>
-                    <div className="mt-6 text-sm text-muted-foreground">
-                      <p className="font-semibold text-foreground">{testimonial.testimonial?.author}</p>
-                      <p>{testimonial.testimonial?.company}</p>
-                    </div>
-                    <Link
-                      href={`/case-studies/${testimonial.slug}`}
-                      className="mt-6 inline-flex items-center gap-2 text-primary font-medium hover:gap-3 transition-all"
-                    >
-                      Read the full story
-                      <ArrowRight className="h-4 w-4" />
+                    <Link className="text-[var(--ide-text)] text-sm font-medium" href={`/projects/${project.slug}`}>
+                      View details →
                     </Link>
-                  </div>
-                </InteractiveCard>
+                  </CardContent>
+                </Card>
               ))}
             </div>
-          </FadeInSection>
-        </div>
-      </section>
+          </div>
 
-      <section className="py-24 px-4">
-        <div className="max-w-6xl mx-auto space-y-12">
-          <FadeInSection>
-            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-              <div>
-                <h2 className="text-3xl md:text-4xl font-bold">Latest writing</h2>
-                <p className="text-muted-foreground max-w-2xl">
-                  Essays and notes on moving complex initiatives from idea to production without losing momentum.
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-[var(--ide-text-muted)] text-sm">
+              <span>112</span>
+              <SyntaxHighlight comment>{"// portfolio/blog.tsx"}</SyntaxHighlight>
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              {featuredPosts.map((post) => (
+                <Card key={post.id} className="bg-[var(--ide-sidebar)] border-[var(--ide-border)]">
+                  <CardHeader>
+                    <CardTitle className="text-[var(--ide-text)]">{post.title}</CardTitle>
+                    <CardDescription className="text-[var(--ide-text-muted)]">
+                      {post.publishedAt} • {post.readTime}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="text-[var(--ide-text)] text-sm space-y-2">
+                    <p>{post.excerpt}</p>
+                    <Link className="text-[var(--ide-accent)]" href={`/blog/${post.id}`}>
+                      Continue reading →
+                    </Link>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-[var(--ide-text-muted)] text-sm">
+              <span>140</span>
+              <SyntaxHighlight comment>{"// portfolio/contact.tsx"}</SyntaxHighlight>
+            </div>
+            <Card className="bg-[var(--ide-sidebar)] border-[var(--ide-border)] max-w-2xl">
+              <CardHeader>
+                <CardTitle className="text-[var(--ide-text)] flex items-center gap-2">
+                  <Mail className="h-5 w-5 text-[var(--ide-accent)]" />
+                  Contact
+                </CardTitle>
+                <CardDescription className="text-[var(--ide-text-muted)]">
+                  Response time: {personalInfo.contact.responseTime}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="text-[var(--ide-text)] space-y-2 text-sm">
+                <p>
+                  Email: <a className="text-[var(--ide-accent)]" href={`mailto:${personalInfo.contact.email}`}>
+                    {personalInfo.contact.email}
+                  </a>
                 </p>
-              </div>
-              <Link
-                href="/blog"
-                className="inline-flex items-center gap-2 text-primary font-medium hover:gap-3 transition-all"
-              >
-                Visit the blog
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-          </FadeInSection>
-
-          <FadeInSection>
-            <div className="grid gap-6 md:grid-cols-2">
-              {latestWriting.map((post) => (
-                <InteractiveCard key={post.id}>
-                  <Link
-                    href={`/blog/${post.id}`}
-                    className="group flex h-full flex-col rounded-xl border border-border bg-card p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-                  >
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
-                      <span>•</span>
-                      <span>{post.readTime}</span>
-                    </div>
-                    <h3 className="mt-4 text-2xl font-semibold leading-snug group-hover:text-primary transition-colors">
-                      {post.title}
-                    </h3>
-                    <p className="mt-4 flex-1 text-muted-foreground leading-relaxed">{post.excerpt}</p>
-                    <div className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-primary">
-                      Read article
-                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </div>
-                  </Link>
-                </InteractiveCard>
-              ))}
-            </div>
-          </FadeInSection>
+                <p>Location: {personalInfo.location}</p>
+              </CardContent>
+            </Card>
+          </div>
         </div>
-      </section>
-    </div>
+      </IdeEditor>
+    </IdeLayout>
   )
 }
