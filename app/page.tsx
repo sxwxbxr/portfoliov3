@@ -1,322 +1,408 @@
 "use client"
 
-import Link from "next/link"
-import Navigation from "../components/Navigation"
-import FadeInSection from "../components/FadeInSection"
-import { ParticleBackground } from "../components/ParticleBackground"
-import { AnimatedCounter } from "../components/AnimatedCounter"
-import { InteractiveCard } from "../components/InteractiveCard"
-import { projects, blogPosts, caseStudies } from "../src/config"
-import { ArrowDown, MapPin, ArrowRight, Users, Award, Calendar, Quote } from "lucide-react"
-
-const featuredProjects = projects.slice(0, 3)
-const featuredTestimonials = caseStudies.filter((study) => study.testimonial).slice(0, 2)
-const latestWriting = blogPosts.slice(0, 2)
-const servicePreview = [
-  {
-    title: "Digital transformation leadership",
-    description:
-      "Fractional leadership for complex software migrations, workflow automation, and cross-team programs with measurable outcomes.",
-  },
-  {
-    title: "Product & delivery coaching",
-    description:
-      "Hands-on support to align discovery, delivery, and stakeholder communication so your roadmap ships on time and on budget.",
-  },
-  {
-    title: "Technical implementation",
-    description:
-      "Execution for .NET, C#, and automation initiatives—from proof of concept to production with documentation and training."
-  },
-]
+import { useTheme } from "@/lib/theme-context"
+import { IdeLayout } from "@/components/ide/ide-layout"
+import { IdeEditor } from "@/components/ide/ide-editor"
+import { SyntaxHighlight, CodeBlock } from "@/components/ide/code-block"
+import { ClassicLayout } from "@/components/classic/classic-layout"
+import { ClassicHero } from "@/components/classic/classic-hero"
+import { ClassicSection } from "@/components/classic/classic-section"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Briefcase, Code2, Rocket, Mail } from "lucide-react"
 
 export default function Home() {
-  return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
+  const { theme } = useTheme()
 
-      <section className="relative min-h-screen flex items-center justify-center gradient-bg overflow-hidden pt-16">
-        <ParticleBackground />
-        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-        <FadeInSection>
-          <div className="text-center space-y-8 px-4 max-w-4xl mx-auto relative z-10">
+  if (theme === "classic") {
+    return (
+      <ClassicLayout>
+        <ClassicHero />
+
+        <ClassicSection title="About" id="about">
+          <div className="grid md:grid-cols-2 gap-8">
             <div className="space-y-4">
-              <div className="inline-block p-3 rounded-full bg-primary/10 mb-6 float-animation glow-effect">
-                <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center hover:scale-110 transition-transform duration-300 cursor-pointer">
-                  <span className="text-2xl font-bold text-primary">SW</span>
-                </div>
-              </div>
-              <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent leading-tight animate-in fade-in slide-in-from-bottom-4 duration-1000">
-                Hi, I&apos;m Seya Weber
-              </h1>
-              <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed font-serif animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-200">
-                Project Manager Software and Digitalisation and Founder / Owner of Weber Development in St. Gallen, Switzerland.
+              <p className="text-muted-foreground leading-relaxed">
+                I'm a passionate developer with 5+ years of experience building modern web applications. I specialize in
+                React, TypeScript, and Next.js, with a strong focus on creating accessible and performant user
+                experiences.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                When I'm not coding, you'll find me contributing to open-source projects, writing technical articles, or
+                exploring new technologies and frameworks.
               </p>
             </div>
-
-            <div className="flex items-center justify-center gap-2 text-muted-foreground animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
-              <MapPin className="w-4 h-4" />
-              <span>St. Gallen, Switzerland</span>
-            </div>
-
-            <div className="flex gap-4 justify-center animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
-              <Link
-                href="/contact"
-                className="px-8 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-all duration-300 hover:scale-105 glow-effect hover:shadow-lg hover:shadow-primary/25"
-              >
-                Get in Touch
-              </Link>
-              <Link
-                href="/projects"
-                className="px-8 py-3 border border-border rounded-lg font-medium hover:bg-card transition-all duration-300 hover:scale-105 hover:shadow-lg"
-              >
-                View Projects
-              </Link>
-            </div>
-
-            <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-              <ArrowDown className="w-6 h-6 text-muted-foreground hover:text-primary transition-colors cursor-pointer" />
+            <div className="space-y-4">
+              <h3 className="font-semibold text-lg">Skills</h3>
+              <div className="flex flex-wrap gap-2">
+                <Badge>TypeScript</Badge>
+                <Badge>React</Badge>
+                <Badge>Next.js</Badge>
+                <Badge>Node.js</Badge>
+                <Badge>Tailwind CSS</Badge>
+                <Badge>PostgreSQL</Badge>
+                <Badge>GraphQL</Badge>
+                <Badge>AWS</Badge>
+              </div>
             </div>
           </div>
-        </FadeInSection>
-      </section>
+        </ClassicSection>
 
-      <section className="py-16 px-4 bg-card/50">
-        <div className="max-w-6xl mx-auto">
-          <FadeInSection>
-            <div className="grid md:grid-cols-3 gap-8 text-center">
-              <div className="space-y-2">
-                <Users className="w-8 h-8 text-primary mx-auto mb-4" />
-                <AnimatedCounter end={projects.length} suffix="+" />
-                <p className="text-muted-foreground">Projects Completed</p>
-              </div>
-              <div className="space-y-2">
-                <Award className="w-8 h-8 text-primary mx-auto mb-4" />
-                <AnimatedCounter end={1} suffix="+" />
-                <p className="text-muted-foreground">Years Experience</p>
-              </div>
-              <div className="space-y-2">
-                <Calendar className="w-8 h-8 text-primary mx-auto mb-4" />
-                <AnimatedCounter end={100} suffix="%" />
-                <p className="text-muted-foreground">Client Satisfaction</p>
-              </div>
-            </div>
-          </FadeInSection>
-        </div>
-      </section>
-
-      <section className="py-24 px-4">
-        <div className="max-w-6xl mx-auto">
-          <FadeInSection>
-            <div className="grid md:grid-cols-3 gap-8">
-              <InteractiveCard>
-                <Link
-                  href="/about"
-                  className="group bg-card border border-border rounded-xl p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 block"
-                >
-                  <h3 className="text-xl font-semibold mb-4 group-hover:text-primary transition-colors">About Me</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Learn more about my background and passion for technology.
-                  </p>
-                  <ArrowRight className="w-5 h-5 text-primary group-hover:translate-x-2 transition-transform duration-300" />
-                </Link>
-              </InteractiveCard>
-
-              <InteractiveCard>
-                <Link
-                  href="/experience"
-                  className="group bg-card border border-border rounded-xl p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 block"
-                >
-                  <h3 className="text-xl font-semibold mb-4 group-hover:text-primary transition-colors">Experience</h3>
-                  <p className="text-muted-foreground mb-4">Explore my professional journey and key achievements.</p>
-                  <ArrowRight className="w-5 h-5 text-primary group-hover:translate-x-2 transition-transform duration-300" />
-                </Link>
-              </InteractiveCard>
-
-              <InteractiveCard>
-                <Link
-                  href="/projects"
-                  className="group bg-card border border-border rounded-xl p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 block"
-                >
-                  <h3 className="text-xl font-semibold mb-4 group-hover:text-primary transition-colors">Projects</h3>
-                  <p className="text-muted-foreground mb-4">Discover the projects I&apos;ve worked on and their impact.</p>
-                  <ArrowRight className="w-5 h-5 text-primary group-hover:translate-x-2 transition-transform duration-300" />
-                </Link>
-              </InteractiveCard>
-            </div>
-          </FadeInSection>
-        </div>
-      </section>
-
-      <section className="py-24 px-4 bg-card/40">
-        <div className="max-w-6xl mx-auto space-y-12">
-          <FadeInSection>
-            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-              <div>
-                <h2 className="text-3xl md:text-4xl font-bold">Featured Projects</h2>
-                <p className="text-muted-foreground max-w-2xl">
-                  A snapshot of multidisciplinary engagements that span software delivery, automation, and operations.
-                </p>
-              </div>
-              <Link
-                href="/projects"
-                className="inline-flex items-center gap-2 text-primary font-medium hover:gap-3 transition-all"
-              >
-                Explore all projects
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-          </FadeInSection>
-
-          <FadeInSection>
-            <div className="grid gap-6 md:grid-cols-3">
-              {featuredProjects.map((project) => (
-                <InteractiveCard key={project.slug}>
-                  <Link
-                    href={`/projects/${project.slug}`}
-                    className="group flex h-full flex-col rounded-xl border border-border bg-card p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
-                  >
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      {project.tags.slice(0, 2).map((tag) => (
-                        <span key={tag} className="rounded-full bg-primary/10 px-3 py-1 text-primary">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <h3 className="mt-6 text-2xl font-semibold leading-snug group-hover:text-primary transition-colors">
-                      {project.title}
-                    </h3>
-                    <p className="mt-4 text-muted-foreground leading-relaxed">{project.shortDescription}</p>
-                    <div className="mt-auto flex items-center gap-2 pt-6 text-sm font-medium text-primary">
-                      View case details
-                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </div>
-                  </Link>
-                </InteractiveCard>
-              ))}
-            </div>
-          </FadeInSection>
-        </div>
-      </section>
-
-      <section className="py-24 px-4">
-        <div className="max-w-6xl mx-auto space-y-12">
-          <FadeInSection>
-            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-              <div>
-                <h2 className="text-3xl md:text-4xl font-bold">Services at a Glance</h2>
-                <p className="text-muted-foreground max-w-2xl">
-                  Partner with me for strategy, delivery, and implementation support tailored to your product or transformation initiative.
-                </p>
-              </div>
-              <Link
-                href="/services"
-                className="inline-flex items-center gap-2 text-primary font-medium hover:gap-3 transition-all"
-              >
-                View full services
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-          </FadeInSection>
-
-          <FadeInSection>
-            <div className="grid gap-6 md:grid-cols-3">
-              {servicePreview.map((service) => (
-                <InteractiveCard key={service.title}>
-                  <div className="h-full rounded-xl border border-border bg-card p-6">
-                    <h3 className="text-xl font-semibold">{service.title}</h3>
-                    <p className="mt-4 text-muted-foreground leading-relaxed">{service.description}</p>
+        <ClassicSection title="Experience" id="experience">
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <div>
+                    <CardTitle>Senior Frontend Engineer</CardTitle>
+                    <CardDescription>Tech Company Inc. • 2022 - Present</CardDescription>
                   </div>
-                </InteractiveCard>
-              ))}
-            </div>
-          </FadeInSection>
-        </div>
-      </section>
+                  <Briefcase className="h-5 w-5 text-muted-foreground" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground leading-relaxed">
+                  Leading frontend architecture decisions and mentoring junior developers. Built and maintained critical
+                  user-facing features serving millions of users.
+                </p>
+              </CardContent>
+            </Card>
 
-      <section className="py-24 px-4 bg-muted/40">
-        <div className="max-w-6xl mx-auto space-y-12">
-          <FadeInSection>
-            <h2 className="text-3xl md:text-4xl font-bold text-center">What partners say</h2>
-            <p className="text-muted-foreground text-center max-w-3xl mx-auto">
-              Real feedback from engagements across healthcare, finance, and residential projects.
+            <Card>
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <div>
+                    <CardTitle>Full Stack Developer</CardTitle>
+                    <CardDescription>Startup Labs • 2020 - 2022</CardDescription>
+                  </div>
+                  <Code2 className="h-5 w-5 text-muted-foreground" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground leading-relaxed">
+                  Developed full-stack applications from scratch, working with React, Node.js, and PostgreSQL.
+                  Implemented CI/CD pipelines and improved deployment processes.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </ClassicSection>
+
+        <ClassicSection title="Projects" id="projects">
+          <div className="grid md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Rocket className="h-5 w-5" />
+                  E-Commerce Platform
+                </CardTitle>
+                <CardDescription>Full-stack shopping experience</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+                  Built a modern e-commerce platform with Next.js, Stripe integration, and real-time inventory
+                  management.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="outline">Next.js</Badge>
+                  <Badge variant="outline">Stripe</Badge>
+                  <Badge variant="outline">PostgreSQL</Badge>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Code2 className="h-5 w-5" />
+                  Developer Tools
+                </CardTitle>
+                <CardDescription>CLI tool for developers</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+                  Created a CLI tool to automate common development workflows, downloaded by thousands of developers.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="outline">Node.js</Badge>
+                  <Badge variant="outline">TypeScript</Badge>
+                  <Badge variant="outline">Open Source</Badge>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </ClassicSection>
+
+        <ClassicSection title="Contact" id="contact">
+          <Card className="max-w-2xl">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Mail className="h-5 w-5" />
+                Get in Touch
+              </CardTitle>
+              <CardDescription>Have a project in mind? Let's talk about how I can help.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form className="space-y-4">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label htmlFor="name" className="text-sm font-medium">
+                      Name
+                    </label>
+                    <Input id="name" placeholder="Your name" />
+                  </div>
+                  <div className="space-y-2">
+                    <label htmlFor="email" className="text-sm font-medium">
+                      Email
+                    </label>
+                    <Input id="email" type="email" placeholder="your@email.com" />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label htmlFor="message" className="text-sm font-medium">
+                    Message
+                  </label>
+                  <Textarea id="message" placeholder="Your message..." rows={5} />
+                </div>
+                <Button type="submit" className="w-full">
+                  Send Message
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </ClassicSection>
+      </ClassicLayout>
+    )
+  }
+
+  return (
+    <IdeLayout>
+      <IdeEditor>
+        <div className="space-y-8 max-w-4xl">
+          {/* About Section */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-[var(--ide-text-muted)] text-sm">
+              <span>1</span>
+              <SyntaxHighlight comment>// portfolio/about.tsx</SyntaxHighlight>
+            </div>
+
+            <CodeBlock>
+              <div className="space-y-1">
+                <div>
+                  <SyntaxHighlight keyword>export</SyntaxHighlight> <SyntaxHighlight keyword>const</SyntaxHighlight>{" "}
+                  <SyntaxHighlight variable>developer</SyntaxHighlight> = {"{"}
+                </div>
+                <div className="pl-4">
+                  <SyntaxHighlight property>name</SyntaxHighlight>:{" "}
+                  <SyntaxHighlight string>"Your Name"</SyntaxHighlight>,
+                </div>
+                <div className="pl-4">
+                  <SyntaxHighlight property>role</SyntaxHighlight>:{" "}
+                  <SyntaxHighlight string>"Full Stack Developer"</SyntaxHighlight>,
+                </div>
+                <div className="pl-4">
+                  <SyntaxHighlight property>experience</SyntaxHighlight>:{" "}
+                  <SyntaxHighlight string>"5+ years"</SyntaxHighlight>,
+                </div>
+                <div className="pl-4">
+                  <SyntaxHighlight property>passion</SyntaxHighlight>:{" "}
+                  <SyntaxHighlight string>"Building elegant solutions"</SyntaxHighlight>,
+                </div>
+                <div>{"}"}</div>
+              </div>
+            </CodeBlock>
+
+            <p className="text-[var(--ide-text)] leading-relaxed">
+              I'm a passionate developer specializing in modern web technologies. I love creating beautiful, performant
+              applications that solve real problems.
             </p>
-          </FadeInSection>
+          </div>
 
-          <FadeInSection>
-            <div className="grid gap-6 md:grid-cols-2">
-              {featuredTestimonials.map((testimonial) => (
-                <InteractiveCard key={testimonial.slug}>
-                  <div className="flex h-full flex-col rounded-xl border border-border bg-card p-8">
-                    <Quote className="h-10 w-10 text-primary" aria-hidden="true" />
-                    <blockquote className="mt-6 flex-1 text-lg italic leading-relaxed">“{testimonial.testimonial?.quote}”</blockquote>
-                    <div className="mt-6 text-sm text-muted-foreground">
-                      <p className="font-semibold text-foreground">{testimonial.testimonial?.author}</p>
-                      <p>{testimonial.testimonial?.company}</p>
-                    </div>
-                    <Link
-                      href={`/case-studies/${testimonial.slug}`}
-                      className="mt-6 inline-flex items-center gap-2 text-primary font-medium hover:gap-3 transition-all"
-                    >
-                      Read the full story
-                      <ArrowRight className="h-4 w-4" />
-                    </Link>
-                  </div>
-                </InteractiveCard>
-              ))}
+          {/* Skills Section */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-[var(--ide-text-muted)] text-sm">
+              <span>24</span>
+              <SyntaxHighlight comment>// portfolio/skills.ts</SyntaxHighlight>
             </div>
-          </FadeInSection>
-        </div>
-      </section>
 
-      <section className="py-24 px-4">
-        <div className="max-w-6xl mx-auto space-y-12">
-          <FadeInSection>
-            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-              <div>
-                <h2 className="text-3xl md:text-4xl font-bold">Latest writing</h2>
-                <p className="text-muted-foreground max-w-2xl">
-                  Essays and notes on moving complex initiatives from idea to production without losing momentum.
-                </p>
+            <CodeBlock>
+              <div className="space-y-1">
+                <div>
+                  <SyntaxHighlight keyword>const</SyntaxHighlight> <SyntaxHighlight variable>skills</SyntaxHighlight> =
+                  [
+                </div>
+                <div className="pl-4">
+                  <SyntaxHighlight string>"TypeScript"</SyntaxHighlight>,{" "}
+                  <SyntaxHighlight string>"React"</SyntaxHighlight>, <SyntaxHighlight string>"Next.js"</SyntaxHighlight>
+                  ,
+                </div>
+                <div className="pl-4">
+                  <SyntaxHighlight string>"Node.js"</SyntaxHighlight>,{" "}
+                  <SyntaxHighlight string>"PostgreSQL"</SyntaxHighlight>,{" "}
+                  <SyntaxHighlight string>"AWS"</SyntaxHighlight>
+                </div>
+                <div>]</div>
               </div>
-              <Link
-                href="/blog"
-                className="inline-flex items-center gap-2 text-primary font-medium hover:gap-3 transition-all"
-              >
-                Visit the blog
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-          </FadeInSection>
+            </CodeBlock>
+          </div>
 
-          <FadeInSection>
-            <div className="grid gap-6 md:grid-cols-2">
-              {latestWriting.map((post) => (
-                <InteractiveCard key={post.id}>
-                  <Link
-                    href={`/blog/${post.id}`}
-                    className="group flex h-full flex-col rounded-xl border border-border bg-card p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-                  >
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
-                      <span>•</span>
-                      <span>{post.readTime}</span>
-                    </div>
-                    <h3 className="mt-4 text-2xl font-semibold leading-snug group-hover:text-primary transition-colors">
-                      {post.title}
-                    </h3>
-                    <p className="mt-4 flex-1 text-muted-foreground leading-relaxed">{post.excerpt}</p>
-                    <div className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-primary">
-                      Read article
-                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </div>
-                  </Link>
-                </InteractiveCard>
-              ))}
+          {/* Experience Section */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-[var(--ide-text-muted)] text-sm">
+              <span>42</span>
+              <SyntaxHighlight comment>// portfolio/experience.tsx</SyntaxHighlight>
             </div>
-          </FadeInSection>
+
+            <div className="space-y-4">
+              <Card className="bg-[var(--ide-sidebar)] border-[var(--ide-border)]">
+                <CardHeader>
+                  <CardTitle className="text-[var(--ide-text)] flex items-center gap-2">
+                    <Briefcase className="h-5 w-5 text-[var(--ide-accent)]" />
+                    Senior Frontend Engineer
+                  </CardTitle>
+                  <CardDescription className="text-[var(--ide-text-muted)]">
+                    Tech Company Inc. • 2022 - Present
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="text-[var(--ide-text)]">
+                  Leading frontend architecture and mentoring developers. Built features serving millions of users.
+                </CardContent>
+              </Card>
+
+              <Card className="bg-[var(--ide-sidebar)] border-[var(--ide-border)]">
+                <CardHeader>
+                  <CardTitle className="text-[var(--ide-text)] flex items-center gap-2">
+                    <Code2 className="h-5 w-5 text-[var(--ide-accent)]" />
+                    Full Stack Developer
+                  </CardTitle>
+                  <CardDescription className="text-[var(--ide-text-muted)]">Startup Labs • 2020 - 2022</CardDescription>
+                </CardHeader>
+                <CardContent className="text-[var(--ide-text)]">
+                  Developed full-stack applications with React, Node.js, and PostgreSQL.
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+
+          {/* Projects Section */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-[var(--ide-text-muted)] text-sm">
+              <span>68</span>
+              <SyntaxHighlight comment>// portfolio/projects.tsx</SyntaxHighlight>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              <Card className="bg-[var(--ide-sidebar)] border-[var(--ide-border)]">
+                <CardHeader>
+                  <CardTitle className="text-[var(--ide-text)] flex items-center gap-2">
+                    <Rocket className="h-5 w-5 text-[var(--ide-success)]" />
+                    E-Commerce Platform
+                  </CardTitle>
+                  <CardDescription className="text-[var(--ide-text-muted)]">
+                    Full-stack shopping experience
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <p className="text-[var(--ide-text)] text-sm">Modern platform with Stripe and real-time inventory.</p>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge className="bg-[var(--ide-accent)] text-white">Next.js</Badge>
+                    <Badge className="bg-[var(--ide-accent)] text-white">Stripe</Badge>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-[var(--ide-sidebar)] border-[var(--ide-border)]">
+                <CardHeader>
+                  <CardTitle className="text-[var(--ide-text)] flex items-center gap-2">
+                    <Code2 className="h-5 w-5 text-[var(--ide-warning)]" />
+                    Developer Tools
+                  </CardTitle>
+                  <CardDescription className="text-[var(--ide-text-muted)]">CLI tool for developers</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <p className="text-[var(--ide-text)] text-sm">Automates workflows, used by thousands.</p>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge className="bg-[var(--ide-accent)] text-white">Node.js</Badge>
+                    <Badge className="bg-[var(--ide-accent)] text-white">TypeScript</Badge>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+
+          {/* Contact Section */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-[var(--ide-text-muted)] text-sm">
+              <span>94</span>
+              <SyntaxHighlight comment>// portfolio/contact.tsx</SyntaxHighlight>
+            </div>
+
+            <Card className="bg-[var(--ide-sidebar)] border-[var(--ide-border)] max-w-2xl">
+              <CardHeader>
+                <CardTitle className="text-[var(--ide-text)] flex items-center gap-2">
+                  <Mail className="h-5 w-5 text-[var(--ide-accent)]" />
+                  Get in Touch
+                </CardTitle>
+                <CardDescription className="text-[var(--ide-text-muted)]">
+                  Let's discuss your next project
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form className="space-y-4">
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label htmlFor="name" className="text-sm font-medium text-[var(--ide-text)]">
+                        Name
+                      </label>
+                      <Input
+                        id="name"
+                        placeholder="Your name"
+                        className="bg-[var(--ide-bg)] border-[var(--ide-border)] text-[var(--ide-text)]"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label htmlFor="email" className="text-sm font-medium text-[var(--ide-text)]">
+                        Email
+                      </label>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="your@email.com"
+                        className="bg-[var(--ide-bg)] border-[var(--ide-border)] text-[var(--ide-text)]"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label htmlFor="message" className="text-sm font-medium text-[var(--ide-text)]">
+                      Message
+                    </label>
+                    <Textarea
+                      id="message"
+                      placeholder="Your message..."
+                      rows={5}
+                      className="bg-[var(--ide-bg)] border-[var(--ide-border)] text-[var(--ide-text)]"
+                    />
+                  </div>
+                  <Button type="submit" className="w-full bg-[var(--ide-accent)] hover:bg-[var(--ide-accent)]/90">
+                    Send Message
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Footer */}
+          <div className="pt-8 border-t border-[var(--ide-border)]">
+            <div className="flex items-center gap-2 text-[var(--ide-text-muted)] text-sm">
+              <span>128</span>
+              <SyntaxHighlight comment>// End of file</SyntaxHighlight>
+            </div>
+          </div>
         </div>
-      </section>
-    </div>
+      </IdeEditor>
+    </IdeLayout>
   )
 }
