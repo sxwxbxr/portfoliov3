@@ -1,212 +1,154 @@
-import Image from "next/image"
+"use client"
+
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { ArrowLeft, Building, CheckCircle, Clock, ExternalLink, Quote, Users } from "lucide-react"
-import { SiGithub } from "react-icons/si"
+import { Github, Link2, Rocket } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { ClassicSection } from "@/components/classic/classic-section"
+import { SyntaxHighlight, CodeBlock } from "@/components/ide/code-block"
+import { DualLayoutPage } from "@/components/dual-layout-page"
+import { projects } from "@/src/config"
 
-import FadeInSection from "../../../components/FadeInSection"
-import Navigation from "../../../components/Navigation"
-import PageLayout from "../../../components/PageLayout"
-import { caseStudies, projects } from "../../../src/config"
-
-interface ProjectPageProps {
-  params: { slug: string } | Promise<{ slug: string }>
-}
-
-export default async function ProjectDetails({ params }: ProjectPageProps) {
-  const { slug } = await params
-  const project = projects.find((item) => item.slug === slug)
-  const study = caseStudies.find((item) => item.slug === slug)
+export default function ProjectDetail({ params }: { params: { slug: string } }) {
+  const project = projects.find((item) => item.slug === params.slug)
 
   if (!project) {
     notFound()
   }
 
-  const heroImage = (study?.image ?? project.image ?? "/abstract-geometric-shapes.png").trim()
-  const heroSrc = heroImage.includes("?")
-    ? heroImage
-    : `${heroImage}?height=400&width=800&query=${encodeURIComponent(project.title)}`
-
-  const hasDemoLink = Boolean(project.demo && project.demo !== "#")
-  const hasRepoLink = Boolean(project.github && project.github !== "#")
-
-  const descriptionParagraphs = project.description
-    .split(/\n+/)
-    .map((paragraph) => paragraph.trim())
-    .filter(Boolean)
-
-  return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
-      <PageLayout>
-        <div className="max-w-4xl mx-auto space-y-16">
-          <FadeInSection>
-            <div className="space-y-6">
-              <Link
-                href="/projects"
-                className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                Back to Projects
+  const classic = (
+    <>
+      <section className="py-16 border-b border-border">
+        <div className="space-y-4 max-w-4xl">
+          <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">Project</p>
+          <h1 className="text-4xl font-bold flex items-center gap-2">
+            <Rocket className="h-6 w-6" /> {project.title}
+          </h1>
+          <p className="text-lg text-muted-foreground leading-relaxed">{project.description}</p>
+          <div className="flex flex-wrap gap-2">
+            {project.tags.map((tag) => (
+              <Badge key={tag} variant="outline">
+                {tag}
+              </Badge>
+            ))}
+          </div>
+          <div className="flex gap-4 flex-wrap text-sm text-muted-foreground">
+            {project.github !== "#" && (
+              <Link className="flex items-center gap-2 hover:underline" href={project.github} target="_blank">
+                <Github className="h-4 w-4" /> Code
               </Link>
-
-              <div className="space-y-5">
-                {study?.client && <p className="text-primary font-medium">{study.client}</p>}
-                <h1 className="text-4xl md:text-5xl font-bold leading-tight">{project.title}</h1>
-                <p className="text-xl text-muted-foreground leading-relaxed font-serif">{project.shortDescription}</p>
-
-                {(hasDemoLink || hasRepoLink) && (
-                  <div className="flex flex-wrap gap-4 pt-2">
-                    {hasDemoLink && (
-                      <a
-                        href={project.demo}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors"
-                      >
-                        <ExternalLink className="w-4 h-4" />
-                        View Demo
-                      </a>
-                    )}
-                    {hasRepoLink && (
-                      <a
-                        href={project.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2 border border-border rounded-lg font-medium hover:bg-muted transition-colors"
-                      >
-                        <SiGithub className="w-4 h-4" />
-                        View Source
-                      </a>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          </FadeInSection>
-
-          <FadeInSection>
-            <div className="overflow-hidden rounded-xl border border-border">
-              <Image
-                src={heroSrc}
-                alt={project.title}
-                width={800}
-                height={400}
-                className="w-full h-64 md:h-96 object-cover"
-                priority
-              />
-            </div>
-          </FadeInSection>
-
-          <FadeInSection>
-            <section className="bg-card border border-border rounded-xl p-8 space-y-6">
-              <div className="space-y-4">
-                <h2 className="text-2xl font-bold">Project Overview</h2>
-                {descriptionParagraphs.length ? (
-                  descriptionParagraphs.map((paragraph, index) => (
-                    <p key={index} className="text-muted-foreground leading-relaxed">
-                      {paragraph}
-                    </p>
-                  ))
-                ) : (
-                  <p className="text-muted-foreground leading-relaxed">{project.description}</p>
-                )}
-              </div>
-
-              {project.tags?.length ? (
-                <div>
-                  <h3 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground mb-3">
-                    Key Technologies &amp; Focus Areas
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {project.tags.map((tag) => (
-                      <span key={tag} className="px-3 py-1 bg-secondary/10 text-secondary rounded-full text-sm">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              ) : null}
-            </section>
-          </FadeInSection>
-
-          {study ? (
-            <div className="space-y-12">
-              <FadeInSection>
-                <div className="grid gap-4 sm:grid-cols-3 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    <Building className="w-4 h-4" />
-                    <span>{study.industry}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4" />
-                    <span>{study.duration}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Users className="w-4 h-4" />
-                    <span>{study.team}</span>
-                  </div>
-                </div>
-              </FadeInSection>
-
-              <FadeInSection>
-                <section className="space-y-8">
-                  <div>
-                    <h2 className="text-2xl font-bold mb-4">Challenge</h2>
-                    <p className="text-muted-foreground leading-relaxed">{study.challenge}</p>
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-bold mb-4">Solution</h2>
-                    <p className="text-muted-foreground leading-relaxed">{study.solution}</p>
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-bold mb-4">Results</h2>
-                    <div className="grid sm:grid-cols-2 gap-4">
-                      {study.results.map((result, index) => (
-                        <div key={index} className="flex items-start gap-3 p-4 bg-card border border-border rounded-lg">
-                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                          <span className="text-sm">{result}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </section>
-              </FadeInSection>
-
-              <FadeInSection>
-                <div className="grid gap-8 lg:grid-cols-2">
-                  <div className="bg-card border border-border rounded-xl p-6">
-                    <h3 className="font-semibold mb-4">Technologies &amp; Focus Areas</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {study.technologies.map((tech) => (
-                        <span key={tech} className="px-3 py-1 bg-secondary/10 text-secondary rounded-full text-sm">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {study.testimonial && (
-                    <div className="bg-primary/5 border border-primary/20 rounded-xl p-6">
-                      <Quote className="w-8 h-8 text-primary mb-4" />
-                      <blockquote className="text-lg italic mb-4">&quot;{study.testimonial.quote}&quot;</blockquote>
-                      <div className="text-sm text-muted-foreground">
-                        <p className="font-medium">{study.testimonial.author}</p>
-                        <p>{study.testimonial.company}</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </FadeInSection>
-            </div>
-          ) : null}
+            )}
+            {project.demo !== "#" && (
+              <Link className="flex items-center gap-2 hover:underline" href={project.demo} target="_blank">
+                <Link2 className="h-4 w-4" /> Demo
+              </Link>
+            )}
+          </div>
         </div>
-      </PageLayout>
+      </section>
+
+      <ClassicSection title="Outcome">
+        <Card>
+          <CardHeader>
+            <CardTitle>What it delivered</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 text-muted-foreground leading-relaxed">
+            <p>{project.shortDescription}</p>
+            <p>{project.description}</p>
+          </CardContent>
+        </Card>
+      </ClassicSection>
+    </>
+  )
+
+  const ide = (
+    <div className="space-y-8 max-w-5xl">
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 text-[var(--ide-text-muted)] text-sm">
+          <span>1</span>
+          <SyntaxHighlight comment>{`// projects/${project.slug}.ts`}</SyntaxHighlight>
+        </div>
+        <CodeBlock>
+          <div className="space-y-1">
+            <div>{"{"}</div>
+            <div className="pl-4">
+              <SyntaxHighlight property>title</SyntaxHighlight>:{" "}
+              <SyntaxHighlight string>{`"${project.title}"`}</SyntaxHighlight>,
+            </div>
+            <div className="pl-4">
+              <SyntaxHighlight property>summary</SyntaxHighlight>:{" "}
+              <SyntaxHighlight string>{`"${project.shortDescription}"`}</SyntaxHighlight>,
+            </div>
+            <div className="pl-4">
+              <SyntaxHighlight property>tags</SyntaxHighlight>: [
+            </div>
+            <div className="pl-8">
+              {project.tags.map((tag, idx) => (
+                <div key={tag}>
+                  <SyntaxHighlight string>{`"${tag}"`}</SyntaxHighlight>
+                  {idx < project.tags.length - 1 ? "," : ""}
+                </div>
+              ))}
+            </div>
+            <div className="pl-4">]</div>
+            <div className="pl-4">
+              <SyntaxHighlight property>links</SyntaxHighlight>: {"{"}
+            </div>
+            <div className="pl-8">
+              <SyntaxHighlight property>github</SyntaxHighlight>: {project.github ? (
+                <SyntaxHighlight string>{`"${project.github}"`}</SyntaxHighlight>
+              ) : (
+                <SyntaxHighlight string>{'"private"'}</SyntaxHighlight>
+              )}
+              ,
+            </div>
+            <div className="pl-8">
+              <SyntaxHighlight property>demo</SyntaxHighlight>: {project.demo ? (
+                <SyntaxHighlight string>{`"${project.demo}"`}</SyntaxHighlight>
+              ) : (
+                <SyntaxHighlight string>{'"n/a"'}</SyntaxHighlight>
+              )}
+            </div>
+            <div className="pl-4">{`}`}</div>
+            <div>{"}"}</div>
+          </div>
+        </CodeBlock>
+      </div>
+
+      <Card className="bg-[var(--ide-sidebar)] border-[var(--ide-border)]">
+        <CardHeader>
+          <CardTitle className="text-[var(--ide-text)] flex items-center gap-2">
+            <Rocket className="h-5 w-5 text-[var(--ide-success)]" />
+            {project.title}
+          </CardTitle>
+          <CardDescription className="text-[var(--ide-text-muted)]">{project.shortDescription}</CardDescription>
+        </CardHeader>
+        <CardContent className="text-[var(--ide-text)] space-y-3 text-sm leading-relaxed">
+          <p>{project.description}</p>
+          <div className="flex flex-wrap gap-2">
+            {project.tags.map((tag) => (
+              <Badge key={tag} className="bg-[var(--ide-accent)] text-white">
+                {tag}
+              </Badge>
+            ))}
+          </div>
+          <div className="flex gap-4 flex-wrap text-[var(--ide-text-muted)]">
+            {project.github !== "#" && (
+              <Link className="flex items-center gap-2" href={project.github} target="_blank">
+                <Github className="h-4 w-4" /> Code
+              </Link>
+            )}
+            {project.demo !== "#" && (
+              <Link className="flex items-center gap-2" href={project.demo} target="_blank">
+                <Link2 className="h-4 w-4" /> Demo
+              </Link>
+            )}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
-}
 
-export function generateStaticParams() {
-  return projects.map((project) => ({ slug: project.slug }))
+  return <DualLayoutPage classic={classic} ide={ide} />
 }
-

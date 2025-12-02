@@ -1,172 +1,118 @@
 "use client"
 
-import { use } from "react"
-import Navigation from "../../../components/Navigation"
-import PageLayout from "../../../components/PageLayout"
-import FadeInSection from "../../../components/FadeInSection"
-import { JsonLd } from "../../../components/JsonLd"
-import { blogPosts } from "../../../src/config"
 import Link from "next/link"
-import { Calendar, Clock, ArrowLeft, Share2 } from "lucide-react"
-import Image from "next/image"
-import { Button } from "@/components/ui/button"
+import { notFound } from "next/navigation"
+import ReactMarkdown from "react-markdown"
+import { Calendar, Clock, ArrowLeft } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { ClassicSection } from "@/components/classic/classic-section"
+import { SyntaxHighlight, CodeBlock } from "@/components/ide/code-block"
+import { DualLayoutPage } from "@/components/dual-layout-page"
+import { blogPosts } from "@/src/config"
 
-interface BlogPostPageProps {
-  params: Promise<{ slug: string }>
-}
-
-export default function BlogPost({ params }: BlogPostPageProps) {
-  const { slug } = use(params)
-  const post = blogPosts.find((p) => p.id === slug)
+export default function BlogDetail({ params }: { params: { slug: string } }) {
+  const post = blogPosts.find((item) => item.id === params.slug)
 
   if (!post) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Navigation />
-        <PageLayout>
-          <div className="text-center space-y-4">
-            <h1 className="text-4xl font-bold">Post Not Found</h1>
-            <p className="text-muted-foreground">The blog post you&apos;re looking for doesn&apos;t exist.</p>
-            <Link href="/blog" className="inline-flex items-center gap-2 text-primary hover:underline">
-              <ArrowLeft className="w-4 h-4" />
-              Back to Blog
+    notFound()
+  }
+
+  const classic = (
+    <>
+      <section className="py-16 border-b border-border">
+        <div className="space-y-4 max-w-4xl">
+          <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">Blog</p>
+          <h1 className="text-4xl font-bold">{post.title}</h1>
+          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            <span className="flex items-center gap-2">
+              <Calendar className="h-4 w-4" /> {post.publishedAt}
+            </span>
+            <span className="flex items-center gap-2">
+              <Clock className="h-4 w-4" /> {post.readTime}
+            </span>
+          </div>
+          <p className="text-lg text-muted-foreground leading-relaxed">{post.excerpt}</p>
+          <div className="flex gap-2 flex-wrap">
+            {post.tags.map((tag) => (
+              <Badge key={tag} variant="outline">
+                {tag}
+              </Badge>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <ClassicSection title="Article">
+        <article className="prose dark:prose-invert max-w-4xl">
+          <ReactMarkdown>{post.content}</ReactMarkdown>
+        </article>
+        <div className="pt-8">
+          <Link className="flex items-center gap-2 text-primary hover:underline" href="/blog">
+            <ArrowLeft className="h-4 w-4" /> Back to blog
+          </Link>
+        </div>
+      </ClassicSection>
+    </>
+  )
+
+  const ide = (
+    <div className="space-y-8 max-w-5xl">
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 text-[var(--ide-text-muted)] text-sm">
+          <span>1</span>
+          <SyntaxHighlight comment>{`// blog/${post.id}.md`}</SyntaxHighlight>
+        </div>
+        <CodeBlock>
+          <div className="space-y-1">
+            <div>{"{"}</div>
+            <div className="pl-4">
+              <SyntaxHighlight property>title</SyntaxHighlight>:{" "}
+              <SyntaxHighlight string>{`"${post.title}"`}</SyntaxHighlight>,
+            </div>
+            <div className="pl-4">
+              <SyntaxHighlight property>publishedAt</SyntaxHighlight>:{" "}
+              <SyntaxHighlight string>{`"${post.publishedAt}"`}</SyntaxHighlight>,
+            </div>
+            <div className="pl-4">
+              <SyntaxHighlight property>readTime</SyntaxHighlight>:{" "}
+              <SyntaxHighlight string>{`"${post.readTime}"`}</SyntaxHighlight>,
+            </div>
+            <div className="pl-4">
+              <SyntaxHighlight property>tags</SyntaxHighlight>: [
+            </div>
+            <div className="pl-8">
+              {post.tags.map((tag, idx) => (
+                <div key={tag}>
+                  <SyntaxHighlight string>{`"${tag}"`}</SyntaxHighlight>
+                  {idx < post.tags.length - 1 ? "," : ""}
+                </div>
+              ))}
+            </div>
+            <div className="pl-4">]</div>
+            <div>{"}"}</div>
+          </div>
+        </CodeBlock>
+      </div>
+
+      <Card className="bg-[var(--ide-sidebar)] border-[var(--ide-border)]">
+        <CardHeader>
+          <CardTitle className="text-[var(--ide-text)]">{post.title}</CardTitle>
+          <CardDescription className="text-[var(--ide-text-muted)]">
+            {post.publishedAt} • {post.readTime}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="prose prose-invert max-w-none text-[var(--ide-text)]">
+          <ReactMarkdown>{post.content}</ReactMarkdown>
+          <div className="pt-6">
+            <Link className="text-[var(--ide-accent)]" href="/blog">
+              ← Back to blog
             </Link>
           </div>
-        </PageLayout>
-      </div>
-    )
-  }
-
-  const blogPostStructuredData = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    headline: post.title,
-    description: post.excerpt,
-    image: `https://seyaweber.com${post.image}`,
-    author: {
-      "@type": "Person",
-      name: post.author,
-      url: "https://seyaweber.com",
-    },
-    publisher: {
-      "@type": "Person",
-      name: "Seya Weber",
-      url: "https://seyaweber.com",
-    },
-    datePublished: post.publishedAt,
-    dateModified: post.publishedAt,
-    mainEntityOfPage: {
-      "@type": "WebPage",
-      "@id": `https://seyaweber.com/blog/${post.id}`,
-    },
-    keywords: post.tags.join(", "),
-  }
-
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: post.title,
-          text: post.excerpt,
-          url: window.location.href,
-        })
-      } catch (err) {
-        console.log("Error sharing:", err)
-      }
-    } else {
-      // Fallback: copy to clipboard
-      navigator.clipboard.writeText(window.location.href)
-    }
-  }
-
-  return (
-    <div className="min-h-screen bg-background">
-      <JsonLd data={blogPostStructuredData} />
-      <Navigation />
-      <PageLayout>
-        <article className="max-w-4xl mx-auto">
-          <FadeInSection>
-            <div className="mb-8">
-              <Link
-                href="/blog"
-                className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-6"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                Back to Blog
-              </Link>
-
-              <div className="space-y-6">
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
-                    <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
-                    <span>{post.readTime}</span>
-                  </div>
-                  <Button variant="ghost" size="sm" onClick={handleShare} className="ml-auto">
-                    <Share2 className="w-4 h-4 mr-2" />
-                    Share
-                  </Button>
-                </div>
-
-                <h1 className="text-4xl md:text-5xl font-bold leading-tight">{post.title}</h1>
-
-                <p className="text-xl text-muted-foreground leading-relaxed font-serif">{post.excerpt}</p>
-
-                <div className="flex flex-wrap gap-2">
-                  {post.tags.map((tag) => (
-                    <span key={tag} className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </FadeInSection>
-
-          <FadeInSection>
-            <div className="mb-12">
-              <Image
-                src={`/abstract-geometric-shapes.png?height=400&width=800&query=${encodeURIComponent(post.title)}`}
-                alt={post.title}
-                width={800}
-                height={400}
-                className="w-full h-64 md:h-96 object-cover rounded-xl"
-              />
-            </div>
-          </FadeInSection>
-
-          <FadeInSection>
-            <div className="prose prose-lg max-w-none dark:prose-invert">
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: post.content.replace(/\n/g, "<br />").replace(/#{1,6}\s/g, (match) => {
-                    const level = match.trim().length
-                    return `<h${level} class="text-${4 - level}xl font-bold mt-8 mb-4">`
-                  }),
-                }}
-              />
-            </div>
-          </FadeInSection>
-
-          <FadeInSection>
-            <div className="mt-16 pt-8 border-t border-border">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Written by</p>
-                  <p className="font-semibold">{post.author}</p>
-                </div>
-                <Button onClick={handleShare} variant="outline">
-                  <Share2 className="w-4 h-4 mr-2" />
-                  Share Article
-                </Button>
-              </div>
-            </div>
-          </FadeInSection>
-        </article>
-      </PageLayout>
+        </CardContent>
+      </Card>
     </div>
   )
+
+  return <DualLayoutPage classic={classic} ide={ide} />
 }

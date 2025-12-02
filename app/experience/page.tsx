@@ -1,102 +1,115 @@
 "use client"
 
-import PageLayout from "../../components/PageLayout"
-import FadeInSection from "../../components/FadeInSection"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { ClassicSection } from "@/components/classic/classic-section"
+import { SyntaxHighlight, CodeBlock } from "@/components/ide/code-block"
+import { DualLayoutPage } from "@/components/dual-layout-page"
+import { experiences } from "@/src/content"
 
-export default function Experience() {
-  return (
-    <PageLayout
-      title="Experience"
-      subtitle="My professional journey and key achievements in software development and project management"
-    >
-      <section className="py-24 px-4">
-        <div className="max-w-6xl mx-auto">
-          <FadeInSection>
-            <div className="space-y-8">
-              <div className="relative bg-card border border-border rounded-xl p-8 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                <div className="absolute -left-4 top-8 w-8 h-8 bg-primary rounded-full border-4 border-background"></div>
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-                  <h3 className="text-xl font-semibold text-card-foreground">
-                    Project Manager Software and Digitalisation
-                  </h3>
-                  <span className="text-sm text-muted-foreground bg-primary/10 px-3 py-1 rounded-full">
-                    07/2025 – Present
-                  </span>
-                </div>
-                <p className="text-primary font-medium mb-4">Telsonic Ultrasonics</p>
-                <ul className="space-y-2 text-card-foreground">
-                  <li className="flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                    Creating customer specific workflows.
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                    Implementing company intern software projects to increase efficiency.
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                    Adjusting post-setup automation workflows for customers
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                    The link between customer and software, to ensure smooth communication and project success.
-                  </li>
-                </ul>
-              </div>
-
-              <div className="relative bg-card border border-border rounded-xl p-8 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                <div className="absolute -left-4 top-8 w-8 h-8 bg-secondary rounded-full border-4 border-background"></div>
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-                  <h3 className="text-xl font-semibold text-card-foreground">Software Developer Apprentice</h3>
-                  <span className="text-sm text-muted-foreground bg-secondary/10 px-3 py-1 rounded-full">
-                    08/2022 – 07/2024
-                  </span>
-                </div>
-                <p className="text-secondary font-medium mb-4">InnoForce EST</p>
-                <ul className="space-y-2 text-card-foreground">
-                  <li className="flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 bg-secondary rounded-full mt-2 flex-shrink-0"></div>
-                    .NET development and third-party module integration
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 bg-secondary rounded-full mt-2 flex-shrink-0"></div>
-                    Implemented test automation templates
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 bg-secondary rounded-full mt-2 flex-shrink-0"></div>
-                    Synchronized medical data across multiple locations
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 bg-secondary rounded-full mt-2 flex-shrink-0"></div>
-                    Evaluated medical databases in France
-                  </li>
-                </ul>
-              </div>
-
-              <div className="relative bg-card border border-border rounded-xl p-8 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                <div className="absolute -left-4 top-8 w-8 h-8 bg-accent rounded-full border-4 border-background"></div>
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-                  <h3 className="text-xl font-semibold text-card-foreground">Electrical Planner</h3>
-                  <span className="text-sm text-muted-foreground bg-accent/10 px-3 py-1 rounded-full">
-                    06/2021 – 08/2022
-                  </span>
-                </div>
-                <p className="text-accent font-medium mb-4">Lepcon GmbH</p>
-                <ul className="space-y-2 text-card-foreground">
-                  <li className="flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 bg-accent rounded-full mt-2 flex-shrink-0"></div>
-                    Managed electrotechnical planning and procurement
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 bg-accent rounded-full mt-2 flex-shrink-0"></div>
-                    Coordinated electrical revisions of 150+ sites
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </FadeInSection>
+export default function ExperiencePage() {
+  const classic = (
+    <>
+      <section className="py-16 border-b border-border">
+        <div className="max-w-3xl space-y-4">
+          <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">Experience</p>
+          <h1 className="text-4xl font-bold">Delivery at the intersection of software and operations</h1>
+          <p className="text-xl text-muted-foreground leading-relaxed">
+            Hands-on project management and engineering in automation, migration, and product delivery.
+          </p>
         </div>
       </section>
-    </PageLayout>
+
+      <ClassicSection title="Roles">
+        <div className="space-y-6">
+          {experiences.map((experience) => (
+            <Card key={experience.role} className="border-border">
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <span>{experience.role}</span>
+                  <span className="text-sm text-muted-foreground">{experience.period}</span>
+                </CardTitle>
+                <CardDescription>{experience.company}</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-2 text-muted-foreground">
+                {experience.highlights.map((highlight) => (
+                  <p key={highlight}>• {highlight}</p>
+                ))}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </ClassicSection>
+    </>
   )
+
+  const ide = (
+    <div className="space-y-8 max-w-5xl">
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 text-[var(--ide-text-muted)] text-sm">
+          <span>1</span>
+          <SyntaxHighlight comment>{"// experience/index.ts"}</SyntaxHighlight>
+        </div>
+        <CodeBlock>
+          <div className="space-y-1">
+            <div>
+              <SyntaxHighlight keyword>export</SyntaxHighlight> <SyntaxHighlight keyword>const</SyntaxHighlight>{" "}
+              <SyntaxHighlight variable>roles</SyntaxHighlight> = [
+            </div>
+            {experiences.map((experience, idx) => (
+              <div key={experience.role} className="pl-4 space-y-1">
+                <div>{"{"}</div>
+                <div className="pl-4">
+                  <SyntaxHighlight property>role</SyntaxHighlight>:{" "}
+                  <SyntaxHighlight string>{`"${experience.role}"`}</SyntaxHighlight>,
+                </div>
+                <div className="pl-4">
+                  <SyntaxHighlight property>company</SyntaxHighlight>:{" "}
+                  <SyntaxHighlight string>{`"${experience.company}"`}</SyntaxHighlight>,
+                </div>
+                <div className="pl-4">
+                  <SyntaxHighlight property>period</SyntaxHighlight>:{" "}
+                  <SyntaxHighlight string>{`"${experience.period}"`}</SyntaxHighlight>,
+                </div>
+                <div className="pl-4">
+                  <SyntaxHighlight property>highlights</SyntaxHighlight>: [
+                </div>
+                <div className="pl-8">
+                  {experience.highlights.map((highlight, highlightIdx) => (
+                    <div key={highlight}>
+                      <SyntaxHighlight string>{`"${highlight}"`}</SyntaxHighlight>
+                      {highlightIdx < experience.highlights.length - 1 ? "," : ""}
+                    </div>
+                  ))}
+                </div>
+                <div className="pl-4">]</div>
+                <div>{"}"}{idx < experiences.length - 1 ? "," : ""}</div>
+              </div>
+            ))}
+            <div>]</div>
+          </div>
+        </CodeBlock>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-4">
+        {experiences.map((experience) => (
+          <Card key={experience.role} className="bg-[var(--ide-sidebar)] border-[var(--ide-border)]">
+            <CardHeader>
+              <CardTitle className="text-[var(--ide-text)] flex items-center justify-between">
+                <span>{experience.role}</span>
+                <span className="text-xs text-[var(--ide-text-muted)]">{experience.period}</span>
+              </CardTitle>
+              <CardDescription className="text-[var(--ide-text-muted)]">{experience.company}</CardDescription>
+            </CardHeader>
+            <CardContent className="text-[var(--ide-text)] text-sm space-y-1">
+              {experience.highlights.map((highlight) => (
+                <p key={highlight}>• {highlight}</p>
+              ))}
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  )
+
+  return <DualLayoutPage classic={classic} ide={ide} />
 }

@@ -1,103 +1,128 @@
 "use client"
 
-import { useState, useMemo } from "react"
-import Navigation from "../../components/Navigation"
-import PageLayout from "../../components/PageLayout"
-import FadeInSection from "../../components/FadeInSection"
-import ProjectCard from "../../components/ProjectCard"
-import { ProjectFilter } from "../../components/ProjectFilter"
-import { InteractiveCard } from "../../components/InteractiveCard"
-import { projects } from "../../src/config"
+import Link from "next/link"
+import { Rocket } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { ClassicSection } from "@/components/classic/classic-section"
+import { SyntaxHighlight, CodeBlock } from "@/components/ide/code-block"
+import { DualLayoutPage } from "@/components/dual-layout-page"
+import { projects } from "@/src/config"
 
-export default function Projects() {
-  const [filters, setFilters] = useState({ search: "", selectedTags: [] as string[] })
-
-  // Get all unique tags from projects
-  const allTags = useMemo(() => {
-    const tags = projects.flatMap((project) => project.tags)
-    return [...new Set(tags)].sort()
-  }, [])
-
-  // Filter projects based on search and tags
-  const filteredProjects = useMemo(() => {
-    return projects.filter((project) => {
-      const matchesSearch =
-        project.title.toLowerCase().includes(filters.search.toLowerCase()) ||
-        project.shortDescription.toLowerCase().includes(filters.search.toLowerCase()) ||
-        project.description.toLowerCase().includes(filters.search.toLowerCase()) ||
-        project.tags.some((tag) => tag.toLowerCase().includes(filters.search.toLowerCase()))
-
-      const matchesTags =
-        filters.selectedTags.length === 0 || filters.selectedTags.some((tag) => project.tags.includes(tag))
-
-      return matchesSearch && matchesTags
-    })
-  }, [filters])
-
-  return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
-      <PageLayout>
-        <div className="space-y-16">
-          <FadeInSection>
-            <div className="text-center space-y-4">
-              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                My Projects
-              </h1>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto font-serif">
-                Explore the projects I&apos;ve worked on and their impact on business operations and digital transformation.
-              </p>
-            </div>
-          </FadeInSection>
-
-          <FadeInSection>
-            <ProjectFilter tags={allTags} onFilterChange={setFilters} />
-          </FadeInSection>
-
-          <section className="py-12">
-            <div className="max-w-6xl mx-auto">
-              <FadeInSection>
-                {filteredProjects.length > 0 ? (
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {filteredProjects.map((project, index) => (
-                      <InteractiveCard key={project.slug}>
-                        <div
-                          className="h-full transform hover:scale-105 transition-all duration-300"
-                          style={{ animationDelay: `${index * 100}ms` }}
-                        >
-                          <ProjectCard {...project} />
-                        </div>
-                      </InteractiveCard>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-16">
-                    <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-                      <span className="text-2xl">🔍</span>
-                    </div>
-                    <h3 className="text-xl font-semibold mb-2">No projects found</h3>
-                    <p className="text-muted-foreground">
-                      Try adjusting your search terms or filters to find what you&apos;re looking for.
-                    </p>
-                  </div>
-                )}
-              </FadeInSection>
-            </div>
-          </section>
-
-          <FadeInSection>
-            <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-8 text-center">
-              <h3 className="text-2xl font-bold mb-4">Have a Project in Mind?</h3>
-              <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-                I&apos;m always excited to work on new challenges. Let&apos;s discuss how I can help bring your ideas to life.
-              </p>
-              <button className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-all duration-300 hover:scale-105 glow-effect">
-                Start a Conversation
-              </button>
-            </div>
-          </FadeInSection>
+export default function ProjectsPage() {
+  const classic = (
+    <>
+      <section className="py-16 border-b border-border">
+        <div className="max-w-3xl space-y-4">
+          <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">Projects</p>
+          <h1 className="text-4xl font-bold">Selected work across industries</h1>
+          <p className="text-xl text-muted-foreground leading-relaxed">
+            Migrations, automation, and products delivered with measurable outcomes.
+          </p>
         </div>
-      </PageLayout>
+      </section>
+
+      <ClassicSection title="All projects">
+        <div className="grid md:grid-cols-2 gap-6">
+          {projects.map((project) => (
+            <Card key={project.slug} className="h-full border-border">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Rocket className="h-5 w-5" />
+                  {project.title}
+                </CardTitle>
+                <CardDescription>{project.shortDescription}</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex flex-wrap gap-2">
+                  {project.tags.slice(0, 5).map((tag) => (
+                    <Badge key={tag} variant="outline">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+                <Link className="text-primary text-sm font-medium hover:underline" href={`/projects/${project.slug}`}>
+                  View details
+                </Link>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </ClassicSection>
+    </>
+  )
+
+  const ide = (
+    <div className="space-y-8 max-w-5xl">
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 text-[var(--ide-text-muted)] text-sm">
+          <span>1</span>
+          <SyntaxHighlight comment>{"// projects/index.ts"}</SyntaxHighlight>
+        </div>
+        <CodeBlock>
+          <div className="space-y-1">
+            <div>
+              <SyntaxHighlight keyword>export</SyntaxHighlight> <SyntaxHighlight keyword>const</SyntaxHighlight>{" "}
+              <SyntaxHighlight variable>projects</SyntaxHighlight> = [
+            </div>
+            {projects.map((project, idx) => (
+              <div key={project.slug} className="pl-4 space-y-1">
+                <div>{"{"}</div>
+                <div className="pl-4">
+                  <SyntaxHighlight property>title</SyntaxHighlight>:{" "}
+                  <SyntaxHighlight string>{`"${project.title}"`}</SyntaxHighlight>,
+                </div>
+                <div className="pl-4">
+                  <SyntaxHighlight property>slug</SyntaxHighlight>:{" "}
+                  <SyntaxHighlight string>{`"${project.slug}"`}</SyntaxHighlight>,
+                </div>
+                <div className="pl-4">
+                  <SyntaxHighlight property>tags</SyntaxHighlight>: [
+                </div>
+                <div className="pl-8">
+                  {project.tags.slice(0, 4).map((tag, tagIdx) => (
+                    <div key={tag}>
+                      <SyntaxHighlight string>{`"${tag}"`}</SyntaxHighlight>
+                      {tagIdx < project.tags.slice(0, 4).length - 1 ? "," : ""}
+                    </div>
+                  ))}
+                </div>
+                <div className="pl-4">]</div>
+                <div>{"}"}{idx < projects.length - 1 ? "," : ""}</div>
+              </div>
+            ))}
+            <div>]</div>
+          </div>
+        </CodeBlock>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-4">
+        {projects.map((project) => (
+          <Card key={project.slug} className="bg-[var(--ide-sidebar)] border-[var(--ide-border)] h-full">
+            <CardHeader>
+              <CardTitle className="text-[var(--ide-text)] flex items-center gap-2">
+                <Rocket className="h-5 w-5 text-[var(--ide-success)]" />
+                {project.title}
+              </CardTitle>
+              <CardDescription className="text-[var(--ide-text-muted)]">{project.shortDescription}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex flex-wrap gap-2">
+                {project.tags.slice(0, 4).map((tag) => (
+                  <Badge key={tag} className="bg-[var(--ide-accent)] text-white">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+              <Link className="text-[var(--ide-text)] text-sm font-medium" href={`/projects/${project.slug}`}>
+                View details →
+              </Link>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </div>
   )
+
+  return <DualLayoutPage classic={classic} ide={ide} />
 }
