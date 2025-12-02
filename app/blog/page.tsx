@@ -1,109 +1,131 @@
 "use client"
 
-import Navigation from "../../components/Navigation"
-import PageLayout from "../../components/PageLayout"
-import FadeInSection from "../../components/FadeInSection"
-import { InteractiveCard } from "../../components/InteractiveCard"
-import { blogPosts } from "../../src/config"
 import Link from "next/link"
-import { Calendar, Clock, ArrowRight } from "lucide-react"
-import Image from "next/image"
+import { Newspaper } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { ClassicSection } from "@/components/classic/classic-section"
+import { SyntaxHighlight, CodeBlock } from "@/components/ide/code-block"
+import { DualLayoutPage } from "@/components/dual-layout-page"
+import { blogPosts } from "@/src/config"
 
-export default function Blog() {
-  return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
-      <PageLayout>
-        <div className="space-y-16">
-          <FadeInSection>
-            <div className="text-center space-y-4">
-              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                Blog & Insights
-              </h1>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto font-serif">
-                Sharing knowledge and insights from my experience in software development, project management, and
-                digital transformation.
-              </p>
-            </div>
-          </FadeInSection>
-
-          <FadeInSection>
-            <div className="grid gap-8">
-              {blogPosts?.map((post) => (
-                <InteractiveCard key={post.id}>
-                  <article className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300">
-                    <div className="md:flex">
-                      <div className="md:w-1/3">
-                        <div className="h-64 md:h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
-                          <Image
-                            src={`/abstract-geometric-shapes.png?height=300&width=400&query=${encodeURIComponent(post.title)}`}
-                            alt={post.title}
-                            width={400}
-                            height={300}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      </div>
-                      <div className="md:w-2/3 p-8">
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
-                          <div className="flex items-center gap-1">
-                            <Calendar className="w-4 h-4" />
-                            <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Clock className="w-4 h-4" />
-                            <span>{post.readTime}</span>
-                          </div>
-                        </div>
-
-                        <h2 className="text-2xl font-bold mb-4 hover:text-primary transition-colors">
-                          <Link href={`/blog/${post.id}`}>{post.title}</Link>
-                        </h2>
-
-                        <p className="text-muted-foreground mb-6 leading-relaxed">{post.excerpt}</p>
-
-                        <div className="flex items-center justify-between">
-                          <div className="flex flex-wrap gap-2">
-                            {post.tags.map((tag) => (
-                              <span key={tag} className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-
-                          <Link
-                            href={`/blog/${post.id}`}
-                            className="flex items-center gap-2 text-primary hover:gap-3 transition-all duration-200 font-medium"
-                          >
-                            Read More
-                            <ArrowRight className="w-4 h-4" />
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                  </article>
-                </InteractiveCard>
-              ))}
-            </div>
-          </FadeInSection>
-
-          <FadeInSection>
-            <div className="text-center space-y-4 py-16">
-              <h2 className="text-3xl font-bold">Case Studies</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                Detailed breakdowns of real projects, challenges faced, and solutions implemented.
-              </p>
-              <Link
-                href="/case-studies"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-all duration-300 hover:scale-105"
-              >
-                View Case Studies
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-          </FadeInSection>
+export default function BlogPage() {
+  const classic = (
+    <>
+      <section className="py-16 border-b border-border">
+        <div className="max-w-3xl space-y-4">
+          <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">Blog</p>
+          <h1 className="text-4xl font-bold">Thoughts on delivery and engineering</h1>
+          <p className="text-xl text-muted-foreground leading-relaxed">
+            Notes from migrations, automations, and the journey from electrical planning to software.
+          </p>
         </div>
-      </PageLayout>
+      </section>
+
+      <ClassicSection title="Latest posts">
+        <div className="grid md:grid-cols-2 gap-6">
+          {blogPosts.map((post) => (
+            <Card key={post.id} className="h-full border-border">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Newspaper className="h-5 w-5" />
+                  {post.title}
+                </CardTitle>
+                <CardDescription>
+                  {post.publishedAt} • {post.readTime}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3 text-muted-foreground">
+                <p>{post.excerpt}</p>
+                <div className="flex gap-2 flex-wrap">
+                  {post.tags.map((tag) => (
+                    <Badge key={tag} variant="outline">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+                <Link className="text-primary text-sm font-medium hover:underline" href={`/blog/${post.id}`}>
+                  Continue reading
+                </Link>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </ClassicSection>
+    </>
+  )
+
+  const ide = (
+    <div className="space-y-8 max-w-5xl">
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 text-[var(--ide-text-muted)] text-sm">
+          <span>1</span>
+          <SyntaxHighlight comment>{"// blog/index.ts"}</SyntaxHighlight>
+        </div>
+        <CodeBlock>
+          <div className="space-y-1">
+            <div>
+              <SyntaxHighlight keyword>export</SyntaxHighlight> <SyntaxHighlight keyword>const</SyntaxHighlight>{" "}
+              <SyntaxHighlight variable>posts</SyntaxHighlight> = [
+            </div>
+            {blogPosts.map((post, idx) => (
+              <div key={post.id} className="pl-4 space-y-1">
+                <div>{"{"}</div>
+                <div className="pl-4">
+                  <SyntaxHighlight property>title</SyntaxHighlight>:{" "}
+                  <SyntaxHighlight string>{`"${post.title}"`}</SyntaxHighlight>,
+                </div>
+                <div className="pl-4">
+                  <SyntaxHighlight property>publishedAt</SyntaxHighlight>:{" "}
+                  <SyntaxHighlight string>{`"${post.publishedAt}"`}</SyntaxHighlight>,
+                </div>
+                <div className="pl-4">
+                  <SyntaxHighlight property>tags</SyntaxHighlight>: [
+                </div>
+                <div className="pl-8">
+                  {post.tags.map((tag, tagIdx) => (
+                    <div key={tag}>
+                      <SyntaxHighlight string>{`"${tag}"`}</SyntaxHighlight>
+                      {tagIdx < post.tags.length - 1 ? "," : ""}
+                    </div>
+                  ))}
+                </div>
+                <div className="pl-4">]</div>
+                <div>{"}"}{idx < blogPosts.length - 1 ? "," : ""}</div>
+              </div>
+            ))}
+            <div>]</div>
+          </div>
+        </CodeBlock>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-4">
+        {blogPosts.map((post) => (
+          <Card key={post.id} className="bg-[var(--ide-sidebar)] border-[var(--ide-border)] h-full">
+            <CardHeader>
+              <CardTitle className="text-[var(--ide-text)]">{post.title}</CardTitle>
+              <CardDescription className="text-[var(--ide-text-muted)]">
+                {post.publishedAt} • {post.readTime}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="text-[var(--ide-text)] text-sm space-y-2">
+              <p>{post.excerpt}</p>
+              <div className="flex gap-2 flex-wrap">
+                {post.tags.map((tag) => (
+                  <Badge key={tag} className="bg-[var(--ide-accent)] text-white">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+              <Link className="text-[var(--ide-accent)]" href={`/blog/${post.id}`}>
+                Continue reading →
+              </Link>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </div>
   )
+
+  return <DualLayoutPage classic={classic} ide={ide} />
 }

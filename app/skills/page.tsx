@@ -1,203 +1,102 @@
 "use client"
 
-import Navigation from "../../components/Navigation"
-import PageLayout from "../../components/PageLayout"
-import FadeInSection from "../../components/FadeInSection"
-import { SkillProgress } from "../../components/SkillProgress"
-import { GitHubActivity } from "../../components/GitHubActivity"
-import { CurrentlyPlaying } from "../../components/CurrentlyPlaying"
-import { InteractiveCard } from "../../components/InteractiveCard"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { ClassicSection } from "@/components/classic/classic-section"
+import { SyntaxHighlight, CodeBlock } from "@/components/ide/code-block"
+import { DualLayoutPage } from "@/components/dual-layout-page"
+import { skillStacks } from "@/src/content"
 
-export default function Skills() {
-  return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
-      <PageLayout>
-        <div className="space-y-16">
-          <FadeInSection>
-            <div className="text-center space-y-4">
-              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                Skills & Expertise
-              </h1>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto font-serif">
-                Technical expertise and competencies I&apos;ve developed throughout my career in software development and
-                project management.
-              </p>
-            </div>
-          </FadeInSection>
-
-          <section className="py-12">
-            <div className="max-w-6xl mx-auto">
-              <div className="grid lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2">
-                  <FadeInSection>
-                    <SkillProgress />
-                  </FadeInSection>
-                </div>
-
-                <div className="space-y-6">
-                  <FadeInSection>
-                    <CurrentlyPlaying />
-                  </FadeInSection>
-
-                  <FadeInSection>
-                    <GitHubActivity />
-                  </FadeInSection>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <FadeInSection>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <InteractiveCard>
-                <div className="bg-card border border-border rounded-xl p-8 hover:shadow-lg transition-all duration-300 h-full">
-                  <h3 className="text-xl font-semibold mb-6 text-primary">Frameworks & Tools</h3>
-                  <div className="space-y-3">
-                    <div className="flex flex-wrap gap-2">
-                      <span className="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">
-                        .NET 8
-                      </span>
-                      <span className="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">
-                        WPF
-                      </span>
-                      <span className="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">
-                        React
-                      </span>
-                      <span className="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">
-                        Next.js
-                      </span>
-                      <span className="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">
-                        Android Studio
-                      </span>
-                      <span className="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">
-                        PySide6
-                      </span>
-                      <span className="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">
-                        QtWebEngine
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </InteractiveCard>
-
-              <InteractiveCard>
-                <div className="bg-card border border-border rounded-xl p-8 hover:shadow-lg transition-all duration-300 h-full">
-                  <h3 className="text-xl font-semibold mb-6 text-secondary">Languages</h3>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium">English</span>
-                      <span className="text-sm text-muted-foreground bg-secondary/10 px-2 py-1 rounded">
-                        C1 Advanced
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium">German</span>
-                      <span className="text-sm text-muted-foreground bg-secondary/10 px-2 py-1 rounded">
-                        Native
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium">French</span>
-                      <span className="text-sm text-muted-foreground bg-secondary/10 px-2 py-1 rounded">
-                        B2
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </InteractiveCard>
-
-              <InteractiveCard>
-                <div className="bg-card border border-border rounded-xl p-8 hover:shadow-lg transition-all duration-300 h-full">
-                  <h3 className="text-xl font-semibold mb-6 text-accent">Certifications</h3>
-                  <div className="space-y-3">
-                    <div className="p-3 bg-accent/5 border border-accent/20 rounded-lg">
-                      <h4 className="font-medium text-sm">N.a.</h4>
-                      <p className="text-xs text-muted-foreground">A thoroughly planned Certification Roadmap is set for 2025/26</p>
-                    </div>
-                  </div>
-                </div>
-              </InteractiveCard>
-            </div>
-          </FadeInSection>
-
-          <FadeInSection>
-            <div className="grid md:grid-cols-2 gap-8">
-              <InteractiveCard>
-                <div className="bg-card border border-border rounded-xl p-8 hover:shadow-lg transition-all duration-300 h-full">
-                  <h3 className="text-xl font-semibold mb-6">Project Management</h3>
-                  <ul className="space-y-3 text-card-foreground">
-                    <li className="flex items-start gap-3">
-                      <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                      <div>
-                        <span className="font-medium">Agile Methodologies</span>
-                        <p className="text-sm text-muted-foreground">Scrum, Kanban, and hybrid approaches</p>
-                      </div>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                      <div>
-                        <span className="font-medium">Requirements Analysis</span>
-                        <p className="text-sm text-muted-foreground">Stakeholder interviews and documentation</p>
-                      </div>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                      <div>
-                        <span className="font-medium">Process Optimization</span>
-                        <p className="text-sm text-muted-foreground">Workflow automation and efficiency improvements</p>
-                      </div>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                      <div>
-                        <span className="font-medium">Team Leadership</span>
-                        <p className="text-sm text-muted-foreground">Cross-functional team coordination</p>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </InteractiveCard>
-
-              <InteractiveCard>
-                <div className="bg-card border border-border rounded-xl p-8 hover:shadow-lg transition-all duration-300 h-full">
-                  <h3 className="text-xl font-semibold mb-6">Technical Expertise</h3>
-                  <ul className="space-y-3 text-card-foreground">
-                    <li className="flex items-start gap-3">
-                      <div className="w-2 h-2 bg-secondary rounded-full mt-2 flex-shrink-0"></div>
-                      <div>
-                        <span className="font-medium">Database Design</span>
-                        <p className="text-sm text-muted-foreground">SQL Server, PostgreSQL optimization</p>
-                      </div>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <div className="w-2 h-2 bg-secondary rounded-full mt-2 flex-shrink-0"></div>
-                      <div>
-                        <span className="font-medium">API Development</span>
-                        <p className="text-sm text-muted-foreground">RESTful services and integration</p>
-                      </div>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <div className="w-2 h-2 bg-secondary rounded-full mt-2 flex-shrink-0"></div>
-                      <div>
-                        <span className="font-medium">Test Automation</span>
-                        <p className="text-sm text-muted-foreground">Unit, integration, and E2E testing</p>
-                      </div>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <div className="w-2 h-2 bg-secondary rounded-full mt-2 flex-shrink-0"></div>
-                      <div>
-                        <span className="font-medium">System Architecture</span>
-                        <p className="text-sm text-muted-foreground">Usage of GO4 patterns and microservices</p>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </InteractiveCard>
-            </div>
-          </FadeInSection>
+export default function SkillsPage() {
+  const classic = (
+    <>
+      <section className="py-16 border-b border-border">
+        <div className="max-w-3xl space-y-4">
+          <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">Skills</p>
+          <h1 className="text-4xl font-bold">Tools I ship with</h1>
+          <p className="text-xl text-muted-foreground leading-relaxed">
+            A pragmatic stack for building, migrating, and automating software with teams.
+          </p>
         </div>
-      </PageLayout>
+      </section>
+
+      <ClassicSection title="Technical">
+        <Card>
+          <CardHeader>
+            <CardTitle>Core stack</CardTitle>
+            <CardDescription>Technologies I rely on to move projects forward</CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-wrap gap-2">
+            {skillStacks.skills.map((skill) => (
+              <Badge key={skill}>{skill}</Badge>
+            ))}
+          </CardContent>
+        </Card>
+      </ClassicSection>
+
+      <ClassicSection title="Languages">
+        <div className="grid md:grid-cols-2 gap-4">
+          {skillStacks.languages.map((language) => (
+            <Card key={language.name}>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <span>{language.name}</span>
+                  <span className="text-sm text-muted-foreground">{language.level}</span>
+                </CardTitle>
+              </CardHeader>
+            </Card>
+          ))}
+        </div>
+      </ClassicSection>
+    </>
+  )
+
+  const ide = (
+    <div className="space-y-8 max-w-4xl">
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 text-[var(--ide-text-muted)] text-sm">
+          <span>1</span>
+          <SyntaxHighlight comment>{"// skills/index.ts"}</SyntaxHighlight>
+        </div>
+        <CodeBlock>
+          <div className="space-y-1">
+            <div>
+              <SyntaxHighlight keyword>export</SyntaxHighlight> <SyntaxHighlight keyword>const</SyntaxHighlight>{" "}
+              <SyntaxHighlight variable>skills</SyntaxHighlight> = [
+            </div>
+            <div className="pl-4">
+              {skillStacks.skills.map((skill, idx) => (
+                <span key={skill} className="pr-2">
+                  <SyntaxHighlight string>{`"${skill}"`}</SyntaxHighlight>
+                  {idx < skillStacks.skills.length - 1 ? "," : ""}
+                </span>
+              ))}
+            </div>
+            <div>]</div>
+          </div>
+        </CodeBlock>
+      </div>
+
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 text-[var(--ide-text-muted)] text-sm">
+          <span>18</span>
+          <SyntaxHighlight comment>{"// skills/languages.ts"}</SyntaxHighlight>
+        </div>
+        <div className="grid md:grid-cols-2 gap-4">
+          {skillStacks.languages.map((language) => (
+            <Card key={language.name} className="bg-[var(--ide-sidebar)] border-[var(--ide-border)]">
+              <CardHeader>
+                <CardTitle className="text-[var(--ide-text)] flex items-center justify-between">
+                  <span>{language.name}</span>
+                  <span className="text-sm text-[var(--ide-text-muted)]">{language.level}</span>
+                </CardTitle>
+              </CardHeader>
+            </Card>
+          ))}
+        </div>
+      </div>
     </div>
   )
+
+  return <DualLayoutPage classic={classic} ide={ide} />
 }

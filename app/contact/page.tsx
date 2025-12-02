@@ -1,185 +1,96 @@
 "use client"
 
-import Navigation from "../../components/Navigation"
-import PageLayout from "../../components/PageLayout"
-import FadeInSection from "../../components/FadeInSection"
-import { ContactForm } from "../../components/ContactForm"
-import { InteractiveCard } from "../../components/InteractiveCard"
-import { Mail, MapPin, Clock, Phone } from "lucide-react"
-import { SiGithub, SiLinkedin } from "react-icons/si"
+import Link from "next/link"
+import { Mail, MapPin } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { ClassicSection } from "@/components/classic/classic-section"
+import { SyntaxHighlight, CodeBlock } from "@/components/ide/code-block"
+import { DualLayoutPage } from "@/components/dual-layout-page"
+import { personalInfo } from "@/src/content"
 
-export default function Contact() {
-  return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
-      <PageLayout>
-        <div className="space-y-16">
-          <FadeInSection>
-            <div className="text-center space-y-4">
-              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                Let&apos;s Work Together
-              </h1>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto font-serif">
-                Ready to bring your project to life? I&apos;d love to hear about your ideas and discuss how we can make them
-                reality.
-              </p>
-            </div>
-          </FadeInSection>
-
-          <section className="py-12">
-            <div className="max-w-6xl mx-auto">
-              <div className="grid lg:grid-cols-3 gap-12">
-                <div className="lg:col-span-1 space-y-8">
-                  <FadeInSection>
-                    <div>
-                      <h3 className="text-2xl font-semibold mb-6">Get in Touch</h3>
-                      <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                        I&apos;m always interested in discussing new opportunities, innovative projects, or simply connecting
-                        with fellow professionals in the tech industry.
-                      </p>
-                    </div>
-                  </FadeInSection>
-
-                  <FadeInSection>
-                    <div className="space-y-4">
-                      <InteractiveCard>
-                        <a
-                          href="mailto:info@sweber.dev"
-                          className="flex items-center gap-4 p-4 bg-card border border-border rounded-lg hover:shadow-md transition-all duration-300"
-                          aria-label="Email info@sweber.dev"
-                        >
-                          <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                            <Mail className="w-6 h-6 text-primary" />
-                          </div>
-                          <div>
-                            <h4 className="font-medium">Email</h4>
-                            <p className="text-muted-foreground">info@sweber.dev</p>
-                          </div>
-                        </a>
-                      </InteractiveCard>
-
-                      <InteractiveCard>
-                        <div className="flex items-center gap-4 p-4 bg-card border border-border rounded-lg hover:shadow-md transition-all duration-300">
-                          <div className="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center">
-                            <MapPin className="w-6 h-6 text-secondary" />
-                          </div>
-                          <div>
-                            <h4 className="font-medium">Location</h4>
-                            <p className="text-muted-foreground">St. Gallen, Switzerland</p>
-                          </div>
-                        </div>
-                      </InteractiveCard>
-
-                      <InteractiveCard>
-                        <div className="flex items-center gap-4 p-4 bg-card border border-border rounded-lg hover:shadow-md transition-all duration-300">
-                          <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center">
-                            <Clock className="w-6 h-6 text-accent" />
-                          </div>
-                          <div>
-                            <h4 className="font-medium">Response Time</h4>
-                            <p className="text-muted-foreground">Within 24 hours</p>
-                          </div>
-                        </div>
-                      </InteractiveCard>
-
-                      <InteractiveCard>
-                        <a
-                          href="tel:+41798991112"
-                          className="flex items-center gap-4 p-4 bg-card border border-border rounded-lg hover:shadow-md transition-all duration-300"
-                          aria-label="Call +41 79 899 11 12"
-                        >
-                          <div className="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center">
-                            <Phone className="w-6 h-6 text-secondary" />
-                          </div>
-                          <div>
-                            <h4 className="font-medium">Phone</h4>
-                            <p className="text-muted-foreground">+41 79 899 11 12</p>
-                          </div>
-                        </a>
-                      </InteractiveCard>
-                    </div>
-                  </FadeInSection>
-
-                  <FadeInSection>
-                    <div>
-                      <h4 className="font-medium mb-4">Connect on Social</h4>
-                      <div className="grid grid-cols-2 gap-4">
-                        <InteractiveCard>
-                          <a
-                            href="mailto:info@sweber.dev"
-                            className="flex items-center justify-center gap-2 p-3 bg-card border border-border rounded-lg hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-105"
-                            aria-label="Email info@sweber.dev"
-                          >
-                            <Mail className="w-6 h-6" />
-                            <span className="text-sm font-medium">Email</span>
-                          </a>
-                        </InteractiveCard>
-                        <InteractiveCard>
-                          <a
-                            href="https://github.com/sxwxbxr"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center justify-center gap-2 p-3 bg-card border border-border rounded-lg hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-105"
-                            aria-label="Visit GitHub profile"
-                          >
-                            <SiGithub className="w-6 h-6" />
-                            <span className="text-sm font-medium">GitHub</span>
-                          </a>
-                        </InteractiveCard>
-                        <InteractiveCard>
-                          <a
-                            href="https://ch.linkedin.com/in/seya-weber-06a592256"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center justify-center gap-2 p-3 bg-card border border-border rounded-lg hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-105"
-                            aria-label="Connect on LinkedIn"
-                          >
-                            <SiLinkedin className="w-6 h-6" />
-                            <span className="text-sm font-medium">LinkedIn</span>
-                          </a>
-                        </InteractiveCard>
-                        <InteractiveCard>
-                          <a
-                            href="tel:+41798991112"
-                            className="flex items-center justify-center gap-2 p-3 bg-card border border-border rounded-lg hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-105"
-                            aria-label="Call +41 79 899 11 12"
-                          >
-                            <Phone className="w-6 h-6" />
-                            <span className="text-sm font-medium">Call</span>
-                          </a>
-                        </InteractiveCard>
-                      </div>
-                    </div>
-                  </FadeInSection>
-                </div>
-
-                <div className="lg:col-span-2">
-                  <FadeInSection>
-                    <ContactForm />
-                  </FadeInSection>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <FadeInSection>
-            <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-8 text-center">
-              <h3 className="text-2xl font-bold mb-4">Prefer a Quick Chat?</h3>
-              <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-                Sometimes it&apos;s easier to discuss projects over a call. I&apos;m available for brief consultations to
-                understand your needs better.
-              </p>
-              <a
-                href="tel:+41798991112"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-all duration-300 hover:scale-105 glow-effect"
-                aria-label="Call +41 79 899 11 12"
-              >
-                Schedule a Call
-              </a>
-            </div>
-          </FadeInSection>
+export default function ContactPage() {
+  const classic = (
+    <>
+      <section className="py-16 border-b border-border">
+        <div className="space-y-4 max-w-3xl">
+          <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">Contact</p>
+          <h1 className="text-4xl font-bold">Let&apos;s collaborate</h1>
+          <p className="text-xl text-muted-foreground leading-relaxed">
+            Share what you&apos;re building or migrating. I respond within {personalInfo.contact.responseTime}.
+          </p>
         </div>
-      </PageLayout>
+      </section>
+
+      <ClassicSection title="How to reach me">
+        <Card className="max-w-2xl">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Mail className="h-5 w-5" />
+              Email
+            </CardTitle>
+            <CardDescription>Fastest way to reach me.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-2 text-muted-foreground">
+            <Link className="text-primary hover:underline" href={`mailto:${personalInfo.contact.email}`}>
+              {personalInfo.contact.email}
+            </Link>
+            <p>Response time: {personalInfo.contact.responseTime}</p>
+          </CardContent>
+        </Card>
+        <div className="pt-6 text-sm text-muted-foreground flex items-center gap-2">
+          <MapPin className="h-4 w-4" /> {personalInfo.location}
+        </div>
+      </ClassicSection>
+    </>
+  )
+
+  const ide = (
+    <div className="space-y-8 max-w-4xl">
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 text-[var(--ide-text-muted)] text-sm">
+          <span>1</span>
+          <SyntaxHighlight comment>{"// contact/info.ts"}</SyntaxHighlight>
+        </div>
+        <CodeBlock>
+          <div className="space-y-1">
+            <div>{"{"}</div>
+            <div className="pl-4">
+              <SyntaxHighlight property>email</SyntaxHighlight>:{" "}
+              <SyntaxHighlight string>{`"${personalInfo.contact.email}"`}</SyntaxHighlight>,
+            </div>
+            <div className="pl-4">
+              <SyntaxHighlight property>responseTime</SyntaxHighlight>:{" "}
+              <SyntaxHighlight string>{`"${personalInfo.contact.responseTime}"`}</SyntaxHighlight>,
+            </div>
+            <div className="pl-4">
+              <SyntaxHighlight property>location</SyntaxHighlight>:{" "}
+              <SyntaxHighlight string>{`"${personalInfo.location}"`}</SyntaxHighlight>
+            </div>
+            <div>{"}"}</div>
+          </div>
+        </CodeBlock>
+      </div>
+
+      <Card className="bg-[var(--ide-sidebar)] border-[var(--ide-border)] max-w-xl">
+        <CardHeader>
+          <CardTitle className="text-[var(--ide-text)] flex items-center gap-2">
+            <Mail className="h-5 w-5 text-[var(--ide-accent)]" /> Contact
+          </CardTitle>
+          <CardDescription className="text-[var(--ide-text-muted)]">
+            Response time: {personalInfo.contact.responseTime}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="text-[var(--ide-text)] text-sm space-y-2">
+          <p>
+            Email: <a className="text-[var(--ide-accent)]" href={`mailto:${personalInfo.contact.email}`}>
+              {personalInfo.contact.email}
+            </a>
+          </p>
+          <p>Location: {personalInfo.location}</p>
+        </CardContent>
+      </Card>
     </div>
   )
+
+  return <DualLayoutPage classic={classic} ide={ide} />
 }
