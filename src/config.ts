@@ -94,7 +94,7 @@ const projects = [
     tags: ["SaaS", "AI", "Chatbot", "WhatsApp", "Next.js", "React", "Clerk", "Stripe", "Fastify", "Supabase"],
     slug: "schulzmedia",
     github: "#",
-    demo: "https://flowlychat.vercel.app",
+    demo: "https://flowlychat.app",
   },
   {
     title: "Chr0no Terminal Time Tracker",
@@ -115,7 +115,29 @@ const projects = [
     ],
     slug: "chr0no",
     github: "https://github.com/sxwxbxr/chr0no",
-    demo: "https://chr0no.vercel.app/",
+    demo: "https://chr0no.app/",
+  },
+  {
+    title: "Chr0no Enterprise Version",
+    shortDescription:
+      "Redesigned the initial chr0no terminal time tracker, to fit the needs of businesses.",
+    description:
+      "After receiving positive feedback as well as improvements and ideas for the future, I've realised an enterprise version with a more professional look and feel while focusing on more important features for businesses and debloating the initial solution.",
+    image: "/chr0no.png",
+    tags: [
+      "Time Tracking",
+      "Business Solution",
+      "Modern UI",
+      "Next.js",
+      "React",
+      "Supabase",
+      "Tailwind CSS",
+      "TypeScript",
+      "shadcn UI",
+    ],
+    slug: "chr0no-enterprise",
+    github: "https://github.com/sxwxbxr/chr0no-enterprise",
+    demo: "https://enterprise.chr0no.app/",
   }
 ]
 
