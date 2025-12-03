@@ -6,6 +6,7 @@ import FadeInSection from "../components/FadeInSection"
 import { ParticleBackground } from "../components/ParticleBackground"
 import { AnimatedCounter } from "../components/AnimatedCounter"
 import { InteractiveCard } from "../components/InteractiveCard"
+import { EtherealShadows } from "../components/EtherealShadows"
 import { projects, blogPosts, caseStudies } from "../src/config"
 import { ArrowDown, MapPin, ArrowRight, Users, Award, Calendar, Quote } from "lucide-react"
 
@@ -37,7 +38,7 @@ export default function Home() {
 
       <section className="relative min-h-screen flex items-center justify-center gradient-bg overflow-hidden pt-16">
         <ParticleBackground />
-        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+        <EtherealShadows />
         <FadeInSection>
           <div className="text-center space-y-8 px-4 max-w-4xl mx-auto relative z-10">
             <div className="space-y-4">
