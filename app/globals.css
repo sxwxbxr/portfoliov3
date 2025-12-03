@@ -172,6 +172,57 @@
     background-size: 20px 20px;
   }
 
+  /* Ethereal shadows background */
+  .ethereal-blob {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(60px);
+    opacity: 0.6;
+    mix-blend-mode: screen;
+  }
+
+  .animate-ethereal-1 {
+    animation: etherealFloat1 18s ease-in-out infinite;
+  }
+
+  .animate-ethereal-2 {
+    animation: etherealFloat2 22s ease-in-out infinite;
+  }
+
+  .animate-ethereal-3 {
+    animation: etherealFloat3 20s ease-in-out infinite;
+  }
+
+  @keyframes etherealFloat1 {
+    0%,
+    100% {
+      transform: translate3d(-8%, -4%, 0) scale(1);
+    }
+    50% {
+      transform: translate3d(6%, 8%, 0) scale(1.05);
+    }
+  }
+
+  @keyframes etherealFloat2 {
+    0%,
+    100% {
+      transform: translate3d(6%, 2%, 0) scale(1.05);
+    }
+    50% {
+      transform: translate3d(-4%, -6%, 0) scale(1);
+    }
+  }
+
+  @keyframes etherealFloat3 {
+    0%,
+    100% {
+      transform: translate3d(0, 8%, 0) scale(1);
+    }
+    50% {
+      transform: translate3d(6%, -6%, 0) scale(1.08);
+    }
+  }
+
   /* Pulse animation for interactive elements */
   @keyframes pulse-glow {
     0%,
