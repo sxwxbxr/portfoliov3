@@ -13,6 +13,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { AuroraBackground } from "@/components/AuroraBackground"
 import { BlurFade } from "@/components/BlurFade"
 import { ThemeToggle } from "@/components/ThemeToggle"
@@ -33,9 +41,27 @@ export default function Home() {
   const featuredStudies = caseStudies.slice(0, 2)
   const latestPosts = blogPosts.slice(0, 2)
 
+  const projectTags = useMemo(
+    () => [
+      "All",
+      ...Array.from(new Set(projects.flatMap((project) => project.tags))),
+    ],
+    [],
+  )
+
+  const [projectView, setProjectView] = useState<"featured" | "all">("featured")
+  const [projectTag, setProjectTag] = useState<string>("All")
   const [selectedProject, setSelectedProject] = useState<(typeof projects)[number] | null>(null)
   const [selectedStudy, setSelectedStudy] = useState<(typeof caseStudies)[number] | null>(null)
   const [selectedPost, setSelectedPost] = useState<(typeof blogPosts)[number] | null>(null)
+
+  const displayedProjects = useMemo(() => {
+    const pool = projectView === "all" ? projects : featuredProjects
+
+    if (projectTag === "All") return pool
+
+    return pool.filter((project) => project.tags.includes(projectTag))
+  }, [featuredProjects, projectTag, projectView])
 
   const currentProject = useMemo(() => selectedProject, [selectedProject])
   const currentStudy = useMemo(() => selectedStudy, [selectedStudy])
@@ -262,47 +288,91 @@ export default function Home() {
         </section>
 
         <section id="projects" className="space-y-8">
-          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-            <div>
-              <p className="text-sm uppercase tracking-[0.25em] text-primary">Projects</p>
-              <h2 className="text-3xl font-semibold md:text-4xl">Recent work & experiments</h2>
-              <p className="max-w-2xl text-muted-foreground">
-                Real-world software delivery across healthcare, finance, automation, and developer tooling.
-              </p>
+          <Tabs
+            value={projectView}
+            onValueChange={(value) => setProjectView(value as "featured" | "all")}
+            className="space-y-4"
+          >
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <div>
+                <p className="text-sm uppercase tracking-[0.25em] text-primary">Projects</p>
+                <h2 className="text-3xl font-semibold md:text-4xl">Recent work & experiments</h2>
+                <p className="max-w-2xl text-muted-foreground">
+                  Real-world software delivery across healthcare, finance, automation, and developer tooling.
+                </p>
+              </div>
+              <div className="flex flex-col gap-3 md:items-end">
+                <TabsList>
+                  <TabsTrigger value="featured">Featured</TabsTrigger>
+                  <TabsTrigger value="all">All projects</TabsTrigger>
+                </TabsList>
+                <Badge variant="outline" className="w-fit rounded-full">
+                  {displayedProjects.length} {projectTag === "All" ? "projects" : `${projectTag} projects`}
+                </Badge>
+              </div>
             </div>
-            <Badge variant="outline" className="h-fit rounded-full">
-              {featuredProjects.length} featured projects
-            </Badge>
-          </div>
-          <div className="grid gap-6 md:grid-cols-2">
-            {featuredProjects.map((project, index) => (
-              <BlurFade key={project.slug} delay={index * 0.05}>
-                <button
-                  type="button"
-                  onClick={() => setSelectedProject(project)}
-                  className="group block h-full w-full transition hover:-translate-y-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
+
+            {projectView === "all" && (
+              <div className="flex flex-wrap items-center gap-3">
+                <Select value={projectTag} onValueChange={setProjectTag}>
+                  <SelectTrigger className="min-w-[200px]">
+                    <SelectValue placeholder="Filter by tag" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {projectTags.map((tag) => (
+                      <SelectItem key={tag} value={tag}>
+                        {tag}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setProjectTag("All")}
+                  className="text-muted-foreground hover:text-foreground"
                 >
-                  <Card className="h-full border-border/70 bg-card/80 transition group-hover:border-primary/40 group-hover:shadow-xl">
-                    <CardHeader>
-                      <div className="flex flex-wrap gap-2">
-                        {project.tags.slice(0, 3).map((tag) => (
-                          <Badge key={tag} variant="secondary" className="rounded-full">
-                            {tag}
-                          </Badge>
-                        ))}
-                      </div>
-                      <CardTitle className="group-hover:text-primary">{project.title}</CardTitle>
-                      <CardDescription>{project.shortDescription}</CardDescription>
-                    </CardHeader>
-                    <CardFooter className="flex items-center gap-3 text-sm font-medium text-primary">
-                      <span>View details</span>
-                      <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
-                    </CardFooter>
-                  </Card>
-                </button>
-              </BlurFade>
-            ))}
-          </div>
+                  Reset filter
+                </Button>
+              </div>
+            )}
+
+            <div className="grid gap-6 md:grid-cols-2">
+              {displayedProjects.map((project, index) => (
+                <BlurFade key={project.slug} delay={index * 0.05}>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedProject(project)}
+                    className="group block h-full w-full transition hover:-translate-y-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
+                  >
+                    <Card className="h-full border-border/70 bg-card/80 transition group-hover:border-primary/40 group-hover:shadow-xl">
+                      <CardHeader>
+                        <div className="flex flex-wrap gap-2">
+                          {project.tags.slice(0, 3).map((tag) => (
+                            <Badge key={tag} variant="secondary" className="rounded-full">
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+                        <CardTitle className="group-hover:text-primary">{project.title}</CardTitle>
+                        <CardDescription>{project.shortDescription}</CardDescription>
+                      </CardHeader>
+                      <CardFooter className="flex items-center gap-3 text-sm font-medium text-primary">
+                        <span>View details</span>
+                        <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+                      </CardFooter>
+                    </Card>
+                  </button>
+                </BlurFade>
+              ))}
+
+              {!displayedProjects.length && (
+                <div className="col-span-full rounded-lg border border-dashed border-border/60 bg-muted/40 p-6 text-center text-sm text-muted-foreground">
+                  No projects match this filter yet. Try another tag.
+                </div>
+              )}
+            </div>
+          </Tabs>
         </section>
 
         <Dialog open={!!currentProject} onOpenChange={(open) => !open && setSelectedProject(null)}>
