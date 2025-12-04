@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { AuroraBackground } from "@/components/AuroraBackground"
 import { BlurFade } from "@/components/BlurFade"
+import { ThemeToggle } from "@/components/ThemeToggle"
 import {
   education,
   engagementModels,
@@ -51,6 +52,13 @@ export default function Home() {
               <Link href="#contact">Contact</Link>
             </Button>
             <Button asChild className="ml-2">
+              <Link href="mailto:info@sweber.dev">Let&apos;s talk</Link>
+            </Button>
+            <ThemeToggle />
+          </div>
+          <div className="flex items-center gap-2 md:hidden">
+            <ThemeToggle />
+            <Button size="sm" asChild>
               <Link href="mailto:info@sweber.dev">Let&apos;s talk</Link>
             </Button>
           </div>
