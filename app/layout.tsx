@@ -153,7 +153,7 @@ export default function RootLayout({
       </head>
       <body className="font-sans">
         <Suspense fallback={null}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
             <ScrollProgress />
             <div className="flex min-h-screen flex-col">
               <div className="flex-1">{children}</div>
