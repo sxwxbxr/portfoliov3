@@ -1,10 +1,18 @@
 "use client"
 
 import Link from "next/link"
+import { useMemo, useState } from "react"
 import { ArrowRight, ArrowUpRight, Github, Linkedin, Mail, MapPin, Phone } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import { AuroraBackground } from "@/components/AuroraBackground"
 import { BlurFade } from "@/components/BlurFade"
 import { ThemeToggle } from "@/components/ThemeToggle"
@@ -24,6 +32,14 @@ export default function Home() {
   const featuredProjects = projects.slice(0, 4)
   const featuredStudies = caseStudies.slice(0, 2)
   const latestPosts = blogPosts.slice(0, 2)
+
+  const [selectedProject, setSelectedProject] = useState<(typeof projects)[number] | null>(null)
+  const [selectedStudy, setSelectedStudy] = useState<(typeof caseStudies)[number] | null>(null)
+  const [selectedPost, setSelectedPost] = useState<(typeof blogPosts)[number] | null>(null)
+
+  const currentProject = useMemo(() => selectedProject, [selectedProject])
+  const currentStudy = useMemo(() => selectedStudy, [selectedStudy])
+  const currentPost = useMemo(() => selectedPost, [selectedPost])
 
   return (
     <main className="bg-gradient-to-b from-background via-background to-background/40 text-foreground">
@@ -261,9 +277,10 @@ export default function Home() {
           <div className="grid gap-6 md:grid-cols-2">
             {featuredProjects.map((project, index) => (
               <BlurFade key={project.slug} delay={index * 0.05}>
-                <Link
-                  href={`/projects/${project.slug}`}
-                  className="group block h-full transition hover:-translate-y-1 hover:no-underline"
+                <button
+                  type="button"
+                  onClick={() => setSelectedProject(project)}
+                  className="group block h-full w-full transition hover:-translate-y-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
                 >
                   <Card className="h-full border-border/70 bg-card/80 transition group-hover:border-primary/40 group-hover:shadow-xl">
                     <CardHeader>
@@ -282,11 +299,50 @@ export default function Home() {
                       <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
                     </CardFooter>
                   </Card>
-                </Link>
+                </button>
               </BlurFade>
             ))}
           </div>
         </section>
+
+        <Dialog open={!!currentProject} onOpenChange={(open) => !open && setSelectedProject(null)}>
+          <DialogContent>
+            {currentProject && (
+              <div className="space-y-4">
+                <DialogHeader className="space-y-2">
+                  <DialogTitle>{currentProject.title}</DialogTitle>
+                  <DialogDescription>{currentProject.shortDescription}</DialogDescription>
+                  <div className="flex flex-wrap gap-2">
+                    {currentProject.tags.map((tag) => (
+                      <Badge key={tag} variant="secondary" className="rounded-full">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                </DialogHeader>
+                <p className="text-sm text-muted-foreground whitespace-pre-line">{currentProject.description}</p>
+                <div className="flex flex-wrap gap-3">
+                  {currentProject.github && currentProject.github !== "#" && (
+                    <Button size="sm" variant="outline" asChild>
+                      <Link href={currentProject.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2">
+                        <Github className="h-4 w-4" />
+                        Repo
+                      </Link>
+                    </Button>
+                  )}
+                  {currentProject.demo && currentProject.demo !== "#" && (
+                    <Button size="sm" asChild>
+                      <Link href={currentProject.demo} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2">
+                        <ArrowUpRight className="h-4 w-4" />
+                        Live demo
+                      </Link>
+                    </Button>
+                  )}
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
 
         <section className="space-y-8">
           <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
@@ -302,9 +358,10 @@ export default function Home() {
           <div className="grid gap-6 md:grid-cols-2">
             {featuredStudies.map((study, index) => (
               <BlurFade key={study.slug} delay={index * 0.05}>
-                <Link
-                  href={`/case-studies/${study.slug}`}
-                  className="group block h-full transition hover:-translate-y-1 hover:no-underline"
+                <button
+                  type="button"
+                  onClick={() => setSelectedStudy(study)}
+                  className="group block h-full w-full transition hover:-translate-y-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
                 >
                   <Card className="h-full border-border/70 bg-card/80 transition group-hover:border-primary/40 group-hover:shadow-xl">
                     <CardHeader>
@@ -337,11 +394,64 @@ export default function Home() {
                       </CardFooter>
                     )}
                   </Card>
-                </Link>
+                </button>
               </BlurFade>
             ))}
           </div>
         </section>
+
+        <Dialog open={!!currentStudy} onOpenChange={(open) => !open && setSelectedStudy(null)}>
+          <DialogContent className="max-w-3xl">
+            {currentStudy && (
+              <div className="space-y-4">
+                <DialogHeader className="space-y-2">
+                  <DialogTitle>{currentStudy.title}</DialogTitle>
+                  <DialogDescription>
+                    {currentStudy.client} · {currentStudy.industry}
+                  </DialogDescription>
+                  <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+                    <Badge variant="outline" className="rounded-full">
+                      {currentStudy.duration}
+                    </Badge>
+                    <Badge variant="secondary" className="rounded-full">
+                      {currentStudy.team}
+                    </Badge>
+                  </div>
+                </DialogHeader>
+                <div className="space-y-3 text-sm text-muted-foreground">
+                  <p className="text-foreground">Challenge: {currentStudy.challenge}</p>
+                  <p className="text-foreground">Solution: {currentStudy.solution}</p>
+                  <div className="rounded-lg bg-muted/40 p-4">
+                    <p className="text-xs uppercase tracking-wide text-primary">Results</p>
+                    <ul className="mt-2 space-y-1">
+                      {currentStudy.results.map((result) => (
+                        <li key={result} className="flex items-start gap-2">
+                          <span className="mt-1 h-1.5 w-1.5 rounded-full bg-primary" />
+                          <span>{result}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {currentStudy.technologies.map((tech) => (
+                      <Badge key={tech} variant="secondary" className="rounded-full">
+                        {tech}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+                {currentStudy.testimonial && (
+                  <div className="rounded-lg border border-border/70 bg-muted/30 p-4 text-sm text-muted-foreground">
+                    <p className="italic">“{currentStudy.testimonial.quote}”</p>
+                    <p className="mt-2 text-xs uppercase tracking-wide text-primary">
+                      {currentStudy.testimonial.author} · {currentStudy.testimonial.company}
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
 
         <section className="space-y-8">
           <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
@@ -469,9 +579,10 @@ export default function Home() {
           <div className="grid gap-6 md:grid-cols-2">
             {latestPosts.map((post, index) => (
               <BlurFade key={post.id} delay={index * 0.05}>
-                <Link
-                  href={`/blog/${post.id}`}
-                  className="group block h-full transition hover:-translate-y-1 hover:no-underline"
+                <button
+                  type="button"
+                  onClick={() => setSelectedPost(post)}
+                  className="group block h-full w-full transition hover:-translate-y-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
                 >
                   <Card className="h-full border-border/70 bg-card/80 transition group-hover:border-primary/40 group-hover:shadow-xl">
                     <CardHeader>
@@ -486,11 +597,36 @@ export default function Home() {
                       <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
                     </CardFooter>
                   </Card>
-                </Link>
+                </button>
               </BlurFade>
             ))}
           </div>
         </section>
+
+        <Dialog open={!!currentPost} onOpenChange={(open) => !open && setSelectedPost(null)}>
+          <DialogContent className="max-w-3xl">
+            {currentPost && (
+              <div className="space-y-4">
+                <DialogHeader className="space-y-2">
+                  <DialogTitle>{currentPost.title}</DialogTitle>
+                  <DialogDescription className="flex flex-wrap gap-2 text-xs">
+                    <span className="rounded-full bg-muted px-3 py-1 text-muted-foreground">{currentPost.readTime}</span>
+                    <span className="rounded-full bg-muted px-3 py-1 text-muted-foreground">{currentPost.publishedAt}</span>
+                    <span className="rounded-full bg-muted px-3 py-1 text-muted-foreground">By {currentPost.author}</span>
+                  </DialogDescription>
+                  <div className="flex flex-wrap gap-2">
+                    {currentPost.tags.map((tag) => (
+                      <Badge key={tag} variant="secondary" className="rounded-full">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                </DialogHeader>
+                <p className="text-sm text-muted-foreground whitespace-pre-line">{currentPost.content}</p>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
 
         <section id="contact" className="space-y-6">
           <AuroraBackground className="p-10">
