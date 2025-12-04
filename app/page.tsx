@@ -261,23 +261,28 @@ export default function Home() {
           <div className="grid gap-6 md:grid-cols-2">
             {featuredProjects.map((project, index) => (
               <BlurFade key={project.slug} delay={index * 0.05}>
-                <Card className="group h-full border-border/70 bg-card/80 transition hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl">
-                  <CardHeader>
-                    <div className="flex flex-wrap gap-2">
-                      {project.tags.slice(0, 3).map((tag) => (
-                        <Badge key={tag} variant="secondary" className="rounded-full">
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                    <CardTitle className="group-hover:text-primary">{project.title}</CardTitle>
-                    <CardDescription>{project.shortDescription}</CardDescription>
-                  </CardHeader>
-                  <CardFooter className="flex items-center gap-3 text-sm font-medium text-primary">
-                    <span>View details</span>
-                    <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
-                  </CardFooter>
-                </Card>
+                <Link
+                  href={`/projects/${project.slug}`}
+                  className="group block h-full transition hover:-translate-y-1 hover:no-underline"
+                >
+                  <Card className="h-full border-border/70 bg-card/80 transition group-hover:border-primary/40 group-hover:shadow-xl">
+                    <CardHeader>
+                      <div className="flex flex-wrap gap-2">
+                        {project.tags.slice(0, 3).map((tag) => (
+                          <Badge key={tag} variant="secondary" className="rounded-full">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                      <CardTitle className="group-hover:text-primary">{project.title}</CardTitle>
+                      <CardDescription>{project.shortDescription}</CardDescription>
+                    </CardHeader>
+                    <CardFooter className="flex items-center gap-3 text-sm font-medium text-primary">
+                      <span>View details</span>
+                      <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+                    </CardFooter>
+                  </Card>
+                </Link>
               </BlurFade>
             ))}
           </div>
@@ -297,37 +302,42 @@ export default function Home() {
           <div className="grid gap-6 md:grid-cols-2">
             {featuredStudies.map((study, index) => (
               <BlurFade key={study.slug} delay={index * 0.05}>
-                <Card className="h-full border-border/70 bg-card/80">
-                  <CardHeader>
-                    <CardTitle>{study.title}</CardTitle>
-                    <CardDescription>
-                      {study.client} · {study.industry}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-3 text-sm text-muted-foreground">
-                    <p>{study.challenge}</p>
-                    <p className="text-foreground">Solution: {study.solution}</p>
-                    <div className="rounded-lg bg-muted/40 p-3">
-                      <p className="text-xs uppercase tracking-wide text-primary">Results</p>
-                      <ul className="mt-2 space-y-1">
-                        {study.results.slice(0, 3).map((result) => (
-                          <li key={result} className="flex items-start gap-2">
-                            <span className="mt-1 h-1.5 w-1.5 rounded-full bg-primary" />
-                            <span>{result}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </CardContent>
-                  {study.testimonial && (
-                    <CardFooter className="flex flex-col gap-2 border-t border-border/60 bg-muted/30 p-6 text-sm text-muted-foreground">
-                      <p className="italic">“{study.testimonial.quote}”</p>
-                      <p className="text-xs uppercase tracking-wide text-primary">
-                        {study.testimonial.author} · {study.testimonial.company}
-                      </p>
-                    </CardFooter>
-                  )}
-                </Card>
+                <Link
+                  href={`/case-studies/${study.slug}`}
+                  className="group block h-full transition hover:-translate-y-1 hover:no-underline"
+                >
+                  <Card className="h-full border-border/70 bg-card/80 transition group-hover:border-primary/40 group-hover:shadow-xl">
+                    <CardHeader>
+                      <CardTitle className="group-hover:text-primary">{study.title}</CardTitle>
+                      <CardDescription>
+                        {study.client} · {study.industry}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-3 text-sm text-muted-foreground">
+                      <p>{study.challenge}</p>
+                      <p className="text-foreground">Solution: {study.solution}</p>
+                      <div className="rounded-lg bg-muted/40 p-3">
+                        <p className="text-xs uppercase tracking-wide text-primary">Results</p>
+                        <ul className="mt-2 space-y-1">
+                          {study.results.slice(0, 3).map((result) => (
+                            <li key={result} className="flex items-start gap-2">
+                              <span className="mt-1 h-1.5 w-1.5 rounded-full bg-primary" />
+                              <span>{result}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </CardContent>
+                    {study.testimonial && (
+                      <CardFooter className="flex flex-col gap-2 border-t border-border/60 bg-muted/30 p-6 text-sm text-muted-foreground">
+                        <p className="italic">“{study.testimonial.quote}”</p>
+                        <p className="text-xs uppercase tracking-wide text-primary">
+                          {study.testimonial.author} · {study.testimonial.company}
+                        </p>
+                      </CardFooter>
+                    )}
+                  </Card>
+                </Link>
               </BlurFade>
             ))}
           </div>
@@ -459,19 +469,24 @@ export default function Home() {
           <div className="grid gap-6 md:grid-cols-2">
             {latestPosts.map((post, index) => (
               <BlurFade key={post.id} delay={index * 0.05}>
-                <Card className="h-full border-border/70 bg-card/80">
-                  <CardHeader>
-                    <Badge variant="secondary" className="w-fit rounded-full text-xs">
-                      {post.readTime}
-                    </Badge>
-                    <CardTitle>{post.title}</CardTitle>
-                    <CardDescription>{post.excerpt}</CardDescription>
-                  </CardHeader>
-                  <CardFooter className="flex items-center gap-2 text-sm font-medium text-primary">
-                    <span>Read article</span>
-                    <ArrowRight className="h-4 w-4" />
-                  </CardFooter>
-                </Card>
+                <Link
+                  href={`/blog/${post.id}`}
+                  className="group block h-full transition hover:-translate-y-1 hover:no-underline"
+                >
+                  <Card className="h-full border-border/70 bg-card/80 transition group-hover:border-primary/40 group-hover:shadow-xl">
+                    <CardHeader>
+                      <Badge variant="secondary" className="w-fit rounded-full text-xs">
+                        {post.readTime}
+                      </Badge>
+                      <CardTitle className="group-hover:text-primary">{post.title}</CardTitle>
+                      <CardDescription>{post.excerpt}</CardDescription>
+                    </CardHeader>
+                    <CardFooter className="flex items-center gap-2 text-sm font-medium text-primary">
+                      <span>Read article</span>
+                      <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+                    </CardFooter>
+                  </Card>
+                </Link>
               </BlurFade>
             ))}
           </div>
