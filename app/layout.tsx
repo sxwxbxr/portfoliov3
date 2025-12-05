@@ -9,6 +9,7 @@ import { Analytics } from "@/components/Analytics"
 import { JsonLd } from "@/components/JsonLd"
 import { Suspense } from "react"
 import { Footer } from "@/components/Footer"
+import { AnimatedGridPattern } from "@/components/AnimatedGridPattern"
 
 const geist = Geist({
   subsets: ["latin"],
@@ -152,16 +153,19 @@ export default function RootLayout({
         <meta name="color-scheme" content="light dark" />
       </head>
       <body className="font-sans">
-        <Suspense fallback={null}>
-          <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
-            <ScrollProgress />
-            <div className="flex min-h-screen flex-col">
-              <div className="flex-1">{children}</div>
-              <Footer />
-            </div>
-          </ThemeProvider>
-        </Suspense>
-        <Analytics />
+        <div className="relative min-h-screen bg-background text-foreground">
+          <AnimatedGridPattern />
+          <Suspense fallback={null}>
+            <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+              <ScrollProgress />
+              <div className="relative z-10 flex min-h-screen flex-col">
+                <div className="flex-1">{children}</div>
+                <Footer />
+              </div>
+            </ThemeProvider>
+          </Suspense>
+          <Analytics />
+        </div>
       </body>
     </html>
   )

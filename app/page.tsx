@@ -21,7 +21,6 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { AuroraBackground } from "@/components/AuroraBackground"
 import { BlurFade } from "@/components/BlurFade"
 import { ThemeToggle } from "@/components/ThemeToggle"
 import {
@@ -68,7 +67,7 @@ export default function Home() {
   const currentPost = useMemo(() => selectedPost, [selectedPost])
 
   return (
-    <main className="bg-gradient-to-b from-background via-background to-background/40 text-foreground">
+    <main className="text-foreground">
       <div className="mx-auto flex min-h-screen max-w-6xl flex-col gap-20 px-6 pb-24 pt-10 md:pt-16">
         <header className="sticky top-4 z-20 flex items-center justify-between rounded-full border border-border/60 bg-background/80 px-4 py-2 shadow-lg shadow-primary/5 backdrop-blur">
           <div className="flex items-center gap-3">
@@ -108,7 +107,7 @@ export default function Home() {
 
         <section id="hero" className="grid items-center gap-8 md:grid-cols-[1.1fr,0.9fr]">
           <BlurFade>
-            <AuroraBackground className="p-10 shadow-2xl">
+            <div className="rounded-[32px] border border-border/70 bg-card/80 p-10 shadow-2xl backdrop-blur">
               <div className="space-y-6">
                 <Badge variant="secondary" className="rounded-full px-3 py-1 text-xs">
                   {heroInfo.availability}
@@ -154,7 +153,7 @@ export default function Home() {
                   ))}
                 </div>
               </div>
-            </AuroraBackground>
+            </div>
           </BlurFade>
 
           <BlurFade delay={0.1} className="space-y-4">
@@ -699,7 +698,7 @@ export default function Home() {
         </Dialog>
 
         <section id="contact" className="space-y-6">
-          <AuroraBackground className="p-10">
+          <div className="rounded-[32px] border border-border/70 bg-card/80 p-10 shadow-xl backdrop-blur">
             <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
               <div className="space-y-2">
                 <p className="text-sm uppercase tracking-[0.25em] text-primary">Let&apos;s collaborate</p>
@@ -723,7 +722,7 @@ export default function Home() {
                 </Button>
               </div>
             </div>
-          </AuroraBackground>
+          </div>
         </section>
       </div>
     </main>
