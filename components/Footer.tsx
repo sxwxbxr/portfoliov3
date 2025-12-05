@@ -1,12 +1,12 @@
 import Link from "next/link"
-import { Mail, MapPin, Linkedin, Github } from "lucide-react"
+import { Mail, MapPin } from "lucide-react"
 import { SiGithub, SiLinkedin } from "react-icons/si"
 
 const quickLinks = [
-  { name: "Projects", href: "/projects" },
-  { name: "Case Studies", href: "/case-studies" },
-  { name: "Services", href: "/services" },
-  { name: "Blog", href: "/blog" },
+  { name: "Services", href: "#services" },
+  { name: "Experience", href: "#experience" },
+  { name: "Projects", href: "#projects" },
+  { name: "Contact", href: "#contact" },
 ]
 
 const contactItems = [
@@ -43,7 +43,7 @@ export function Footer() {
         <div className="grid gap-12 md:grid-cols-[2fr_1fr_1fr]">
           <div>
             <Link
-              href="/contact"
+              href="#contact"
               className="text-2xl font-semibold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
             >
               Let&apos;s build your next project

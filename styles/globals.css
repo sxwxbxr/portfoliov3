@@ -121,3 +121,18 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  @keyframes grid-motion {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(-48px);
+    }
+  }
+
+  .animate-grid-motion {
+    animation: grid-motion 28s linear infinite;
+  }
+}
