@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { Mail, MapPin, Linkedin, Github } from "lucide-react"
 import { SiGithub, SiLinkedin } from "react-icons/si"
+import { LiaMountainSolid } from "react-icons/lia";
 
 const quickLinks = [
   { name: "Projects", href: "/projects" },
@@ -34,6 +35,11 @@ const socialLinks = [
     label: "GitHub",
     href: "https://github.com/sxwxbxr",
   },
+  {
+    icon: LiaMountainSolid,
+    label: "NxrthStack",
+    href: "https://nxrthstack.vercel.app",
+  },
 ]
 
 export function Footer() {
@@ -59,9 +65,9 @@ export function Footer() {
                   <div>
                     <p className="font-medium text-foreground">{item.label}</p>
                     {item.href ? (
-                  <Link href={item.href} className="hover:text-primary transition-colors">
-                    {item.value}
-                  </Link>
+                      <Link href={item.href} className="hover:text-primary transition-colors">
+                        {item.value}
+                      </Link>
                     ) : (
                       <p>{item.value}</p>
                     )}

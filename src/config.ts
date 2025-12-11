@@ -85,7 +85,7 @@ const projects = [
     demo: "#",
   },
   {
-    title: "SchulzMedia SaaS Solution",
+    title: "FlowlyChat for SchulzMedia",
     shortDescription:
       "Developed a SaaS platform for companies to implement a customizable AI Whatsapp chatbot for customer inquiries.",
     description:

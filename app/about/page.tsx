@@ -16,7 +16,7 @@ export default function About() {
                 <div className="bg-card border border-border rounded-xl p-8 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                   <p className="text-lg leading-relaxed text-card-foreground">
                     I&apos;m a Software & Digitalization Project Manager at Telsonic, creating customer specific automation
-                    workflows in business-critical systems. Founder and owner of Weber Development, developing custom software for various companies.
+                    workflows in business-critical systems. Founder of NxrthStack, developing custom software for various companies.
                   </p>
                 </div>
 
