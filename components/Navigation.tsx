@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation"
 import { Menu, X } from "lucide-react"
 import { navLinks } from "../src/config"
 import { ThemeToggle } from "./ThemeToggle"
+import { DownloadDocumentsButton } from "./DownloadDocumentsButton"
 import pages from "@/data/pages.json"
 
 export default function Navigation() {
@@ -43,6 +44,7 @@ export default function Navigation() {
                 {link.name}
               </Link>
             ))}
+            <DownloadDocumentsButton variant="compact" />
             <ThemeToggle />
           </div>
 
@@ -71,6 +73,9 @@ export default function Navigation() {
                   {link.name}
                 </Link>
               ))}
+              <div className="pt-2">
+                <DownloadDocumentsButton variant="compact" className="w-full" />
+              </div>
             </div>
           </div>
         )}

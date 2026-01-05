@@ -5,7 +5,8 @@ import PageLayout from "../../components/PageLayout"
 import FadeInSection from "../../components/FadeInSection"
 import { ContactForm } from "../../components/ContactForm"
 import { InteractiveCard } from "../../components/InteractiveCard"
-import { Mail, MapPin, Clock, Phone } from "lucide-react"
+import { DownloadDocumentsButton } from "../../components/DownloadDocumentsButton"
+import { Mail, MapPin, Clock, Phone, Download } from "lucide-react"
 import { SiGithub, SiLinkedin } from "react-icons/si"
 
 export default function Contact() {
@@ -147,6 +148,22 @@ export default function Contact() {
                             <Phone className="w-6 h-6" />
                             <span className="text-sm font-medium">Call</span>
                           </a>
+                        </InteractiveCard>
+                      </div>
+                    </div>
+                  </FadeInSection>
+
+                  <FadeInSection>
+                    <div>
+                      <h4 className="font-medium mb-4">Application Documents</h4>
+                      <div className="space-y-4">
+                        <InteractiveCard>
+                          <div className="p-4 bg-card border border-border rounded-lg">
+                            <p className="text-sm text-muted-foreground mb-4">
+                              Download my complete application package including resume, certificates, and work references.
+                            </p>
+                            <DownloadDocumentsButton variant="compact" className="w-full" />
+                          </div>
                         </InteractiveCard>
                       </div>
                     </div>
