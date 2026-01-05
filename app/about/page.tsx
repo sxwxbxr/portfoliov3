@@ -2,6 +2,7 @@
 
 import PageLayout from "../../components/PageLayout"
 import FadeInSection from "../../components/FadeInSection"
+import DownloadDocumentsButton from "../../components/DownloadDocumentsButton"
 import { Mail, Phone } from "lucide-react"
 import { SiGithub, SiLinkedin } from "react-icons/si"
 
@@ -118,6 +119,14 @@ export default function About() {
                       <span className="text-sm font-medium">Call</span>
                     </a>
                   </div>
+                </div>
+
+                <div className="bg-gradient-to-br from-primary/10 to-secondary/10 border border-primary/20 rounded-xl p-6">
+                  <h3 className="font-semibold text-lg mb-4">Application Documents</h3>
+                  <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+                    Download my complete application package including resume, certificates, and references.
+                  </p>
+                  <DownloadDocumentsButton />
                 </div>
               </div>
             </div>
