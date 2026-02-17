@@ -51,7 +51,7 @@ export default function Home() {
                 Hi, I&apos;m Seya Weber
               </h1>
               <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed font-serif animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-200">
-                Project Manager Software and Digitalisation and Founder / Owner of Weber Development in St. Gallen, Switzerland.
+                Project Manager Software and Digitalisation and Founder of <Link href="https://nxrthstack.sweber.dev" className="hover:text-primary transition-colors">NxrthStack</Link> in St. Gallen, Switzerland.
               </p>
             </div>
 
