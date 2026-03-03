@@ -1,12 +1,11 @@
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { ArrowLeft, Building, CheckCircle, Clock, ExternalLink, Quote, Users } from "lucide-react"
+import { ArrowLeft, Building, CheckCircle, Clock, ExternalLink, Quote, Users, ArrowUpRight } from "lucide-react"
 import { SiGithub } from "react-icons/si"
 
-import FadeInSection from "../../../components/FadeInSection"
 import Navigation from "../../../components/Navigation"
-import PageLayout from "../../../components/PageLayout"
+import { AnimatedSection } from "../../../components/AnimatedSection"
 import { caseStudies, projects } from "../../../src/config"
 
 interface ProjectPageProps {
@@ -36,57 +35,64 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
     .filter(Boolean)
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background grain-overlay">
       <Navigation />
-      <PageLayout>
-        <div className="max-w-4xl mx-auto space-y-16">
-          <FadeInSection>
-            <div className="space-y-6">
-              <Link
-                href="/projects"
-                className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                Back to Projects
-              </Link>
 
-              <div className="space-y-5">
-                {study?.client && <p className="text-primary font-medium">{study.client}</p>}
-                <h1 className="text-4xl md:text-5xl font-bold leading-tight">{project.title}</h1>
-                <p className="text-xl text-muted-foreground leading-relaxed font-serif">{project.shortDescription}</p>
+      <div className="pt-16">
+        <section className="py-20 md:py-28 px-6 mesh-gradient">
+          <div className="max-w-4xl mx-auto">
+            <Link
+              href="/projects"
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              All Projects
+            </Link>
 
-                {(hasDemoLink || hasRepoLink) && (
-                  <div className="flex flex-wrap gap-4 pt-2">
-                    {hasDemoLink && (
-                      <a
-                        href={project.demo}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors"
-                      >
-                        <ExternalLink className="w-4 h-4" />
-                        View Demo
-                      </a>
-                    )}
-                    {hasRepoLink && (
-                      <a
-                        href={project.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2 border border-border rounded-lg font-medium hover:bg-muted transition-colors"
-                      >
-                        <SiGithub className="w-4 h-4" />
-                        View Source
-                      </a>
-                    )}
-                  </div>
-                )}
-              </div>
+            <div className="space-y-5">
+              {study?.client && (
+                <p className="text-sm font-medium text-primary">{study.client}</p>
+              )}
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.05] tracking-tight">
+                {project.title}
+              </h1>
+              <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
+                {project.shortDescription}
+              </p>
+
+              {(hasDemoLink || hasRepoLink) && (
+                <div className="flex flex-wrap gap-3 pt-2">
+                  {hasDemoLink && (
+                    <a
+                      href={project.demo}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 bg-foreground text-background rounded-full text-sm font-medium hover:opacity-80 transition-opacity"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      View Demo
+                    </a>
+                  )}
+                  {hasRepoLink && (
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 border border-border rounded-full text-sm font-medium hover:bg-muted transition-colors"
+                    >
+                      <SiGithub className="w-4 h-4" />
+                      Source Code
+                    </a>
+                  )}
+                </div>
+              )}
             </div>
-          </FadeInSection>
+          </div>
+        </section>
 
-          <FadeInSection>
-            <div className="overflow-hidden rounded-xl border border-border">
+        <main className="py-20 md:py-28 px-6">
+          <div className="max-w-4xl mx-auto space-y-16">
+            <div className="overflow-hidden rounded-2xl border border-border">
               <Image
                 src={heroSrc}
                 alt={project.title}
@@ -96,12 +102,11 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
                 priority
               />
             </div>
-          </FadeInSection>
 
-          <FadeInSection>
-            <section className="bg-card border border-border rounded-xl p-8 space-y-6">
+            <section className="bento-card rounded-2xl border border-border bg-card p-8 md:p-10 space-y-6">
               <div className="space-y-4">
-                <h2 className="text-2xl font-bold">Project Overview</h2>
+                <p className="text-xs font-medium text-primary uppercase tracking-widest">Overview</p>
+                <h2 className="text-2xl font-bold">Project Details</h2>
                 {descriptionParagraphs.length ? (
                   descriptionParagraphs.map((paragraph, index) => (
                     <p key={index} className="text-muted-foreground leading-relaxed">
@@ -115,12 +120,12 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
 
               {project.tags?.length ? (
                 <div>
-                  <h3 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground mb-3">
-                    Key Technologies &amp; Focus Areas
-                  </h3>
+                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest mb-3">
+                    Technologies & Focus Areas
+                  </p>
                   <div className="flex flex-wrap gap-2">
                     {project.tags.map((tag) => (
-                      <span key={tag} className="px-3 py-1 bg-secondary/10 text-secondary rounded-full text-sm">
+                      <span key={tag} className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium">
                         {tag}
                       </span>
                     ))}
@@ -128,58 +133,54 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
                 </div>
               ) : null}
             </section>
-          </FadeInSection>
 
-          {study ? (
-            <div className="space-y-12">
-              <FadeInSection>
-                <div className="grid gap-4 sm:grid-cols-3 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    <Building className="w-4 h-4" />
-                    <span>{study.industry}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4" />
-                    <span>{study.duration}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Users className="w-4 h-4" />
-                    <span>{study.team}</span>
-                  </div>
+            {study ? (
+              <div className="space-y-12">
+                <div className="grid gap-4 sm:grid-cols-3">
+                  {[
+                    { icon: Building, text: study.industry },
+                    { icon: Clock, text: study.duration },
+                    { icon: Users, text: study.team },
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-2.5 text-sm text-muted-foreground rounded-xl border border-border bg-card p-4">
+                      <item.icon className="w-4 h-4 text-primary" />
+                      <span>{item.text}</span>
+                    </div>
+                  ))}
                 </div>
-              </FadeInSection>
 
-              <FadeInSection>
-                <section className="space-y-8">
+                <div className="space-y-10">
+                  {[
+                    { label: "Challenge", content: study.challenge },
+                    { label: "Solution", content: study.solution },
+                  ].map((section) => (
+                    <div key={section.label}>
+                      <p className="text-xs font-medium text-primary uppercase tracking-widest mb-3">{section.label}</p>
+                      <h2 className="text-2xl font-bold mb-4">The {section.label}</h2>
+                      <p className="text-muted-foreground leading-relaxed">{section.content}</p>
+                    </div>
+                  ))}
+
                   <div>
-                    <h2 className="text-2xl font-bold mb-4">Challenge</h2>
-                    <p className="text-muted-foreground leading-relaxed">{study.challenge}</p>
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-bold mb-4">Solution</h2>
-                    <p className="text-muted-foreground leading-relaxed">{study.solution}</p>
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-bold mb-4">Results</h2>
-                    <div className="grid sm:grid-cols-2 gap-4">
+                    <p className="text-xs font-medium text-primary uppercase tracking-widest mb-3">Outcomes</p>
+                    <h2 className="text-2xl font-bold mb-6">Results Achieved</h2>
+                    <div className="grid sm:grid-cols-2 gap-3">
                       {study.results.map((result, index) => (
-                        <div key={index} className="flex items-start gap-3 p-4 bg-card border border-border rounded-lg">
+                        <div key={index} className="flex items-start gap-3 p-4 rounded-xl border border-border bg-card">
                           <CheckCircle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                           <span className="text-sm">{result}</span>
                         </div>
                       ))}
                     </div>
                   </div>
-                </section>
-              </FadeInSection>
+                </div>
 
-              <FadeInSection>
-                <div className="grid gap-8 lg:grid-cols-2">
-                  <div className="bg-card border border-border rounded-xl p-6">
-                    <h3 className="font-semibold mb-4">Technologies &amp; Focus Areas</h3>
+                <div className="grid gap-6 lg:grid-cols-2">
+                  <div className="bento-card rounded-2xl border border-border bg-card p-6">
+                    <p className="text-xs font-medium text-primary uppercase tracking-widest mb-4">Stack</p>
                     <div className="flex flex-wrap gap-2">
                       {study.technologies.map((tech) => (
-                        <span key={tech} className="px-3 py-1 bg-secondary/10 text-secondary rounded-full text-sm">
+                        <span key={tech} className="px-3 py-1 bg-secondary/10 text-secondary rounded-full text-xs font-medium">
                           {tech}
                         </span>
                       ))}
@@ -187,21 +188,23 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
                   </div>
 
                   {study.testimonial && (
-                    <div className="bg-primary/5 border border-primary/20 rounded-xl p-6">
-                      <Quote className="w-8 h-8 text-primary mb-4" />
-                      <blockquote className="text-lg italic mb-4">&quot;{study.testimonial.quote}&quot;</blockquote>
+                    <div className="bento-card rounded-2xl border border-primary/20 bg-primary/5 p-6">
+                      <Quote className="w-8 h-8 text-primary/30 mb-4" />
+                      <blockquote className="text-base italic leading-relaxed mb-4">
+                        &quot;{study.testimonial.quote}&quot;
+                      </blockquote>
                       <div className="text-sm text-muted-foreground">
-                        <p className="font-medium">{study.testimonial.author}</p>
+                        <p className="font-medium text-foreground">{study.testimonial.author}</p>
                         <p>{study.testimonial.company}</p>
                       </div>
                     </div>
                   )}
                 </div>
-              </FadeInSection>
-            </div>
-          ) : null}
-        </div>
-      </PageLayout>
+              </div>
+            ) : null}
+          </div>
+        </main>
+      </div>
     </div>
   )
 }
@@ -209,4 +212,3 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
 export function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }))
 }
-

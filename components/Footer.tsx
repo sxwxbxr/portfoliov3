@@ -1,112 +1,128 @@
+"use client"
+
 import Link from "next/link"
-import { Mail, MapPin, Linkedin, Github } from "lucide-react"
+import { ArrowUpRight } from "lucide-react"
 import { SiGithub, SiLinkedin } from "react-icons/si"
+import { AnimatedSection } from "./AnimatedSection"
 
-const quickLinks = [
-  { name: "Projects", href: "/projects" },
-  { name: "Case Studies", href: "/case-studies" },
-  { name: "Services", href: "/services" },
-  { name: "Blog", href: "/blog" },
-]
-
-const contactItems = [
+const footerLinks = [
   {
-    icon: Mail,
-    label: "Email",
-    value: "info@sweber.dev",
-    href: "mailto:info@sweber.dev",
+    heading: "Navigate",
+    links: [
+      { name: "About", href: "/about" },
+      { name: "Projects", href: "/projects" },
+      { name: "Case Studies", href: "/case-studies" },
+      { name: "Experience", href: "/experience" },
+    ],
   },
   {
-    icon: MapPin,
-    label: "Location",
-    value: "St. Gallen, Switzerland",
+    heading: "More",
+    links: [
+      { name: "Services", href: "/services" },
+      { name: "Blog", href: "/blog" },
+      { name: "Skills", href: "/skills" },
+      { name: "Education", href: "/education" },
+    ],
   },
 ]
 
 const socialLinks = [
-  {
-    icon: SiLinkedin,
-    label: "LinkedIn",
-    href: "https://ch.linkedin.com/in/seya-weber-06a592256",
-  },
-  {
-    icon: SiGithub,
-    label: "GitHub",
-    href: "https://github.com/sxwxbxr",
-  },
+  { icon: SiGithub, label: "GitHub", href: "https://github.com/sxwxbxr" },
+  { icon: SiLinkedin, label: "LinkedIn", href: "https://ch.linkedin.com/in/seya-weber-06a592256" },
 ]
 
 export function Footer() {
   return (
-    <footer className="border-t border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-      <div className="max-w-6xl mx-auto px-4 py-12">
-        <div className="grid gap-12 md:grid-cols-[2fr_1fr_1fr]">
-          <div>
-            <Link
-              href="/contact"
-              className="text-2xl font-semibold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
-            >
-              Let&apos;s build your next project
-            </Link>
-            <p className="mt-4 text-muted-foreground max-w-md">
-              From clinical software migrations to automation and energy optimisation programs, I partner with teams to deliver
-              measurable outcomes. Reach out and let&apos;s scope what success looks like for you.
-            </p>
-            <div className="mt-6 flex flex-col gap-4">
-              {contactItems.map((item) => (
-                <div key={item.label} className="flex items-start gap-3 text-sm text-muted-foreground">
-                  <item.icon className="mt-0.5 h-4 w-4 text-primary" aria-hidden="true" />
-                  <div>
-                    <p className="font-medium text-foreground">{item.label}</p>
-                    {item.href ? (
-                  <Link href={item.href} className="hover:text-primary transition-colors">
-                    {item.value}
-                  </Link>
-                    ) : (
-                      <p>{item.value}</p>
-                    )}
-                  </div>
-                </div>
-              ))}
+    <footer className="border-t border-border bg-card/50">
+      <div className="max-w-7xl mx-auto px-6">
+        <AnimatedSection>
+          <div className="py-20 md:py-28">
+            <div className="max-w-3xl">
+              <p className="text-sm font-medium text-primary tracking-wide uppercase mb-4">
+                Available for projects
+              </p>
+              <h2 className="text-4xl md:text-6xl font-bold leading-[1.1] tracking-tight">
+                Let&apos;s build something{" "}
+                <span className="text-gradient">great together.</span>
+              </h2>
+              <div className="mt-8 flex flex-wrap gap-4">
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-foreground text-background rounded-full text-sm font-medium hover:opacity-80 transition-opacity"
+                >
+                  Start a project
+                  <ArrowUpRight className="w-4 h-4" />
+                </Link>
+                <a
+                  href="mailto:info@sweber.dev"
+                  className="inline-flex items-center gap-2 px-6 py-3 border border-border rounded-full text-sm font-medium hover:bg-muted transition-colors"
+                >
+                  info@sweber.dev
+                </a>
+              </div>
             </div>
           </div>
+        </AnimatedSection>
 
+        <div className="border-t border-border py-12 grid gap-10 md:grid-cols-[2fr_1fr_1fr_1fr]">
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Quick Links</h3>
-            <ul className="mt-4 space-y-3 text-sm">
-              {quickLinks.map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href} className="hover:text-primary transition-colors">
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <Link href="/" className="font-bold text-lg tracking-tight">
+              <span className="text-foreground">seya</span>
+              <span className="text-primary">.</span>
+            </Link>
+            <p className="mt-3 text-sm text-muted-foreground max-w-xs leading-relaxed">
+              Project Manager & Developer based in St. Gallen, Switzerland.
+              Turning complex ideas into lean, maintainable solutions.
+            </p>
           </div>
 
+          {footerLinks.map((group) => (
+            <div key={group.heading}>
+              <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">
+                {group.heading}
+              </h3>
+              <ul className="space-y-3">
+                {group.links.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Social</h3>
-            <ul className="mt-4 space-y-3 text-sm">
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">
+              Connect
+            </h3>
+            <ul className="space-y-3">
               {socialLinks.map((link) => (
                 <li key={link.href}>
-                  <Link
+                  <a
                     href={link.href}
-                    className="flex items-center gap-2 hover:text-primary transition-colors"
+                    className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                     target="_blank"
                     rel="noreferrer"
                   >
-                    <link.icon className="h-4 w-4" aria-hidden="true" />
+                    <link.icon className="w-4 h-4" />
                     {link.label}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
           </div>
         </div>
 
-        <div className="mt-12 border-t border-border pt-6 text-xs text-muted-foreground">
-          <p>
-            © {new Date().getFullYear()} Seya Weber. Built with care in Switzerland.
+        <div className="border-t border-border py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
+          <p>&copy; {new Date().getFullYear()} Seya Weber. Handcrafted in Switzerland.</p>
+          <p className="flex items-center gap-1">
+            St. Gallen, CH
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-500 ml-1" />
           </p>
         </div>
       </div>

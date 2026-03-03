@@ -1,109 +1,76 @@
 "use client"
 
-import Navigation from "../../components/Navigation"
-import PageLayout from "../../components/PageLayout"
-import FadeInSection from "../../components/FadeInSection"
-import { InteractiveCard } from "../../components/InteractiveCard"
-import { blogPosts } from "../../src/config"
 import Link from "next/link"
-import { Calendar, Clock, ArrowRight } from "lucide-react"
-import Image from "next/image"
+import PageLayout from "../../components/PageLayout"
+import { AnimatedSection } from "../../components/AnimatedSection"
+import { StaggerContainer, StaggerItem } from "../../components/StaggerContainer"
+import { blogPosts } from "../../src/config"
+import { ArrowUpRight, ArrowRight } from "lucide-react"
 
 export default function Blog() {
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
-      <PageLayout>
-        <div className="space-y-16">
-          <FadeInSection>
-            <div className="text-center space-y-4">
-              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                Blog & Insights
-              </h1>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto font-serif">
-                Sharing knowledge and insights from my experience in software development, project management, and
-                digital transformation.
-              </p>
-            </div>
-          </FadeInSection>
-
-          <FadeInSection>
-            <div className="grid gap-8">
-              {blogPosts?.map((post) => (
-                <InteractiveCard key={post.id}>
-                  <article className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300">
-                    <div className="md:flex">
-                      <div className="md:w-1/3">
-                        <div className="h-64 md:h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
-                          <Image
-                            src={`/abstract-geometric-shapes.png?height=300&width=400&query=${encodeURIComponent(post.title)}`}
-                            alt={post.title}
-                            width={400}
-                            height={300}
-                            className="w-full h-full object-cover"
-                          />
+    <PageLayout
+      title="Blog & Insights"
+      subtitle="Sharing knowledge and insights from my experience in software development, project management, and digital transformation."
+      label="Writing"
+    >
+      <section className="py-20 md:py-28 px-6">
+        <div className="max-w-4xl mx-auto">
+          <StaggerContainer className="space-y-0 divide-y divide-border" staggerDelay={0.12}>
+            {blogPosts?.map((post) => (
+              <StaggerItem key={post.id}>
+                <Link
+                  href={`/blog/${post.id}`}
+                  className="group block py-10 first:pt-0 last:pb-0"
+                >
+                  <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-8">
+                    <div className="md:w-36 flex-shrink-0">
+                      <time className="text-sm text-muted-foreground">
+                        {new Date(post.publishedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                      </time>
+                      <p className="text-xs text-muted-foreground mt-1">{post.readTime}</p>
+                    </div>
+                    <div className="flex-1">
+                      <h2 className="text-xl md:text-2xl font-semibold leading-snug group-hover:text-primary transition-colors mb-3">
+                        {post.title}
+                      </h2>
+                      <p className="text-muted-foreground leading-relaxed mb-4">{post.excerpt}</p>
+                      <div className="flex items-center justify-between">
+                        <div className="flex flex-wrap gap-1.5">
+                          {post.tags.map((tag) => (
+                            <span key={tag} className="text-xs px-2.5 py-1 rounded-full bg-muted text-muted-foreground">
+                              {tag}
+                            </span>
+                          ))}
                         </div>
-                      </div>
-                      <div className="md:w-2/3 p-8">
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
-                          <div className="flex items-center gap-1">
-                            <Calendar className="w-4 h-4" />
-                            <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Clock className="w-4 h-4" />
-                            <span>{post.readTime}</span>
-                          </div>
-                        </div>
-
-                        <h2 className="text-2xl font-bold mb-4 hover:text-primary transition-colors">
-                          <Link href={`/blog/${post.id}`}>{post.title}</Link>
-                        </h2>
-
-                        <p className="text-muted-foreground mb-6 leading-relaxed">{post.excerpt}</p>
-
-                        <div className="flex items-center justify-between">
-                          <div className="flex flex-wrap gap-2">
-                            {post.tags.map((tag) => (
-                              <span key={tag} className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-
-                          <Link
-                            href={`/blog/${post.id}`}
-                            className="flex items-center gap-2 text-primary hover:gap-3 transition-all duration-200 font-medium"
-                          >
-                            Read More
-                            <ArrowRight className="w-4 h-4" />
-                          </Link>
-                        </div>
+                        <span className="text-sm font-medium text-primary flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                          Read <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                        </span>
                       </div>
                     </div>
-                  </article>
-                </InteractiveCard>
-              ))}
-            </div>
-          </FadeInSection>
+                  </div>
+                </Link>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
 
-          <FadeInSection>
-            <div className="text-center space-y-4 py-16">
-              <h2 className="text-3xl font-bold">Case Studies</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
+          <AnimatedSection delay={0.2}>
+            <div className="mt-20 bento-card rounded-2xl border border-border bg-gradient-to-br from-primary/5 to-secondary/5 p-10 md:p-14 text-center">
+              <h3 className="text-2xl md:text-3xl font-bold mb-4">Case Studies</h3>
+              <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
                 Detailed breakdowns of real projects, challenges faced, and solutions implemented.
               </p>
               <Link
                 href="/case-studies"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-all duration-300 hover:scale-105"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-foreground text-background rounded-full text-sm font-medium hover:opacity-80 transition-opacity"
               >
                 View Case Studies
-                <ArrowRight className="w-4 h-4" />
+                <ArrowUpRight className="w-4 h-4" />
               </Link>
             </div>
-          </FadeInSection>
+          </AnimatedSection>
         </div>
-      </PageLayout>
-    </div>
+      </section>
+    </PageLayout>
   )
 }

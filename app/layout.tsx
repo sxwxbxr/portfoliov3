@@ -4,7 +4,6 @@ import { Geist } from "next/font/google"
 import { Manrope } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/ThemeProvider"
-import { ScrollProgress } from "@/components/ScrollProgress"
 import { Analytics } from "@/components/Analytics"
 import { JsonLd } from "@/components/JsonLd"
 import { Suspense } from "react"
@@ -98,7 +97,7 @@ export const metadata: Metadata = {
     canonical: "https://seyaweber.com",
   },
   category: "technology",
-    generator: 'v0.app'
+  generator: 'v0.app'
 }
 
 const structuredData = {
@@ -148,13 +147,13 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="icon" href="/favicon.ico" />
         <link rel="manifest" href="/site.webmanifest" />
-        <meta name="theme-color" content="#6366f1" />
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#c87533" />
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1a1710" />
         <meta name="color-scheme" content="light dark" />
       </head>
       <body className="font-sans">
         <Suspense fallback={null}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-            <ScrollProgress />
             <div className="flex min-h-screen flex-col">
               <div className="flex-1">{children}</div>
               <Footer />

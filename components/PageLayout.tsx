@@ -1,29 +1,39 @@
+"use client"
+
 import type React from "react"
 import Navigation from "./Navigation"
-import FadeInSection from "./FadeInSection"
+import { AnimatedSection } from "./AnimatedSection"
 
 interface PageLayoutProps {
   children: React.ReactNode
-  title: string
+  title?: string
   subtitle?: string
+  label?: string
 }
 
-export default function PageLayout({ children, title, subtitle }: PageLayoutProps) {
+export default function PageLayout({ children, title, subtitle, label }: PageLayoutProps) {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background grain-overlay">
       <Navigation />
 
       <div className="pt-16">
-        <section className="py-24 px-4 gradient-bg">
-          <div className="max-w-6xl mx-auto text-center">
-            <FadeInSection>
-              <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                {title}
-              </h1>
-              {subtitle && <p className="text-xl text-muted-foreground max-w-2xl mx-auto font-serif">{subtitle}</p>}
-            </FadeInSection>
-          </div>
-        </section>
+        {title && (
+          <section className="py-20 md:py-28 px-6 mesh-gradient">
+            <div className="max-w-7xl mx-auto">
+              <AnimatedSection>
+                {label && (
+                  <p className="text-sm font-medium text-primary tracking-wide uppercase mb-4">{label}</p>
+                )}
+                <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05]">
+                  {title}
+                </h1>
+                {subtitle && (
+                  <p className="mt-6 text-lg text-muted-foreground max-w-2xl leading-relaxed">{subtitle}</p>
+                )}
+              </AnimatedSection>
+            </div>
+          </section>
+        )}
 
         <main>{children}</main>
       </div>

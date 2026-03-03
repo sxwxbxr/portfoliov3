@@ -2,8 +2,7 @@
 
 import { use } from "react"
 import Navigation from "../../../components/Navigation"
-import PageLayout from "../../../components/PageLayout"
-import FadeInSection from "../../../components/FadeInSection"
+import { AnimatedSection } from "../../../components/AnimatedSection"
 import { JsonLd } from "../../../components/JsonLd"
 import { blogPosts } from "../../../src/config"
 import Link from "next/link"
@@ -21,18 +20,18 @@ export default function BlogPost({ params }: BlogPostPageProps) {
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background grain-overlay">
         <Navigation />
-        <PageLayout>
-          <div className="text-center space-y-4">
-            <h1 className="text-4xl font-bold">Post Not Found</h1>
-            <p className="text-muted-foreground">The blog post you&apos;re looking for doesn&apos;t exist.</p>
-            <Link href="/blog" className="inline-flex items-center gap-2 text-primary hover:underline">
+        <div className="pt-16">
+          <div className="py-20 px-6 text-center">
+            <h1 className="text-4xl font-bold mb-4">Post Not Found</h1>
+            <p className="text-muted-foreground mb-6">The blog post you&apos;re looking for doesn&apos;t exist.</p>
+            <Link href="/blog" className="inline-flex items-center gap-2 text-primary hover:underline text-sm">
               <ArrowLeft className="w-4 h-4" />
               Back to Blog
             </Link>
           </div>
-        </PageLayout>
+        </div>
       </div>
     )
   }
@@ -74,99 +73,102 @@ export default function BlogPost({ params }: BlogPostPageProps) {
         console.log("Error sharing:", err)
       }
     } else {
-      // Fallback: copy to clipboard
       navigator.clipboard.writeText(window.location.href)
     }
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background grain-overlay">
       <JsonLd data={blogPostStructuredData} />
       <Navigation />
-      <PageLayout>
-        <article className="max-w-4xl mx-auto">
-          <FadeInSection>
-            <div className="mb-8">
-              <Link
-                href="/blog"
-                className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-6"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                Back to Blog
-              </Link>
 
-              <div className="space-y-6">
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
-                    <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
+      <div className="pt-16">
+        <section className="py-20 md:py-28 px-6 mesh-gradient">
+          <div className="max-w-3xl mx-auto">
+            <Link
+              href="/blog"
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              All Articles
+            </Link>
+
+            <div className="flex items-center gap-4 text-sm text-muted-foreground mb-6">
+              <div className="flex items-center gap-1.5">
+                <Calendar className="w-4 h-4" />
+                <time>{new Date(post.publishedAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</time>
+              </div>
+              <span className="w-1 h-1 rounded-full bg-border" />
+              <div className="flex items-center gap-1.5">
+                <Clock className="w-4 h-4" />
+                <span>{post.readTime}</span>
+              </div>
+              <Button variant="ghost" size="sm" onClick={handleShare} className="ml-auto">
+                <Share2 className="w-4 h-4 mr-2" />
+                Share
+              </Button>
+            </div>
+
+            <h1 className="text-4xl md:text-5xl font-bold leading-[1.1] tracking-tight mb-6">
+              {post.title}
+            </h1>
+
+            <p className="text-lg text-muted-foreground leading-relaxed mb-6">{post.excerpt}</p>
+
+            <div className="flex flex-wrap gap-1.5">
+              {post.tags.map((tag) => (
+                <span key={tag} className="text-xs px-2.5 py-1 rounded-full bg-primary/10 text-primary font-medium">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <main className="py-20 md:py-28 px-6">
+          <article className="max-w-3xl mx-auto">
+            <AnimatedSection>
+              <div className="overflow-hidden rounded-2xl border border-border mb-16">
+                <Image
+                  src={`/abstract-geometric-shapes.png?height=400&width=800&query=${encodeURIComponent(post.title)}`}
+                  alt={post.title}
+                  width={800}
+                  height={400}
+                  className="w-full h-64 md:h-96 object-cover"
+                />
+              </div>
+            </AnimatedSection>
+
+            <AnimatedSection delay={0.1}>
+              <div className="prose prose-lg max-w-none dark:prose-invert">
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: post.content.replace(/\n/g, "<br />").replace(/#{1,6}\s/g, (match) => {
+                      const level = match.trim().length
+                      return `<h${level} class="text-${4 - level}xl font-bold mt-8 mb-4">`
+                    }),
+                  }}
+                />
+              </div>
+            </AnimatedSection>
+
+            <AnimatedSection delay={0.2}>
+              <div className="mt-16 pt-8 border-t border-border">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs text-muted-foreground uppercase tracking-widest">Written by</p>
+                    <p className="font-semibold mt-1">{post.author}</p>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
-                    <span>{post.readTime}</span>
-                  </div>
-                  <Button variant="ghost" size="sm" onClick={handleShare} className="ml-auto">
+                  <Button onClick={handleShare} variant="outline" className="rounded-full">
                     <Share2 className="w-4 h-4 mr-2" />
                     Share
                   </Button>
                 </div>
-
-                <h1 className="text-4xl md:text-5xl font-bold leading-tight">{post.title}</h1>
-
-                <p className="text-xl text-muted-foreground leading-relaxed font-serif">{post.excerpt}</p>
-
-                <div className="flex flex-wrap gap-2">
-                  {post.tags.map((tag) => (
-                    <span key={tag} className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
               </div>
-            </div>
-          </FadeInSection>
-
-          <FadeInSection>
-            <div className="mb-12">
-              <Image
-                src={`/abstract-geometric-shapes.png?height=400&width=800&query=${encodeURIComponent(post.title)}`}
-                alt={post.title}
-                width={800}
-                height={400}
-                className="w-full h-64 md:h-96 object-cover rounded-xl"
-              />
-            </div>
-          </FadeInSection>
-
-          <FadeInSection>
-            <div className="prose prose-lg max-w-none dark:prose-invert">
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: post.content.replace(/\n/g, "<br />").replace(/#{1,6}\s/g, (match) => {
-                    const level = match.trim().length
-                    return `<h${level} class="text-${4 - level}xl font-bold mt-8 mb-4">`
-                  }),
-                }}
-              />
-            </div>
-          </FadeInSection>
-
-          <FadeInSection>
-            <div className="mt-16 pt-8 border-t border-border">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Written by</p>
-                  <p className="font-semibold">{post.author}</p>
-                </div>
-                <Button onClick={handleShare} variant="outline">
-                  <Share2 className="w-4 h-4 mr-2" />
-                  Share Article
-                </Button>
-              </div>
-            </div>
-          </FadeInSection>
-        </article>
-      </PageLayout>
+            </AnimatedSection>
+          </article>
+        </main>
+      </div>
     </div>
   )
 }

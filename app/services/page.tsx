@@ -1,10 +1,10 @@
 "use client"
 
-import PageLayout from "../../components/PageLayout"
-import FadeInSection from "../../components/FadeInSection"
-import { InteractiveCard } from "../../components/InteractiveCard"
 import Link from "next/link"
-import { CheckCircle2, Workflow, Users, Lightbulb, ArrowRight } from "lucide-react"
+import PageLayout from "../../components/PageLayout"
+import { AnimatedSection } from "../../components/AnimatedSection"
+import { StaggerContainer, StaggerItem } from "../../components/StaggerContainer"
+import { CheckCircle2, Users, Workflow, Lightbulb, ArrowUpRight } from "lucide-react"
 
 const servicePackages = [
   {
@@ -39,148 +39,143 @@ const servicePackages = [
 
 const engagementProcess = [
   {
-    title: "1. Alignment Workshop",
+    step: "01",
+    title: "Alignment Workshop",
     detail: "We map objectives, constraints, and success metrics to ensure the engagement starts with clarity.",
   },
   {
-    title: "2. Co-created Delivery Plan",
+    step: "02",
+    title: "Co-created Delivery Plan",
     detail: "We shape the roadmap, define responsibilities, and agree on communication and reporting rhythms.",
   },
   {
-    title: "3. Execution & Iteration",
+    step: "03",
+    title: "Execution & Iteration",
     detail: "Implementation begins with visible checkpoints, demos, and data so stakeholders stay informed.",
   },
   {
-    title: "4. Handover & Next Steps",
+    step: "04",
+    title: "Handover & Next Steps",
     detail: "We wrap with documentation, training, and recommendations that support long-term ownership.",
   },
 ]
 
 const engagementModels = [
-  {
-    title: "Project-based",
-    description: "Fixed-scope initiatives with defined milestones and delivery outcomes.",
-  },
-  {
-    title: "Retainer",
-    description: "Ongoing advisory and execution support for teams that want a strategic partner on call.",
-  },
-  {
-    title: "Workshops",
-    description: "Focused sessions to unblock decisions, facilitate discovery, or upskill your internal team.",
-  },
+  { title: "Project-based", description: "Fixed-scope initiatives with defined milestones and delivery outcomes." },
+  { title: "Retainer", description: "Ongoing advisory and execution support for teams that want a strategic partner on call." },
+  { title: "Workshops", description: "Focused sessions to unblock decisions, facilitate discovery, or upskill your internal team." },
 ]
 
 export default function Services() {
   return (
     <PageLayout
       title="Services"
-      subtitle="Partner with me to move complex initiatives from idea to impact with the right blend of strategy and execution"
+      subtitle="Partner with me to move complex initiatives from idea to impact with the right blend of strategy and execution."
+      label="What I offer"
     >
-      <section className="py-24 px-4">
-        <div className="mx-auto max-w-6xl space-y-16">
-          <FadeInSection>
-            <div className="grid gap-8 md:grid-cols-3">
-              {servicePackages.map((service) => (
-                <InteractiveCard key={service.title}>
-                  <div className="flex h-full flex-col rounded-xl border border-border bg-card p-8">
-                    <div className="flex items-center gap-3 text-primary">
-                      <Lightbulb className="h-6 w-6" aria-hidden="true" />
-                      <h3 className="text-xl font-semibold text-foreground">{service.title}</h3>
-                    </div>
-                    <p className="mt-4 text-muted-foreground leading-relaxed">{service.description}</p>
-                    <ul className="mt-6 space-y-3 text-sm text-muted-foreground">
-                      {service.outcomes.map((outcome) => (
-                        <li key={outcome} className="flex items-start gap-2">
-                          <CheckCircle2 className="mt-0.5 h-4 w-4 text-primary" aria-hidden="true" />
-                          <span>{outcome}</span>
-                        </li>
-                      ))}
-                    </ul>
+      <section className="py-20 md:py-28 px-6">
+        <div className="max-w-7xl mx-auto space-y-20">
+          {/* Service Packages */}
+          <StaggerContainer className="grid gap-6 md:grid-cols-3" staggerDelay={0.1}>
+            {servicePackages.map((service) => (
+              <StaggerItem key={service.title}>
+                <div className="bento-card rounded-2xl border border-border bg-card p-8 h-full flex flex-col">
+                  <div className="flex items-center gap-3 mb-4">
+                    <Lightbulb className="h-5 w-5 text-primary" />
+                    <h3 className="text-lg font-semibold">{service.title}</h3>
                   </div>
-                </InteractiveCard>
-              ))}
-            </div>
-          </FadeInSection>
-
-          <FadeInSection>
-            <div className="grid gap-8 md:grid-cols-2">
-              <InteractiveCard>
-                <div className="h-full rounded-xl border border-border bg-card p-8">
-                  <h3 className="text-2xl font-semibold">How engagements unfold</h3>
-                  <p className="mt-3 text-muted-foreground">
-                    Every partnership is structured for clarity, predictable delivery, and measurable results.
-                  </p>
-                  <ol className="mt-6 space-y-4 text-muted-foreground">
-                    {engagementProcess.map((step) => (
-                      <li key={step.title} className="rounded-lg bg-muted/40 p-4">
-                        <p className="font-semibold text-foreground">{step.title}</p>
-                        <p className="mt-2 text-sm leading-relaxed">{step.detail}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-6">{service.description}</p>
+                  <ul className="space-y-3 mt-auto">
+                    {service.outcomes.map((outcome) => (
+                      <li key={outcome} className="flex items-start gap-2.5 text-sm text-muted-foreground">
+                        <CheckCircle2 className="mt-0.5 h-4 w-4 text-primary flex-shrink-0" />
+                        <span>{outcome}</span>
                       </li>
                     ))}
-                  </ol>
-                </div>
-              </InteractiveCard>
-
-              <InteractiveCard>
-                <div className="h-full rounded-xl border border-border bg-card p-8">
-                  <h3 className="text-2xl font-semibold">Who I work with</h3>
-                  <p className="mt-3 text-muted-foreground">
-                    Teams that need a trusted partner to navigate digital change without disrupting the day-to-day.
-                  </p>
-                  <ul className="mt-6 space-y-4 text-muted-foreground">
-                    <li className="flex items-start gap-3">
-                      <Users className="mt-1 h-5 w-5 text-primary" aria-hidden="true" />
-                      <span>Operations leaders modernising legacy workflows and tooling.</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <Workflow className="mt-1 h-5 w-5 text-primary" aria-hidden="true" />
-                      <span>Product teams balancing regulatory, technical, and stakeholder demands.</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <Lightbulb className="mt-1 h-5 w-5 text-primary" aria-hidden="true" />
-                      <span>Founders and innovators seeking a pragmatic path from concept to launch.</span>
-                    </li>
                   </ul>
                 </div>
-              </InteractiveCard>
-            </div>
-          </FadeInSection>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
 
-          <FadeInSection>
-            <div className="rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/10 to-secondary/10 p-10 text-center">
-              <h3 className="text-3xl font-semibold">Let&apos;s scope your next initiative</h3>
-              <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
+          {/* How Engagements Unfold + Who I Work With */}
+          <div className="grid gap-6 md:grid-cols-2">
+            <AnimatedSection>
+              <div className="bento-card rounded-2xl border border-border bg-card p-8 h-full">
+                <p className="text-xs font-medium text-primary uppercase tracking-widest mb-3">Process</p>
+                <h3 className="text-2xl font-semibold mb-6">How engagements unfold</h3>
+                <div className="space-y-4">
+                  {engagementProcess.map((step) => (
+                    <div key={step.step} className="rounded-xl bg-muted/40 p-4">
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="text-xs font-bold text-primary">{step.step}</span>
+                        <p className="font-semibold text-sm">{step.title}</p>
+                      </div>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{step.detail}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </AnimatedSection>
+
+            <AnimatedSection delay={0.1}>
+              <div className="bento-card rounded-2xl border border-border bg-card p-8 h-full">
+                <p className="text-xs font-medium text-primary uppercase tracking-widest mb-3">Clients</p>
+                <h3 className="text-2xl font-semibold mb-6">Who I work with</h3>
+                <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
+                  Teams that need a trusted partner to navigate digital change without disrupting the day-to-day.
+                </p>
+                <ul className="space-y-5">
+                  {[
+                    { icon: Users, text: "Operations leaders modernising legacy workflows and tooling." },
+                    { icon: Workflow, text: "Product teams balancing regulatory, technical, and stakeholder demands." },
+                    { icon: Lightbulb, text: "Founders and innovators seeking a pragmatic path from concept to launch." },
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <item.icon className="mt-0.5 h-5 w-5 text-primary flex-shrink-0" />
+                      <span className="text-sm text-muted-foreground leading-relaxed">{item.text}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </AnimatedSection>
+          </div>
+
+          {/* CTA */}
+          <AnimatedSection>
+            <div className="bento-card rounded-2xl border border-border bg-gradient-to-br from-primary/5 to-secondary/5 p-10 md:p-14 text-center">
+              <h3 className="text-2xl md:text-3xl font-bold mb-4">Let&apos;s scope your next initiative</h3>
+              <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
                 Share your goals and constraints, and I&apos;ll outline the approach, timeline, and collaboration model that gets you there.
               </p>
-              <div className="mt-6 flex flex-wrap justify-center gap-4">
+              <div className="flex flex-wrap justify-center gap-4">
                 <Link
                   href="/contact"
-                  className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-foreground text-background rounded-full text-sm font-medium hover:opacity-80 transition-opacity"
                 >
-                  Start a project
-                  <ArrowRight className="h-4 w-4" />
+                  Start a project <ArrowUpRight className="w-4 h-4" />
                 </Link>
-                <Link
+                <a
                   href="mailto:info@sweber.dev"
-                  className="inline-flex items-center gap-2 rounded-lg border border-border px-6 py-3 font-medium transition-colors hover:bg-card"
+                  className="inline-flex items-center gap-2 px-6 py-3 border border-border rounded-full text-sm font-medium hover:bg-muted transition-colors"
                 >
                   Email me directly
-                </Link>
+                </a>
               </div>
             </div>
-          </FadeInSection>
+          </AnimatedSection>
 
-          <FadeInSection>
-            <div className="grid gap-6 md:grid-cols-3">
-              {engagementModels.map((model) => (
-                <div key={model.title} className="rounded-xl border border-border bg-card p-6 text-center">
-                  <h4 className="text-lg font-semibold text-foreground">{model.title}</h4>
-                  <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{model.description}</p>
+          {/* Engagement Models */}
+          <StaggerContainer className="grid gap-6 md:grid-cols-3" staggerDelay={0.1}>
+            {engagementModels.map((model) => (
+              <StaggerItem key={model.title}>
+                <div className="rounded-2xl border border-border bg-card p-6 text-center">
+                  <h4 className="text-base font-semibold mb-3">{model.title}</h4>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{model.description}</p>
                 </div>
-              ))}
-            </div>
-          </FadeInSection>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
         </div>
       </section>
     </PageLayout>

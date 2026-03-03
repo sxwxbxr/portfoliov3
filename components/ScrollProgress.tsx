@@ -15,14 +15,16 @@ export function ScrollProgress() {
       }
     }
 
-    window.addEventListener("scroll", updateScrollProgress)
+    window.addEventListener("scroll", updateScrollProgress, { passive: true })
     return () => window.removeEventListener("scroll", updateScrollProgress)
   }, [])
 
+  if (scrollProgress < 1) return null
+
   return (
-    <div className="fixed top-0 left-0 w-full h-1 bg-muted z-50">
+    <div className="fixed top-0 left-0 w-full h-[2px] z-[60]">
       <div
-        className="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-150 ease-out"
+        className="h-full bg-primary transition-all duration-150 ease-out"
         style={{ width: `${scrollProgress}%` }}
       />
     </div>
