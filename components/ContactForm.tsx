@@ -42,6 +42,7 @@ export function ContactForm() {
   const [errors, setErrors] = useState<FormErrors>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {}
@@ -85,6 +86,7 @@ export function ContactForm() {
     }
 
     setIsSubmitting(true)
+    setSubmitError(null)
 
     try {
       const response = await fetch("/api/contact", {
@@ -94,7 +96,9 @@ export function ContactForm() {
       })
 
       if (!response.ok) {
-        throw new Error("Failed to submit form")
+        const body = await response.json().catch(() => ({}))
+        const message = body.error || "Failed to send message. Please try again."
+        throw new Error(message)
       }
 
       setFormData({
@@ -111,6 +115,8 @@ export function ContactForm() {
       setShowSuccessModal(true)
     } catch (error) {
       console.error("Form submission error:", error)
+      const message = error instanceof Error ? error.message : "Something went wrong. Please try again or email me directly at info@sweber.dev."
+      setSubmitError(message)
     } finally {
       setIsSubmitting(false)
     }
@@ -119,9 +125,12 @@ export function ContactForm() {
   const handleInputChange = (field: keyof FormData, value: string | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
 
-    // Clear error when user starts typing
+    // Clear errors when user starts typing
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: "" }))
+    }
+    if (submitError) {
+      setSubmitError(null)
     }
   }
 
@@ -264,6 +273,13 @@ export function ContactForm() {
             Subscribe to my newsletter for updates on new projects and insights
           </Label>
         </div>
+
+        {submitError && (
+          <div className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400 p-3 rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50">
+            <AlertCircle className="w-4 h-4 flex-shrink-0" />
+            {submitError}
+          </div>
+        )}
 
         <Button
           type="submit"

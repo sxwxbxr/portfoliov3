@@ -9,6 +9,7 @@ import Link from "next/link"
 import { Calendar, Clock, ArrowLeft, Share2 } from "lucide-react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
+import ReactMarkdown from "react-markdown"
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>
@@ -141,14 +142,7 @@ export default function BlogPost({ params }: BlogPostPageProps) {
 
             <AnimatedSection delay={0.1}>
               <div className="prose prose-lg max-w-none dark:prose-invert">
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: post.content.replace(/\n/g, "<br />").replace(/#{1,6}\s/g, (match) => {
-                      const level = match.trim().length
-                      return `<h${level} class="text-${4 - level}xl font-bold mt-8 mb-4">`
-                    }),
-                  }}
-                />
+                <ReactMarkdown>{post.content}</ReactMarkdown>
               </div>
             </AnimatedSection>
 
