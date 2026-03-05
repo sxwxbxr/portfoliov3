@@ -2,13 +2,9 @@
 
 import { use } from "react"
 import Navigation from "../../../components/Navigation"
-import { AnimatedSection } from "../../../components/AnimatedSection"
 import { JsonLd } from "../../../components/JsonLd"
 import { blogPosts } from "../../../src/config"
 import Link from "next/link"
-import { Calendar, Clock, ArrowLeft, Share2 } from "lucide-react"
-import Image from "next/image"
-import { Button } from "@/components/ui/button"
 import ReactMarkdown from "react-markdown"
 
 interface BlogPostPageProps {
@@ -23,13 +19,12 @@ export default function BlogPost({ params }: BlogPostPageProps) {
     return (
       <div className="min-h-screen bg-background grain-overlay">
         <Navigation />
-        <div className="pt-16">
-          <div className="py-20 px-6 text-center">
-            <h1 className="text-4xl font-bold mb-4">Post Not Found</h1>
+        <div className="pt-32">
+          <div className="max-w-[1200px] mx-auto px-6 text-center py-24">
+            <h1 className="text-4xl font-display font-bold tracking-tight mb-4">Post Not Found</h1>
             <p className="text-muted-foreground mb-6">The blog post you&apos;re looking for doesn&apos;t exist.</p>
-            <Link href="/blog" className="inline-flex items-center gap-2 text-primary hover:underline text-sm">
-              <ArrowLeft className="w-4 h-4" />
-              Back to Blog
+            <Link href="/blog" className="link-underline text-primary text-sm font-medium">
+              &larr; Back to Writing
             </Link>
           </div>
         </div>
@@ -62,106 +57,105 @@ export default function BlogPost({ params }: BlogPostPageProps) {
     keywords: post.tags.join(", "),
   }
 
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: post.title,
-          text: post.excerpt,
-          url: window.location.href,
-        })
-      } catch (err) {
-        console.log("Error sharing:", err)
-      }
-    } else {
-      navigator.clipboard.writeText(window.location.href)
-    }
-  }
+  // Find next/prev posts
+  const currentIndex = blogPosts.findIndex((p) => p.id === slug)
+  const nextPost = currentIndex < blogPosts.length - 1 ? blogPosts[currentIndex + 1] : null
+  const prevPost = currentIndex > 0 ? blogPosts[currentIndex - 1] : null
 
   return (
     <div className="min-h-screen bg-background grain-overlay">
       <JsonLd data={blogPostStructuredData} />
       <Navigation />
 
-      <div className="pt-16">
-        <section className="py-20 md:py-28 px-6 mesh-gradient">
-          <div className="max-w-3xl mx-auto">
-            <Link
-              href="/blog"
-              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              All Articles
-            </Link>
+      <div className="pt-32">
+        {/* Header */}
+        <section className="max-w-[1200px] mx-auto px-6 pb-16 md:pb-20">
+          <Link
+            href="/blog"
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
+          >
+            &larr; All articles
+          </Link>
 
-            <div className="flex items-center gap-4 text-sm text-muted-foreground mb-6">
-              <div className="flex items-center gap-1.5">
-                <Calendar className="w-4 h-4" />
-                <time>{new Date(post.publishedAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</time>
-              </div>
-              <span className="w-1 h-1 rounded-full bg-border" />
-              <div className="flex items-center gap-1.5">
-                <Clock className="w-4 h-4" />
-                <span>{post.readTime}</span>
-              </div>
-              <Button variant="ghost" size="sm" onClick={handleShare} className="ml-auto">
-                <Share2 className="w-4 h-4 mr-2" />
-                Share
-              </Button>
-            </div>
+          <h1 className="text-4xl md:text-5xl font-display font-bold tracking-tight leading-[1.1]">
+            {post.title}
+          </h1>
 
-            <h1 className="text-4xl md:text-5xl font-bold leading-[1.1] tracking-tight mb-6">
-              {post.title}
-            </h1>
-
-            <p className="text-lg text-muted-foreground leading-relaxed mb-6">{post.excerpt}</p>
-
-            <div className="flex flex-wrap gap-1.5">
-              {post.tags.map((tag) => (
-                <span key={tag} className="text-xs px-2.5 py-1 rounded-full bg-primary/10 text-primary font-medium">
-                  {tag}
-                </span>
-              ))}
-            </div>
+          <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+            <span className="font-mono">
+              {new Date(post.publishedAt).toLocaleDateString("en-US", {
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </span>
+            <span className="text-border">&middot;</span>
+            <span>{post.readTime}</span>
+            <span className="text-border">&middot;</span>
+            <span>{post.author}</span>
           </div>
         </section>
 
-        <main className="py-20 md:py-28 px-6">
-          <article className="max-w-3xl mx-auto">
-            <AnimatedSection>
-              <div className="overflow-hidden rounded-2xl border border-border mb-16">
-                <Image
-                  src={`/abstract-geometric-shapes.png?height=400&width=800&query=${encodeURIComponent(post.title)}`}
-                  alt={post.title}
-                  width={800}
-                  height={400}
-                  className="w-full h-64 md:h-96 object-cover"
-                />
-              </div>
-            </AnimatedSection>
+        <div className="border-t border-border" />
 
-            <AnimatedSection delay={0.1}>
-              <div className="prose prose-lg max-w-none dark:prose-invert">
-                <ReactMarkdown>{post.content}</ReactMarkdown>
-              </div>
-            </AnimatedSection>
+        {/* Article body */}
+        <main className="py-24 md:py-32">
+          <article className="max-w-[720px] mx-auto px-6">
+            <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:font-display prose-headings:tracking-tight prose-p:leading-[1.75] prose-a:text-primary prose-a:no-underline hover:prose-a:underline">
+              <ReactMarkdown>{post.content}</ReactMarkdown>
+            </div>
 
-            <AnimatedSection delay={0.2}>
-              <div className="mt-16 pt-8 border-t border-border">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs text-muted-foreground uppercase tracking-widest">Written by</p>
-                    <p className="font-semibold mt-1">{post.author}</p>
-                  </div>
-                  <Button onClick={handleShare} variant="outline" className="rounded-full">
-                    <Share2 className="w-4 h-4 mr-2" />
-                    Share
-                  </Button>
-                </div>
+            {/* Tags */}
+            <div className="mt-16 pt-8 border-t border-border">
+              <p className="font-mono text-xs text-muted-foreground mb-3">Tagged</p>
+              <div className="flex flex-wrap gap-2">
+                {post.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="text-sm text-muted-foreground"
+                  >
+                    {tag}{post.tags.indexOf(tag) < post.tags.length - 1 ? "," : ""}
+                  </span>
+                ))}
               </div>
-            </AnimatedSection>
+            </div>
+
+            {/* Author */}
+            <div className="mt-12 pt-8 border-t border-border">
+              <p className="font-mono text-xs text-muted-foreground">Written by</p>
+              <p className="font-semibold mt-1">{post.author}</p>
+            </div>
           </article>
         </main>
+
+        {/* Post navigation */}
+        <div className="border-t border-border">
+          <div className="max-w-[1200px] mx-auto px-6 py-16 md:py-20 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            {prevPost ? (
+              <Link href={`/blog/${prevPost.id}`} className="group">
+                <span className="text-sm text-muted-foreground">&larr; Previous</span>
+                <p className="font-semibold group-hover:text-primary transition-colors">
+                  {prevPost.title}
+                </p>
+              </Link>
+            ) : (
+              <Link
+                href="/blog"
+                className="link-underline text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                &larr; All articles
+              </Link>
+            )}
+            {nextPost && (
+              <Link href={`/blog/${nextPost.id}`} className="group text-right">
+                <span className="text-sm text-muted-foreground">Next &rarr;</span>
+                <p className="font-semibold group-hover:text-primary transition-colors">
+                  {nextPost.title}
+                </p>
+              </Link>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   )

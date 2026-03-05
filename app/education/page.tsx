@@ -1,30 +1,27 @@
 "use client"
 
-import PageLayout from "../../components/PageLayout"
-import { StaggerContainer, StaggerItem } from "../../components/StaggerContainer"
+import Link from "next/link"
+import PageLayout, { Section } from "../../components/PageLayout"
 
 const education = [
   {
-    abbr: "BM",
     title: "Berufsmatura TALS",
     institution: "",
-    period: "08/2024 – 07/2025",
+    period: "2024 -- 2025",
     description:
       "Advanced vocational education focusing on technical and scientific subjects, preparing for higher education in engineering and technology fields.",
   },
   {
-    abbr: "CS",
     title: "EFZ in Computer Science",
-    institution: "Application Development – WISS St. Gallen",
-    period: "08/2022 – 07/2024",
+    institution: "Application Development -- WISS St. Gallen",
+    period: "2022 -- 2024",
     description:
       "Comprehensive training in software development, focusing on .NET technologies, database management, and modern application development practices.",
   },
   {
-    abbr: "EP",
     title: "EFZ in Electrical Planning",
     institution: "GBS St. Gallen",
-    period: "08/2018 – 07/2022",
+    period: "2018 -- 2022",
     description:
       "Specialized training in electrical systems design, planning, and implementation, providing a strong foundation in technical problem-solving.",
   },
@@ -34,28 +31,46 @@ export default function Education() {
   return (
     <PageLayout
       title="Education"
-      subtitle="My academic journey and continuous learning in technology and engineering."
-      label="Learning"
+      subtitle="My academic journey in technology and engineering."
     >
-      <section className="py-20 md:py-28 px-6">
-        <div className="max-w-4xl mx-auto">
-          <StaggerContainer className="grid gap-6 md:grid-cols-3" staggerDelay={0.12}>
-            {education.map((edu) => (
-              <StaggerItem key={edu.title}>
-                <div className="bento-card rounded-2xl border border-border bg-card p-8 h-full flex flex-col">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
-                    <span className="text-sm font-bold text-primary">{edu.abbr}</span>
+      <section className="pb-24 md:pb-32">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div>
+            {education.map((edu, i) => (
+              <Section key={edu.title} delay={i * 0.05}>
+                <div
+                  className={`py-8 ${
+                    i > 0 ? "border-t border-border" : ""
+                  }`}
+                >
+                  <div className="flex flex-col md:flex-row md:items-start gap-2 md:gap-0 mb-3">
+                    <h3 className="font-semibold text-lg md:flex-1">{edu.title}</h3>
+                    {edu.institution && (
+                      <span className="text-muted-foreground text-sm md:flex-1">
+                        {edu.institution}
+                      </span>
+                    )}
+                    <span className="font-mono text-sm text-muted-foreground md:text-right">
+                      {edu.period}
+                    </span>
                   </div>
-                  <h3 className="text-lg font-semibold mb-1">{edu.title}</h3>
-                  {edu.institution && (
-                    <p className="text-sm text-muted-foreground mb-1">{edu.institution}</p>
-                  )}
-                  <p className="text-xs text-muted-foreground mb-4">{edu.period}</p>
-                  <p className="text-sm text-muted-foreground leading-relaxed flex-1">{edu.description}</p>
+                  <p className="text-muted-foreground leading-relaxed max-w-2xl">
+                    {edu.description}
+                  </p>
                 </div>
-              </StaggerItem>
+              </Section>
             ))}
-          </StaggerContainer>
+            <div className="border-t border-border" />
+          </div>
+
+          <div className="mt-8">
+            <Link
+              href="/about"
+              className="link-underline text-primary text-sm font-medium"
+            >
+              More about me &rarr;
+            </Link>
+          </div>
         </div>
       </section>
     </PageLayout>

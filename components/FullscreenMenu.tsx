@@ -1,0 +1,130 @@
+"use client"
+
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { useEffect } from "react"
+import { X } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
+import { SiGithub, SiLinkedin } from "react-icons/si"
+import { ThemeToggle } from "./ThemeToggle"
+
+const menuLinks = [
+  { name: "Work", href: "/projects" },
+  { name: "About", href: "/about" },
+  { name: "Contact", href: "/contact" },
+]
+
+const socialLinks = [
+  { icon: SiGithub, label: "GitHub", href: "https://github.com/sxwxbxr" },
+  { icon: SiLinkedin, label: "LinkedIn", href: "https://ch.linkedin.com/in/seya-weber-06a592256" },
+]
+
+interface FullscreenMenuProps {
+  isOpen: boolean
+  onClose: () => void
+}
+
+export function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps) {
+  const pathname = usePathname()
+
+  // Close on Escape key
+  useEffect(() => {
+    if (!isOpen) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose()
+    }
+    document.addEventListener("keydown", handleKeyDown)
+    return () => document.removeEventListener("keydown", handleKeyDown)
+  }, [isOpen, onClose])
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Navigation menu"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="fixed inset-0 z-50 lg:hidden"
+        >
+          {/* Background */}
+          <div className="absolute inset-0 bg-background/98 backdrop-blur-md" />
+
+          {/* Content */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3, delay: 0.05 }}
+            className="relative flex flex-col h-full px-8"
+          >
+            {/* Close button */}
+            <div className="flex justify-end pt-5">
+              <button
+                onClick={onClose}
+                className="p-2 text-foreground hover:text-primary transition-colors"
+                aria-label="Close menu"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            {/* Navigation links */}
+            <nav className="flex-1 flex flex-col justify-center -mt-16">
+              <div className="space-y-2">
+                {menuLinks.map((link, i) => (
+                  <motion.div
+                    key={link.href}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    transition={{ delay: 0.1 + i * 0.05, duration: 0.4 }}
+                  >
+                    <Link
+                      href={link.href}
+                      onClick={onClose}
+                      className={`block text-5xl font-display font-semibold tracking-tight py-3 transition-colors ${
+                        pathname === link.href
+                          ? "text-primary"
+                          : "text-foreground hover:text-primary"
+                      }`}
+                    >
+                      {link.name}
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
+            </nav>
+
+            {/* Bottom section: socials + theme toggle */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3, duration: 0.4 }}
+              className="pb-10 flex items-center justify-between"
+            >
+              <div className="flex items-center gap-5">
+                {socialLinks.map((link) => (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-muted-foreground hover:text-primary transition-colors"
+                    aria-label={link.label}
+                  >
+                    <link.icon className="w-5 h-5" />
+                  </a>
+                ))}
+              </div>
+              <ThemeToggle />
+            </motion.div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+}

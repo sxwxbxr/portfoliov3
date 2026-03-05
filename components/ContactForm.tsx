@@ -47,14 +47,12 @@ export function ContactForm() {
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {}
 
-    // Name validation
     if (!formData.name.trim()) {
       newErrors.name = "Name is required"
     } else if (formData.name.trim().length < 2) {
       newErrors.name = "Name must be at least 2 characters"
     }
 
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!formData.email.trim()) {
       newErrors.email = "Email is required"
@@ -62,12 +60,10 @@ export function ContactForm() {
       newErrors.email = "Please enter a valid email address"
     }
 
-    // Project type validation
     if (!formData.projectType) {
       newErrors.projectType = "Please select a project type"
     }
 
-    // Message validation
     if (!formData.message.trim()) {
       newErrors.message = "Message is required"
     } else if (formData.message.trim().length < 10) {
@@ -125,7 +121,6 @@ export function ContactForm() {
   const handleInputChange = (field: keyof FormData, value: string | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
 
-    // Clear errors when user starts typing
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: "" }))
     }
@@ -135,41 +130,40 @@ export function ContactForm() {
   }
 
   return (
-    <div className="relative bg-card border border-border rounded-xl p-8">
-      <h3 className="text-xl font-semibold mb-6">Send a Message</h3>
+    <div className="relative">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <Label htmlFor="name">Name *</Label>
+            <Label htmlFor="name" className="text-sm">Name *</Label>
             <Input
               id="name"
               type="text"
               value={formData.name}
               onChange={(e) => handleInputChange("name", e.target.value)}
               placeholder="Your full name"
-              className={errors.name ? "border-red-500 focus:ring-red-500" : ""}
+              className={`bg-transparent border-border ${errors.name ? "border-red-500 focus:ring-red-500" : ""}`}
             />
             {errors.name && (
               <div className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400">
-                <AlertCircle className="w-4 h-4" />
+                <AlertCircle className="w-3.5 h-3.5" />
                 {errors.name}
               </div>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email">Email *</Label>
+            <Label htmlFor="email" className="text-sm">Email *</Label>
             <Input
               id="email"
               type="email"
               value={formData.email}
               onChange={(e) => handleInputChange("email", e.target.value)}
               placeholder="your.email@example.com"
-              className={errors.email ? "border-red-500 focus:ring-red-500" : ""}
+              className={`bg-transparent border-border ${errors.email ? "border-red-500 focus:ring-red-500" : ""}`}
             />
             {errors.email && (
               <div className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400">
-                <AlertCircle className="w-4 h-4" />
+                <AlertCircle className="w-3.5 h-3.5" />
                 {errors.email}
               </div>
             )}
@@ -177,21 +171,22 @@ export function ContactForm() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="company">Company</Label>
+          <Label htmlFor="company" className="text-sm">Company</Label>
           <Input
             id="company"
             type="text"
             value={formData.company}
             onChange={(e) => handleInputChange("company", e.target.value)}
             placeholder="Your company name (optional)"
+            className="bg-transparent border-border"
           />
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <Label htmlFor="projectType">Project Type *</Label>
+            <Label htmlFor="projectType" className="text-sm">Project Type *</Label>
             <Select value={formData.projectType} onValueChange={(value) => handleInputChange("projectType", value)}>
-              <SelectTrigger className={errors.projectType ? "border-red-500" : ""}>
+              <SelectTrigger className={`bg-transparent border-border ${errors.projectType ? "border-red-500" : ""}`}>
                 <SelectValue placeholder="Select project type" />
               </SelectTrigger>
               <SelectContent>
@@ -204,16 +199,16 @@ export function ContactForm() {
             </Select>
             {errors.projectType && (
               <div className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400">
-                <AlertCircle className="w-4 h-4" />
+                <AlertCircle className="w-3.5 h-3.5" />
                 {errors.projectType}
               </div>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="budget">Budget Range</Label>
+            <Label htmlFor="budget" className="text-sm">Budget Range</Label>
             <Select value={formData.budget} onValueChange={(value) => handleInputChange("budget", value)}>
-              <SelectTrigger>
+              <SelectTrigger className="bg-transparent border-border">
                 <SelectValue placeholder="Select budget range" />
               </SelectTrigger>
               <SelectContent>
@@ -229,9 +224,9 @@ export function ContactForm() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="timeline">Timeline</Label>
+          <Label htmlFor="timeline" className="text-sm">Timeline</Label>
           <Select value={formData.timeline} onValueChange={(value) => handleInputChange("timeline", value)}>
-            <SelectTrigger>
+            <SelectTrigger className="bg-transparent border-border">
               <SelectValue placeholder="When do you need this completed?" />
             </SelectTrigger>
             <SelectContent>
@@ -245,22 +240,22 @@ export function ContactForm() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="message">Message *</Label>
+          <Label htmlFor="message" className="text-sm">Message *</Label>
           <Textarea
             id="message"
             value={formData.message}
             onChange={(e) => handleInputChange("message", e.target.value)}
             placeholder="Tell me about your project, goals, and any specific requirements..."
             rows={5}
-            className={errors.message ? "border-red-500 focus:ring-red-500" : ""}
+            className={`bg-transparent border-border ${errors.message ? "border-red-500 focus:ring-red-500" : ""}`}
           />
           {errors.message && (
             <div className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400">
-              <AlertCircle className="w-4 h-4" />
+              <AlertCircle className="w-3.5 h-3.5" />
               {errors.message}
             </div>
           )}
-          <div className="text-sm text-muted-foreground">{formData.message.length}/500 characters</div>
+          <div className="text-xs text-muted-foreground">{formData.message.length}/5000 characters</div>
         </div>
 
         <div className="flex items-center space-x-2">
@@ -269,14 +264,14 @@ export function ContactForm() {
             checked={formData.newsletter}
             onCheckedChange={(checked) => handleInputChange("newsletter", checked as boolean)}
           />
-          <Label htmlFor="newsletter" className="text-sm">
-            Subscribe to my newsletter for updates on new projects and insights
+          <Label htmlFor="newsletter" className="text-sm text-muted-foreground">
+            Subscribe to updates on new projects and insights
           </Label>
         </div>
 
         {submitError && (
-          <div className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400 p-3 rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50">
-            <AlertCircle className="w-4 h-4 flex-shrink-0" />
+          <div className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400 p-3 border border-red-200 dark:border-red-900/50">
+            <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
             {submitError}
           </div>
         )}
@@ -284,12 +279,12 @@ export function ContactForm() {
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-primary text-primary-foreground transition-all duration-300 hover:bg-primary/90 hover:scale-105 glow-effect"
+          className="bg-primary text-primary-foreground hover:bg-primary/90 px-8"
         >
           {isSubmitting ? (
             <>
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Sending Message...
+              Sending...
             </>
           ) : (
             <>
@@ -308,14 +303,14 @@ export function ContactForm() {
           <div
             role="alertdialog"
             aria-modal="true"
-            className="bg-card border border-border rounded-2xl shadow-xl max-w-md w-full mx-4 p-8 text-center space-y-6"
+            className="bg-card border border-border max-w-md w-full mx-4 p-8 text-center space-y-6"
             onClick={(event) => event.stopPropagation()}
           >
             <div className="flex items-center justify-center">
               <CheckmarkAnimation />
             </div>
             <div className="space-y-2">
-              <h3 className="text-2xl font-semibold">Message Sent!</h3>
+              <h3 className="text-2xl font-display font-bold">Message Sent</h3>
               <p className="text-muted-foreground">
                 Thank you for reaching out. I&apos;ll get back to you within 24 hours.
               </p>

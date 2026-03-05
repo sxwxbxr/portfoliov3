@@ -1,15 +1,10 @@
-import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { ArrowLeft, Building, CheckCircle, Clock, ExternalLink, Quote, Users, ArrowUpRight } from "lucide-react"
-import { SiGithub } from "react-icons/si"
-
-import Navigation from "../../../components/Navigation"
-import { AnimatedSection } from "../../../components/AnimatedSection"
 import { caseStudies, projects } from "../../../src/config"
+import Navigation from "../../../components/Navigation"
 
 interface ProjectPageProps {
-  params: { slug: string } | Promise<{ slug: string }>
+  params: Promise<{ slug: string }>
 }
 
 export default async function ProjectDetails({ params }: ProjectPageProps) {
@@ -21,11 +16,6 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
     notFound()
   }
 
-  const heroImage = (study?.image ?? project.image ?? "/abstract-geometric-shapes.png").trim()
-  const heroSrc = heroImage.includes("?")
-    ? heroImage
-    : `${heroImage}?height=400&width=800&query=${encodeURIComponent(project.title)}`
-
   const hasDemoLink = Boolean(project.demo && project.demo !== "#")
   const hasRepoLink = Boolean(project.github && project.github !== "#")
 
@@ -34,176 +24,194 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
     .map((paragraph) => paragraph.trim())
     .filter(Boolean)
 
+  // Find next project
+  const currentIndex = projects.findIndex((p) => p.slug === slug)
+  const nextProject = projects[(currentIndex + 1) % projects.length]
+
   return (
     <div className="min-h-screen bg-background grain-overlay">
       <Navigation />
 
-      <div className="pt-16">
-        <section className="py-20 md:py-28 px-6 mesh-gradient">
-          <div className="max-w-4xl mx-auto">
-            <Link
-              href="/projects"
-              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              All Projects
-            </Link>
+      <div className="pt-32">
+        {/* Hero */}
+        <section className="max-w-[1200px] mx-auto px-6 pb-16 md:pb-20">
+          <Link
+            href="/projects"
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
+          >
+            &larr; Back to projects
+          </Link>
 
-            <div className="space-y-5">
-              {study?.client && (
-                <p className="text-sm font-medium text-primary">{study.client}</p>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight leading-[1.05]">
+            {project.title}
+          </h1>
+
+          <p className="mt-4 text-lg text-muted-foreground max-w-2xl leading-relaxed">
+            {project.shortDescription}
+          </p>
+
+          {/* Meta bar */}
+          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-sm text-muted-foreground">
+            {study?.client && (
+              <>
+                <span>{study.client}</span>
+                <span className="hidden md:inline text-border">|</span>
+              </>
+            )}
+            <span>{project.tags.join(", ")}</span>
+            {study?.duration && (
+              <>
+                <span className="hidden md:inline text-border">|</span>
+                <span>{study.duration}</span>
+              </>
+            )}
+          </div>
+
+          {/* Links */}
+          {(hasDemoLink || hasRepoLink) && (
+            <div className="mt-8 flex flex-wrap items-center gap-6">
+              {hasDemoLink && (
+                <a
+                  href={project.demo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="link-underline text-primary text-sm font-medium"
+                >
+                  View live site &rarr;
+                </a>
               )}
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.05] tracking-tight">
-                {project.title}
-              </h1>
-              <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
-                {project.shortDescription}
-              </p>
-
-              {(hasDemoLink || hasRepoLink) && (
-                <div className="flex flex-wrap gap-3 pt-2">
-                  {hasDemoLink && (
-                    <a
-                      href={project.demo}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-5 py-2.5 bg-foreground text-background rounded-full text-sm font-medium hover:opacity-80 transition-opacity"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                      View Demo
-                    </a>
-                  )}
-                  {hasRepoLink && (
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-5 py-2.5 border border-border rounded-full text-sm font-medium hover:bg-muted transition-colors"
-                    >
-                      <SiGithub className="w-4 h-4" />
-                      Source Code
-                    </a>
-                  )}
-                </div>
+              {hasRepoLink && (
+                <a
+                  href={project.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="link-underline text-primary text-sm font-medium"
+                >
+                  Source code &rarr;
+                </a>
               )}
             </div>
-          </div>
+          )}
         </section>
 
-        <main className="py-20 md:py-28 px-6">
-          <div className="max-w-4xl mx-auto space-y-16">
-            <div className="overflow-hidden rounded-2xl border border-border">
-              <Image
-                src={heroSrc}
-                alt={project.title}
-                width={800}
-                height={400}
-                className="w-full h-64 md:h-96 object-cover"
-                priority
-              />
-            </div>
+        <div className="border-t border-border" />
 
-            <section className="bento-card rounded-2xl border border-border bg-card p-8 md:p-10 space-y-6">
+        {/* Content */}
+        <main className="py-24 md:py-32">
+          <div className="max-w-[1200px] mx-auto px-6">
+            <div className="max-w-3xl">
+              {/* Description */}
               <div className="space-y-4">
-                <p className="text-xs font-medium text-primary uppercase tracking-widest">Overview</p>
-                <h2 className="text-2xl font-bold">Project Details</h2>
                 {descriptionParagraphs.length ? (
                   descriptionParagraphs.map((paragraph, index) => (
-                    <p key={index} className="text-muted-foreground leading-relaxed">
+                    <p key={index} className="text-lg leading-relaxed text-foreground/90">
                       {paragraph}
                     </p>
                   ))
                 ) : (
-                  <p className="text-muted-foreground leading-relaxed">{project.description}</p>
+                  <p className="text-lg leading-relaxed text-foreground/90">
+                    {project.description}
+                  </p>
                 )}
               </div>
 
-              {project.tags?.length ? (
-                <div>
-                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest mb-3">
-                    Technologies & Focus Areas
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {project.tags.map((tag) => (
-                      <span key={tag} className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              ) : null}
-            </section>
-
-            {study ? (
-              <div className="space-y-12">
-                <div className="grid gap-4 sm:grid-cols-3">
-                  {[
-                    { icon: Building, text: study.industry },
-                    { icon: Clock, text: study.duration },
-                    { icon: Users, text: study.team },
-                  ].map((item, i) => (
-                    <div key={i} className="flex items-center gap-2.5 text-sm text-muted-foreground rounded-xl border border-border bg-card p-4">
-                      <item.icon className="w-4 h-4 text-primary" />
-                      <span>{item.text}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="space-y-10">
-                  {[
-                    { label: "Challenge", content: study.challenge },
-                    { label: "Solution", content: study.solution },
-                  ].map((section) => (
-                    <div key={section.label}>
-                      <p className="text-xs font-medium text-primary uppercase tracking-widest mb-3">{section.label}</p>
-                      <h2 className="text-2xl font-bold mb-4">The {section.label}</h2>
-                      <p className="text-muted-foreground leading-relaxed">{section.content}</p>
-                    </div>
-                  ))}
-
+              {/* Case study sections */}
+              {study && (
+                <div className="mt-20 space-y-16">
+                  {/* Challenge */}
                   <div>
-                    <p className="text-xs font-medium text-primary uppercase tracking-widest mb-3">Outcomes</p>
-                    <h2 className="text-2xl font-bold mb-6">Results Achieved</h2>
-                    <div className="grid sm:grid-cols-2 gap-3">
+                    <h2 className="text-2xl md:text-3xl font-display font-bold tracking-tight mb-4">
+                      The Challenge
+                    </h2>
+                    <p className="text-muted-foreground leading-relaxed text-lg">
+                      {study.challenge}
+                    </p>
+                  </div>
+
+                  {/* Solution */}
+                  <div>
+                    <h2 className="text-2xl md:text-3xl font-display font-bold tracking-tight mb-4">
+                      The Solution
+                    </h2>
+                    <p className="text-muted-foreground leading-relaxed text-lg">
+                      {study.solution}
+                    </p>
+                  </div>
+
+                  {/* Results */}
+                  <div>
+                    <h2 className="text-2xl md:text-3xl font-display font-bold tracking-tight mb-8">
+                      Results
+                    </h2>
+                    <div className="space-y-0">
                       {study.results.map((result, index) => (
-                        <div key={index} className="flex items-start gap-3 p-4 rounded-xl border border-border bg-card">
-                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                          <span className="text-sm">{result}</span>
+                        <div
+                          key={index}
+                          className={`flex items-start gap-4 py-4 ${
+                            index > 0 ? "border-t border-border" : ""
+                          }`}
+                        >
+                          <span className="font-mono text-sm text-muted-foreground mt-0.5">
+                            {String(index + 1).padStart(2, "0")}
+                          </span>
+                          <span className="text-foreground/90">{result}</span>
                         </div>
                       ))}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid gap-6 lg:grid-cols-2">
-                  <div className="bento-card rounded-2xl border border-border bg-card p-6">
-                    <p className="text-xs font-medium text-primary uppercase tracking-widest mb-4">Stack</p>
-                    <div className="flex flex-wrap gap-2">
-                      {study.technologies.map((tech) => (
-                        <span key={tech} className="px-3 py-1 bg-secondary/10 text-secondary rounded-full text-xs font-medium">
-                          {tech}
-                        </span>
-                      ))}
+                      <div className="border-t border-border" />
                     </div>
                   </div>
 
+                  {/* Testimonial */}
                   {study.testimonial && (
-                    <div className="bento-card rounded-2xl border border-primary/20 bg-primary/5 p-6">
-                      <Quote className="w-8 h-8 text-primary/30 mb-4" />
-                      <blockquote className="text-base italic leading-relaxed mb-4">
-                        &quot;{study.testimonial.quote}&quot;
+                    <div className="mt-8">
+                      <div className="text-muted-foreground/30 font-display text-5xl leading-none select-none mb-4">
+                        &ldquo;
+                      </div>
+                      <blockquote className="text-xl md:text-2xl font-display leading-relaxed -mt-6">
+                        {study.testimonial.quote}
                       </blockquote>
-                      <div className="text-sm text-muted-foreground">
-                        <p className="font-medium text-foreground">{study.testimonial.author}</p>
-                        <p>{study.testimonial.company}</p>
+                      <div className="mt-6">
+                        <p className="font-semibold">{study.testimonial.author}</p>
+                        <p className="text-sm text-muted-foreground">{study.testimonial.company}</p>
                       </div>
                     </div>
                   )}
+
+                  {/* Technologies */}
+                  <div>
+                    <h3 className="font-display font-semibold text-sm mb-4">Technologies</h3>
+                    <p className="text-muted-foreground">
+                      {study.technologies.join(", ")}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ) : null}
+              )}
+            </div>
           </div>
         </main>
+
+        {/* Navigation footer */}
+        <div className="border-t border-border">
+          <div className="max-w-[1200px] mx-auto px-6 py-16 md:py-20 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <Link
+              href="/projects"
+              className="link-underline text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              &larr; All projects
+            </Link>
+            {nextProject && (
+              <Link
+                href={`/projects/${nextProject.slug}`}
+                className="group text-right"
+              >
+                <span className="text-sm text-muted-foreground">Next project</span>
+                <p className="font-display font-semibold text-lg group-hover:text-primary transition-colors">
+                  {nextProject.title} &rarr;
+                </p>
+              </Link>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   )

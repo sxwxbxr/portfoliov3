@@ -2,306 +2,481 @@
 
 import Link from "next/link"
 import Navigation from "../components/Navigation"
-import { AnimatedSection } from "../components/AnimatedSection"
-import { StaggerContainer, StaggerItem } from "../components/StaggerContainer"
-import { Marquee } from "../components/Marquee"
-import { MagneticButton } from "../components/MagneticButton"
+import { ProjectListItem } from "../components/ProjectListItem"
 import { projects, blogPosts, caseStudies } from "../src/config"
-import { ArrowUpRight, ArrowRight, Quote, MapPin } from "lucide-react"
-import { motion } from "framer-motion"
+import { motion, useInView, useReducedMotion, type Variants } from "framer-motion"
+import { useRef } from "react"
+import { ArrowDown } from "lucide-react"
+import { CursorSpotlight } from "../components/CursorSpotlight"
 
-const featuredProjects = projects.slice(0, 4)
-const featuredTestimonials = caseStudies.filter((study) => study.testimonial).slice(0, 2)
-const latestWriting = blogPosts.slice(0, 2)
-const marqueeItems = [
-  "Project Management",
-  "Software Development",
-  "Digital Transformation",
-  "Process Automation",
-  ".NET & C#",
-  "Next.js & React",
-  "Agile Delivery",
-  "Data Migration",
+// ── Data ──────────────────────────────────────────────
+const selectedProjects = projects.slice(0, 6)
+const latestPosts = blogPosts.slice(0, 2)
+const featuredTestimonial = caseStudies.find((cs) => cs.testimonial)!
+
+const experience = [
+  {
+    company: "Telsonic AG",
+    role: "Project Manager & Software Developer",
+    period: "2024 -- Present",
+    current: true,
+  },
+  {
+    company: "INNOFORCE Est.",
+    role: "Software Developer",
+    period: "2023 -- 2024",
+    current: false,
+  },
+  {
+    company: "Credit Suisse (ISS)",
+    role: "Energy Optimization Planner",
+    period: "2021 -- 2022",
+    current: false,
+  },
+  {
+    company: "Bettermann AG",
+    role: "Electrical Planner",
+    period: "2019 -- 2021",
+    current: false,
+  },
 ]
 
-export default function Home() {
+const expertise = [
+  {
+    category: "Development",
+    skills: "C#, .NET, TypeScript, React, Next.js, SQL, REST APIs, Python",
+  },
+  {
+    category: "Project Management",
+    skills:
+      "Agile / Scrum, Stakeholder Management, Requirements Engineering, Risk Management",
+  },
+  {
+    category: "Tools & Platforms",
+    skills: "Azure DevOps, Git, Docker, Vercel, Jira, Supabase",
+  },
+]
+
+// ── Animation helpers ─────────────────────────────────
+const sectionTransition = {
+  duration: 0.6,
+  ease: [0.16, 1, 0.3, 1] as const,
+}
+
+function Section({
+  children,
+  className = "",
+  delay = 0,
+}: {
+  children: React.ReactNode
+  className?: string
+  delay?: number
+}) {
+  const ref = useRef<HTMLDivElement>(null)
+  const isInView = useInView(ref, { once: true, margin: "-80px" })
+  const prefersReducedMotion = useReducedMotion()
+
   return (
-    <div className="min-h-screen bg-background grain-overlay">
+    <motion.section
+      ref={ref}
+      className={className}
+      initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
+      animate={
+        prefersReducedMotion
+          ? { opacity: 1, y: 0 }
+          : isInView
+            ? { opacity: 1, y: 0 }
+            : { opacity: 0, y: 20 }
+      }
+      transition={{ ...sectionTransition, delay }}
+    >
+      {children}
+    </motion.section>
+  )
+}
+
+function StaggerChildren({
+  children,
+  className = "",
+  staggerDelay = 0.05,
+}: {
+  children: React.ReactNode
+  className?: string
+  staggerDelay?: number
+}) {
+  const ref = useRef<HTMLDivElement>(null)
+  const isInView = useInView(ref, { once: true, margin: "-60px" })
+  const prefersReducedMotion = useReducedMotion()
+
+  return (
+    <motion.div
+      ref={ref}
+      className={className}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      variants={{
+        hidden: {},
+        visible: {
+          transition: {
+            staggerChildren: prefersReducedMotion ? 0 : staggerDelay,
+          },
+        },
+      }}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+const staggerChildVariants: Variants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
+  },
+}
+
+// ── Page ──────────────────────────────────────────────
+export default function Home() {
+  const prefersReducedMotion = useReducedMotion()
+
+  return (
+    <motion.div
+      className="min-h-screen bg-background grain-overlay"
+      initial={prefersReducedMotion ? false : { opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+    >
       <Navigation />
 
-      {/* Hero */}
-      <section className="relative min-h-screen flex items-center mesh-gradient overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 py-32 w-full">
-          <div className="max-w-4xl">
-            <AnimatedSection delay={0.1}>
-              <div className="flex items-center gap-3 mb-8">
-                <div className="relative w-3 h-3 rounded-full bg-green-500">
-                  <span className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-40" />
-                </div>
-                <span className="text-sm text-muted-foreground font-medium">Available for projects</span>
-              </div>
-            </AnimatedSection>
+      {/* ─── Section 1: Hero ─── */}
+      <section className="relative min-h-screen flex flex-col justify-center overflow-hidden">
+        {/* Cursor spotlight — desktop only */}
+        <CursorSpotlight />
 
-            <AnimatedSection delay={0.2}>
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.95]">
-                <span className="block">I design &</span>
-                <span className="block mt-2">build digital</span>
-                <span className="block mt-2 text-gradient">experiences.</span>
-              </h1>
-            </AnimatedSection>
+        {/* Subtle radial gradient background */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 60% 50% at 50% 50%, var(--primary) 0%, transparent 70%)",
+            opacity: 0.04,
+          }}
+        />
 
-            <AnimatedSection delay={0.4}>
-              <p className="mt-8 text-lg md:text-xl text-muted-foreground max-w-xl leading-relaxed">
-                Seya Weber — Project Manager & Developer from St. Gallen, Switzerland.
-                I turn complex operational needs into lean solutions and ship them.
-              </p>
-            </AnimatedSection>
+        <div className="max-w-[1200px] mx-auto px-6 w-full">
+          {/* Hero title — staggered line-by-line entrance */}
+          <div className="overflow-hidden">
+            <motion.h1
+              className="font-display font-bold tracking-tight leading-[0.95]"
+              style={{ fontSize: "clamp(3.5rem, 8vw, 7rem)" }}
+              initial={prefersReducedMotion ? false : { opacity: 0, y: 60, clipPath: "inset(100% 0 0 0)" }}
+              animate={{ opacity: 1, y: 0, clipPath: "inset(0% 0 0 0)" }}
+              transition={{
+                duration: 0.6,
+                ease: [0.16, 1, 0.3, 1],
+                delay: 0.1,
+              }}
+            >
+              Seya Weber
+            </motion.h1>
+          </div>
 
-            <AnimatedSection delay={0.5}>
-              <div className="mt-10 flex flex-wrap gap-4">
-                <MagneticButton>
-                  <Link
-                    href="/projects"
-                    className="inline-flex items-center gap-2 px-7 py-3.5 bg-foreground text-background rounded-full text-sm font-medium hover:opacity-80 transition-opacity"
-                  >
-                    View Projects
-                    <ArrowUpRight className="w-4 h-4" />
-                  </Link>
-                </MagneticButton>
-                <MagneticButton>
-                  <Link
-                    href="/contact"
-                    className="inline-flex items-center gap-2 px-7 py-3.5 border border-border rounded-full text-sm font-medium hover:bg-muted transition-colors"
-                  >
-                    Get in touch
-                  </Link>
-                </MagneticButton>
-              </div>
-            </AnimatedSection>
+          <div className="overflow-hidden">
+            <motion.p
+              className="mt-4 text-lg md:text-xl text-muted-foreground"
+              initial={prefersReducedMotion ? false : { opacity: 0, y: 30, clipPath: "inset(100% 0 0 0)" }}
+              animate={{ opacity: 1, y: 0, clipPath: "inset(0% 0 0 0)" }}
+              transition={{
+                duration: 0.6,
+                ease: [0.16, 1, 0.3, 1],
+                delay: 0.16,
+              }}
+            >
+              Project Manager & Software Developer
+            </motion.p>
+          </div>
 
-            <AnimatedSection delay={0.6}>
-              <div className="mt-16 flex items-center gap-6 text-sm text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4" />
-                  <span>St. Gallen, CH</span>
-                </div>
-                <span className="text-border">|</span>
-                <span>{projects.length}+ projects delivered</span>
-              </div>
-            </AnimatedSection>
+          <div className="overflow-hidden">
+            <motion.p
+              className="mt-3 text-base text-muted-foreground/80 max-w-lg"
+              initial={prefersReducedMotion ? false : { opacity: 0, y: 24, clipPath: "inset(100% 0 0 0)" }}
+              animate={{ opacity: 1, y: 0, clipPath: "inset(0% 0 0 0)" }}
+              transition={{
+                duration: 0.6,
+                ease: [0.16, 1, 0.3, 1],
+                delay: 0.22,
+              }}
+            >
+              Building lean digital solutions in St. Gallen, Switzerland.
+            </motion.p>
           </div>
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+        {/* Bottom-left: availability indicator */}
+        <motion.div
+          className="absolute bottom-8 left-6 md:left-[max(1.5rem,calc((100vw-1200px)/2+1.5rem))] flex items-center gap-2.5"
+          initial={prefersReducedMotion ? false : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+        >
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-40" />
+            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-500" />
+          </span>
+          <span className="text-xs text-muted-foreground">
+            Available for projects
+          </span>
+        </motion.div>
+
+        {/* Bottom-right: scroll indicator */}
+        <motion.div
+          className="absolute bottom-8 right-6 md:right-[max(1.5rem,calc((100vw-1200px)/2+1.5rem))] flex items-center gap-2 text-muted-foreground"
+          initial={prefersReducedMotion ? false : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+        >
+          <span className="text-xs">Scroll</span>
+          <motion.div
+            animate={prefersReducedMotion ? {} : { y: [0, 4, 0] }}
+            transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <ArrowDown className="w-3.5 h-3.5" />
+          </motion.div>
+        </motion.div>
       </section>
 
-      {/* Marquee */}
-      <section className="py-6 border-b border-border bg-card/30 overflow-hidden">
-        <Marquee
-          items={marqueeItems}
-          className="text-sm font-medium text-muted-foreground/60 tracking-wide uppercase"
-        />
-      </section>
-
-      {/* Bento Grid */}
-      <section className="py-24 md:py-32 px-6">
-        <div className="max-w-7xl mx-auto">
-          <AnimatedSection>
-            <div className="mb-16">
-              <p className="text-sm font-medium text-primary tracking-wide uppercase mb-3">Overview</p>
-              <h2 className="text-3xl md:text-5xl font-bold tracking-tight">What I bring to the table</h2>
+      {/* ─── Section 2: Introduction ─── */}
+      <Section className="py-24 md:py-32 border-t border-border">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_0.6fr] gap-16 md:gap-12">
+            {/* Left — editorial copy */}
+            <div>
+              <p className="text-xl md:text-2xl leading-relaxed text-foreground/90">
+                I&apos;m a project manager and developer based in St.&nbsp;Gallen,
+                Switzerland. I specialize in turning complex operational needs
+                into lean, maintainable digital solutions&thinsp;&mdash;&thinsp;from
+                custom automation workflows to full-stack applications.
+              </p>
+              <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
+                With a background spanning electrical planning, energy
+                optimization, healthcare technology, and SaaS development, I
+                bring an unusual breadth of context to every project I touch.
+              </p>
             </div>
-          </AnimatedSection>
 
-          <StaggerContainer className="grid gap-4 md:grid-cols-2 lg:grid-cols-3" staggerDelay={0.08}>
-            <StaggerItem>
-              <Link href="/about" className="block bento-card rounded-2xl border border-border bg-card p-8 h-full">
-                <div className="flex flex-col h-full min-h-[200px]">
-                  <p className="text-xs font-medium text-primary uppercase tracking-widest mb-4">About</p>
-                  <h3 className="text-xl font-semibold mb-3">Software & Digitalization</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed flex-1">
-                    Dual background in software engineering and electrical design.
-                    I bridge technical implementation and business objectives.
+            {/* Right — metrics */}
+            <div className="flex flex-col gap-8 md:border-l md:border-border md:pl-12">
+              {[
+                { value: `${projects.length}+`, label: "Projects Delivered" },
+                { value: "3+", label: "Years Experience" },
+                { value: "5+", label: "Technologies" },
+              ].map((metric) => (
+                <div key={metric.label}>
+                  <span className="font-display text-4xl md:text-5xl font-bold tracking-tight">
+                    {metric.value}
+                  </span>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {metric.label}
                   </p>
-                  <div className="mt-6 flex items-center gap-2 text-sm font-medium text-primary">
-                    Learn more <ArrowRight className="w-4 h-4" />
-                  </div>
                 </div>
-              </Link>
-            </StaggerItem>
-
-            <StaggerItem>
-              <Link href="/experience" className="block bento-card rounded-2xl border border-border bg-card p-8 h-full">
-                <div className="flex flex-col h-full min-h-[200px]">
-                  <p className="text-xs font-medium text-primary uppercase tracking-widest mb-4">Experience</p>
-                  <h3 className="text-xl font-semibold mb-3">PM at Telsonic</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed flex-1">
-                    Creating customer-specific automation workflows and
-                    implementing internal software to increase efficiency.
-                  </p>
-                  <div className="mt-6 flex items-center gap-2 text-sm font-medium text-primary">
-                    See journey <ArrowRight className="w-4 h-4" />
-                  </div>
-                </div>
-              </Link>
-            </StaggerItem>
-
-            <StaggerItem>
-              <Link href="/services" className="block bento-card rounded-2xl border border-border bg-card p-8 h-full md:col-span-2 lg:col-span-1">
-                <div className="flex flex-col h-full min-h-[200px]">
-                  <p className="text-xs font-medium text-primary uppercase tracking-widest mb-4">Services</p>
-                  <h3 className="text-xl font-semibold mb-3">End-to-end delivery</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed flex-1">
-                    From strategy to hands-on execution — delivery leadership,
-                    solution acceleration, and process coaching.
-                  </p>
-                  <div className="mt-6 flex items-center gap-2 text-sm font-medium text-primary">
-                    Explore services <ArrowRight className="w-4 h-4" />
-                  </div>
-                </div>
-              </Link>
-            </StaggerItem>
-          </StaggerContainer>
+              ))}
+            </div>
+          </div>
         </div>
-      </section>
+      </Section>
 
-      {/* Featured Projects */}
-      <section className="py-24 md:py-32 px-6 bg-card/40">
-        <div className="max-w-7xl mx-auto">
-          <AnimatedSection>
-            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between mb-16">
-              <div>
-                <p className="text-sm font-medium text-primary tracking-wide uppercase mb-3">Work</p>
-                <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Selected Projects</h2>
-              </div>
-              <Link
-                href="/projects"
-                className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-              >
-                View all projects
-                <ArrowUpRight className="w-4 h-4" />
-              </Link>
-            </div>
-          </AnimatedSection>
+      {/* ─── Section 3: Selected Work ─── */}
+      <Section className="py-24 md:py-32">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight mb-12">
+            Selected Work
+          </h2>
 
-          <StaggerContainer className="grid gap-6 md:grid-cols-2" staggerDelay={0.12}>
-            {featuredProjects.map((project) => (
-              <StaggerItem key={project.slug}>
-                <Link
-                  href={`/projects/${project.slug}`}
-                  className="group block bento-card rounded-2xl border border-border bg-card overflow-hidden"
-                >
-                  <div className="aspect-[16/10] bg-gradient-to-br from-primary/5 to-secondary/5 dot-grid relative">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-6xl font-bold text-primary/10">{project.title.charAt(0)}</span>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {project.tags.slice(0, 3).map((tag) => (
-                        <span key={tag} className="text-xs font-medium px-2.5 py-1 rounded-full bg-muted text-muted-foreground">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">
-                      {project.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
-                      {project.shortDescription}
-                    </p>
-                    <div className="mt-4 flex items-center gap-2 text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                      View project <ArrowUpRight className="w-3.5 h-3.5" />
-                    </div>
-                  </div>
-                </Link>
-              </StaggerItem>
+          <div>
+            {selectedProjects.map((project, i) => (
+              <ProjectListItem key={project.slug} project={project} index={i} />
             ))}
-          </StaggerContainer>
+            {/* Bottom border on last item */}
+            <div className="border-t border-border" />
+          </div>
+
+          <div className="mt-8">
+            <Link
+              href="/projects"
+              className="link-underline text-primary text-sm font-medium"
+            >
+              View all projects &rarr;
+            </Link>
+          </div>
         </div>
-      </section>
+      </Section>
 
-      {/* Testimonials */}
-      <section className="py-24 md:py-32 px-6">
-        <div className="max-w-7xl mx-auto">
-          <AnimatedSection>
-            <div className="mb-16">
-              <p className="text-sm font-medium text-primary tracking-wide uppercase mb-3">Testimonials</p>
-              <h2 className="text-3xl md:text-5xl font-bold tracking-tight">What partners say</h2>
-            </div>
-          </AnimatedSection>
+      {/* ─── Section 4: Expertise ─── */}
+      <Section className="py-24 md:py-32 border-t border-border">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight mb-16">
+            Expertise
+          </h2>
 
-          <StaggerContainer className="grid gap-6 md:grid-cols-2" staggerDelay={0.15}>
-            {featuredTestimonials.map((testimonial) => (
-              <StaggerItem key={testimonial.slug}>
-                <div className="bento-card rounded-2xl border border-border bg-card p-8 md:p-10 h-full flex flex-col">
-                  <Quote className="w-8 h-8 text-primary/30 mb-6" />
-                  <blockquote className="text-lg leading-relaxed flex-1">
-                    &ldquo;{testimonial.testimonial?.quote}&rdquo;
-                  </blockquote>
-                  <div className="mt-8 flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-sm">{testimonial.testimonial?.author}</p>
-                      <p className="text-sm text-muted-foreground">{testimonial.testimonial?.company}</p>
-                    </div>
-                    <Link
-                      href={`/case-studies/${testimonial.slug}`}
-                      className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:gap-2.5 transition-all"
-                    >
-                      Read story <ArrowRight className="w-3.5 h-3.5" />
-                    </Link>
-                  </div>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
-        </div>
-      </section>
-
-      {/* Latest Writing */}
-      <section className="py-24 md:py-32 px-6 bg-card/40">
-        <div className="max-w-7xl mx-auto">
-          <AnimatedSection>
-            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between mb-16">
-              <div>
-                <p className="text-sm font-medium text-primary tracking-wide uppercase mb-3">Blog</p>
-                <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Latest writing</h2>
-              </div>
-              <Link
-                href="/blog"
-                className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          <StaggerChildren className="space-y-0" staggerDelay={0.06}>
+            {expertise.map((area, i) => (
+              <motion.div
+                key={area.category}
+                variants={staggerChildVariants}
+                className={`grid grid-cols-1 md:grid-cols-[200px_1fr] gap-2 md:gap-12 py-6 ${
+                  i > 0 ? "border-t border-border" : ""
+                }`}
               >
-                All articles
-                <ArrowUpRight className="w-4 h-4" />
+                <h3 className="font-display font-semibold text-sm md:text-base md:sticky md:top-24">
+                  {area.category}
+                </h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  {area.skills}
+                </p>
+              </motion.div>
+            ))}
+            <div className="border-t border-border" />
+          </StaggerChildren>
+        </div>
+      </Section>
+
+      {/* ─── Section 5: Experience ─── */}
+      <Section className="py-24 md:py-32">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight mb-12">
+            Experience
+          </h2>
+
+          <StaggerChildren staggerDelay={0.05}>
+            {experience.map((entry, i) => (
+              <motion.div
+                key={entry.company}
+                variants={staggerChildVariants}
+                className={`flex flex-col md:flex-row md:items-center gap-1 md:gap-0 py-4 ${
+                  i > 0 ? "border-t border-border" : ""
+                }`}
+              >
+                <div className="flex items-center gap-2.5 md:flex-1">
+                  {entry.current && (
+                    <span className="relative flex h-2 w-2 shrink-0">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-40" />
+                      <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
+                    </span>
+                  )}
+                  <span
+                    className={`font-semibold ${
+                      !entry.current ? "md:ml-[18px]" : ""
+                    }`}
+                  >
+                    {entry.company}
+                  </span>
+                </div>
+                <span className="text-muted-foreground text-sm md:flex-1">
+                  {entry.role}
+                </span>
+                <span className="font-mono text-sm text-muted-foreground md:text-right">
+                  {entry.period}
+                </span>
+              </motion.div>
+            ))}
+            <div className="border-t border-border" />
+          </StaggerChildren>
+
+          <div className="mt-8">
+            <Link
+              href="/about"
+              className="link-underline text-primary text-sm font-medium"
+            >
+              More about me &rarr;
+            </Link>
+          </div>
+        </div>
+      </Section>
+
+      {/* ─── Section 6: Testimonial ─── */}
+      <Section className="py-24 md:py-32 border-t border-border">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight mb-16">
+            What partners say
+          </h2>
+
+          <div className="max-w-3xl">
+            <div className="text-muted-foreground/30 font-display text-6xl md:text-7xl leading-none select-none mb-6">
+              &ldquo;
+            </div>
+            <blockquote className="text-2xl md:text-3xl font-display leading-relaxed -mt-10">
+              {featuredTestimonial.testimonial?.quote}
+            </blockquote>
+            <div className="mt-8">
+              <p className="font-semibold">
+                {featuredTestimonial.testimonial?.author}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                {featuredTestimonial.testimonial?.company}
+              </p>
+            </div>
+            <div className="mt-6">
+              <Link
+                href={`/case-studies/${featuredTestimonial.slug}`}
+                className="link-underline text-primary text-sm font-medium"
+              >
+                Read case study &rarr;
               </Link>
             </div>
-          </AnimatedSection>
+          </div>
+        </div>
+      </Section>
 
-          <StaggerContainer className="grid gap-6 md:grid-cols-2" staggerDelay={0.12}>
-            {latestWriting.map((post) => (
-              <StaggerItem key={post.id}>
+      {/* ─── Section 7: Writing ─── */}
+      <Section className="py-24 md:py-32">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight mb-12">
+            Writing
+          </h2>
+
+          <StaggerChildren staggerDelay={0.06}>
+            {latestPosts.map((post, i) => (
+              <motion.div key={post.id} variants={staggerChildVariants}>
                 <Link
                   href={`/blog/${post.id}`}
-                  className="group block bento-card rounded-2xl border border-border bg-card p-8 h-full"
+                  className="group block"
                 >
-                  <div className="flex items-center gap-3 text-xs text-muted-foreground mb-6">
-                    <time>{new Date(post.publishedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</time>
-                    <span className="w-1 h-1 rounded-full bg-border" />
-                    <span>{post.readTime}</span>
-                  </div>
-                  <h3 className="text-xl font-semibold leading-snug group-hover:text-primary transition-colors mb-4">
-                    {post.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{post.excerpt}</p>
-                  <div className="mt-6 flex items-center gap-2 text-sm font-medium text-primary">
-                    Read article <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                  <div
+                    className={`flex flex-col md:flex-row md:items-center gap-1 md:gap-6 py-5 ${
+                      i > 0 ? "border-t border-border" : ""
+                    }`}
+                  >
+                    <h3 className="font-semibold md:flex-1 group-hover:text-primary transition-colors duration-200">
+                      {post.title}
+                    </h3>
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      <span className="font-mono">
+                        {new Date(post.publishedAt).toLocaleDateString("en-US", {
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </span>
+                      <span>{post.readTime}</span>
+                    </div>
                   </div>
                 </Link>
-              </StaggerItem>
+              </motion.div>
             ))}
-          </StaggerContainer>
+            <div className="border-t border-border" />
+          </StaggerChildren>
+
+          <div className="mt-8">
+            <Link
+              href="/blog"
+              className="link-underline text-primary text-sm font-medium"
+            >
+              All articles &rarr;
+            </Link>
+          </div>
         </div>
-      </section>
-    </div>
+      </Section>
+    </motion.div>
   )
 }

@@ -1,11 +1,22 @@
 "use client"
 
-import PageLayout from "../../components/PageLayout"
-import { AnimatedSection } from "../../components/AnimatedSection"
-import { StaggerContainer, StaggerItem } from "../../components/StaggerContainer"
-import { SkillProgress } from "../../components/SkillProgress"
-import { GitHubActivity } from "../../components/GitHubActivity"
-import { CurrentlyPlaying } from "../../components/CurrentlyPlaying"
+import Link from "next/link"
+import PageLayout, { Section } from "../../components/PageLayout"
+
+const expertise = [
+  {
+    category: "Development",
+    skills: "C#, .NET, TypeScript, React, Next.js, SQL, REST APIs, Python",
+  },
+  {
+    category: "Project Management",
+    skills: "Agile / Scrum, Stakeholder Management, Requirements Engineering, Risk Management",
+  },
+  {
+    category: "Tools & Platforms",
+    skills: "Azure DevOps, Git, Docker, Vercel, Jira, Supabase",
+  },
+]
 
 const frameworks = [".NET 8", "WPF", "React", "Next.js", "Android Studio", "PySide6", "QtWebEngine"]
 
@@ -33,106 +44,120 @@ export default function Skills() {
   return (
     <PageLayout
       title="Skills & Expertise"
-      subtitle="Technical expertise and competencies I've developed throughout my career in software development and project management."
-      label="Competencies"
+      subtitle="Technical expertise and competencies developed across software development, project management, and engineering."
     >
-      <section className="py-20 md:py-28 px-6">
-        <div className="max-w-7xl mx-auto space-y-12">
-          {/* Main skill bars + sidebar */}
-          <div className="grid lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2">
-              <AnimatedSection>
-                <div className="bento-card rounded-2xl border border-border bg-card p-8">
-                  <SkillProgress />
+      {/* Core expertise */}
+      <section className="pb-24 md:pb-32">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="space-y-0">
+            {expertise.map((area, i) => (
+              <Section key={area.category} delay={i * 0.05}>
+                <div
+                  className={`grid grid-cols-1 md:grid-cols-[200px_1fr] gap-2 md:gap-12 py-6 ${
+                    i > 0 ? "border-t border-border" : ""
+                  }`}
+                >
+                  <h3 className="font-display font-semibold text-sm md:text-base">
+                    {area.category}
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {area.skills}
+                  </p>
                 </div>
-              </AnimatedSection>
-            </div>
-
-            <div className="space-y-6">
-              <AnimatedSection delay={0.1}>
-                <CurrentlyPlaying />
-              </AnimatedSection>
-              <AnimatedSection delay={0.2}>
-                <GitHubActivity />
-              </AnimatedSection>
-            </div>
+              </Section>
+            ))}
+            <div className="border-t border-border" />
           </div>
+        </div>
+      </section>
 
-          {/* Frameworks, Languages, Certifications */}
-          <StaggerContainer className="grid gap-6 md:grid-cols-3" staggerDelay={0.1}>
-            <StaggerItem>
-              <div className="bento-card rounded-2xl border border-border bg-card p-8 h-full">
-                <p className="text-xs font-medium text-primary uppercase tracking-widest mb-4">Frameworks & Tools</p>
-                <div className="flex flex-wrap gap-2">
-                  {frameworks.map((fw) => (
-                    <span key={fw} className="text-xs px-3 py-1.5 rounded-full bg-primary/10 text-primary font-medium">
-                      {fw}
-                    </span>
-                  ))}
+      {/* Frameworks */}
+      <section className="py-24 md:py-32 border-t border-border">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <Section>
+            <h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight mb-12">
+              Frameworks & Tools
+            </h2>
+            <p className="text-muted-foreground">
+              {frameworks.join(", ")}
+            </p>
+          </Section>
+        </div>
+      </section>
+
+      {/* Detailed skills */}
+      <section className="py-24 md:py-32">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+            <Section>
+              <h2 className="text-2xl font-display font-bold tracking-tight mb-8">
+                Project Management
+              </h2>
+              <div>
+                {pmSkills.map((skill, i) => (
+                  <div
+                    key={skill.name}
+                    className={`py-4 ${i > 0 ? "border-t border-border" : ""}`}
+                  >
+                    <p className="font-semibold text-sm">{skill.name}</p>
+                    <p className="text-sm text-muted-foreground mt-1">{skill.detail}</p>
+                  </div>
+                ))}
+                <div className="border-t border-border" />
+              </div>
+            </Section>
+
+            <Section delay={0.1}>
+              <h2 className="text-2xl font-display font-bold tracking-tight mb-8">
+                Technical Expertise
+              </h2>
+              <div>
+                {techSkills.map((skill, i) => (
+                  <div
+                    key={skill.name}
+                    className={`py-4 ${i > 0 ? "border-t border-border" : ""}`}
+                  >
+                    <p className="font-semibold text-sm">{skill.name}</p>
+                    <p className="text-sm text-muted-foreground mt-1">{skill.detail}</p>
+                  </div>
+                ))}
+                <div className="border-t border-border" />
+              </div>
+            </Section>
+          </div>
+        </div>
+      </section>
+
+      {/* Languages */}
+      <section className="py-24 md:py-32 border-t border-border">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <Section>
+            <h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight mb-12">
+              Languages
+            </h2>
+            <div>
+              {languages.map((lang, i) => (
+                <div
+                  key={lang.name}
+                  className={`flex items-center justify-between py-4 ${
+                    i > 0 ? "border-t border-border" : ""
+                  }`}
+                >
+                  <span className="font-semibold">{lang.name}</span>
+                  <span className="font-mono text-sm text-muted-foreground">{lang.level}</span>
                 </div>
-              </div>
-            </StaggerItem>
+              ))}
+              <div className="border-t border-border" />
+            </div>
+          </Section>
 
-            <StaggerItem>
-              <div className="bento-card rounded-2xl border border-border bg-card p-8 h-full">
-                <p className="text-xs font-medium text-primary uppercase tracking-widest mb-4">Languages</p>
-                <div className="space-y-3">
-                  {languages.map((lang) => (
-                    <div key={lang.name} className="flex items-center justify-between text-sm">
-                      <span className="font-medium">{lang.name}</span>
-                      <span className="text-xs text-muted-foreground bg-muted px-2.5 py-1 rounded-full">{lang.level}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </StaggerItem>
-
-            <StaggerItem>
-              <div className="bento-card rounded-2xl border border-border bg-card p-8 h-full">
-                <p className="text-xs font-medium text-primary uppercase tracking-widest mb-4">Certifications</p>
-                <div className="p-4 rounded-xl bg-muted/40 border border-border">
-                  <p className="text-sm font-medium">N.a.</p>
-                  <p className="text-xs text-muted-foreground mt-1">A thoroughly planned Certification Roadmap is set for 2025/26</p>
-                </div>
-              </div>
-            </StaggerItem>
-          </StaggerContainer>
-
-          {/* PM + Technical Skills */}
-          <div className="grid gap-6 md:grid-cols-2">
-            <AnimatedSection>
-              <div className="bento-card rounded-2xl border border-border bg-card p-8 h-full">
-                <p className="text-xs font-medium text-primary uppercase tracking-widest mb-6">Project Management</p>
-                <ul className="space-y-4">
-                  {pmSkills.map((skill) => (
-                    <li key={skill.name} className="flex items-start gap-3">
-                      <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0" />
-                      <div>
-                        <span className="text-sm font-medium">{skill.name}</span>
-                        <p className="text-xs text-muted-foreground mt-0.5">{skill.detail}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </AnimatedSection>
-
-            <AnimatedSection delay={0.1}>
-              <div className="bento-card rounded-2xl border border-border bg-card p-8 h-full">
-                <p className="text-xs font-medium text-primary uppercase tracking-widest mb-6">Technical Expertise</p>
-                <ul className="space-y-4">
-                  {techSkills.map((skill) => (
-                    <li key={skill.name} className="flex items-start gap-3">
-                      <div className="w-1.5 h-1.5 bg-secondary rounded-full mt-2 flex-shrink-0" />
-                      <div>
-                        <span className="text-sm font-medium">{skill.name}</span>
-                        <p className="text-xs text-muted-foreground mt-0.5">{skill.detail}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </AnimatedSection>
+          <div className="mt-8">
+            <Link
+              href="/about"
+              className="link-underline text-primary text-sm font-medium"
+            >
+              More about me &rarr;
+            </Link>
           </div>
         </div>
       </section>

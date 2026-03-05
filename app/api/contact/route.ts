@@ -142,7 +142,7 @@ const getClientIp = (req: Request) => {
   return header ? header.split(",")[0].trim() : undefined
 }
 
-const prepareRateLimit = (req: Request) => {
+const prepareRateLimit = async (req: Request) => {
   const { contactRateLimit } = getGlobalState()
   const store = contactRateLimit!
   const now = Date.now()
@@ -153,7 +153,7 @@ const prepareRateLimit = (req: Request) => {
     }
   }
 
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   const existingCookie = cookieStore.get(RATE_LIMIT_COOKIE)
   const browserId = existingCookie?.value ?? crypto.randomUUID()
   const secureCookie = process.env.NODE_ENV === "production"
@@ -222,7 +222,7 @@ export async function POST(req: Request) {
     )
   }
 
-  const rateLimit = prepareRateLimit(req)
+  const rateLimit = await prepareRateLimit(req)
 
   if (rateLimit.limited) {
     const retryAfter = Math.max(
