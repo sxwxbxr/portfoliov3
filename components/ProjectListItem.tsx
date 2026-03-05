@@ -32,7 +32,7 @@ export function ProjectListItem({ project, index }: ProjectListItemProps) {
           "py-5 md:py-6 border-t border-border",
           // Hover background
           "transition-[background-color] duration-200 ease-out",
-          "group-hover:bg-primary/5",
+          "group-hover:bg-background/60 group-hover:backdrop-blur-sm",
         ].join(" ")}
       >
         {/* Left border accent — animates height on hover */}

@@ -90,38 +90,40 @@ export default function Skills() {
         <div className="max-w-[1200px] mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
             <Section>
-              <h2 className="text-2xl font-display font-bold tracking-tight mb-8">
-                Project Management
-              </h2>
-              <div>
-                {pmSkills.map((skill, i) => (
-                  <div
-                    key={skill.name}
-                    className={`py-4 ${i > 0 ? "border-t border-border" : ""}`}
-                  >
-                    <p className="font-semibold text-sm">{skill.name}</p>
-                    <p className="text-sm text-muted-foreground mt-1">{skill.detail}</p>
-                  </div>
-                ))}
-                <div className="border-t border-border" />
+              <div className="glass rounded-xl p-6">
+                <h2 className="text-2xl font-display font-bold tracking-tight mb-8">
+                  Project Management
+                </h2>
+                <div>
+                  {pmSkills.map((skill, i) => (
+                    <div
+                      key={skill.name}
+                      className={`py-4 ${i > 0 ? "border-t border-border" : ""}`}
+                    >
+                      <p className="font-semibold text-sm">{skill.name}</p>
+                      <p className="text-sm text-muted-foreground mt-1">{skill.detail}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
             </Section>
 
             <Section delay={0.1}>
-              <h2 className="text-2xl font-display font-bold tracking-tight mb-8">
-                Technical Expertise
-              </h2>
-              <div>
-                {techSkills.map((skill, i) => (
-                  <div
-                    key={skill.name}
-                    className={`py-4 ${i > 0 ? "border-t border-border" : ""}`}
-                  >
-                    <p className="font-semibold text-sm">{skill.name}</p>
-                    <p className="text-sm text-muted-foreground mt-1">{skill.detail}</p>
-                  </div>
-                ))}
-                <div className="border-t border-border" />
+              <div className="glass rounded-xl p-6">
+                <h2 className="text-2xl font-display font-bold tracking-tight mb-8">
+                  Technical Expertise
+                </h2>
+                <div>
+                  {techSkills.map((skill, i) => (
+                    <div
+                      key={skill.name}
+                      className={`py-4 ${i > 0 ? "border-t border-border" : ""}`}
+                    >
+                      <p className="font-semibold text-sm">{skill.name}</p>
+                      <p className="text-sm text-muted-foreground mt-1">{skill.detail}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
             </Section>
           </div>

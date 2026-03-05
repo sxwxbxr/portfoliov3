@@ -26,22 +26,26 @@ export function CursorSpotlight() {
       return
     }
 
+    const parent = el.parentElement
+    if (!parent) return
+
     const handleMouseMove = (e: MouseEvent) => {
-      el.style.setProperty("--spotlight-x", `${e.clientX}px`)
-      el.style.setProperty("--spotlight-y", `${e.clientY}px`)
-      el.style.opacity = "1"
+      const rect = parent.getBoundingClientRect()
+      el.style.setProperty("--spotlight-x", `${e.clientX - rect.left}px`)
+      el.style.setProperty("--spotlight-y", `${e.clientY - rect.top}px`)
+      el.style.opacity = "0.025"
     }
 
     const handleMouseLeave = () => {
       el.style.opacity = "0"
     }
 
-    window.addEventListener("mousemove", handleMouseMove, { passive: true })
-    document.addEventListener("mouseleave", handleMouseLeave)
+    parent.addEventListener("mousemove", handleMouseMove, { passive: true })
+    parent.addEventListener("mouseleave", handleMouseLeave)
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove)
-      document.removeEventListener("mouseleave", handleMouseLeave)
+      parent.removeEventListener("mousemove", handleMouseMove)
+      parent.removeEventListener("mouseleave", handleMouseLeave)
     }
   }, [])
 
@@ -50,27 +54,17 @@ export function CursorSpotlight() {
       ref={spotlightRef}
       className="hidden md:block"
       style={{
-        position: "fixed",
+        position: "absolute",
         inset: 0,
         zIndex: 1,
         pointerEvents: "none",
         opacity: 0,
-        transition: "opacity 0.3s ease",
+        transition: "opacity 0.4s ease",
         background:
-          "radial-gradient(400px circle at var(--spotlight-x, 50%) var(--spotlight-y, 50%), var(--primary) 0%, transparent 100%)",
+          "radial-gradient(250px circle at var(--spotlight-x, 50%) var(--spotlight-y, 50%), var(--primary) 0%, transparent 100%)",
         mixBlendMode: "normal",
-        // Very low opacity so it's subtle
       }}
       aria-hidden="true"
-    >
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: "inherit",
-          opacity: 0.06,
-        }}
-      />
-    </div>
+    />
   )
 }

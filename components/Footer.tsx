@@ -34,6 +34,7 @@ const footerNav = [
       { name: "Contact", href: "/contact" },
       { name: "GitHub", href: "https://github.com/sxwxbxr" },
       { name: "LinkedIn", href: "https://ch.linkedin.com/in/seya-weber-06a592256" },
+      { name: "Nxrthstack", href: "https://nxrthstack.sweber.dev" },
     ],
   },
 ]

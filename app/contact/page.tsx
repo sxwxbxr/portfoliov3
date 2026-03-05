@@ -68,7 +68,9 @@ export default function Contact() {
 
             {/* Right -- form */}
             <Section delay={0.1}>
-              <ContactForm />
+              <div className="glass rounded-xl p-6 md:p-8">
+                <ContactForm />
+              </div>
             </Section>
           </div>
         </div>

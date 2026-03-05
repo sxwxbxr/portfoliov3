@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Menu } from "lucide-react"
+import { Menu, ChevronDown, ExternalLink } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
 import { ThemeToggle } from "./ThemeToggle"
 import { FullscreenMenu } from "./FullscreenMenu"
 
@@ -13,12 +14,30 @@ const navLinks = [
   { name: "Contact", href: "/contact" },
 ]
 
+const moreLinks = [
+  { name: "Case Studies", href: "/case-studies", description: "In-depth project breakdowns" },
+  { name: "Services", href: "/services", description: "What I offer" },
+  { name: "Experience", href: "/experience", description: "Work history" },
+  { name: "Blog", href: "/blog", description: "Thoughts and articles" },
+  { name: "Skills", href: "/skills", description: "Technical expertise" },
+  { name: "Education", href: "/education", description: "Academic background" },
+  {
+    name: "Nxrthstack",
+    href: "https://nxrthstack.sweber.dev",
+    description: "SaaS product",
+    external: true,
+  },
+]
+
 export default function Navigation() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [dropdownOpen, setDropdownOpen] = useState(false)
   const [visible, setVisible] = useState(true)
   const [scrolled, setScrolled] = useState(false)
   const lastScrollY = useRef(0)
   const pathname = usePathname()
+  const dropdownRef = useRef<HTMLDivElement>(null)
+  const moreButtonRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -51,6 +70,34 @@ export default function Navigation() {
       document.body.style.overflow = ""
     }
   }, [menuOpen])
+
+  // Close dropdown on Escape and click-outside
+  useEffect(() => {
+    if (!dropdownOpen) return
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setDropdownOpen(false)
+        moreButtonRef.current?.focus()
+      }
+    }
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
+        setDropdownOpen(false)
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown)
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown)
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [dropdownOpen])
 
   return (
     <>
@@ -88,6 +135,74 @@ export default function Navigation() {
                   {link.name}
                 </Link>
               ))}
+
+              {/* More dropdown */}
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  ref={moreButtonRef}
+                  onClick={() => setDropdownOpen((v) => !v)}
+                  aria-expanded={dropdownOpen}
+                  aria-haspopup="true"
+                  className="flex items-center gap-1 link-underline text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
+                >
+                  More
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                      dropdownOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                <AnimatePresence>
+                  {dropdownOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+                      className="absolute top-full right-0 mt-3 w-[520px] glass rounded-xl border border-border/50 shadow-lg overflow-hidden"
+                    >
+                      <div className="grid grid-cols-3 gap-px p-1">
+                        {moreLinks.map((link) =>
+                          link.external ? (
+                            <a
+                              key={link.href}
+                              href={link.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={() => setDropdownOpen(false)}
+                              className="group flex flex-col gap-0.5 rounded-lg p-3 hover:bg-primary/5 transition-colors duration-150"
+                            >
+                              <span className="flex items-center gap-1.5 text-sm font-medium text-foreground group-hover:text-primary transition-colors">
+                                {link.name}
+                                <ExternalLink className="w-3 h-3 text-muted-foreground/60" aria-hidden="true" />
+                              </span>
+                              <span className="text-xs text-muted-foreground">
+                                {link.description}
+                              </span>
+                            </a>
+                          ) : (
+                            <Link
+                              key={link.href}
+                              href={link.href}
+                              onClick={() => setDropdownOpen(false)}
+                              className="group flex flex-col gap-0.5 rounded-lg p-3 hover:bg-primary/5 transition-colors duration-150"
+                            >
+                              <span className={`text-sm font-medium transition-colors ${pathname === link.href ? "text-primary" : "text-foreground group-hover:text-primary"}`}>
+                                {link.name}
+                              </span>
+                              <span className="text-xs text-muted-foreground">
+                                {link.description}
+                              </span>
+                            </Link>
+                          )
+                        )}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
               <div className="w-px h-4 bg-border" />
               <ThemeToggle />
             </div>

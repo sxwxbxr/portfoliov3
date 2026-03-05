@@ -58,12 +58,14 @@ export default function CaseStudy({ params }: CaseStudyPageProps) {
           </p>
 
           {/* Meta bar */}
-          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-sm text-muted-foreground">
-            <span>{study.industry}</span>
-            <span className="hidden md:inline text-border">|</span>
-            <span>{study.duration}</span>
-            <span className="hidden md:inline text-border">|</span>
-            <span>{study.team}</span>
+          <div className="glass rounded-lg p-4 md:p-6 mt-6">
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-sm text-muted-foreground">
+              <span>{study.industry}</span>
+              <span className="hidden md:inline text-border">|</span>
+              <span>{study.duration}</span>
+              <span className="hidden md:inline text-border">|</span>
+              <span>{study.team}</span>
+            </div>
           </div>
         </section>
 
@@ -119,15 +121,17 @@ export default function CaseStudy({ params }: CaseStudyPageProps) {
               {/* Testimonial */}
               {study.testimonial && (
                 <Section delay={0.3}>
-                  <div className="text-muted-foreground/30 font-display text-6xl md:text-7xl leading-none select-none mb-6">
-                    &ldquo;
-                  </div>
-                  <blockquote className="text-2xl md:text-3xl font-display leading-relaxed -mt-10">
-                    {study.testimonial.quote}
-                  </blockquote>
-                  <div className="mt-8">
-                    <p className="font-semibold">{study.testimonial.author}</p>
-                    <p className="text-sm text-muted-foreground">{study.testimonial.company}</p>
+                  <div className="glass rounded-xl p-8 md:p-10">
+                    <div className="text-muted-foreground/30 font-display text-6xl md:text-7xl leading-none select-none mb-6">
+                      &ldquo;
+                    </div>
+                    <blockquote className="text-2xl md:text-3xl font-display leading-relaxed -mt-10">
+                      {study.testimonial.quote}
+                    </blockquote>
+                    <div className="mt-8">
+                      <p className="font-semibold">{study.testimonial.author}</p>
+                      <p className="text-sm text-muted-foreground">{study.testimonial.company}</p>
+                    </div>
                   </div>
                 </Section>
               )}

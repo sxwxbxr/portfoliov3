@@ -241,7 +241,7 @@ export default function Home() {
             </div>
 
             {/* Right — metrics */}
-            <div className="flex flex-col gap-8 md:border-l md:border-border md:pl-12">
+            <div className="glass rounded-xl p-6 md:p-8 flex flex-col gap-8">
               {[
                 { value: `${projects.length}+`, label: "Projects Delivered" },
                 { value: "3+", label: "Years Experience" },
@@ -376,7 +376,7 @@ export default function Home() {
             What partners say
           </h2>
 
-          <div className="max-w-3xl">
+          <div className="max-w-3xl glass rounded-xl p-8 md:p-10">
             <div className="text-muted-foreground/30 font-display text-6xl md:text-7xl leading-none select-none mb-6">
               &ldquo;
             </div>

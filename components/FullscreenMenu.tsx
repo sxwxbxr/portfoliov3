@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useRef } from "react"
-import { X } from "lucide-react"
+import { X, ExternalLink } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { SiGithub, SiLinkedin } from "react-icons/si"
 import { ThemeToggle } from "./ThemeToggle"
@@ -12,6 +12,20 @@ const menuLinks = [
   { name: "Work", href: "/projects" },
   { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
+]
+
+const subLinks = [
+  { name: "Case Studies", href: "/case-studies" },
+  { name: "Services", href: "/services" },
+  { name: "Experience", href: "/experience" },
+  { name: "Blog", href: "/blog" },
+  { name: "Skills", href: "/skills" },
+  { name: "Education", href: "/education" },
+  {
+    name: "Nxrthstack",
+    href: "https://nxrthstack.sweber.dev",
+    external: true,
+  },
 ]
 
 const socialLinks = [
@@ -109,7 +123,7 @@ export function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps) {
               </button>
             </div>
 
-            {/* Navigation links */}
+            {/* Primary navigation links */}
             <nav className="flex-1 flex flex-col justify-center -mt-16">
               <div className="space-y-2">
                 {menuLinks.map((link, i) => (
@@ -134,6 +148,44 @@ export function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps) {
                   </motion.div>
                 ))}
               </div>
+
+              {/* Subpage links */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ delay: 0.28, duration: 0.4 }}
+                className="mt-8 flex flex-wrap gap-x-5 gap-y-2"
+              >
+                {subLinks.map((link) =>
+                  link.external ? (
+                    <a
+                      key={link.href}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={onClose}
+                      className="flex items-center gap-1 text-sm text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      {link.name}
+                      <ExternalLink className="w-3 h-3" aria-hidden="true" />
+                    </a>
+                  ) : (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={onClose}
+                      className={`text-sm transition-colors ${
+                        pathname === link.href
+                          ? "text-primary"
+                          : "text-muted-foreground hover:text-primary"
+                      }`}
+                    >
+                      {link.name}
+                    </Link>
+                  )
+                )}
+              </motion.div>
             </nav>
 
             {/* Bottom section: socials + theme toggle */}

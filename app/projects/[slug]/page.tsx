@@ -54,20 +54,22 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
           </p>
 
           {/* Meta bar */}
-          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-sm text-muted-foreground">
-            {study?.client && (
-              <>
-                <span>{study.client}</span>
-                <span className="hidden md:inline text-border">|</span>
-              </>
-            )}
-            <span>{project.tags.join(", ")}</span>
-            {study?.duration && (
-              <>
-                <span className="hidden md:inline text-border">|</span>
-                <span>{study.duration}</span>
-              </>
-            )}
+          <div className="glass rounded-lg p-4 md:p-6 mt-8">
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-sm text-muted-foreground">
+              {study?.client && (
+                <>
+                  <span>{study.client}</span>
+                  <span className="hidden md:inline text-border">|</span>
+                </>
+              )}
+              <span>{project.tags.join(", ")}</span>
+              {study?.duration && (
+                <>
+                  <span className="hidden md:inline text-border">|</span>
+                  <span>{study.duration}</span>
+                </>
+              )}
+            </div>
           </div>
 
           {/* Links */}

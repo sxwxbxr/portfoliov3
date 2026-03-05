@@ -75,18 +75,20 @@ export default function About() {
                 height={533}
                 className="aspect-[3/4] w-full rounded-sm object-cover object-top"
               />
-              <div className="space-y-3">
-                {[
-                  { label: "Location", value: "St. Gallen, CH" },
-                  { label: "Experience", value: "3+ Years" },
-                  { label: "Focus", value: "Automation & PM" },
-                  { label: "Languages", value: "DE, EN, FR" },
-                ].map((fact) => (
-                  <div key={fact.label} className="flex justify-between text-sm border-b border-border pb-3 last:border-0">
-                    <span className="text-muted-foreground">{fact.label}</span>
-                    <span className="font-mono">{fact.value}</span>
-                  </div>
-                ))}
+              <div className="glass rounded-xl p-6">
+                <div className="space-y-3">
+                  {[
+                    { label: "Location", value: "St. Gallen, CH" },
+                    { label: "Experience", value: "3+ Years" },
+                    { label: "Focus", value: "Automation & PM" },
+                    { label: "Languages", value: "DE, EN, FR" },
+                  ].map((fact) => (
+                    <div key={fact.label} className="flex justify-between text-sm border-b border-border pb-3 last:border-0">
+                      <span className="text-muted-foreground">{fact.label}</span>
+                      <span className="font-mono">{fact.value}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
