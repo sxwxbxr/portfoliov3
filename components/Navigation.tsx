@@ -24,7 +24,7 @@ const moreLinks = [
   {
     name: "Nxrthstack",
     href: "https://nxrthstack.sweber.dev",
-    description: "SaaS product",
+    description: "Company Homepage",
     external: true,
   },
 ]
@@ -102,13 +102,11 @@ export default function Navigation() {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ease-out ${
-          visible ? "translate-y-0" : "-translate-y-full"
-        } ${
-          scrolled
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ease-out ${visible ? "translate-y-0" : "-translate-y-full"
+          } ${scrolled
             ? "glass border-b border-border/50 shadow-sm"
             : "bg-transparent border-b border-transparent"
-        }`}
+          }`}
       >
         <div className="max-w-[1200px] mx-auto px-6">
           <div className="flex items-center justify-between h-16">
@@ -126,11 +124,10 @@ export default function Navigation() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`link-underline text-sm transition-colors duration-200 ${
-                    pathname === link.href
+                  className={`link-underline text-sm transition-colors duration-200 ${pathname === link.href
                       ? "text-primary"
                       : "text-muted-foreground hover:text-foreground"
-                  }`}
+                    }`}
                 >
                   {link.name}
                 </Link>
@@ -147,9 +144,8 @@ export default function Navigation() {
                 >
                   More
                   <ChevronDown
-                    className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                      dropdownOpen ? "rotate-180" : ""
-                    }`}
+                    className={`w-3.5 h-3.5 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""
+                      }`}
                   />
                 </button>
 

@@ -1,10 +1,12 @@
-"use client"
-
 import Link from "next/link"
 import PageLayout from "../../components/PageLayout"
-import { blogPosts } from "../../src/config"
+import { getBlogPosts } from "@/lib/data"
 
-export default function Blog() {
+export const dynamic = "force-dynamic"
+
+export default async function Blog() {
+  const blogPosts = await getBlogPosts()
+
   return (
     <PageLayout
       title="Writing"
@@ -15,8 +17,8 @@ export default function Blog() {
           <div>
             {blogPosts.map((post, i) => (
               <Link
-                key={post.id}
-                href={`/blog/${post.id}`}
+                key={post.slug}
+                href={`/blog/${post.slug}`}
                 className="group block"
               >
                 <div

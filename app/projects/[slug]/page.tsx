@@ -1,10 +1,12 @@
 import Link from "next/link"
 import Image from "next/image"
 import { notFound } from "next/navigation"
-import { caseStudies, projects } from "../../../src/config"
+import { getProjectBySlug, getProjects, getCaseStudyBySlug } from "@/lib/data"
 import Navigation from "../../../components/Navigation"
 import fs from "fs"
 import path from "path"
+
+export const dynamic = "force-dynamic"
 
 interface ProjectPageProps {
   params: Promise<{ slug: string }>
@@ -12,8 +14,11 @@ interface ProjectPageProps {
 
 export default async function ProjectDetails({ params }: ProjectPageProps) {
   const { slug } = await params
-  const project = projects.find((item) => item.slug === slug)
-  const study = caseStudies.find((item) => item.slug === slug)
+  const [project, study, allProjects] = await Promise.all([
+    getProjectBySlug(slug),
+    getCaseStudyBySlug(slug),
+    getProjects(),
+  ])
 
   if (!project) {
     notFound()
@@ -28,8 +33,8 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
     .filter(Boolean)
 
   // Find next project
-  const currentIndex = projects.findIndex((p) => p.slug === slug)
-  const nextProject = projects[(currentIndex + 1) % projects.length]
+  const currentIndex = allProjects.findIndex((p) => p.slug === slug)
+  const nextProject = currentIndex >= 0 ? allProjects[(currentIndex + 1) % allProjects.length] : null
 
   return (
     <div className="min-h-screen bg-background grain-overlay">
@@ -62,7 +67,7 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
                   <span className="hidden md:inline text-border">|</span>
                 </>
               )}
-              <span>{project.tags.join(", ")}</span>
+              <span>{(project.tags as string[]).join(", ")}</span>
               {study?.duration && (
                 <>
                   <span className="hidden md:inline text-border">|</span>
@@ -183,7 +188,7 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
                       Results
                     </h2>
                     <div className="space-y-0">
-                      {study.results.map((result, index) => (
+                      {(study.results as string[]).map((result, index) => (
                         <div
                           key={index}
                           className={`flex items-start gap-4 py-4 ${
@@ -201,17 +206,17 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
                   </div>
 
                   {/* Testimonial */}
-                  {study.testimonial && (
+                  {study.testimonialQuote && (
                     <div className="mt-8">
                       <div className="text-muted-foreground/30 font-display text-5xl leading-none select-none mb-4">
                         &ldquo;
                       </div>
                       <blockquote className="text-xl md:text-2xl font-display leading-relaxed -mt-6">
-                        {study.testimonial.quote}
+                        {study.testimonialQuote}
                       </blockquote>
                       <div className="mt-6">
-                        <p className="font-semibold">{study.testimonial.author}</p>
-                        <p className="text-sm text-muted-foreground">{study.testimonial.company}</p>
+                        <p className="font-semibold">{study.testimonialAuthor}</p>
+                        <p className="text-sm text-muted-foreground">{study.testimonialCompany}</p>
                       </div>
                     </div>
                   )}
@@ -220,7 +225,7 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
                   <div>
                     <h3 className="font-display font-semibold text-sm mb-4">Technologies</h3>
                     <p className="text-muted-foreground">
-                      {study.technologies.join(", ")}
+                      {(study.technologies as string[]).join(", ")}
                     </p>
                   </div>
                 </div>
@@ -254,8 +259,4 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
       </div>
     </div>
   )
-}
-
-export function generateStaticParams() {
-  return projects.map((project) => ({ slug: project.slug }))
 }

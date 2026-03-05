@@ -1,10 +1,12 @@
-"use client"
-
 import Link from "next/link"
 import PageLayout, { Section } from "../../components/PageLayout"
-import { experience } from "../../src/config"
+import { getExperience } from "@/lib/data"
 
-export default function Experience() {
+export const dynamic = "force-dynamic"
+
+export default async function Experience() {
+  const experience = await getExperience()
+
   return (
     <PageLayout
       title="Experience"
@@ -40,7 +42,7 @@ export default function Experience() {
                     </span>
                   </div>
                   <ul className="space-y-2 md:ml-[18px]">
-                    {exp.responsibilities.map((item, j) => (
+                    {(exp.responsibilities as string[]).map((item, j) => (
                       <li key={j} className="flex items-start gap-3 text-sm text-muted-foreground">
                         <span className="text-border mt-1.5">--</span>
                         {item}

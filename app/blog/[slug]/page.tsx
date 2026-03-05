@@ -1,8 +1,11 @@
 import Navigation from "../../../components/Navigation"
 import { JsonLd } from "../../../components/JsonLd"
-import { blogPosts } from "../../../src/config"
+import { getBlogPosts, getBlogPostBySlug } from "@/lib/data"
 import Link from "next/link"
 import ReactMarkdown from "react-markdown"
+import { notFound } from "next/navigation"
+
+export const dynamic = "force-dynamic"
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>
@@ -10,23 +13,13 @@ interface BlogPostPageProps {
 
 export default async function BlogPost({ params }: BlogPostPageProps) {
   const { slug } = await params
-  const post = blogPosts.find((p) => p.id === slug)
+  const [post, allPosts] = await Promise.all([
+    getBlogPostBySlug(slug),
+    getBlogPosts(),
+  ])
 
   if (!post) {
-    return (
-      <div className="min-h-screen bg-background grain-overlay">
-        <Navigation />
-        <div className="pt-32">
-          <div className="max-w-[1200px] mx-auto px-6 text-center py-24">
-            <h1 className="text-4xl font-display font-bold tracking-tight mb-4">Post Not Found</h1>
-            <p className="text-muted-foreground mb-6">The blog post you&apos;re looking for doesn&apos;t exist.</p>
-            <Link href="/blog" className="link-underline text-primary text-sm font-medium">
-              &larr; Back to Writing
-            </Link>
-          </div>
-        </div>
-      </div>
-    )
+    notFound()
   }
 
   const blogPostStructuredData = {
@@ -49,15 +42,15 @@ export default async function BlogPost({ params }: BlogPostPageProps) {
     dateModified: post.publishedAt,
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://sweber.dev/blog/${post.id}`,
+      "@id": `https://sweber.dev/blog/${post.slug}`,
     },
-    keywords: post.tags.join(", "),
+    keywords: (post.tags as string[]).join(", "),
   }
 
   // Find next/prev posts
-  const currentIndex = blogPosts.findIndex((p) => p.id === slug)
-  const nextPost = currentIndex < blogPosts.length - 1 ? blogPosts[currentIndex + 1] : null
-  const prevPost = currentIndex > 0 ? blogPosts[currentIndex - 1] : null
+  const currentIndex = allPosts.findIndex((p) => p.slug === slug)
+  const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null
+  const prevPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null
 
   return (
     <div className="min-h-screen bg-background grain-overlay">
@@ -106,12 +99,12 @@ export default async function BlogPost({ params }: BlogPostPageProps) {
             <div className="mt-16 pt-8 border-t border-border">
               <p className="font-mono text-xs text-muted-foreground mb-3">Tagged</p>
               <div className="flex flex-wrap gap-2">
-                {post.tags.map((tag) => (
+                {(post.tags as string[]).map((tag) => (
                   <span
                     key={tag}
                     className="text-sm text-muted-foreground"
                   >
-                    {tag}{post.tags.indexOf(tag) < post.tags.length - 1 ? "," : ""}
+                    {tag}{(post.tags as string[]).indexOf(tag) < (post.tags as string[]).length - 1 ? "," : ""}
                   </span>
                 ))}
               </div>
@@ -129,7 +122,7 @@ export default async function BlogPost({ params }: BlogPostPageProps) {
         <div className="border-t border-border">
           <div className="max-w-[1200px] mx-auto px-6 py-16 md:py-20 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             {prevPost ? (
-              <Link href={`/blog/${prevPost.id}`} className="group">
+              <Link href={`/blog/${prevPost.slug}`} className="group">
                 <span className="text-sm text-muted-foreground">&larr; Previous</span>
                 <p className="font-semibold group-hover:text-primary transition-colors">
                   {prevPost.title}
@@ -144,7 +137,7 @@ export default async function BlogPost({ params }: BlogPostPageProps) {
               </Link>
             )}
             {nextPost && (
-              <Link href={`/blog/${nextPost.id}`} className="group text-right">
+              <Link href={`/blog/${nextPost.slug}`} className="group text-right">
                 <span className="text-sm text-muted-foreground">Next &rarr;</span>
                 <p className="font-semibold group-hover:text-primary transition-colors">
                   {nextPost.title}
@@ -156,8 +149,4 @@ export default async function BlogPost({ params }: BlogPostPageProps) {
       </div>
     </div>
   )
-}
-
-export function generateStaticParams() {
-  return blogPosts.map((post) => ({ slug: post.id }))
 }

@@ -1,39 +1,29 @@
-"use client"
-
-import { use } from "react"
 import Navigation from "../../../components/Navigation"
 import { Section } from "../../../components/PageLayout"
-import { caseStudies } from "../../../src/config"
+import { getCaseStudies, getCaseStudyBySlug } from "@/lib/data"
 import Link from "next/link"
+import { notFound } from "next/navigation"
+
+export const dynamic = "force-dynamic"
 
 interface CaseStudyPageProps {
   params: Promise<{ slug: string }>
 }
 
-export default function CaseStudy({ params }: CaseStudyPageProps) {
-  const { slug } = use(params)
-  const study = caseStudies.find((s) => s.slug === slug)
+export default async function CaseStudy({ params }: CaseStudyPageProps) {
+  const { slug } = await params
+  const [study, allStudies] = await Promise.all([
+    getCaseStudyBySlug(slug),
+    getCaseStudies(),
+  ])
 
   if (!study) {
-    return (
-      <div className="min-h-screen bg-background grain-overlay">
-        <Navigation />
-        <div className="pt-32">
-          <div className="max-w-[1200px] mx-auto px-6 text-center py-24">
-            <h1 className="text-4xl font-display font-bold tracking-tight mb-4">Case Study Not Found</h1>
-            <p className="text-muted-foreground mb-6">The case study you&apos;re looking for doesn&apos;t exist.</p>
-            <Link href="/case-studies" className="link-underline text-primary text-sm font-medium">
-              &larr; Back to Case Studies
-            </Link>
-          </div>
-        </div>
-      </div>
-    )
+    notFound()
   }
 
   // Find next case study
-  const currentIndex = caseStudies.findIndex((s) => s.slug === slug)
-  const nextStudy = caseStudies[(currentIndex + 1) % caseStudies.length]
+  const currentIndex = allStudies.findIndex((s) => s.slug === slug)
+  const nextStudy = currentIndex >= 0 ? allStudies[(currentIndex + 1) % allStudies.length] : null
 
   return (
     <div className="min-h-screen bg-background grain-overlay">
@@ -101,7 +91,7 @@ export default function CaseStudy({ params }: CaseStudyPageProps) {
                   Results
                 </h2>
                 <div className="space-y-0">
-                  {study.results.map((result, index) => (
+                  {(study.results as string[]).map((result, index) => (
                     <div
                       key={index}
                       className={`flex items-start gap-4 py-4 ${
@@ -119,18 +109,18 @@ export default function CaseStudy({ params }: CaseStudyPageProps) {
               </Section>
 
               {/* Testimonial */}
-              {study.testimonial && (
+              {study.testimonialQuote && (
                 <Section delay={0.3}>
                   <div className="glass rounded-xl p-8 md:p-10">
                     <div className="text-muted-foreground/30 font-display text-6xl md:text-7xl leading-none select-none mb-6">
                       &ldquo;
                     </div>
                     <blockquote className="text-2xl md:text-3xl font-display leading-relaxed -mt-10">
-                      {study.testimonial.quote}
+                      {study.testimonialQuote}
                     </blockquote>
                     <div className="mt-8">
-                      <p className="font-semibold">{study.testimonial.author}</p>
-                      <p className="text-sm text-muted-foreground">{study.testimonial.company}</p>
+                      <p className="font-semibold">{study.testimonialAuthor}</p>
+                      <p className="text-sm text-muted-foreground">{study.testimonialCompany}</p>
                     </div>
                   </div>
                 </Section>
@@ -140,7 +130,7 @@ export default function CaseStudy({ params }: CaseStudyPageProps) {
               <Section delay={0.4}>
                 <h3 className="font-display font-semibold text-sm mb-4">Technologies & Tools</h3>
                 <p className="text-muted-foreground">
-                  {study.technologies.join(", ")}
+                  {(study.technologies as string[]).join(", ")}
                 </p>
               </Section>
             </div>

@@ -1,11 +1,13 @@
-"use client"
-
 import Link from "next/link"
 import PageLayout from "../../components/PageLayout"
 import { ProjectListItem } from "../../components/ProjectListItem"
-import { projects } from "../../src/config"
+import { getProjects } from "@/lib/data"
 
-export default function Projects() {
+export const dynamic = "force-dynamic"
+
+export default async function Projects() {
+  const projects = await getProjects()
+
   return (
     <PageLayout
       title="Projects"

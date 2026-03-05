@@ -1,8 +1,16 @@
 import type { MetadataRoute } from "next"
-import { projects, blogPosts, caseStudies } from "@/src/config"
+import { getProjects, getBlogPosts, getCaseStudies } from "@/lib/data"
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export const dynamic = "force-dynamic"
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://sweber.dev"
+
+  const [projects, blogPosts, caseStudies] = await Promise.all([
+    getProjects(),
+    getBlogPosts(),
+    getCaseStudies(),
+  ])
 
   const staticPages: MetadataRoute.Sitemap = [
     {
@@ -75,7 +83,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }))
 
   const blogPages: MetadataRoute.Sitemap = blogPosts.map((post) => ({
-    url: `${baseUrl}/blog/${post.id}`,
+    url: `${baseUrl}/blog/${post.slug}`,
     lastModified: new Date(post.publishedAt),
     changeFrequency: "yearly",
     priority: 0.7,

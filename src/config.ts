@@ -1,3 +1,6 @@
+// LEGACY: This file is used only by the seed script (scripts/seed.ts).
+// All public-facing pages now fetch content from the database via lib/data.ts.
+
 const navLinks = [
   { name: "Home", href: "/" },
   { name: "About", href: "/about" },

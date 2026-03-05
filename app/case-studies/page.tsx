@@ -1,10 +1,12 @@
-"use client"
-
 import Link from "next/link"
 import PageLayout from "../../components/PageLayout"
-import { caseStudies } from "../../src/config"
+import { getCaseStudies } from "@/lib/data"
 
-export default function CaseStudies() {
+export const dynamic = "force-dynamic"
+
+export default async function CaseStudies() {
+  const caseStudies = await getCaseStudies()
+
   return (
     <PageLayout
       title="Case Studies"
