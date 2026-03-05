@@ -6,21 +6,52 @@ import DeleteButton from "./DeleteButton"
 interface Column {
   name: string
   accessor: string
-  render?: (value: unknown, row: Record<string, unknown>) => React.ReactNode
+  type?: "tags" | "mono" | "boolean"
 }
 
 interface ContentTableProps {
   columns: Column[]
   data: Record<string, unknown>[]
-  editHref: (row: Record<string, unknown>) => string
-  deleteEndpoint: (row: Record<string, unknown>) => string
+  editPattern: string
+  deletePattern: string
+}
+
+function interpolate(pattern: string, row: Record<string, unknown>) {
+  return pattern.replace(/\{(\w+)\}/g, (_, key) => String(row[key] ?? ""))
+}
+
+function renderCell(value: unknown, type?: string) {
+  if (type === "tags" && Array.isArray(value)) {
+    return (
+      <div className="flex flex-wrap gap-1">
+        {(value as string[]).map((tag) => (
+          <span key={tag} className="px-2 py-0.5 text-xs bg-accent rounded-full">
+            {tag}
+          </span>
+        ))}
+      </div>
+    )
+  }
+  if (type === "mono") {
+    return <span className="font-mono text-xs">{String(value ?? "")}</span>
+  }
+  if (type === "boolean") {
+    return value ? (
+      <span className="px-2 py-0.5 text-xs bg-primary/10 text-primary rounded-full font-medium">
+        Yes
+      </span>
+    ) : (
+      <span className="text-muted-foreground text-xs">--</span>
+    )
+  }
+  return String(value ?? "")
 }
 
 export default function ContentTable({
   columns,
   data,
-  editHref,
-  deleteEndpoint,
+  editPattern,
+  deletePattern,
 }: ContentTableProps) {
   if (data.length === 0) {
     return (
@@ -56,20 +87,18 @@ export default function ContentTable({
             >
               {columns.map((col) => (
                 <td key={col.accessor} className="py-3 px-4">
-                  {col.render
-                    ? col.render(row[col.accessor], row)
-                    : String(row[col.accessor] ?? "")}
+                  {renderCell(row[col.accessor], col.type)}
                 </td>
               ))}
               <td className="py-3 px-4 text-right">
                 <div className="flex items-center justify-end gap-2">
                   <Link
-                    href={editHref(row)}
+                    href={interpolate(editPattern, row)}
                     className="px-3 py-1.5 text-xs font-medium border border-border rounded-lg hover:bg-accent transition-colors"
                   >
                     Edit
                   </Link>
-                  <DeleteButton endpoint={deleteEndpoint(row)} />
+                  <DeleteButton endpoint={interpolate(deletePattern, row)} />
                 </div>
               </td>
             </tr>

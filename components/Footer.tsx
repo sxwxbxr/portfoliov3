@@ -120,7 +120,15 @@ export function Footer() {
         <div className="border-t border-border py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
           <p>&copy; 2026 Seya Weber</p>
           <p>St. Gallen, Switzerland</p>
-          <TimeDisplay />
+          <div className="flex items-center gap-4">
+            <Link
+              href="/login"
+              className="hover:text-primary transition-colors duration-200"
+            >
+              Login
+            </Link>
+            <TimeDisplay />
+          </div>
         </div>
       </div>
     </footer>

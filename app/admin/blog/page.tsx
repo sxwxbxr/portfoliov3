@@ -11,13 +11,7 @@ export default async function AdminBlogPage() {
   const columns = [
     { name: "Title", accessor: "title" },
     { name: "Slug", accessor: "slug" },
-    {
-      name: "Published",
-      accessor: "publishedAt",
-      render: (value: unknown) => (
-        <span className="font-mono text-xs">{String(value)}</span>
-      ),
-    },
+    { name: "Published", accessor: "publishedAt", type: "mono" as const },
   ]
 
   return (
@@ -43,8 +37,8 @@ export default async function AdminBlogPage() {
         <ContentTable
           columns={columns}
           data={data as unknown as Record<string, unknown>[]}
-          editHref={(row) => `/admin/blog/${row.id}/edit`}
-          deleteEndpoint={(row) => `/api/admin/blog/${row.id}`}
+          editPattern="/admin/blog/{id}/edit"
+          deletePattern="/api/admin/blog/{id}"
         />
       </div>
     </div>

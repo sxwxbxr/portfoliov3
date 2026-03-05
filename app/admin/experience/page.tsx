@@ -16,18 +16,7 @@ export default async function AdminExperiencePage() {
     { name: "Company", accessor: "company" },
     { name: "Role", accessor: "role" },
     { name: "Period", accessor: "period" },
-    {
-      name: "Current",
-      accessor: "current",
-      render: (value: unknown) =>
-        value ? (
-          <span className="px-2 py-0.5 text-xs bg-primary/10 text-primary rounded-full font-medium">
-            Current
-          </span>
-        ) : (
-          <span className="text-muted-foreground text-xs">--</span>
-        ),
-    },
+    { name: "Current", accessor: "current", type: "boolean" as const },
   ]
 
   return (
@@ -53,8 +42,8 @@ export default async function AdminExperiencePage() {
         <ContentTable
           columns={columns}
           data={data as unknown as Record<string, unknown>[]}
-          editHref={(row) => `/admin/experience/${row.id}/edit`}
-          deleteEndpoint={(row) => `/api/admin/experience/${row.id}`}
+          editPattern="/admin/experience/{id}/edit"
+          deletePattern="/api/admin/experience/{id}"
         />
       </div>
     </div>

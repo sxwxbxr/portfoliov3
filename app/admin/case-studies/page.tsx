@@ -37,8 +37,8 @@ export default async function AdminCaseStudiesPage() {
         <ContentTable
           columns={columns}
           data={data as unknown as Record<string, unknown>[]}
-          editHref={(row) => `/admin/case-studies/${row.id}/edit`}
-          deleteEndpoint={(row) => `/api/admin/case-studies/${row.id}`}
+          editPattern="/admin/case-studies/{id}/edit"
+          deletePattern="/api/admin/case-studies/{id}"
         />
       </div>
     </div>

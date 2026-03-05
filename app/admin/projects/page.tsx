@@ -15,32 +15,8 @@ export default async function AdminProjectsPage() {
   const columns = [
     { name: "Title", accessor: "title" },
     { name: "Slug", accessor: "slug" },
-    {
-      name: "Tags",
-      accessor: "tags",
-      render: (value: unknown) => {
-        const tags = value as string[]
-        return (
-          <div className="flex flex-wrap gap-1">
-            {tags.map((tag) => (
-              <span
-                key={tag}
-                className="px-2 py-0.5 text-xs bg-accent rounded-full"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        )
-      },
-    },
-    {
-      name: "Order",
-      accessor: "sortOrder",
-      render: (value: unknown) => (
-        <span className="font-mono text-xs">{String(value)}</span>
-      ),
-    },
+    { name: "Tags", accessor: "tags", type: "tags" as const },
+    { name: "Order", accessor: "sortOrder", type: "mono" as const },
   ]
 
   return (
@@ -66,8 +42,8 @@ export default async function AdminProjectsPage() {
         <ContentTable
           columns={columns}
           data={data as unknown as Record<string, unknown>[]}
-          editHref={(row) => `/admin/projects/${row.id}/edit`}
-          deleteEndpoint={(row) => `/api/admin/projects/${row.id}`}
+          editPattern="/admin/projects/{id}/edit"
+          deletePattern="/api/admin/projects/{id}"
         />
       </div>
     </div>
