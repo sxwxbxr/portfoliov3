@@ -35,7 +35,7 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://seyaweber.com"),
+  metadataBase: new URL("https://sweber.dev"),
   title: {
     default: "Seya Weber - Project Manager & Software Developer",
     template: "%s | Seya Weber",
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     "Healthcare Technology",
     "Manufacturing Software",
   ],
-  authors: [{ name: "Seya Weber", url: "https://seyaweber.com" }],
+  authors: [{ name: "Seya Weber", url: "https://sweber.dev" }],
   creator: "Seya Weber",
   publisher: "Seya Weber",
   formatDetection: {
@@ -68,7 +68,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://seyaweber.com",
+    url: "https://sweber.dev",
     siteName: "Seya Weber Portfolio",
     title: "Seya Weber - Project Manager & Software Developer",
     description:
@@ -102,7 +102,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://seyaweber.com",
+    canonical: "https://sweber.dev",
   },
   category: "technology",
 }
@@ -114,7 +114,7 @@ const structuredData = {
   jobTitle: "Project Manager & Software Developer",
   description:
     "Experienced Project Manager specializing in software development and digital transformation in St. Gallen, Switzerland.",
-  url: "https://seyaweber.com",
+  url: "https://sweber.dev",
   sameAs: ["https://linkedin.com/in/seyaweber", "https://github.com/sxwxbxr"],
   address: {
     "@type": "PostalAddress",
@@ -171,7 +171,7 @@ export default function RootLayout({
             <ScrollProgress />
             <SmoothScroll>
               <div className="flex min-h-screen flex-col">
-                <div id="main-content" className="flex-1">{children}</div>
+                <main id="main-content" className="flex-1">{children}</main>
                 <Footer />
               </div>
             </SmoothScroll>

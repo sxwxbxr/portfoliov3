@@ -2,43 +2,7 @@
 
 import Link from "next/link"
 import PageLayout, { Section } from "../../components/PageLayout"
-
-const experiences = [
-  {
-    role: "Project Manager Software and Digitalisation",
-    company: "Telsonic Ultrasonics",
-    period: "2025 -- Present",
-    current: true,
-    responsibilities: [
-      "Creating customer specific workflows.",
-      "Implementing company intern software projects to increase efficiency.",
-      "Adjusting post-setup automation workflows for customers.",
-      "The link between customer and software, to ensure smooth communication and project success.",
-    ],
-  },
-  {
-    role: "Software Developer Apprentice",
-    company: "InnoForce EST",
-    period: "2022 -- 2024",
-    current: false,
-    responsibilities: [
-      ".NET development and third-party module integration.",
-      "Implemented test automation templates.",
-      "Synchronized medical data across multiple locations.",
-      "Evaluated medical databases in France.",
-    ],
-  },
-  {
-    role: "Electrical Planner",
-    company: "Lepcon GmbH",
-    period: "2021 -- 2022",
-    current: false,
-    responsibilities: [
-      "Managed electrotechnical planning and procurement.",
-      "Coordinated electrical revisions of 150+ sites.",
-    ],
-  },
-]
+import { experience } from "../../src/config"
 
 export default function Experience() {
   return (
@@ -49,7 +13,7 @@ export default function Experience() {
       <section className="pb-24 md:pb-32">
         <div className="max-w-[1200px] mx-auto px-6">
           <div>
-            {experiences.map((exp, i) => (
+            {experience.map((exp, i) => (
               <Section key={exp.company + exp.period} delay={i * 0.05}>
                 <div
                   className={`py-8 ${

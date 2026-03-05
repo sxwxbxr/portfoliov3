@@ -1,6 +1,3 @@
-"use client"
-
-import { use } from "react"
 import Navigation from "../../../components/Navigation"
 import { JsonLd } from "../../../components/JsonLd"
 import { blogPosts } from "../../../src/config"
@@ -11,8 +8,8 @@ interface BlogPostPageProps {
   params: Promise<{ slug: string }>
 }
 
-export default function BlogPost({ params }: BlogPostPageProps) {
-  const { slug } = use(params)
+export default async function BlogPost({ params }: BlogPostPageProps) {
+  const { slug } = await params
   const post = blogPosts.find((p) => p.id === slug)
 
   if (!post) {
@@ -37,22 +34,22 @@ export default function BlogPost({ params }: BlogPostPageProps) {
     "@type": "BlogPosting",
     headline: post.title,
     description: post.excerpt,
-    image: `https://seyaweber.com${post.image}`,
+    image: `https://sweber.dev${post.image}`,
     author: {
       "@type": "Person",
       name: post.author,
-      url: "https://seyaweber.com",
+      url: "https://sweber.dev",
     },
     publisher: {
       "@type": "Person",
       name: "Seya Weber",
-      url: "https://seyaweber.com",
+      url: "https://sweber.dev",
     },
     datePublished: post.publishedAt,
     dateModified: post.publishedAt,
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://seyaweber.com/blog/${post.id}`,
+      "@id": `https://sweber.dev/blog/${post.id}`,
     },
     keywords: post.tags.join(", "),
   }
@@ -99,7 +96,7 @@ export default function BlogPost({ params }: BlogPostPageProps) {
         <div className="border-t border-border" />
 
         {/* Article body */}
-        <main className="py-24 md:py-32">
+        <div className="py-24 md:py-32">
           <article className="max-w-[720px] mx-auto px-6">
             <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:font-display prose-headings:tracking-tight prose-p:leading-[1.75] prose-a:text-primary prose-a:no-underline hover:prose-a:underline">
               <ReactMarkdown>{post.content}</ReactMarkdown>
@@ -126,7 +123,7 @@ export default function BlogPost({ params }: BlogPostPageProps) {
               <p className="font-semibold mt-1">{post.author}</p>
             </div>
           </article>
-        </main>
+        </div>
 
         {/* Post navigation */}
         <div className="border-t border-border">
@@ -159,4 +156,8 @@ export default function BlogPost({ params }: BlogPostPageProps) {
       </div>
     </div>
   )
+}
+
+export function generateStaticParams() {
+  return blogPosts.map((post) => ({ slug: post.id }))
 }

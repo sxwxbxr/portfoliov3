@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { X } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { SiGithub, SiLinkedin } from "react-icons/si"
@@ -26,12 +26,47 @@ interface FullscreenMenuProps {
 
 export function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps) {
   const pathname = usePathname()
+  const menuRef = useRef<HTMLDivElement>(null)
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
 
-  // Close on Escape key
+  // Auto-focus close button when menu opens
+  useEffect(() => {
+    if (isOpen) {
+      // Small delay to let the animation start rendering
+      const timer = setTimeout(() => closeButtonRef.current?.focus(), 100)
+      return () => clearTimeout(timer)
+    }
+  }, [isOpen])
+
+  // Close on Escape key + focus trap
   useEffect(() => {
     if (!isOpen) return
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose()
+      if (e.key === "Escape") {
+        onClose()
+        return
+      }
+      if (e.key === "Tab") {
+        const container = menuRef.current
+        if (!container) return
+        const focusableEls = container.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )
+        if (focusableEls.length === 0) return
+        const first = focusableEls[0]
+        const last = focusableEls[focusableEls.length - 1]
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault()
+            last.focus()
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault()
+            first.focus()
+          }
+        }
+      }
     }
     document.addEventListener("keydown", handleKeyDown)
     return () => document.removeEventListener("keydown", handleKeyDown)
@@ -41,6 +76,7 @@ export function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps) {
     <AnimatePresence>
       {isOpen && (
         <motion.div
+          ref={menuRef}
           role="dialog"
           aria-modal="true"
           aria-label="Navigation menu"
@@ -64,6 +100,7 @@ export function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps) {
             {/* Close button */}
             <div className="flex justify-end pt-5">
               <button
+                ref={closeButtonRef}
                 onClick={onClose}
                 className="p-2 text-foreground hover:text-primary transition-colors"
                 aria-label="Close menu"
@@ -112,7 +149,7 @@ export function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps) {
                     key={link.href}
                     href={link.href}
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                     className="text-muted-foreground hover:text-primary transition-colors"
                     aria-label={link.label}
                   >

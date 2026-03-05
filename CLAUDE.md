@@ -27,7 +27,7 @@ App Router pages are in `app/`. Each top-level route has its own `page.tsx`. Dyn
 ### Components
 
 - `components/ui/` — shadcn/ui primitives (New York style, Radix UI + Tailwind). Add new ones via `npx shadcn@latest add <component>`.
-- `components/` (root) — app-specific components: Navigation, Footer, ContactForm, ParticleBackground, ProjectCard, etc.
+- `components/` (root) — app-specific components: Navigation, Footer, ContactForm, ParticleBackground, ProjectListItem, etc.
 - `components/PageLayout.tsx` — standard wrapper used by most pages (includes Navigation).
 
 ### Styling
@@ -41,7 +41,7 @@ Tailwind CSS 4 with CSS variables defined in `app/globals.css` (oklch color toke
 ### Key conventions
 
 - Path alias: `@/*` maps to the project root (e.g., `@/components/Button`).
-- Fonts: Geist (sans) and Manrope loaded via `next/font/google` as CSS variables.
+- Fonts: Inter (body), Space Grotesk (display), and JetBrains Mono (mono) loaded via `next/font/google` as CSS variables.
 - Images are unoptimized (`next.config.mjs`: `images.unoptimized: true`).
 - SEO: `app/robots.ts`, `app/sitemap.ts`, JSON-LD structured data in layout, OpenGraph metadata per page.
 - Analytics: Vercel Analytics loaded in root layout.

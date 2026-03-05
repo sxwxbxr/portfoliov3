@@ -70,7 +70,7 @@ export default function About() {
             <div className="space-y-8">
               <Image
                 src="/260216_professionalMG.jpeg"
-                alt="Seya Weber"
+                alt="Seya Weber, Project Manager and Software Developer"
                 width={400}
                 height={533}
                 className="aspect-[3/4] w-full rounded-sm object-cover object-top"

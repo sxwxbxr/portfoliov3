@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useRef, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -43,6 +43,20 @@ export function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
+
+  const closeSuccessModal = useCallback(() => setShowSuccessModal(false), [])
+
+  // Auto-focus close button and handle Escape key when success modal is open
+  useEffect(() => {
+    if (!showSuccessModal) return
+    closeButtonRef.current?.focus()
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeSuccessModal()
+    }
+    document.addEventListener("keydown", handleKeyDown)
+    return () => document.removeEventListener("keydown", handleKeyDown)
+  }, [showSuccessModal, closeSuccessModal])
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {}
@@ -212,11 +226,10 @@ export function ContactForm() {
                 <SelectValue placeholder="Select budget range" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="under-10k">Under $10,000</SelectItem>
-                <SelectItem value="10k-25k">$10,000 - $25,000</SelectItem>
-                <SelectItem value="25k-50k">$25,000 - $50,000</SelectItem>
-                <SelectItem value="50k-100k">$50,000 - $100,000</SelectItem>
-                <SelectItem value="over-100k">Over $100,000</SelectItem>
+                <SelectItem value="under-10k">&lt; CHF 10,000</SelectItem>
+                <SelectItem value="10k-25k">CHF 10,000 - 25,000</SelectItem>
+                <SelectItem value="25k-50k">CHF 25,000 - 50,000</SelectItem>
+                <SelectItem value="50k-plus">CHF 50,000+</SelectItem>
                 <SelectItem value="discuss">Let&apos;s discuss</SelectItem>
               </SelectContent>
             </Select>
@@ -298,11 +311,12 @@ export function ContactForm() {
       {showSuccessModal && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur"
-          onClick={() => setShowSuccessModal(false)}
+          onClick={closeSuccessModal}
         >
           <div
             role="alertdialog"
             aria-modal="true"
+            aria-labelledby="success-heading"
             className="bg-card border border-border max-w-md w-full mx-4 p-8 text-center space-y-6"
             onClick={(event) => event.stopPropagation()}
           >
@@ -310,12 +324,12 @@ export function ContactForm() {
               <CheckmarkAnimation />
             </div>
             <div className="space-y-2">
-              <h3 className="text-2xl font-display font-bold">Message Sent</h3>
+              <h3 id="success-heading" className="text-2xl font-display font-bold">Message Sent</h3>
               <p className="text-muted-foreground">
                 Thank you for reaching out. I&apos;ll get back to you within 24 hours.
               </p>
             </div>
-            <Button className="w-full" onClick={() => setShowSuccessModal(false)}>
+            <Button ref={closeButtonRef} className="w-full" onClick={closeSuccessModal}>
               Close
             </Button>
           </div>

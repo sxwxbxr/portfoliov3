@@ -70,7 +70,7 @@ export default function CaseStudy({ params }: CaseStudyPageProps) {
         <div className="border-t border-border" />
 
         {/* Content */}
-        <main className="py-24 md:py-32">
+        <div className="py-24 md:py-32">
           <div className="max-w-[1200px] mx-auto px-6">
             <div className="max-w-3xl space-y-20">
               {/* Challenge */}
@@ -141,7 +141,7 @@ export default function CaseStudy({ params }: CaseStudyPageProps) {
               </Section>
             </div>
           </div>
-        </main>
+        </div>
 
         {/* Navigation footer */}
         <div className="border-t border-border">

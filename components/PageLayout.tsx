@@ -74,7 +74,7 @@ export default function PageLayout({ children, title, subtitle, label }: PageLay
           </section>
         )}
 
-        <main>{children}</main>
+        <div>{children}</div>
       </div>
     </div>
   )

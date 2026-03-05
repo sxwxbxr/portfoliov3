@@ -48,7 +48,7 @@ export default function Contact() {
                     <a
                       href="https://github.com/sxwxbxr"
                       target="_blank"
-                      rel="noreferrer"
+                      rel="noopener noreferrer"
                       className="text-sm text-muted-foreground hover:text-foreground transition-colors link-underline"
                     >
                       GitHub
@@ -56,7 +56,7 @@ export default function Contact() {
                     <a
                       href="https://ch.linkedin.com/in/seya-weber-06a592256"
                       target="_blank"
-                      rel="noreferrer"
+                      rel="noopener noreferrer"
                       className="text-sm text-muted-foreground hover:text-foreground transition-colors link-underline"
                     >
                       LinkedIn

@@ -1,7 +1,10 @@
 import Link from "next/link"
+import Image from "next/image"
 import { notFound } from "next/navigation"
 import { caseStudies, projects } from "../../../src/config"
 import Navigation from "../../../components/Navigation"
+import fs from "fs"
+import path from "path"
 
 interface ProjectPageProps {
   params: Promise<{ slug: string }>
@@ -94,10 +97,44 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
           )}
         </section>
 
+        {/* Project image or placeholder */}
+        {(() => {
+          const imageExists =
+            project.image &&
+            fs.existsSync(path.join(process.cwd(), "public", project.image))
+          if (imageExists) {
+            return (
+              <div className="max-w-[1200px] mx-auto px-6 pb-12">
+                <div className="relative w-full aspect-[16/9] overflow-hidden border border-border">
+                  <Image
+                    src={project.image}
+                    alt={project.title}
+                    fill
+                    className="object-cover"
+                    priority
+                  />
+                </div>
+              </div>
+            )
+          }
+          return (
+            <div className="max-w-[1200px] mx-auto px-6 pb-12">
+              <div className="relative w-full aspect-[16/9] overflow-hidden border border-border bg-muted/30 flex items-center justify-center">
+                <span
+                  className="font-display font-bold text-muted-foreground/10 select-none"
+                  style={{ fontSize: "clamp(6rem, 15vw, 14rem)" }}
+                >
+                  {project.title.charAt(0)}
+                </span>
+              </div>
+            </div>
+          )
+        })()}
+
         <div className="border-t border-border" />
 
         {/* Content */}
-        <main className="py-24 md:py-32">
+        <div className="py-24 md:py-32">
           <div className="max-w-[1200px] mx-auto px-6">
             <div className="max-w-3xl">
               {/* Description */}
@@ -188,7 +225,7 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
               )}
             </div>
           </div>
-        </main>
+        </div>
 
         {/* Navigation footer */}
         <div className="border-t border-border">

@@ -3,7 +3,7 @@
 import Link from "next/link"
 import Navigation from "../components/Navigation"
 import { ProjectListItem } from "../components/ProjectListItem"
-import { projects, blogPosts, caseStudies } from "../src/config"
+import { projects, blogPosts, caseStudies, experience } from "../src/config"
 import { motion, useInView, useReducedMotion, type Variants } from "framer-motion"
 import { useRef } from "react"
 import { ArrowDown } from "lucide-react"
@@ -13,33 +13,6 @@ import { CursorSpotlight } from "../components/CursorSpotlight"
 const selectedProjects = projects.slice(0, 6)
 const latestPosts = blogPosts.slice(0, 2)
 const featuredTestimonial = caseStudies.find((cs) => cs.testimonial)!
-
-const experience = [
-  {
-    company: "Telsonic AG",
-    role: "Project Manager & Software Developer",
-    period: "2024 -- Present",
-    current: true,
-  },
-  {
-    company: "INNOFORCE Est.",
-    role: "Software Developer",
-    period: "2023 -- 2024",
-    current: false,
-  },
-  {
-    company: "Credit Suisse (ISS)",
-    role: "Energy Optimization Planner",
-    period: "2021 -- 2022",
-    current: false,
-  },
-  {
-    company: "Bettermann AG",
-    role: "Electrical Planner",
-    period: "2019 -- 2021",
-    current: false,
-  },
-]
 
 const expertise = [
   {
@@ -250,6 +223,7 @@ export default function Home() {
       {/* ─── Section 2: Introduction ─── */}
       <Section className="py-24 md:py-32 border-t border-border">
         <div className="max-w-[1200px] mx-auto px-6">
+          <h2 className="sr-only">Introduction</h2>
           <div className="grid grid-cols-1 md:grid-cols-[1fr_0.6fr] gap-16 md:gap-12">
             {/* Left — editorial copy */}
             <div>

@@ -1,9 +1,10 @@
 import type { MetadataRoute } from "next"
+import { projects, blogPosts, caseStudies } from "@/src/config"
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://seyaweber.com"
+  const baseUrl = "https://sweber.dev"
 
-  return [
+  const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
       lastModified: new Date(),
@@ -41,6 +42,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
+      url: `${baseUrl}/services`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
       url: `${baseUrl}/skills`,
       lastModified: new Date(),
       changeFrequency: "monthly",
@@ -58,37 +65,28 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.8,
     },
-    // Blog posts
-    {
-      url: `${baseUrl}/blog/digital-transformation-healthcare`,
-      lastModified: new Date("2024-01-15"),
-      changeFrequency: "yearly",
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/blog/automation-best-practices`,
-      lastModified: new Date("2024-02-20"),
-      changeFrequency: "yearly",
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/blog/testing-automation-frameworks`,
-      lastModified: new Date("2024-03-10"),
-      changeFrequency: "yearly",
-      priority: 0.7,
-    },
-    // Case studies
-    {
-      url: `${baseUrl}/case-studies/telsonic-automation`,
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/case-studies/healthcare-data-sync`,
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.7,
-    },
   ]
+
+  const projectPages: MetadataRoute.Sitemap = projects.map((project) => ({
+    url: `${baseUrl}/projects/${project.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "yearly",
+    priority: 0.7,
+  }))
+
+  const blogPages: MetadataRoute.Sitemap = blogPosts.map((post) => ({
+    url: `${baseUrl}/blog/${post.id}`,
+    lastModified: new Date(post.publishedAt),
+    changeFrequency: "yearly",
+    priority: 0.7,
+  }))
+
+  const caseStudyPages: MetadataRoute.Sitemap = caseStudies.map((cs) => ({
+    url: `${baseUrl}/case-studies/${cs.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "yearly",
+    priority: 0.7,
+  }))
+
+  return [...staticPages, ...projectPages, ...blogPages, ...caseStudyPages]
 }
