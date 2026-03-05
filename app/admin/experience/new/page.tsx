@@ -1,0 +1,148 @@
+"use client"
+
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import FormField from "@/components/admin/FormField"
+import CheckboxField from "@/components/admin/CheckboxField"
+
+export default function NewExperiencePage() {
+  const router = useRouter()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
+  const [form, setForm] = useState({
+    company: "",
+    role: "",
+    period: "",
+    current: false,
+    description: "",
+    responsibilities: "",
+    sortOrder: "0",
+  })
+
+  function updateField(field: string, value: string | boolean) {
+    setForm((prev) => ({ ...prev, [field]: value }))
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setError("")
+    setLoading(true)
+
+    try {
+      const res = await fetch("/api/admin/experience", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...form,
+          responsibilities: form.responsibilities
+            ? form.responsibilities.split("\n").map((r) => r.trim()).filter(Boolean)
+            : [],
+          sortOrder: parseInt(form.sortOrder) || 0,
+        }),
+      })
+
+      if (!res.ok) {
+        const data = await res.json()
+        setError(data.error || "Failed to create entry")
+        return
+      }
+
+      router.push("/admin/experience")
+    } catch {
+      setError("Something went wrong")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="max-w-2xl space-y-6">
+      <div>
+        <h2 className="font-display text-2xl font-semibold tracking-tight">
+          New Experience
+        </h2>
+        <p className="text-sm text-muted-foreground mt-1">
+          Add a new work experience entry.
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="glass rounded-xl p-6 space-y-5">
+        <FormField
+          label="Company"
+          name="company"
+          value={form.company}
+          onChange={(e) => updateField("company", e.target.value)}
+          placeholder="Acme Inc."
+          required
+        />
+        <FormField
+          label="Role"
+          name="role"
+          value={form.role}
+          onChange={(e) => updateField("role", e.target.value)}
+          placeholder="Senior Developer"
+          required
+        />
+        <FormField
+          label="Period"
+          name="period"
+          value={form.period}
+          onChange={(e) => updateField("period", e.target.value)}
+          placeholder="Jan 2023 - Present"
+          required
+        />
+        <CheckboxField
+          label="Currently working here"
+          name="current"
+          checked={form.current}
+          onChange={(e) => updateField("current", e.target.checked)}
+        />
+        <FormField
+          label="Description"
+          name="description"
+          value={form.description}
+          onChange={(e) => updateField("description", e.target.value)}
+          placeholder="Brief description of the role..."
+          multiline
+          rows={3}
+        />
+        <FormField
+          label="Responsibilities (one per line)"
+          name="responsibilities"
+          value={form.responsibilities}
+          onChange={(e) => updateField("responsibilities", e.target.value)}
+          placeholder={"Led a team of 5 developers\nBuilt CI/CD pipeline\nDesigned API architecture"}
+          multiline
+          rows={5}
+        />
+        <FormField
+          label="Sort Order"
+          name="sortOrder"
+          type="number"
+          value={form.sortOrder}
+          onChange={(e) => updateField("sortOrder", e.target.value)}
+          placeholder="0"
+        />
+
+        {error && <p className="text-sm text-destructive">{error}</p>}
+
+        <div className="flex items-center gap-3 pt-2">
+          <button
+            type="submit"
+            disabled={loading}
+            className="bg-primary text-primary-foreground rounded-lg px-4 py-2 text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+          >
+            {loading ? "Creating..." : "Create Experience"}
+          </button>
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="px-4 py-2 text-sm font-medium border border-border rounded-lg hover:bg-accent transition-colors"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  )
+}

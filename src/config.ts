@@ -1,3 +1,6 @@
+// LEGACY: This file is used only by the seed script (scripts/seed.ts).
+// All public-facing pages now fetch content from the database via lib/data.ts.
+
 const navLinks = [
   { name: "Home", href: "/" },
   { name: "About", href: "/about" },
@@ -307,9 +310,66 @@ const caseStudies = [
   },
 ]
 
+const experience = [
+  {
+    company: "Telsonic AG",
+    role: "Project Manager Software and Digitalisation",
+    period: "2025 -- Present",
+    current: true,
+    description:
+      "Leading software digitalisation projects and customer-specific workflow automation.",
+    responsibilities: [
+      "Creating customer specific workflows.",
+      "Implementing company intern software projects to increase efficiency.",
+      "Adjusting post-setup automation workflows for customers.",
+      "The link between customer and software, to ensure smooth communication and project success.",
+    ],
+  },
+  {
+    company: "InnoForce Est.",
+    role: "Software Developer Apprentice",
+    period: "2022 -- 2024",
+    current: false,
+    description:
+      ".NET development, test automation, and medical data synchronisation across multiple locations.",
+    responsibilities: [
+      ".NET development and third-party module integration.",
+      "Implemented test automation templates.",
+      "Synchronized medical data across multiple locations.",
+      "Evaluated medical databases in France.",
+    ],
+  },
+  {
+    company: "Credit Suisse (ISS)",
+    role: "Energy Optimization Planner",
+    period: "2021 -- 2022",
+    current: false,
+    description:
+      "Managed energy optimisation across 150+ properties, achieving 10-20% efficiency gains.",
+    responsibilities: [
+      "Managed energy optimization across 150+ properties.",
+      "Coordinated with facility teams to implement quick-win measures.",
+      "Produced transparent reporting dashboards for stakeholders.",
+    ],
+  },
+  {
+    company: "Bettermann AG",
+    role: "Electrical Planner",
+    period: "2019 -- 2021",
+    current: false,
+    description:
+      "End-to-end electrical planning and procurement for commercial and residential projects.",
+    responsibilities: [
+      "Managed electrotechnical planning and procurement.",
+      "Coordinated electrical revisions of 150+ sites.",
+    ],
+  },
+]
+
 export {
   navLinks,
   projects,
   blogPosts,
   caseStudies,
+  experience,
 }

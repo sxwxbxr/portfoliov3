@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://seyaweber.com/sitemap.xml",
+    sitemap: "https://sweber.dev/sitemap.xml",
   }
 }

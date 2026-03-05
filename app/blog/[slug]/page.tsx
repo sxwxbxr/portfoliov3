@@ -1,40 +1,25 @@
-"use client"
-
-import { use } from "react"
 import Navigation from "../../../components/Navigation"
-import PageLayout from "../../../components/PageLayout"
-import FadeInSection from "../../../components/FadeInSection"
 import { JsonLd } from "../../../components/JsonLd"
-import { blogPosts } from "../../../src/config"
+import { getBlogPosts, getBlogPostBySlug } from "@/lib/data"
 import Link from "next/link"
-import { Calendar, Clock, ArrowLeft, Share2 } from "lucide-react"
-import Image from "next/image"
-import { Button } from "@/components/ui/button"
+import ReactMarkdown from "react-markdown"
+import { notFound } from "next/navigation"
+
+export const dynamic = "force-dynamic"
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>
 }
 
-export default function BlogPost({ params }: BlogPostPageProps) {
-  const { slug } = use(params)
-  const post = blogPosts.find((p) => p.id === slug)
+export default async function BlogPost({ params }: BlogPostPageProps) {
+  const { slug } = await params
+  const [post, allPosts] = await Promise.all([
+    getBlogPostBySlug(slug),
+    getBlogPosts(),
+  ])
 
   if (!post) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Navigation />
-        <PageLayout>
-          <div className="text-center space-y-4">
-            <h1 className="text-4xl font-bold">Post Not Found</h1>
-            <p className="text-muted-foreground">The blog post you&apos;re looking for doesn&apos;t exist.</p>
-            <Link href="/blog" className="inline-flex items-center gap-2 text-primary hover:underline">
-              <ArrowLeft className="w-4 h-4" />
-              Back to Blog
-            </Link>
-          </div>
-        </PageLayout>
-      </div>
-    )
+    notFound()
   }
 
   const blogPostStructuredData = {
@@ -42,131 +27,126 @@ export default function BlogPost({ params }: BlogPostPageProps) {
     "@type": "BlogPosting",
     headline: post.title,
     description: post.excerpt,
-    image: `https://seyaweber.com${post.image}`,
+    image: `https://sweber.dev${post.image}`,
     author: {
       "@type": "Person",
       name: post.author,
-      url: "https://seyaweber.com",
+      url: "https://sweber.dev",
     },
     publisher: {
       "@type": "Person",
       name: "Seya Weber",
-      url: "https://seyaweber.com",
+      url: "https://sweber.dev",
     },
     datePublished: post.publishedAt,
     dateModified: post.publishedAt,
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://seyaweber.com/blog/${post.id}`,
+      "@id": `https://sweber.dev/blog/${post.slug}`,
     },
-    keywords: post.tags.join(", "),
+    keywords: (post.tags as string[]).join(", "),
   }
 
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: post.title,
-          text: post.excerpt,
-          url: window.location.href,
-        })
-      } catch (err) {
-        console.log("Error sharing:", err)
-      }
-    } else {
-      // Fallback: copy to clipboard
-      navigator.clipboard.writeText(window.location.href)
-    }
-  }
+  // Find next/prev posts
+  const currentIndex = allPosts.findIndex((p) => p.slug === slug)
+  const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null
+  const prevPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background grain-overlay">
       <JsonLd data={blogPostStructuredData} />
       <Navigation />
-      <PageLayout>
-        <article className="max-w-4xl mx-auto">
-          <FadeInSection>
-            <div className="mb-8">
+
+      <div className="pt-32">
+        {/* Header */}
+        <section className="max-w-[1200px] mx-auto px-6 pb-16 md:pb-20">
+          <Link
+            href="/blog"
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
+          >
+            &larr; All articles
+          </Link>
+
+          <h1 className="text-4xl md:text-5xl font-display font-bold tracking-tight leading-[1.1]">
+            {post.title}
+          </h1>
+
+          <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+            <span className="font-mono">
+              {new Date(post.publishedAt).toLocaleDateString("en-US", {
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </span>
+            <span className="text-border">&middot;</span>
+            <span>{post.readTime}</span>
+            <span className="text-border">&middot;</span>
+            <span>{post.author}</span>
+          </div>
+        </section>
+
+        <div className="border-t border-border" />
+
+        {/* Article body */}
+        <div className="py-24 md:py-32">
+          <article className="max-w-[720px] mx-auto px-6">
+            <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:font-display prose-headings:tracking-tight prose-p:leading-[1.75] prose-a:text-primary prose-a:no-underline hover:prose-a:underline">
+              <ReactMarkdown>{post.content}</ReactMarkdown>
+            </div>
+
+            {/* Tags */}
+            <div className="mt-16 pt-8 border-t border-border">
+              <p className="font-mono text-xs text-muted-foreground mb-3">Tagged</p>
+              <div className="flex flex-wrap gap-2">
+                {(post.tags as string[]).map((tag) => (
+                  <span
+                    key={tag}
+                    className="text-sm text-muted-foreground"
+                  >
+                    {tag}{(post.tags as string[]).indexOf(tag) < (post.tags as string[]).length - 1 ? "," : ""}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Author */}
+            <div className="mt-12 pt-8 border-t border-border">
+              <p className="font-mono text-xs text-muted-foreground">Written by</p>
+              <p className="font-semibold mt-1">{post.author}</p>
+            </div>
+          </article>
+        </div>
+
+        {/* Post navigation */}
+        <div className="border-t border-border">
+          <div className="max-w-[1200px] mx-auto px-6 py-16 md:py-20 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            {prevPost ? (
+              <Link href={`/blog/${prevPost.slug}`} className="group">
+                <span className="text-sm text-muted-foreground">&larr; Previous</span>
+                <p className="font-semibold group-hover:text-primary transition-colors">
+                  {prevPost.title}
+                </p>
+              </Link>
+            ) : (
               <Link
                 href="/blog"
-                className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-6"
+                className="link-underline text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
-                <ArrowLeft className="w-4 h-4" />
-                Back to Blog
+                &larr; All articles
               </Link>
-
-              <div className="space-y-6">
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
-                    <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
-                    <span>{post.readTime}</span>
-                  </div>
-                  <Button variant="ghost" size="sm" onClick={handleShare} className="ml-auto">
-                    <Share2 className="w-4 h-4 mr-2" />
-                    Share
-                  </Button>
-                </div>
-
-                <h1 className="text-4xl md:text-5xl font-bold leading-tight">{post.title}</h1>
-
-                <p className="text-xl text-muted-foreground leading-relaxed font-serif">{post.excerpt}</p>
-
-                <div className="flex flex-wrap gap-2">
-                  {post.tags.map((tag) => (
-                    <span key={tag} className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </FadeInSection>
-
-          <FadeInSection>
-            <div className="mb-12">
-              <Image
-                src={`/abstract-geometric-shapes.png?height=400&width=800&query=${encodeURIComponent(post.title)}`}
-                alt={post.title}
-                width={800}
-                height={400}
-                className="w-full h-64 md:h-96 object-cover rounded-xl"
-              />
-            </div>
-          </FadeInSection>
-
-          <FadeInSection>
-            <div className="prose prose-lg max-w-none dark:prose-invert">
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: post.content.replace(/\n/g, "<br />").replace(/#{1,6}\s/g, (match) => {
-                    const level = match.trim().length
-                    return `<h${level} class="text-${4 - level}xl font-bold mt-8 mb-4">`
-                  }),
-                }}
-              />
-            </div>
-          </FadeInSection>
-
-          <FadeInSection>
-            <div className="mt-16 pt-8 border-t border-border">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Written by</p>
-                  <p className="font-semibold">{post.author}</p>
-                </div>
-                <Button onClick={handleShare} variant="outline">
-                  <Share2 className="w-4 h-4 mr-2" />
-                  Share Article
-                </Button>
-              </div>
-            </div>
-          </FadeInSection>
-        </article>
-      </PageLayout>
+            )}
+            {nextPost && (
+              <Link href={`/blog/${nextPost.slug}`} className="group text-right">
+                <span className="text-sm text-muted-foreground">Next &rarr;</span>
+                <p className="font-semibold group-hover:text-primary transition-colors">
+                  {nextPost.title}
+                </p>
+              </Link>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

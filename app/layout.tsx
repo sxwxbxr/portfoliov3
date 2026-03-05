@@ -1,31 +1,41 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Geist } from "next/font/google"
-import { Manrope } from "next/font/google"
+import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/ThemeProvider"
-import { ScrollProgress } from "@/components/ScrollProgress"
 import { Analytics } from "@/components/Analytics"
 import { JsonLd } from "@/components/JsonLd"
 import { Suspense } from "react"
 import { Footer } from "@/components/Footer"
+import SmoothScroll from "@/components/SmoothScroll"
+import { ScrollProgress } from "@/components/ScrollProgress"
 
-const geist = Geist({
+const inter = Inter({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-geist",
+  weight: ["400", "500"],
+  variable: "--font-inter",
   preload: true,
 })
 
-const manrope = Manrope({
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-manrope",
+  weight: ["500", "600", "700"],
+  variable: "--font-space-grotesk",
+  preload: true,
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400"],
+  variable: "--font-jetbrains-mono",
   preload: true,
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://seyaweber.com"),
+  metadataBase: new URL("https://sweber.dev"),
   title: {
     default: "Seya Weber - Project Manager & Software Developer",
     template: "%s | Seya Weber",
@@ -47,7 +57,7 @@ export const metadata: Metadata = {
     "Healthcare Technology",
     "Manufacturing Software",
   ],
-  authors: [{ name: "Seya Weber", url: "https://seyaweber.com" }],
+  authors: [{ name: "Seya Weber", url: "https://sweber.dev" }],
   creator: "Seya Weber",
   publisher: "Seya Weber",
   formatDetection: {
@@ -58,7 +68,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://seyaweber.com",
+    url: "https://sweber.dev",
     siteName: "Seya Weber Portfolio",
     title: "Seya Weber - Project Manager & Software Developer",
     description:
@@ -91,14 +101,10 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  verification: {
-    google: "your-google-verification-code",
-  },
   alternates: {
-    canonical: "https://seyaweber.com",
+    canonical: "https://sweber.dev",
   },
   category: "technology",
-    generator: 'v0.app'
 }
 
 const structuredData = {
@@ -108,7 +114,7 @@ const structuredData = {
   jobTitle: "Project Manager & Software Developer",
   description:
     "Experienced Project Manager specializing in software development and digital transformation in St. Gallen, Switzerland.",
-  url: "https://seyaweber.com",
+  url: "https://sweber.dev",
   sameAs: ["https://linkedin.com/in/seyaweber", "https://github.com/sxwxbxr"],
   address: {
     "@type": "PostalAddress",
@@ -140,7 +146,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${geist.variable} ${manrope.variable} antialiased`} suppressHydrationWarning>
+    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} antialiased`} suppressHydrationWarning>
       <head>
         <JsonLd data={structuredData} />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
@@ -148,17 +154,27 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="icon" href="/favicon.ico" />
         <link rel="manifest" href="/site.webmanifest" />
-        <meta name="theme-color" content="#6366f1" />
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#1a8a6a" />
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0d0d14" />
         <meta name="color-scheme" content="light dark" />
       </head>
       <body className="font-sans">
+        {/* Skip to main content — keyboard / screen reader accessibility */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-background focus:text-foreground focus:border focus:border-border focus:rounded focus:text-sm focus:font-medium"
+        >
+          Skip to main content
+        </a>
         <Suspense fallback={null}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
             <ScrollProgress />
-            <div className="flex min-h-screen flex-col">
-              <div className="flex-1">{children}</div>
-              <Footer />
-            </div>
+            <SmoothScroll>
+              <div className="flex min-h-screen flex-col">
+                <main id="main-content" className="flex-1">{children}</main>
+                <Footer />
+              </div>
+            </SmoothScroll>
           </ThemeProvider>
         </Suspense>
         <Analytics />

@@ -1,185 +1,80 @@
 "use client"
 
-import Navigation from "../../components/Navigation"
-import PageLayout from "../../components/PageLayout"
-import FadeInSection from "../../components/FadeInSection"
+import PageLayout, { Section } from "../../components/PageLayout"
 import { ContactForm } from "../../components/ContactForm"
-import { InteractiveCard } from "../../components/InteractiveCard"
-import { Mail, MapPin, Clock, Phone } from "lucide-react"
-import { SiGithub, SiLinkedin } from "react-icons/si"
 
 export default function Contact() {
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
-      <PageLayout>
-        <div className="space-y-16">
-          <FadeInSection>
-            <div className="text-center space-y-4">
-              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                Let&apos;s Work Together
-              </h1>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto font-serif">
-                Ready to bring your project to life? I&apos;d love to hear about your ideas and discuss how we can make them
-                reality.
-              </p>
-            </div>
-          </FadeInSection>
-
-          <section className="py-12">
-            <div className="max-w-6xl mx-auto">
-              <div className="grid lg:grid-cols-3 gap-12">
-                <div className="lg:col-span-1 space-y-8">
-                  <FadeInSection>
-                    <div>
-                      <h3 className="text-2xl font-semibold mb-6">Get in Touch</h3>
-                      <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                        I&apos;m always interested in discussing new opportunities, innovative projects, or simply connecting
-                        with fellow professionals in the tech industry.
-                      </p>
-                    </div>
-                  </FadeInSection>
-
-                  <FadeInSection>
-                    <div className="space-y-4">
-                      <InteractiveCard>
-                        <a
-                          href="mailto:info@sweber.dev"
-                          className="flex items-center gap-4 p-4 bg-card border border-border rounded-lg hover:shadow-md transition-all duration-300"
-                          aria-label="Email info@sweber.dev"
-                        >
-                          <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                            <Mail className="w-6 h-6 text-primary" />
-                          </div>
-                          <div>
-                            <h4 className="font-medium">Email</h4>
-                            <p className="text-muted-foreground">info@sweber.dev</p>
-                          </div>
-                        </a>
-                      </InteractiveCard>
-
-                      <InteractiveCard>
-                        <div className="flex items-center gap-4 p-4 bg-card border border-border rounded-lg hover:shadow-md transition-all duration-300">
-                          <div className="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center">
-                            <MapPin className="w-6 h-6 text-secondary" />
-                          </div>
-                          <div>
-                            <h4 className="font-medium">Location</h4>
-                            <p className="text-muted-foreground">St. Gallen, Switzerland</p>
-                          </div>
-                        </div>
-                      </InteractiveCard>
-
-                      <InteractiveCard>
-                        <div className="flex items-center gap-4 p-4 bg-card border border-border rounded-lg hover:shadow-md transition-all duration-300">
-                          <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center">
-                            <Clock className="w-6 h-6 text-accent" />
-                          </div>
-                          <div>
-                            <h4 className="font-medium">Response Time</h4>
-                            <p className="text-muted-foreground">Within 24 hours</p>
-                          </div>
-                        </div>
-                      </InteractiveCard>
-
-                      <InteractiveCard>
-                        <a
-                          href="tel:+41798991112"
-                          className="flex items-center gap-4 p-4 bg-card border border-border rounded-lg hover:shadow-md transition-all duration-300"
-                          aria-label="Call +41 79 899 11 12"
-                        >
-                          <div className="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center">
-                            <Phone className="w-6 h-6 text-secondary" />
-                          </div>
-                          <div>
-                            <h4 className="font-medium">Phone</h4>
-                            <p className="text-muted-foreground">+41 79 899 11 12</p>
-                          </div>
-                        </a>
-                      </InteractiveCard>
-                    </div>
-                  </FadeInSection>
-
-                  <FadeInSection>
-                    <div>
-                      <h4 className="font-medium mb-4">Connect on Social</h4>
-                      <div className="grid grid-cols-2 gap-4">
-                        <InteractiveCard>
-                          <a
-                            href="mailto:info@sweber.dev"
-                            className="flex items-center justify-center gap-2 p-3 bg-card border border-border rounded-lg hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-105"
-                            aria-label="Email info@sweber.dev"
-                          >
-                            <Mail className="w-6 h-6" />
-                            <span className="text-sm font-medium">Email</span>
-                          </a>
-                        </InteractiveCard>
-                        <InteractiveCard>
-                          <a
-                            href="https://github.com/sxwxbxr"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center justify-center gap-2 p-3 bg-card border border-border rounded-lg hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-105"
-                            aria-label="Visit GitHub profile"
-                          >
-                            <SiGithub className="w-6 h-6" />
-                            <span className="text-sm font-medium">GitHub</span>
-                          </a>
-                        </InteractiveCard>
-                        <InteractiveCard>
-                          <a
-                            href="https://ch.linkedin.com/in/seya-weber-06a592256"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center justify-center gap-2 p-3 bg-card border border-border rounded-lg hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-105"
-                            aria-label="Connect on LinkedIn"
-                          >
-                            <SiLinkedin className="w-6 h-6" />
-                            <span className="text-sm font-medium">LinkedIn</span>
-                          </a>
-                        </InteractiveCard>
-                        <InteractiveCard>
-                          <a
-                            href="tel:+41798991112"
-                            className="flex items-center justify-center gap-2 p-3 bg-card border border-border rounded-lg hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-105"
-                            aria-label="Call +41 79 899 11 12"
-                          >
-                            <Phone className="w-6 h-6" />
-                            <span className="text-sm font-medium">Call</span>
-                          </a>
-                        </InteractiveCard>
-                      </div>
-                    </div>
-                  </FadeInSection>
+    <PageLayout
+      title="Get in touch"
+      subtitle="Have a project in mind or want to discuss an opportunity? I'd love to hear from you."
+    >
+      <section className="pb-24 md:pb-32">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-16">
+            {/* Left -- contact info */}
+            <Section>
+              <div className="space-y-8">
+                <div>
+                  <p className="font-mono text-xs text-muted-foreground mb-2">Email</p>
+                  <a
+                    href="mailto:info@sweber.dev"
+                    className="link-underline text-primary font-medium"
+                  >
+                    info@sweber.dev
+                  </a>
+                </div>
+                <div>
+                  <p className="font-mono text-xs text-muted-foreground mb-2">Phone</p>
+                  <a
+                    href="tel:+41798991112"
+                    className="link-underline text-foreground"
+                  >
+                    +41 79 899 11 12
+                  </a>
+                </div>
+                <div>
+                  <p className="font-mono text-xs text-muted-foreground mb-2">Location</p>
+                  <p>St. Gallen, Switzerland</p>
+                </div>
+                <div>
+                  <p className="font-mono text-xs text-muted-foreground mb-2">Response time</p>
+                  <p className="text-muted-foreground">Within 24 hours</p>
                 </div>
 
-                <div className="lg:col-span-2">
-                  <FadeInSection>
-                    <ContactForm />
-                  </FadeInSection>
+                <div className="pt-4 border-t border-border">
+                  <p className="font-mono text-xs text-muted-foreground mb-3">Connect</p>
+                  <div className="flex items-center gap-4">
+                    <a
+                      href="https://github.com/sxwxbxr"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-muted-foreground hover:text-foreground transition-colors link-underline"
+                    >
+                      GitHub
+                    </a>
+                    <a
+                      href="https://ch.linkedin.com/in/seya-weber-06a592256"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-muted-foreground hover:text-foreground transition-colors link-underline"
+                    >
+                      LinkedIn
+                    </a>
+                  </div>
                 </div>
               </div>
-            </div>
-          </section>
+            </Section>
 
-          <FadeInSection>
-            <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-8 text-center">
-              <h3 className="text-2xl font-bold mb-4">Prefer a Quick Chat?</h3>
-              <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-                Sometimes it&apos;s easier to discuss projects over a call. I&apos;m available for brief consultations to
-                understand your needs better.
-              </p>
-              <a
-                href="tel:+41798991112"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-all duration-300 hover:scale-105 glow-effect"
-                aria-label="Call +41 79 899 11 12"
-              >
-                Schedule a Call
-              </a>
-            </div>
-          </FadeInSection>
+            {/* Right -- form */}
+            <Section delay={0.1}>
+              <div className="glass rounded-xl p-6 md:p-8">
+                <ContactForm />
+              </div>
+            </Section>
+          </div>
         </div>
-      </PageLayout>
-    </div>
+      </section>
+    </PageLayout>
   )
 }

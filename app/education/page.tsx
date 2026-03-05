@@ -1,54 +1,76 @@
 "use client"
 
-import PageLayout from "../../components/PageLayout"
-import FadeInSection from "../../components/FadeInSection"
+import Link from "next/link"
+import PageLayout, { Section } from "../../components/PageLayout"
+
+const education = [
+  {
+    title: "Berufsmatura TALS",
+    institution: "",
+    period: "2024 -- 2025",
+    description:
+      "Advanced vocational education focusing on technical and scientific subjects, preparing for higher education in engineering and technology fields.",
+  },
+  {
+    title: "EFZ in Computer Science",
+    institution: "Application Development -- WISS St. Gallen",
+    period: "2022 -- 2024",
+    description:
+      "Comprehensive training in software development, focusing on .NET technologies, database management, and modern application development practices.",
+  },
+  {
+    title: "EFZ in Electrical Planning",
+    institution: "GBS St. Gallen",
+    period: "2018 -- 2022",
+    description:
+      "Specialized training in electrical systems design, planning, and implementation, providing a strong foundation in technical problem-solving.",
+  },
+]
 
 export default function Education() {
   return (
-    <PageLayout title="Education" subtitle="My academic journey and continuous learning in technology and engineering">
-      <section className="py-24 px-4">
-        <div className="max-w-6xl mx-auto">
-          <FadeInSection>
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="bg-card border border-border rounded-xl p-8 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                  <span className="text-primary font-bold">BM</span>
+    <PageLayout
+      title="Education"
+      subtitle="My academic journey in technology and engineering."
+    >
+      <section className="pb-24 md:pb-32">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div>
+            {education.map((edu, i) => (
+              <Section key={edu.title} delay={i * 0.05}>
+                <div
+                  className={`py-8 ${
+                    i > 0 ? "border-t border-border" : ""
+                  }`}
+                >
+                  <div className="flex flex-col md:flex-row md:items-start gap-2 md:gap-0 mb-3">
+                    <h3 className="font-semibold text-lg md:flex-1">{edu.title}</h3>
+                    {edu.institution && (
+                      <span className="text-muted-foreground text-sm md:flex-1">
+                        {edu.institution}
+                      </span>
+                    )}
+                    <span className="font-mono text-sm text-muted-foreground md:text-right">
+                      {edu.period}
+                    </span>
+                  </div>
+                  <p className="text-muted-foreground leading-relaxed max-w-2xl">
+                    {edu.description}
+                  </p>
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Berufsmatura TALS</h3>
-                <p className="text-muted-foreground text-sm mb-4">08/2024 – 07/2025</p>
-                <p className="text-card-foreground">
-                  Advanced vocational education focusing on technical and scientific subjects, preparing for higher
-                  education in engineering and technology fields.
-                </p>
-              </div>
+              </Section>
+            ))}
+            <div className="border-t border-border" />
+          </div>
 
-              <div className="bg-card border border-border rounded-xl p-8 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                <div className="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center mb-4">
-                  <span className="text-secondary font-bold">CS</span>
-                </div>
-                <h3 className="text-xl font-semibold mb-2">EFZ in Computer Science</h3>
-                <p className="text-muted-foreground text-sm mb-2">Application Development – WISS St. Gallen</p>
-                <p className="text-muted-foreground text-sm mb-4">08/2022 – 07/2024</p>
-                <p className="text-card-foreground">
-                  Comprehensive training in software development, focusing on .NET technologies, database management,
-                  and modern application development practices.
-                </p>
-              </div>
-
-              <div className="bg-card border border-border rounded-xl p-8 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mb-4">
-                  <span className="text-accent font-bold">EP</span>
-                </div>
-                <h3 className="text-xl font-semibold mb-2">EFZ in Electrical Planning</h3>
-                <p className="text-muted-foreground text-sm mb-2">GBS St. Gallen</p>
-                <p className="text-muted-foreground text-sm mb-4">08/2018 – 07/2022</p>
-                <p className="text-card-foreground">
-                  Specialized training in electrical systems design, planning, and implementation, providing a strong
-                  foundation in technical problem-solving.
-                </p>
-              </div>
-            </div>
-          </FadeInSection>
+          <div className="mt-8">
+            <Link
+              href="/about"
+              className="link-underline text-primary text-sm font-medium"
+            >
+              More about me &rarr;
+            </Link>
+          </div>
         </div>
       </section>
     </PageLayout>

@@ -7,13 +7,13 @@ import { cookies } from "next/headers"
 export const runtime = "nodejs"
 
 const schema = z.object({
-  name: z.string(),
-  email: z.string().email(),
-  company: z.string().optional(),
-  projectType: z.string().optional(),
-  budget: z.string().optional(),
-  timeline: z.string().optional(),
-  message: z.string(),
+  name: z.string().min(2, "Name must be at least 2 characters").max(100, "Name is too long"),
+  email: z.string().email("Invalid email address").max(254, "Email is too long"),
+  company: z.string().max(200, "Company name is too long").optional(),
+  projectType: z.string().max(50, "Invalid project type").optional(),
+  budget: z.string().max(50, "Invalid budget value").optional(),
+  timeline: z.string().max(50, "Invalid timeline value").optional(),
+  message: z.string().min(10, "Message must be at least 10 characters").max(5000, "Message is too long (max 5000 characters)"),
   newsletter: z.boolean().optional(),
 })
 
@@ -142,7 +142,7 @@ const getClientIp = (req: Request) => {
   return header ? header.split(",")[0].trim() : undefined
 }
 
-const prepareRateLimit = (req: Request) => {
+const prepareRateLimit = async (req: Request) => {
   const { contactRateLimit } = getGlobalState()
   const store = contactRateLimit!
   const now = Date.now()
@@ -153,7 +153,7 @@ const prepareRateLimit = (req: Request) => {
     }
   }
 
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   const existingCookie = cookieStore.get(RATE_LIMIT_COOKIE)
   const browserId = existingCookie?.value ?? crypto.randomUUID()
   const secureCookie = process.env.NODE_ENV === "production"
@@ -222,7 +222,7 @@ export async function POST(req: Request) {
     )
   }
 
-  const rateLimit = prepareRateLimit(req)
+  const rateLimit = await prepareRateLimit(req)
 
   if (rateLimit.limited) {
     const retryAfter = Math.max(

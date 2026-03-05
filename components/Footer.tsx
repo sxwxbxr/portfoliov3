@@ -1,113 +1,134 @@
+"use client"
+
 import Link from "next/link"
-import { Mail, MapPin, Linkedin, Github } from "lucide-react"
 import { SiGithub, SiLinkedin } from "react-icons/si"
-
-const quickLinks = [
-  { name: "Projects", href: "/projects" },
-  { name: "Case Studies", href: "/case-studies" },
-  { name: "Services", href: "/services" },
-  { name: "Blog", href: "/blog" },
-]
-
-const contactItems = [
-  {
-    icon: Mail,
-    label: "Email",
-    value: "info@sweber.dev",
-    href: "mailto:info@sweber.dev",
-  },
-  {
-    icon: MapPin,
-    label: "Location",
-    value: "St. Gallen, Switzerland",
-  },
-]
+import { TimeDisplay } from "./TimeDisplay"
 
 const socialLinks = [
+  { icon: SiGithub, label: "GitHub", href: "https://github.com/sxwxbxr" },
+  { icon: SiLinkedin, label: "LinkedIn", href: "https://ch.linkedin.com/in/seya-weber-06a592256" },
+]
+
+const footerNav = [
   {
-    icon: SiLinkedin,
-    label: "LinkedIn",
-    href: "https://ch.linkedin.com/in/seya-weber-06a592256",
+    heading: "Work",
+    links: [
+      { name: "Projects", href: "/projects" },
+      { name: "Case Studies", href: "/case-studies" },
+      { name: "Services", href: "/services" },
+    ],
   },
   {
-    icon: SiGithub,
-    label: "GitHub",
-    href: "https://github.com/sxwxbxr",
+    heading: "About",
+    links: [
+      { name: "About", href: "/about" },
+      { name: "Experience", href: "/experience" },
+      { name: "Education", href: "/education" },
+      { name: "Skills", href: "/skills" },
+      { name: "Blog", href: "/blog" },
+    ],
+  },
+  {
+    heading: "Connect",
+    links: [
+      { name: "Contact", href: "/contact" },
+      { name: "GitHub", href: "https://github.com/sxwxbxr" },
+      { name: "LinkedIn", href: "https://ch.linkedin.com/in/seya-weber-06a592256" },
+      { name: "Nxrthstack", href: "https://nxrthstack.sweber.dev" },
+    ],
   },
 ]
 
 export function Footer() {
   return (
-    <footer className="border-t border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-      <div className="max-w-6xl mx-auto px-4 py-12">
-        <div className="grid gap-12 md:grid-cols-[2fr_1fr_1fr]">
-          <div>
-            <Link
-              href="/contact"
-              className="text-2xl font-semibold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
-            >
-              Let&apos;s build your next project
-            </Link>
-            <p className="mt-4 text-muted-foreground max-w-md">
-              From clinical software migrations to automation and energy optimisation programs, I partner with teams to deliver
-              measurable outcomes. Reach out and let&apos;s scope what success looks like for you.
-            </p>
-            <div className="mt-6 flex flex-col gap-4">
-              {contactItems.map((item) => (
-                <div key={item.label} className="flex items-start gap-3 text-sm text-muted-foreground">
-                  <item.icon className="mt-0.5 h-4 w-4 text-primary" aria-hidden="true" />
-                  <div>
-                    <p className="font-medium text-foreground">{item.label}</p>
-                    {item.href ? (
-                  <Link href={item.href} className="hover:text-primary transition-colors">
-                    {item.value}
-                  </Link>
-                    ) : (
-                      <p>{item.value}</p>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+    <footer className="border-t border-border">
+      <div className="max-w-[1200px] mx-auto px-6">
+        {/* Contact CTA section */}
+        <div className="py-24 md:py-32">
+          <p
+            className="font-display font-bold tracking-tight text-balance leading-[1.1]"
+            style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}
+          >
+            Let&apos;s work together
+          </p>
 
-          <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Quick Links</h3>
-            <ul className="mt-4 space-y-3 text-sm">
-              {quickLinks.map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href} className="hover:text-primary transition-colors">
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <a
+            href="mailto:info@sweber.dev"
+            className="inline-block mt-6 link-underline text-primary font-medium"
+            style={{ fontSize: "clamp(1.125rem, 2.5vw, 1.5rem)" }}
+          >
+            info@sweber.dev
+          </a>
 
-          <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Social</h3>
-            <ul className="mt-4 space-y-3 text-sm">
-              {socialLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="flex items-center gap-2 hover:text-primary transition-colors"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <link.icon className="h-4 w-4" aria-hidden="true" />
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          {/* Social links */}
+          <div className="flex items-center gap-5 mt-8">
+            {socialLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-primary transition-colors duration-200"
+                aria-label={link.label}
+              >
+                <link.icon className="w-5 h-5" />
+              </a>
+            ))}
           </div>
         </div>
 
-        <div className="mt-12 border-t border-border pt-6 text-xs text-muted-foreground">
-          <p>
-            © {new Date().getFullYear()} Seya Weber. Built with care in Switzerland.
-          </p>
+        {/* Navigation link grid */}
+        <div className="border-t border-border py-12">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
+            {footerNav.map((group) => (
+              <div key={group.heading}>
+                <p className="font-mono text-xs text-muted-foreground/60 uppercase tracking-wider mb-4">
+                  {group.heading}
+                </p>
+                <ul className="space-y-2.5">
+                  {group.links.map((link) => {
+                    const isExternal = link.href.startsWith("http")
+                    return (
+                      <li key={link.name}>
+                        {isExternal ? (
+                          <a
+                            href={link.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
+                          >
+                            {link.name}
+                          </a>
+                        ) : (
+                          <Link
+                            href={link.href}
+                            className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
+                          >
+                            {link.name}
+                          </Link>
+                        )}
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div className="border-t border-border py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
+          <p>&copy; 2026 Seya Weber</p>
+          <p>St. Gallen, Switzerland</p>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/login"
+              className="hover:text-primary transition-colors duration-200"
+            >
+              Login
+            </Link>
+            <TimeDisplay />
+          </div>
         </div>
       </div>
     </footer>

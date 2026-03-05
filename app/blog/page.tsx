@@ -1,109 +1,59 @@
-"use client"
-
-import Navigation from "../../components/Navigation"
-import PageLayout from "../../components/PageLayout"
-import FadeInSection from "../../components/FadeInSection"
-import { InteractiveCard } from "../../components/InteractiveCard"
-import { blogPosts } from "../../src/config"
 import Link from "next/link"
-import { Calendar, Clock, ArrowRight } from "lucide-react"
-import Image from "next/image"
+import PageLayout from "../../components/PageLayout"
+import { getBlogPosts } from "@/lib/data"
 
-export default function Blog() {
+export const dynamic = "force-dynamic"
+
+export default async function Blog() {
+  const blogPosts = await getBlogPosts()
+
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
-      <PageLayout>
-        <div className="space-y-16">
-          <FadeInSection>
-            <div className="text-center space-y-4">
-              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                Blog & Insights
-              </h1>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto font-serif">
-                Sharing knowledge and insights from my experience in software development, project management, and
-                digital transformation.
-              </p>
-            </div>
-          </FadeInSection>
-
-          <FadeInSection>
-            <div className="grid gap-8">
-              {blogPosts?.map((post) => (
-                <InteractiveCard key={post.id}>
-                  <article className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300">
-                    <div className="md:flex">
-                      <div className="md:w-1/3">
-                        <div className="h-64 md:h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
-                          <Image
-                            src={`/abstract-geometric-shapes.png?height=300&width=400&query=${encodeURIComponent(post.title)}`}
-                            alt={post.title}
-                            width={400}
-                            height={300}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      </div>
-                      <div className="md:w-2/3 p-8">
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
-                          <div className="flex items-center gap-1">
-                            <Calendar className="w-4 h-4" />
-                            <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Clock className="w-4 h-4" />
-                            <span>{post.readTime}</span>
-                          </div>
-                        </div>
-
-                        <h2 className="text-2xl font-bold mb-4 hover:text-primary transition-colors">
-                          <Link href={`/blog/${post.id}`}>{post.title}</Link>
-                        </h2>
-
-                        <p className="text-muted-foreground mb-6 leading-relaxed">{post.excerpt}</p>
-
-                        <div className="flex items-center justify-between">
-                          <div className="flex flex-wrap gap-2">
-                            {post.tags.map((tag) => (
-                              <span key={tag} className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-
-                          <Link
-                            href={`/blog/${post.id}`}
-                            className="flex items-center gap-2 text-primary hover:gap-3 transition-all duration-200 font-medium"
-                          >
-                            Read More
-                            <ArrowRight className="w-4 h-4" />
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                  </article>
-                </InteractiveCard>
-              ))}
-            </div>
-          </FadeInSection>
-
-          <FadeInSection>
-            <div className="text-center space-y-4 py-16">
-              <h2 className="text-3xl font-bold">Case Studies</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                Detailed breakdowns of real projects, challenges faced, and solutions implemented.
-              </p>
+    <PageLayout
+      title="Writing"
+      subtitle="Thoughts on software development, project management, and digital transformation."
+    >
+      <section className="pb-24 md:pb-32">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div>
+            {blogPosts.map((post, i) => (
               <Link
-                href="/case-studies"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-all duration-300 hover:scale-105"
+                key={post.slug}
+                href={`/blog/${post.slug}`}
+                className="group block"
               >
-                View Case Studies
-                <ArrowRight className="w-4 h-4" />
+                <div
+                  className={`flex flex-col md:flex-row md:items-center gap-1 md:gap-6 py-5 ${
+                    i > 0 ? "border-t border-border" : ""
+                  }`}
+                >
+                  <h3 className="font-semibold md:flex-1 group-hover:text-primary transition-colors duration-200">
+                    {post.title}
+                  </h3>
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    <span className="font-mono">
+                      {new Date(post.publishedAt).toLocaleDateString("en-US", {
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </span>
+                    <span>{post.readTime}</span>
+                  </div>
+                </div>
               </Link>
-            </div>
-          </FadeInSection>
+            ))}
+            <div className="border-t border-border" />
+          </div>
+
+          <div className="mt-8">
+            <Link
+              href="/case-studies"
+              className="link-underline text-primary text-sm font-medium"
+            >
+              Read case studies &rarr;
+            </Link>
+          </div>
         </div>
-      </PageLayout>
-    </div>
+      </section>
+    </PageLayout>
   )
 }

@@ -78,7 +78,12 @@ export function CheckmarkAnimation({ className }: CheckmarkAnimationProps) {
     node.addEventListener("load", handleReady)
 
     if (node.load) {
-      node.load(ANIMATION_PATH).catch(handleError)
+      try {
+        node.load(ANIMATION_PATH)
+      } catch (err) {
+        handleError()
+        console.error("[CheckmarkAnimation] load error", err)
+      }
     } else {
       node.src = ANIMATION_PATH
     }
