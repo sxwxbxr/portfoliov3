@@ -306,7 +306,7 @@ export default function HomeContent({ projects, experience, blogPosts, caseStudi
             <div className="glass rounded-xl p-6 md:p-8 flex flex-col gap-8">
               {[
                 { value: `${projects.length}+`, label: "Projects Delivered" },
-                { value: "3+", label: "Years Experience" },
+                { value: "2+", label: "Years Experience" },
                 { value: "5+", label: "Technologies" },
               ].map((metric) => (
                 <div key={metric.label}>
