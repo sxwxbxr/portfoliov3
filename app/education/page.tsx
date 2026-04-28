@@ -88,14 +88,9 @@ export default async function Education() {
       {/* Certificates */}
       <Section className="py-16 md:py-24 border-t border-border">
         <div className="max-w-[1200px] mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] items-baseline gap-4 md:gap-8 mb-10">
-            <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
-              § Certificates
-            </span>
-            <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight">
-              Credentials &amp; roadmap
-            </h2>
-          </div>
+          <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight mb-10">
+            Credentials &amp; roadmap
+          </h2>
 
           {certificates.length === 0 ? (
             <div className="glass rounded-xl p-10 md:p-14 text-center">
@@ -163,14 +158,9 @@ export default async function Education() {
       {hasRoadmap && (
         <Section className="py-16 md:py-24 border-t border-border">
           <div className="max-w-[1200px] mx-auto px-6">
-            <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] items-baseline gap-4 md:gap-8 mb-10">
-              <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                § Roadmap
-              </span>
-              <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight">
-                What&apos;s next on the bench.
-              </h2>
-            </div>
+            <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight mb-10">
+              What&apos;s next on the bench.
+            </h2>
             <CertificatesRoadmap certs={certificates} />
           </div>
         </Section>
