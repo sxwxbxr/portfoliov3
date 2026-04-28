@@ -1,5 +1,5 @@
 import { db } from "./db"
-import { projects, experienceEntries, blogPosts, caseStudies } from "./schema"
+import { projects, experienceEntries, blogPosts, caseStudies, certificates } from "./schema"
 import { eq, asc } from "drizzle-orm"
 
 export async function getProjects() {
@@ -31,4 +31,8 @@ export async function getCaseStudies() {
 export async function getCaseStudyBySlug(slug: string) {
   const results = await db.select().from(caseStudies).where(eq(caseStudies.slug, slug))
   return results[0] ?? null
+}
+
+export async function getCertificates() {
+  return db.select().from(certificates).orderBy(asc(certificates.sortOrder))
 }
