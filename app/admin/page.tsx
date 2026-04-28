@@ -2,20 +2,26 @@ export const dynamic = "force-dynamic"
 
 import Link from "next/link"
 import { db } from "@/lib/db"
-import { projects, experienceEntries, blogPosts, caseStudies } from "@/lib/schema"
+import { projects, experienceEntries, blogPosts, caseStudies, certificates } from "@/lib/schema"
 import { count } from "drizzle-orm"
 import { getSession } from "@/lib/auth"
 
 export default async function AdminDashboardPage() {
   const session = await getSession()
 
-  const [[projectCount], [experienceCount], [blogCount], [caseStudyCount]] =
-    await Promise.all([
-      db.select({ value: count() }).from(projects),
-      db.select({ value: count() }).from(experienceEntries),
-      db.select({ value: count() }).from(blogPosts),
-      db.select({ value: count() }).from(caseStudies),
-    ])
+  const [
+    [projectCount],
+    [experienceCount],
+    [blogCount],
+    [caseStudyCount],
+    [certificateCount],
+  ] = await Promise.all([
+    db.select({ value: count() }).from(projects),
+    db.select({ value: count() }).from(experienceEntries),
+    db.select({ value: count() }).from(blogPosts),
+    db.select({ value: count() }).from(caseStudies),
+    db.select({ value: count() }).from(certificates),
+  ])
 
   const stats = [
     {
@@ -37,6 +43,11 @@ export default async function AdminDashboardPage() {
       label: "Case Studies",
       count: caseStudyCount.value,
       href: "/admin/case-studies",
+    },
+    {
+      label: "Certificates",
+      count: certificateCount.value,
+      href: "/admin/certificates",
     },
   ]
 
@@ -97,6 +108,12 @@ export default async function AdminDashboardPage() {
             className="bg-primary text-primary-foreground rounded-lg px-4 py-2 text-sm font-medium hover:opacity-90 transition-opacity"
           >
             New Case Study
+          </Link>
+          <Link
+            href="/admin/certificates/new"
+            className="bg-primary text-primary-foreground rounded-lg px-4 py-2 text-sm font-medium hover:opacity-90 transition-opacity"
+          >
+            New Certificate
           </Link>
         </div>
       </div>

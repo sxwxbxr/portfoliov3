@@ -20,7 +20,7 @@ const moreLinks = [
   { name: "Experience", href: "/experience", description: "Work history" },
   { name: "Blog", href: "/blog", description: "Thoughts and articles" },
   { name: "Skills", href: "/skills", description: "Technical expertise" },
-  { name: "Education", href: "/education", description: "Academic background" },
+  { name: "Education", href: "/education", description: "Academic background & certs" },
   {
     name: "Nxrthstack",
     href: "https://nxrthstack.sweber.dev",

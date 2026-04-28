@@ -45,6 +45,29 @@ export const blogPosts = pgTable("blog_posts", {
   image: text("image").notNull().default(""),
 })
 
+export const certificates = pgTable("certificates", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  fullTitle: text("full_title").notNull().default(""),
+  provider: text("provider").notNull().default(""),
+  category: text("category").notNull().default(""),
+  status: text("status").notNull().default("planned"),
+  description: text("description").notNull().default(""),
+  credentialUrl: text("credential_url").notNull().default(""),
+  credentialId: text("credential_id").notNull().default(""),
+  issueDate: text("issue_date").notNull().default(""),
+  expiryDate: text("expiry_date").notNull().default(""),
+  plannedStart: text("planned_start").notNull().default(""),
+  plannedEnd: text("planned_end").notNull().default(""),
+  estimatedHours: integer("estimated_hours").notNull().default(0),
+  estimatedCost: text("estimated_cost").notNull().default(""),
+  difficulty: integer("difficulty").notNull().default(0),
+  skills: json("skills").$type<string[]>().notNull().default([]),
+  whyPoints: json("why_points").$type<string[]>().notNull().default([]),
+  accentColor: text("accent_color").notNull().default(""),
+  sortOrder: integer("sort_order").notNull().default(0),
+})
+
 export const caseStudies = pgTable("case_studies", {
   id: serial("id").primaryKey(),
   slug: text("slug").notNull().unique(),
