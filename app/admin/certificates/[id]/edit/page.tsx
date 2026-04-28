@@ -44,7 +44,10 @@ export default function EditCertificatePage({
 
   useEffect(() => {
     fetch(`/api/admin/certificates/${id}`)
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch certificate")
+        return res.json()
+      })
       .then((data) => {
         setForm({
           name: data.name || "",

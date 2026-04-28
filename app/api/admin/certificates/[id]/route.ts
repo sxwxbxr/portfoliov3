@@ -42,6 +42,10 @@ export async function PUT(
   const { id } = await params
   const body = await request.json()
 
+  if (!body.name) {
+    return NextResponse.json({ error: "name is required" }, { status: 400 })
+  }
+
   const result = await db
     .update(certificates)
     .set({

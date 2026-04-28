@@ -1,18 +1,10 @@
 import type { Certificate } from "./CertificateCard"
+import { formatMonth, getReadableTextColor } from "@/lib/utils"
 
 const STATUS_LABEL: Record<string, string> = {
   completed: "Completed",
   "in-progress": "In Progress",
   planned: "Planned",
-}
-
-function formatMonth(value: string) {
-  if (!value) return ""
-  const [year, month] = value.split("-")
-  if (!year || !month) return value
-  const date = new Date(Number(year), Number(month) - 1, 1)
-  if (isNaN(date.getTime())) return value
-  return date.toLocaleString("en-US", { month: "short", year: "numeric" })
 }
 
 function parseMonth(value: string): number | null {
@@ -123,11 +115,17 @@ export default function CertificatesRoadmap({
         {entries.map(({ cert, startOffset, span, startLabel, endLabel }) => {
           const left = (startOffset / totalMonths) * 100
           const width = (span / totalMonths) * 100
+          const hasAccent = Boolean(cert.accentColor)
           const fill =
             cert.accentColor ||
             (cert.status === "in-progress"
               ? "var(--primary)"
               : "var(--muted-foreground)")
+          const textColor = hasAccent
+            ? getReadableTextColor(cert.accentColor)
+            : cert.status === "in-progress"
+              ? "var(--primary-foreground)"
+              : "var(--background)"
           return (
             <div
               key={cert.id}
@@ -150,11 +148,9 @@ export default function CertificatesRoadmap({
                     left: `${left}%`,
                     width: `${width}%`,
                     background: fill,
-                    opacity: cert.status === "in-progress" ? 1 : 0.65,
-                    color:
-                      cert.status === "in-progress"
-                        ? "var(--primary-foreground)"
-                        : "var(--background)",
+                    opacity:
+                      hasAccent || cert.status === "in-progress" ? 1 : 0.65,
+                    color: textColor,
                   }}
                 >
                   <span className="truncate">

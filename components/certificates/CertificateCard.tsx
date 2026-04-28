@@ -1,4 +1,5 @@
 import { certificates } from "@/lib/schema"
+import { formatMonth } from "@/lib/utils"
 import type { InferSelectModel } from "drizzle-orm"
 
 export type Certificate = InferSelectModel<typeof certificates>
@@ -22,15 +23,6 @@ const STATUS_META: Record<
     tone: "bg-muted text-muted-foreground border-border",
     dot: "bg-muted-foreground/60",
   },
-}
-
-function formatMonth(value: string) {
-  if (!value) return ""
-  const [year, month] = value.split("-")
-  if (!year || !month) return value
-  const date = new Date(Number(year), Number(month) - 1, 1)
-  if (isNaN(date.getTime())) return value
-  return date.toLocaleString("en-US", { month: "short", year: "numeric" })
 }
 
 export default function CertificateCard({ cert }: { cert: Certificate }) {
