@@ -9,6 +9,7 @@ import { Suspense } from "react"
 import { Footer } from "@/components/Footer"
 import SmoothScroll from "@/components/SmoothScroll"
 import { ScrollProgress } from "@/components/ScrollProgress"
+import { getSiteSettings } from "@/lib/data"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -31,7 +32,7 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
   weight: ["400"],
   variable: "--font-jetbrains-mono",
-  preload: true,
+  preload: false,
 })
 
 export const metadata: Metadata = {
@@ -73,22 +74,6 @@ export const metadata: Metadata = {
     title: "Seya Weber - Project Manager & Software Developer",
     description:
       "Experienced Project Manager specializing in software development and digital transformation in St. Gallen, Switzerland.",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Seya Weber - Project Manager & Software Developer",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Seya Weber - Project Manager & Software Developer",
-    description:
-      "Experienced Project Manager specializing in software development and digital transformation in St. Gallen, Switzerland.",
-    images: ["/og-image.jpg"],
-    creator: "@seyaweber",
   },
   robots: {
     index: true,
@@ -107,44 +92,54 @@ export const metadata: Metadata = {
   category: "technology",
 }
 
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "Person",
-  name: "Seya Weber",
-  jobTitle: "Project Manager & Software Developer",
-  description:
-    "Experienced Project Manager specializing in software development and digital transformation in St. Gallen, Switzerland.",
-  url: "https://sweber.dev",
-  sameAs: ["https://linkedin.com/in/seyaweber", "https://github.com/sxwxbxr"],
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: "St. Gallen",
-    addressCountry: "Switzerland",
-  },
-  knowsAbout: [
-    "Project Management",
-    "Software Development",
-    "Digital Transformation",
-    "C# Programming",
-    ".NET Framework",
-    "Process Automation",
-    "Agile Methodologies",
-  ],
-  alumniOf: {
-    "@type": "Organization",
-    name: "University of Applied Sciences",
-  },
-  worksFor: {
-    "@type": "Organization",
-    name: "Freelance",
-  },
+async function buildStructuredData() {
+  const settings = await getSiteSettings()
+
+  const sameAs = [settings.linkedinUrl, settings.githubUrl, settings.twitterUrl].filter(
+    Boolean
+  )
+
+  const [city, country = "Switzerland"] = (settings.contactLocation || "St. Gallen, Switzerland")
+    .split(",")
+    .map((s) => s.trim())
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: "Seya Weber",
+    jobTitle: settings.currentRole || "Project Manager & Software Developer",
+    description:
+      "Experienced Project Manager specializing in software development and digital transformation in St. Gallen, Switzerland.",
+    url: "https://sweber.dev",
+    ...(sameAs.length > 0 && { sameAs }),
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: city,
+      addressCountry: country,
+    },
+    ...(settings.knowsAbout.length > 0 && { knowsAbout: settings.knowsAbout }),
+    ...(settings.alumniOf && {
+      alumniOf: {
+        "@type": "Organization",
+        name: settings.alumniOf,
+      },
+    }),
+    ...(settings.currentEmployer && {
+      worksFor: {
+        "@type": "Organization",
+        name: settings.currentEmployer,
+      },
+    }),
+  }
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const structuredData = await buildStructuredData()
+
   return (
     <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} antialiased`} suppressHydrationWarning>
       <head>

@@ -2,7 +2,7 @@ import Link from "next/link"
 import PageLayout from "../../components/PageLayout"
 import { getBlogPosts } from "@/lib/data"
 
-export const dynamic = "force-dynamic"
+export const revalidate = 60
 
 export default async function Blog() {
   const blogPosts = await getBlogPosts()

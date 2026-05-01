@@ -1,22 +1,10 @@
-// LEGACY: This file is used only by the seed script (scripts/seed.ts).
-// All public-facing pages now fetch content from the database via lib/data.ts.
+// Source data for the seed script (scripts/seed.ts).
+// Public-facing pages read from the database via lib/data.ts; this file is only
+// used to populate a fresh database. Edit content via /admin in production.
 
-const navLinks = [
-  { name: "Home", href: "/" },
-  { name: "About", href: "/about" },
-  { name: "Experience", href: "/experience" },
-  { name: "Projects", href: "/projects" },
-  { name: "Case Studies", href: "/case-studies" },
-  { name: "Services", href: "/services" },
-  { name: "Blog", href: "/blog" },
-  { name: "Education", href: "/education" },
-  { name: "Skills", href: "/skills" },
-  { name: "Contact", href: "/contact" },
-]
-
-const projects = [
+export const projects = [
   {
-    title: "Medical Database Migration — France & Belgium",
+    title: "Medical Database Migration -- France & Belgium",
     shortDescription:
       "Led the end-to-end migration of a large medical database across France and Belgium with GDPR compliance and zero downtime.",
     description:
@@ -40,9 +28,9 @@ const projects = [
     demo: "#",
   },
   {
-    title: "Energy Optimization Portfolio — Swiss Bank",
+    title: "Energy Optimization Portfolio -- Swiss Bank",
     shortDescription:
-      "Managed energy optimization across 150+ properties, unlocking 10–20% efficiency gains and measurable savings.",
+      "Managed energy optimization across 150+ properties, unlocking 10-20% efficiency gains and measurable savings.",
     description:
       "Oversaw monitoring and reporting for a Swiss banking property portfolio spanning more than 150 locations to uncover actionable efficiency opportunities. Partnered with facility teams to prioritize quick-win measures that minimized disruption while improving energy performance. Transparent dashboards kept stakeholders aligned and laid the groundwork for ongoing optimization.",
     image: "/energy-optimization.png",
@@ -66,9 +54,9 @@ const projects = [
   {
     title: "MultiScreenKiosk Application",
     shortDescription:
-      "Created a PyQt6 kiosk app that arranges multiple applications in a customizable 2×2 grid for event displays.",
+      "Created a PyQt6 kiosk app that arranges multiple applications in a customizable 2x2 grid for event displays.",
     description:
-      "MultiScreenKiosk makes it easy to pin local applications or browser windows into a configurable 2×2 grid on a single monitor. I built the desktop UI with PyQt6, adding fast shortcuts, layout presets, and logging so operators can react quickly during live events. The project is open source, giving venues a lightweight alternative to complex digital signage suites.",
+      "MultiScreenKiosk makes it easy to pin local applications or browser windows into a configurable 2x2 grid on a single monitor. I built the desktop UI with PyQt6, adding fast shortcuts, layout presets, and logging so operators can react quickly during live events. The project is open source, giving venues a lightweight alternative to complex digital signage suites.",
     image: "/multi-screen-kiosk.png",
     tags: ["Kiosk", "UI/UX", "Web Development", "Python", "PyQt6", "Open Source", "Logging"],
     slug: "multi-screen-kiosk",
@@ -80,7 +68,7 @@ const projects = [
     shortDescription:
       "Built an offline-first personal finance tracker with Next.js and SQLite for quick budgeting on any network.",
     description:
-      "CashTrack offers an intuitive interface for capturing income, expenses, and budgets without relying on the cloud. I combined Next.js, React, SQLite, and iron-session to store data locally while enabling optional syncing across devices on the same network. Users can categorize transactions, monitor budgets, and explore charts that reveal spending trends—all from an open-source codebase.",
+      "CashTrack offers an intuitive interface for capturing income, expenses, and budgets without relying on the cloud. I combined Next.js, React, SQLite, and iron-session to store data locally while enabling optional syncing across devices on the same network. Users can categorize transactions, monitor budgets, and explore charts that reveal spending trends -- all from an open-source codebase.",
     image: "/cashtrack.png",
     tags: ["Finance", "Next.js", "React", "SQLite", "Open Source"],
     slug: "cashtrack",
@@ -104,18 +92,9 @@ const projects = [
     shortDescription:
       "Designed a terminal-native time tracking platform that keeps developers in their flow while logging focused work sessions.",
     description:
-      "Chr0no is a developer-first time tracker built with Next.js, React, and Supabase that mirrors the feel of a command-line companion. I led the end-to-end experience—from the live tracking dashboard and automatic break deductions to configurable preferences and exportable work logs—so engineers can monitor progress without breaking concentration.",
+      "Chr0no is a developer-first time tracker built with Next.js, React, and Supabase that mirrors the feel of a command-line companion. I led the end-to-end experience -- from the live tracking dashboard and automatic break deductions to configurable preferences and exportable work logs -- so engineers can monitor progress without breaking concentration.",
     image: "/chr0no.png",
-    tags: [
-      "Time Tracking",
-      "Developer Tools",
-      "Terminal UI",
-      "Next.js",
-      "React",
-      "Supabase",
-      "Tailwind CSS",
-      "TypeScript",
-    ],
+    tags: ["Time Tracking", "Developer Tools", "Terminal UI", "Next.js", "React", "Supabase", "Tailwind CSS", "TypeScript"],
     slug: "chr0no",
     github: "https://github.com/sxwxbxr/chr0no",
     demo: "https://chr0no.app/",
@@ -127,24 +106,14 @@ const projects = [
     description:
       "After receiving positive feedback as well as improvements and ideas for the future, I've realised an enterprise version with a more professional look and feel while focusing on more important features for businesses and debloating the initial solution.",
     image: "/chr0no.png",
-    tags: [
-      "Time Tracking",
-      "Business Solution",
-      "Modern UI",
-      "Next.js",
-      "React",
-      "Supabase",
-      "Tailwind CSS",
-      "TypeScript",
-      "shadcn UI",
-    ],
+    tags: ["Time Tracking", "Business Solution", "Modern UI", "Next.js", "React", "Supabase", "Tailwind CSS", "TypeScript", "shadcn UI"],
     slug: "chr0no-enterprise",
     github: "https://github.com/sxwxbxr/chr0no-enterprise",
     demo: "https://enterprise.chr0no.app/",
-  }
+  },
 ]
 
-const blogPosts = [
+export const blogPosts = [
   {
     id: "healthcare-transformation-lessons",
     title: "Digital Transformation in Healthcare: Lessons from the Field",
@@ -207,13 +176,13 @@ The tools change. The habits scale.
   },
 ]
 
-const caseStudies = [
+export const caseStudies = [
   {
     slug: "medical-db-migration-fr-be",
     title: "Healthcare Data Migration Platform",
     client: "INNOFORCE Est.",
     industry: "Healthcare",
-    duration: "Nov 2023 – Mar 2024",
+    duration: "Nov 2023 - Mar 2024",
     team: "1 developer (project lead) with cross-team support",
     challenge:
       "Migrate a large clinical database while maintaining full GDPR compliance, data integrity, and uninterrupted access for clinicians.",
@@ -239,7 +208,7 @@ const caseStudies = [
     title: "Patient Questionnaire Automation",
     client: "INNOFORCE Est.",
     industry: "Healthcare",
-    duration: "Apr 2024 – Jul 2024",
+    duration: "Apr 2024 - Jul 2024",
     team: "1 developer working with clinical operations",
     challenge:
       "Manual patient intake questionnaires varied by location, produced inconsistent data, and required significant administrative follow-up.",
@@ -264,14 +233,14 @@ const caseStudies = [
     title: "Energy Efficiency Program for Swiss Bank Portfolio",
     client: "Credit Suisse (portfolio management)",
     industry: "Real Estate / Facility Management",
-    duration: "Jun 2021 – Dec 2021",
+    duration: "Jun 2021 - Dec 2021",
     team: "1 planner, cross-functional partners",
     challenge:
       "Reduce energy consumption across a diverse portfolio without major capex and with minimal operational disruption.",
     solution:
       "Introduced monitoring, reporting, and targeted optimizations; coordinated with facility teams to implement quick-win measures first.",
     results: [
-      "Approx. 10–20% efficiency gains across managed properties",
+      "Approx. 10-20% efficiency gains across managed properties",
       "Transparent reporting to stakeholders with actionable insights",
       "Foundation for continuous improvement beyond the initial phase",
     ],
@@ -289,7 +258,7 @@ const caseStudies = [
     title: "Luxury Villa Electrical Planning and Delivery",
     client: "Private",
     industry: "Residential Construction",
-    duration: "Jan 2022 – Apr 2022",
+    duration: "Jan 2022 - Apr 2022",
     team: "1 planner coordinating subcontractors",
     challenge:
       "Integrate complex subsystems (lighting, security, HVAC) into a cohesive and reliable electrical plan on a tight schedule.",
@@ -310,7 +279,62 @@ const caseStudies = [
   },
 ]
 
-const experience = [
+export const skills = [
+  // Development
+  { category: "Development", name: "C# / .NET", detail: "Production .NET 8 services and WPF tooling at Telsonic and InnoForce.", level: "Expert", sortOrder: 0 },
+  { category: "Development", name: "TypeScript / React / Next.js", detail: "App Router, server components, ISR; built sweber.dev plus several SaaS tools.", level: "Comfortable", sortOrder: 1 },
+  { category: "Development", name: "SQL / Database design", detail: "Schema design, migrations, and data integrity work for clinical and finance datasets.", level: "Comfortable", sortOrder: 2 },
+  { category: "Development", name: "Python", detail: "Automation scripts and the PyQt6 MultiScreenKiosk app.", level: "Comfortable", sortOrder: 3 },
+
+  // Project Management
+  { category: "Project Management", name: "Agile / Scrum", detail: "Run discovery and delivery cadences for cross-functional teams.", level: "", sortOrder: 10 },
+  { category: "Project Management", name: "Stakeholder Management", detail: "Translate business needs into actionable scope without losing context.", level: "", sortOrder: 11 },
+  { category: "Project Management", name: "Requirements Engineering", detail: "Stakeholder interviews, workflow mapping, scope decomposition.", level: "", sortOrder: 12 },
+  { category: "Project Management", name: "Risk Management", detail: "Phased rollouts with rollback and parity checks for high-stakes migrations.", level: "", sortOrder: 13 },
+
+  // Tools & Platforms
+  { category: "Tools & Platforms", name: "Azure DevOps", detail: "Boards, pipelines, and artefact feeds for .NET delivery.", level: "", sortOrder: 20 },
+  { category: "Tools & Platforms", name: "Git", detail: "Trunk-based and feature-branch workflows; conventional commits.", level: "", sortOrder: 21 },
+  { category: "Tools & Platforms", name: "Docker", detail: "Reproducible local environments and CI build agents.", level: "", sortOrder: 22 },
+  { category: "Tools & Platforms", name: "Vercel", detail: "Hosting, ISR, and edge functions for the production site.", level: "", sortOrder: 23 },
+  { category: "Tools & Platforms", name: "Supabase", detail: "Postgres, auth, and storage for SaaS side projects.", level: "", sortOrder: 24 },
+
+  // Languages
+  { category: "Languages", name: "German", detail: "", level: "Native", sortOrder: 30 },
+  { category: "Languages", name: "English", detail: "", level: "C1 Advanced", sortOrder: 31 },
+  { category: "Languages", name: "French", detail: "", level: "B2", sortOrder: 32 },
+]
+
+export const siteSettings = {
+  heroAvailable: true,
+  heroAvailabilityLabel: "Available for projects",
+  heroMetrics: [
+    { value: "9+", label: "Projects Delivered" },
+    { value: "3+", label: "Years Experience" },
+    { value: "5+", label: "Technologies" },
+  ],
+  contactEmail: "info@sweber.dev",
+  contactPhone: "+41 79 899 11 12",
+  contactLocation: "St. Gallen, Switzerland",
+  linkedinUrl: "https://ch.linkedin.com/in/seya-weber-06a592256",
+  githubUrl: "https://github.com/sxwxbxr",
+  twitterUrl: "",
+  currentEmployer: "Telsonic AG",
+  currentRole: "Project Manager Software and Digitalisation",
+  alumniOf: "WISS St. Gallen",
+  knowsAbout: [
+    "Project Management",
+    "Software Development",
+    "Digital Transformation",
+    "C# / .NET",
+    "TypeScript / React / Next.js",
+    "Process Automation",
+    "Agile Methodologies",
+  ],
+  privacyContent: "",
+}
+
+export const experience = [
   {
     company: "Telsonic AG",
     role: "Project Manager Software and Digitalisation",
@@ -365,11 +389,3 @@ const experience = [
     ],
   },
 ]
-
-export {
-  navLinks,
-  projects,
-  blogPosts,
-  caseStudies,
-  experience,
-}

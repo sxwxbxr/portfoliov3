@@ -3,6 +3,7 @@
 import { useState, useEffect, use } from "react"
 import { useRouter } from "next/navigation"
 import FormField from "@/components/admin/FormField"
+import CheckboxField from "@/components/admin/CheckboxField"
 
 export default function EditBlogPostPage({
   params,
@@ -24,6 +25,7 @@ export default function EditBlogPostPage({
     author: "",
     tags: "",
     image: "",
+    featured: false,
   })
 
   useEffect(() => {
@@ -40,6 +42,7 @@ export default function EditBlogPostPage({
           author: data.author || "",
           tags: (data.tags || []).join(", "),
           image: data.image || "",
+          featured: Boolean(data.featured),
         })
         setFetching(false)
       })
@@ -49,7 +52,7 @@ export default function EditBlogPostPage({
       })
   }, [id])
 
-  function updateField(field: string, value: string) {
+  function updateField(field: string, value: string | boolean) {
     setForm((prev) => ({ ...prev, [field]: value }))
   }
 
@@ -167,6 +170,12 @@ export default function EditBlogPostPage({
           name="image"
           value={form.image}
           onChange={(e) => updateField("image", e.target.value)}
+        />
+        <CheckboxField
+          label="Feature on homepage (overrides recency check)"
+          name="featured"
+          checked={form.featured}
+          onChange={(e) => updateField("featured", e.target.checked)}
         />
 
         {error && <p className="text-sm text-destructive">{error}</p>}

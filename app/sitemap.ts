@@ -1,15 +1,21 @@
 import type { MetadataRoute } from "next"
-import { getProjects, getBlogPosts, getCaseStudies } from "@/lib/data"
+import {
+  getProjects,
+  getBlogPosts,
+  getCaseStudies,
+  getSiteSettings,
+} from "@/lib/data"
 
-export const dynamic = "force-dynamic"
+export const revalidate = 3600
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://sweber.dev"
 
-  const [projects, blogPosts, caseStudies] = await Promise.all([
+  const [projects, blogPosts, caseStudies, settings] = await Promise.all([
     getProjects(),
     getBlogPosts(),
     getCaseStudies(),
+    getSiteSettings(),
   ])
 
   const staticPages: MetadataRoute.Sitemap = [
@@ -73,6 +79,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",
       priority: 0.8,
     },
+    ...(settings.privacyContent.trim()
+      ? [
+          {
+            url: `${baseUrl}/privacy`,
+            lastModified: new Date(),
+            changeFrequency: "yearly" as const,
+            priority: 0.3,
+          },
+        ]
+      : []),
   ]
 
   const projectPages: MetadataRoute.Sitemap = projects.map((project) => ({

@@ -2,7 +2,7 @@ import Link from "next/link"
 import PageLayout, { Section } from "../../components/PageLayout"
 import { getExperience } from "@/lib/data"
 
-export const dynamic = "force-dynamic"
+export const revalidate = 60
 
 export default async function Experience() {
   const experience = await getExperience()

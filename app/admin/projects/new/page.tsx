@@ -18,6 +18,11 @@ export default function NewProjectPage() {
     github: "",
     demo: "",
     sortOrder: "0",
+    client: "",
+    duration: "",
+    challenge: "",
+    solution: "",
+    results: "",
   })
 
   function updateField(field: string, value: string) {
@@ -47,6 +52,9 @@ export default function NewProjectPage() {
           ...form,
           tags: form.tags
             ? form.tags.split(",").map((t) => t.trim()).filter(Boolean)
+            : [],
+          results: form.results
+            ? form.results.split("\n").map((r) => r.trim()).filter(Boolean)
             : [],
           sortOrder: parseInt(form.sortOrder) || 0,
           github: form.github || "#",
@@ -152,6 +160,61 @@ export default function NewProjectPage() {
           onChange={(e) => updateField("sortOrder", e.target.value)}
           placeholder="0"
         />
+
+        <div className="pt-4 border-t border-border space-y-5">
+          <div>
+            <h3 className="font-display text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+              Case study (optional)
+            </h3>
+            <p className="text-xs text-muted-foreground mt-1">
+              Fill these in to render a richer Challenge / Solution / Results
+              layout on the project detail page.
+            </p>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              label="Client"
+              name="client"
+              value={form.client}
+              onChange={(e) => updateField("client", e.target.value)}
+              placeholder="ACME Corp"
+            />
+            <FormField
+              label="Duration"
+              name="duration"
+              value={form.duration}
+              onChange={(e) => updateField("duration", e.target.value)}
+              placeholder="Mar 2024 - Jul 2024"
+            />
+          </div>
+          <FormField
+            label="Challenge"
+            name="challenge"
+            value={form.challenge}
+            onChange={(e) => updateField("challenge", e.target.value)}
+            placeholder="What problem we set out to solve."
+            multiline
+            rows={4}
+          />
+          <FormField
+            label="Solution"
+            name="solution"
+            value={form.solution}
+            onChange={(e) => updateField("solution", e.target.value)}
+            placeholder="How we solved it."
+            multiline
+            rows={4}
+          />
+          <FormField
+            label="Results (one per line)"
+            name="results"
+            value={form.results}
+            onChange={(e) => updateField("results", e.target.value)}
+            placeholder={"40% latency reduction\nZero downtime cutover"}
+            multiline
+            rows={5}
+          />
+        </div>
 
         {error && <p className="text-sm text-destructive">{error}</p>}
 

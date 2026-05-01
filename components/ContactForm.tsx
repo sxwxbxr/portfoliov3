@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
 import { AlertCircle, Send, Loader2 } from "lucide-react"
 import { CheckmarkAnimation } from "@/components/CheckmarkAnimation"
 
@@ -20,7 +19,6 @@ interface FormData {
   budget: string
   timeline: string
   message: string
-  newsletter: boolean
 }
 
 interface FormErrors {
@@ -36,7 +34,6 @@ export function ContactForm() {
     budget: "",
     timeline: "",
     message: "",
-    newsletter: false,
   })
 
   const [errors, setErrors] = useState<FormErrors>({})
@@ -119,7 +116,6 @@ export function ContactForm() {
         budget: "",
         timeline: "",
         message: "",
-        newsletter: false,
       })
 
       setShowSuccessModal(true)
@@ -132,7 +128,7 @@ export function ContactForm() {
     }
   }
 
-  const handleInputChange = (field: keyof FormData, value: string | boolean) => {
+  const handleInputChange = (field: keyof FormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
 
     if (errors[field]) {
@@ -271,23 +267,21 @@ export function ContactForm() {
           <div className="text-xs text-muted-foreground">{formData.message.length}/5000 characters</div>
         </div>
 
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            id="newsletter"
-            checked={formData.newsletter}
-            onCheckedChange={(checked) => handleInputChange("newsletter", checked as boolean)}
-          />
-          <Label htmlFor="newsletter" className="text-sm text-muted-foreground">
-            Subscribe to updates on new projects and insights
-          </Label>
-        </div>
-
         {submitError && (
           <div className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400 p-3 border border-red-200 dark:border-red-900/50">
             <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
             {submitError}
           </div>
         )}
+
+        <p className="text-xs text-muted-foreground leading-relaxed">
+          By submitting this form you agree to your data being processed for the
+          purpose of responding to your enquiry. See the{" "}
+          <a href="/privacy" className="link-underline text-foreground">
+            privacy notice
+          </a>{" "}
+          for details.
+        </p>
 
         <Button
           type="submit"

@@ -145,6 +145,7 @@ export default function EditCertificatePage({
           value={form.name}
           onChange={(e) => updateField("name", e.target.value)}
           required
+          hint="Microsoft IDs follow XX-### (e.g. AI-900, AI-102, SC-900, AZ-900). Verify via learn.microsoft.com before saving."
         />
         <FormField
           label="Full Title"

@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic"
 
 import { NextResponse } from "next/server"
 import { requireAuth } from "@/lib/auth"
+import { revalidatePublic } from "@/lib/cache"
 import { db } from "@/lib/db"
 import { certificates } from "@/lib/schema"
 import { eq } from "drizzle-orm"
@@ -76,6 +77,7 @@ export async function PUT(
     return NextResponse.json({ error: "Not found" }, { status: 404 })
   }
 
+  revalidatePublic()
   return NextResponse.json(result[0])
 }
 
@@ -92,5 +94,6 @@ export async function DELETE(
   const { id } = await params
   await db.delete(certificates).where(eq(certificates.id, parseInt(id)))
 
+  revalidatePublic()
   return NextResponse.json({ success: true })
 }

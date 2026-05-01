@@ -14,7 +14,6 @@ const schema = z.object({
   budget: z.string().max(50, "Invalid budget value").optional(),
   timeline: z.string().max(50, "Invalid timeline value").optional(),
   message: z.string().min(10, "Message must be at least 10 characters").max(5000, "Message is too long (max 5000 characters)"),
-  newsletter: z.boolean().optional(),
 })
 
 type ContactFormData = z.infer<typeof schema>
@@ -97,7 +96,6 @@ const formatEmailBody = (data: ContactFormData) => {
     data.projectType ? `Project Type: ${data.projectType}` : undefined,
     data.budget ? `Budget: ${data.budget}` : undefined,
     data.timeline ? `Timeline: ${data.timeline}` : undefined,
-    `Newsletter: ${data.newsletter ? "Yes" : "No"}`,
   ]
     .filter(Boolean)
     .join("\n")

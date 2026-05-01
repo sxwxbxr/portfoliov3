@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic"
 
 import { NextResponse } from "next/server"
 import { requireAuth } from "@/lib/auth"
+import { revalidatePublic } from "@/lib/cache"
 import { db } from "@/lib/db"
 import { projects } from "@/lib/schema"
 import { asc } from "drizzle-orm"
@@ -45,8 +46,14 @@ export async function POST(request: Request) {
       github: body.github ?? "#",
       demo: body.demo ?? "#",
       sortOrder: body.sortOrder ?? 0,
+      client: body.client ?? "",
+      duration: body.duration ?? "",
+      challenge: body.challenge ?? "",
+      solution: body.solution ?? "",
+      results: body.results ?? [],
     })
     .returning()
 
+  revalidatePublic()
   return NextResponse.json(result[0], { status: 201 })
 }

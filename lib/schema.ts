@@ -19,6 +19,14 @@ export const projects = pgTable("projects", {
   github: text("github").notNull().default("#"),
   demo: text("demo").notNull().default("#"),
   sortOrder: integer("sort_order").notNull().default(0),
+  // Optional case-study fields. When filled, the project detail page renders
+  // a richer Challenge / Solution / Results layout. Empty strings mean
+  // "fall back to the legacy caseStudies row matched by slug".
+  client: text("client").notNull().default(""),
+  duration: text("duration").notNull().default(""),
+  challenge: text("challenge").notNull().default(""),
+  solution: text("solution").notNull().default(""),
+  results: json("results").$type<string[]>().notNull().default([]),
 })
 
 export const experienceEntries = pgTable("experience", {
@@ -43,6 +51,7 @@ export const blogPosts = pgTable("blog_posts", {
   author: text("author").notNull().default("Seya Weber"),
   tags: json("tags").$type<string[]>().notNull().default([]),
   image: text("image").notNull().default(""),
+  featured: boolean("featured").notNull().default(false),
 })
 
 export const certificates = pgTable("certificates", {
@@ -84,4 +93,46 @@ export const caseStudies = pgTable("case_studies", {
   testimonialQuote: text("testimonial_quote").notNull().default(""),
   testimonialAuthor: text("testimonial_author").notNull().default(""),
   testimonialCompany: text("testimonial_company").notNull().default(""),
+})
+
+export const skills = pgTable("skills", {
+  id: serial("id").primaryKey(),
+  category: text("category").notNull(),
+  name: text("name").notNull(),
+  detail: text("detail").notNull().default(""),
+  level: text("level").notNull().default(""),
+  sortOrder: integer("sort_order").notNull().default(0),
+})
+
+export type HeroMetric = { value: string; label: string }
+
+export const siteSettings = pgTable("site_settings", {
+  id: serial("id").primaryKey(),
+  // Hero
+  heroAvailable: boolean("hero_available").notNull().default(true),
+  heroAvailabilityLabel: text("hero_availability_label")
+    .notNull()
+    .default("Available for projects"),
+  heroMetrics: json("hero_metrics")
+    .$type<HeroMetric[]>()
+    .notNull()
+    .default([]),
+  // Contact / public identity
+  contactEmail: text("contact_email").notNull().default("info@sweber.dev"),
+  contactPhone: text("contact_phone").notNull().default(""),
+  contactLocation: text("contact_location")
+    .notNull()
+    .default("St. Gallen, Switzerland"),
+  // Social URLs (single source of truth for footer + JSON-LD)
+  linkedinUrl: text("linkedin_url").notNull().default(""),
+  githubUrl: text("github_url").notNull().default(""),
+  twitterUrl: text("twitter_url").notNull().default(""),
+  // Structured data
+  currentEmployer: text("current_employer").notNull().default(""),
+  currentRole: text("current_role").notNull().default(""),
+  alumniOf: text("alumni_of").notNull().default(""),
+  knowsAbout: json("knows_about").$type<string[]>().notNull().default([]),
+  // Privacy / legal copy (Markdown). Rendered on /privacy.
+  privacyContent: text("privacy_content").notNull().default(""),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 })
