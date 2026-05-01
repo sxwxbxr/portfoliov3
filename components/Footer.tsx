@@ -1,13 +1,7 @@
-"use client"
-
 import Link from "next/link"
 import { SiGithub, SiLinkedin } from "react-icons/si"
 import { TimeDisplay } from "./TimeDisplay"
-
-const socialLinks = [
-  { icon: SiGithub, label: "GitHub", href: "https://github.com/sxwxbxr" },
-  { icon: SiLinkedin, label: "LinkedIn", href: "https://ch.linkedin.com/in/seya-weber-06a592256" },
-]
+import type { SiteSettings } from "@/lib/data"
 
 const footerNav = [
   {
@@ -28,18 +22,38 @@ const footerNav = [
       { name: "Blog", href: "/blog" },
     ],
   },
-  {
-    heading: "Connect",
-    links: [
-      { name: "Contact", href: "/contact" },
-      { name: "GitHub", href: "https://github.com/sxwxbxr" },
-      { name: "LinkedIn", href: "https://ch.linkedin.com/in/seya-weber-06a592256" },
-      { name: "Nxrthstack", href: "https://nxrthstack.sweber.dev" },
-    ],
-  },
 ]
 
-export function Footer() {
+export function Footer({ settings }: { settings: SiteSettings }) {
+  const year = new Date().getFullYear()
+  const email = settings.contactEmail || "info@sweber.dev"
+
+  const socialLinks = [
+    settings.githubUrl
+      ? { icon: SiGithub, label: "GitHub", href: settings.githubUrl }
+      : null,
+    settings.linkedinUrl
+      ? { icon: SiLinkedin, label: "LinkedIn", href: settings.linkedinUrl }
+      : null,
+  ].filter((link): link is NonNullable<typeof link> => link !== null)
+
+  const connectGroup = {
+    heading: "Connect",
+    links: [
+      { name: "Contact", href: "/contact", external: false },
+      ...(settings.githubUrl
+        ? [{ name: "GitHub", href: settings.githubUrl, external: true }]
+        : []),
+      ...(settings.linkedinUrl
+        ? [{ name: "LinkedIn", href: settings.linkedinUrl, external: true }]
+        : []),
+      { name: "Nxrthstack", href: "https://nxrthstack.sweber.dev", external: true },
+      ...(settings.privacyContent.trim()
+        ? [{ name: "Privacy", href: "/privacy", external: false }]
+        : []),
+    ],
+  }
+
   return (
     <footer className="border-t border-border">
       <div className="max-w-[1200px] mx-auto px-6">
@@ -53,41 +67,49 @@ export function Footer() {
           </p>
 
           <a
-            href="mailto:info@sweber.dev"
+            href={`mailto:${email}`}
             className="inline-block mt-6 link-underline text-primary font-medium"
             style={{ fontSize: "clamp(1.125rem, 2.5vw, 1.5rem)" }}
           >
-            info@sweber.dev
+            {email}
           </a>
 
           {/* Social links */}
-          <div className="flex items-center gap-5 mt-8">
-            {socialLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors duration-200"
-                aria-label={link.label}
-              >
-                <link.icon className="w-5 h-5" />
-              </a>
-            ))}
-          </div>
+          {socialLinks.length > 0 && (
+            <div className="flex items-center gap-5 mt-8">
+              {socialLinks.map((link) => {
+                const Icon = link.icon
+                return (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-primary transition-colors duration-200"
+                    aria-label={link.label}
+                  >
+                    <Icon className="w-5 h-5" />
+                  </a>
+                )
+              })}
+            </div>
+          )}
         </div>
 
         {/* Navigation link grid */}
         <div className="border-t border-border py-12">
           <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
-            {footerNav.map((group) => (
+            {[...footerNav, connectGroup].map((group) => (
               <div key={group.heading}>
                 <p className="font-mono text-xs text-muted-foreground/60 uppercase tracking-wider mb-4">
                   {group.heading}
                 </p>
                 <ul className="space-y-2.5">
                   {group.links.map((link) => {
-                    const isExternal = link.href.startsWith("http")
+                    const isExternal =
+                      "external" in link
+                        ? link.external
+                        : link.href.startsWith("http")
                     return (
                       <li key={link.name}>
                         {isExternal ? (
@@ -118,8 +140,8 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className="border-t border-border py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
-          <p>&copy; 2026 Seya Weber</p>
-          <p>St. Gallen, Switzerland</p>
+          <p>&copy; {year} Seya Weber</p>
+          <p>{settings.contactLocation || "St. Gallen, Switzerland"}</p>
           <div className="flex items-center gap-4">
             <Link
               href="/login"

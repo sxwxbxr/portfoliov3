@@ -7,6 +7,7 @@ import { motion, useInView, useReducedMotion, type Variants } from "framer-motio
 import { useRef } from "react"
 import { ArrowDown } from "lucide-react"
 import { CursorSpotlight } from "./CursorSpotlight"
+import type { SiteSettings } from "@/lib/data"
 
 // ── Types ────────────────────────────────────────────
 interface Project {
@@ -44,6 +45,7 @@ interface BlogPost {
   author: string
   tags: string[]
   image: string
+  featured: boolean
 }
 
 interface CaseStudy {
@@ -69,6 +71,7 @@ interface HomeContentProps {
   experience: ExperienceEntry[]
   blogPosts: BlogPost[]
   caseStudies: CaseStudy[]
+  settings: SiteSettings
 }
 
 // ── Static data ──────────────────────────────────────
@@ -169,12 +172,56 @@ const staggerChildVariants: Variants = {
 }
 
 // ── Component ────────────────────────────────────────
-export default function HomeContent({ projects, experience, blogPosts, caseStudies }: HomeContentProps) {
+export default function HomeContent({
+  projects,
+  experience,
+  blogPosts,
+  caseStudies,
+  settings,
+}: HomeContentProps) {
   const prefersReducedMotion = useReducedMotion()
 
   const selectedProjects = projects.slice(0, 6)
-  const latestPosts = blogPosts.slice(0, 2)
-  const featuredTestimonial = caseStudies.find((cs) => cs.testimonialQuote) ?? null
+
+  // Blog freshness: prefer explicitly featured posts; otherwise fall back to
+  // the two most recent. Hide the section entirely if the newest post is more
+  // than 12 months old, so a stale blog doesn't broadcast "abandoned".
+  const featuredPosts = blogPosts.filter((p) => p.featured)
+  const sortedByDate = [...blogPosts].sort(
+    (a, b) =>
+      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+  )
+  const newestDate = sortedByDate[0]
+    ? new Date(sortedByDate[0].publishedAt).getTime()
+    : 0
+  const monthsSinceNewest = newestDate
+    ? (Date.now() - newestDate) / (1000 * 60 * 60 * 24 * 30)
+    : Infinity
+  const blogIsFresh = monthsSinceNewest <= 12
+
+  const latestPosts =
+    featuredPosts.length > 0
+      ? featuredPosts.slice(0, 2)
+      : blogIsFresh
+        ? sortedByDate.slice(0, 2)
+        : []
+  // Only feature testimonials with both an author and a company — anonymous
+  // quotes hurt rather than help credibility.
+  const featuredTestimonial =
+    caseStudies.find(
+      (cs) =>
+        cs.testimonialQuote &&
+        cs.testimonialAuthor.trim() &&
+        cs.testimonialCompany.trim()
+    ) ?? null
+
+  const heroMetrics =
+    settings.heroMetrics.length > 0
+      ? settings.heroMetrics
+      : [
+          { value: `${projects.length}+`, label: "Projects Delivered" },
+          { value: "5+", label: "Technologies" },
+        ]
 
   return (
     <motion.div
@@ -250,20 +297,22 @@ export default function HomeContent({ projects, experience, blogPosts, caseStudi
         </div>
 
         {/* Bottom-left: availability indicator */}
-        <motion.div
-          className="absolute bottom-8 left-6 md:left-[max(1.5rem,calc((100vw-1200px)/2+1.5rem))] flex items-center gap-2.5"
-          initial={prefersReducedMotion ? false : { opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-        >
-          <span className="relative flex h-2.5 w-2.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-40" />
-            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-500" />
-          </span>
-          <span className="text-xs text-muted-foreground">
-            Available for projects
-          </span>
-        </motion.div>
+        {settings.heroAvailable && (
+          <motion.div
+            className="absolute bottom-8 left-6 md:left-[max(1.5rem,calc((100vw-1200px)/2+1.5rem))] flex items-center gap-2.5"
+            initial={prefersReducedMotion ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+          >
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-40" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-500" />
+            </span>
+            <span className="text-xs text-muted-foreground">
+              {settings.heroAvailabilityLabel || "Available for projects"}
+            </span>
+          </motion.div>
+        )}
 
         {/* Bottom-right: scroll indicator */}
         <motion.div
@@ -303,22 +352,20 @@ export default function HomeContent({ projects, experience, blogPosts, caseStudi
             </div>
 
             {/* Right — metrics */}
-            <div className="glass rounded-xl p-6 md:p-8 flex flex-col gap-8">
-              {[
-                { value: `${projects.length}+`, label: "Projects Delivered" },
-                { value: "2+", label: "Years Experience" },
-                { value: "5+", label: "Technologies" },
-              ].map((metric) => (
-                <div key={metric.label}>
-                  <span className="font-display text-4xl md:text-5xl font-bold tracking-tight">
-                    {metric.value}
-                  </span>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    {metric.label}
-                  </p>
-                </div>
-              ))}
-            </div>
+            {heroMetrics.length > 0 && (
+              <div className="glass rounded-xl p-6 md:p-8 flex flex-col gap-8">
+                {heroMetrics.map((metric) => (
+                  <div key={metric.label}>
+                    <span className="font-display text-4xl md:text-5xl font-bold tracking-tight">
+                      {metric.value}
+                    </span>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      {metric.label}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </Section>

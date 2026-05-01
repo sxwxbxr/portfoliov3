@@ -1,9 +1,16 @@
-"use client"
-
 import PageLayout, { Section } from "../../components/PageLayout"
 import { ContactForm } from "../../components/ContactForm"
+import { getSiteSettings } from "@/lib/data"
 
-export default function Contact() {
+export const revalidate = 60
+
+export default async function Contact() {
+  const settings = await getSiteSettings()
+  const email = settings.contactEmail || "info@sweber.dev"
+  const phone = settings.contactPhone
+  const phoneHref = phone ? `tel:${phone.replace(/[^+\d]/g, "")}` : ""
+  const location = settings.contactLocation || "St. Gallen, Switzerland"
+
   return (
     <PageLayout
       title="Get in touch"
@@ -18,51 +25,59 @@ export default function Contact() {
                 <div>
                   <p className="font-mono text-xs text-muted-foreground mb-2">Email</p>
                   <a
-                    href="mailto:info@sweber.dev"
+                    href={`mailto:${email}`}
                     className="link-underline text-primary font-medium"
                   >
-                    info@sweber.dev
+                    {email}
                   </a>
                 </div>
-                <div>
-                  <p className="font-mono text-xs text-muted-foreground mb-2">Phone</p>
-                  <a
-                    href="tel:+41798991112"
-                    className="link-underline text-foreground"
-                  >
-                    +41 79 899 11 12
-                  </a>
-                </div>
+                {phone && (
+                  <div>
+                    <p className="font-mono text-xs text-muted-foreground mb-2">Phone</p>
+                    <a
+                      href={phoneHref}
+                      className="link-underline text-foreground"
+                    >
+                      {phone}
+                    </a>
+                  </div>
+                )}
                 <div>
                   <p className="font-mono text-xs text-muted-foreground mb-2">Location</p>
-                  <p>St. Gallen, Switzerland</p>
+                  <p>{location}</p>
                 </div>
                 <div>
                   <p className="font-mono text-xs text-muted-foreground mb-2">Response time</p>
                   <p className="text-muted-foreground">Within 24 hours</p>
                 </div>
 
-                <div className="pt-4 border-t border-border">
-                  <p className="font-mono text-xs text-muted-foreground mb-3">Connect</p>
-                  <div className="flex items-center gap-4">
-                    <a
-                      href="https://github.com/sxwxbxr"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-muted-foreground hover:text-foreground transition-colors link-underline"
-                    >
-                      GitHub
-                    </a>
-                    <a
-                      href="https://ch.linkedin.com/in/seya-weber-06a592256"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-muted-foreground hover:text-foreground transition-colors link-underline"
-                    >
-                      LinkedIn
-                    </a>
+                {(settings.githubUrl || settings.linkedinUrl) && (
+                  <div className="pt-4 border-t border-border">
+                    <p className="font-mono text-xs text-muted-foreground mb-3">Connect</p>
+                    <div className="flex items-center gap-4">
+                      {settings.githubUrl && (
+                        <a
+                          href={settings.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm text-muted-foreground hover:text-foreground transition-colors link-underline"
+                        >
+                          GitHub
+                        </a>
+                      )}
+                      {settings.linkedinUrl && (
+                        <a
+                          href={settings.linkedinUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm text-muted-foreground hover:text-foreground transition-colors link-underline"
+                        >
+                          LinkedIn
+                        </a>
+                      )}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </Section>
 

@@ -1,14 +1,21 @@
-import { getProjects, getExperience, getBlogPosts, getCaseStudies } from "@/lib/data"
+import {
+  getProjects,
+  getExperience,
+  getBlogPosts,
+  getCaseStudies,
+  getSiteSettings,
+} from "@/lib/data"
 import HomeContent from "@/components/HomeContent"
 
-export const dynamic = "force-dynamic"
+export const revalidate = 60
 
 export default async function Home() {
-  const [projects, experience, blogPosts, caseStudies] = await Promise.all([
+  const [projects, experience, blogPosts, caseStudies, settings] = await Promise.all([
     getProjects(),
     getExperience(),
     getBlogPosts(),
     getCaseStudies(),
+    getSiteSettings(),
   ])
 
   return (
@@ -17,6 +24,7 @@ export default async function Home() {
       experience={experience}
       blogPosts={blogPosts}
       caseStudies={caseStudies}
+      settings={settings}
     />
   )
 }

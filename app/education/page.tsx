@@ -1,4 +1,4 @@
-export const dynamic = "force-dynamic"
+export const revalidate = 60
 
 import Link from "next/link"
 import PageLayout, { Section } from "../../components/PageLayout"
@@ -108,27 +108,29 @@ export default async function Education() {
             </div>
           ) : (
             <>
-              <dl className="grid grid-cols-3 border-y border-border mb-12">
-                {[
-                  { label: "Completed", value: completed.length },
-                  { label: "In Progress", value: inProgress.length },
-                  { label: "Planned", value: planned.length },
-                ].map((stat, i) => (
-                  <div
-                    key={stat.label}
-                    className={`py-6 px-4 ${
-                      i > 0 ? "border-l border-border" : ""
-                    }`}
-                  >
-                    <dt className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-                      {stat.label}
-                    </dt>
-                    <dd className="font-display text-3xl md:text-4xl font-semibold mt-2">
-                      {String(stat.value).padStart(2, "0")}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
+              {completed.length + inProgress.length > 0 && (
+                <dl className="grid grid-cols-3 border-y border-border mb-12">
+                  {[
+                    { label: "Completed", value: completed.length },
+                    { label: "In Progress", value: inProgress.length },
+                    { label: "Planned", value: planned.length },
+                  ].map((stat, i) => (
+                    <div
+                      key={stat.label}
+                      className={`py-6 px-4 ${
+                        i > 0 ? "border-l border-border" : ""
+                      }`}
+                    >
+                      <dt className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+                        {stat.label}
+                      </dt>
+                      <dd className="font-display text-3xl md:text-4xl font-semibold mt-2">
+                        {String(stat.value).padStart(2, "0")}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
 
               <div className="space-y-12 md:space-y-16">
                 {groups.map((group) => (

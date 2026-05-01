@@ -4,7 +4,7 @@ import { NextResponse } from "next/server"
 import { requireAuth } from "@/lib/auth"
 import { revalidatePublic } from "@/lib/cache"
 import { db } from "@/lib/db"
-import { blogPosts } from "@/lib/schema"
+import { skills } from "@/lib/schema"
 import { eq } from "drizzle-orm"
 
 export async function GET(
@@ -20,8 +20,8 @@ export async function GET(
   const { id } = await params
   const result = await db
     .select()
-    .from(blogPosts)
-    .where(eq(blogPosts.id, parseInt(id)))
+    .from(skills)
+    .where(eq(skills.id, parseInt(id)))
 
   if (!result[0]) {
     return NextResponse.json({ error: "Not found" }, { status: 404 })
@@ -44,20 +44,15 @@ export async function PUT(
   const body = await request.json()
 
   const result = await db
-    .update(blogPosts)
+    .update(skills)
     .set({
-      title: body.title,
-      slug: body.slug,
-      excerpt: body.excerpt,
-      content: body.content,
-      publishedAt: body.publishedAt,
-      readTime: body.readTime,
-      author: body.author,
-      tags: body.tags,
-      image: body.image,
-      featured: Boolean(body.featured),
+      category: body.category,
+      name: body.name,
+      detail: body.detail ?? "",
+      level: body.level ?? "",
+      sortOrder: body.sortOrder ?? 0,
     })
-    .where(eq(blogPosts.id, parseInt(id)))
+    .where(eq(skills.id, parseInt(id)))
     .returning()
 
   if (!result[0]) {
@@ -79,7 +74,7 @@ export async function DELETE(
   }
 
   const { id } = await params
-  await db.delete(blogPosts).where(eq(blogPosts.id, parseInt(id)))
+  await db.delete(skills).where(eq(skills.id, parseInt(id)))
 
   revalidatePublic()
   return NextResponse.json({ success: true })

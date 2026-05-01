@@ -4,7 +4,8 @@ import { NextResponse } from "next/server"
 import { requireAuth } from "@/lib/auth"
 import { revalidatePublic } from "@/lib/cache"
 import { db } from "@/lib/db"
-import { caseStudies } from "@/lib/schema"
+import { skills } from "@/lib/schema"
+import { asc } from "drizzle-orm"
 
 export async function GET() {
   try {
@@ -13,7 +14,7 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  const data = await db.select().from(caseStudies)
+  const data = await db.select().from(skills).orderBy(asc(skills.sortOrder))
   return NextResponse.json(data)
 }
 
@@ -25,31 +26,21 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json()
-
-  if (!body.title || !body.slug) {
+  if (!body.category || !body.name) {
     return NextResponse.json(
-      { error: "title and slug are required" },
+      { error: "category and name are required" },
       { status: 400 }
     )
   }
 
   const result = await db
-    .insert(caseStudies)
+    .insert(skills)
     .values({
-      title: body.title,
-      slug: body.slug,
-      client: body.client ?? "",
-      industry: body.industry ?? "",
-      duration: body.duration ?? "",
-      team: body.team ?? "",
-      challenge: body.challenge ?? "",
-      solution: body.solution ?? "",
-      results: body.results ?? [],
-      technologies: body.technologies ?? [],
-      image: body.image ?? "",
-      testimonialQuote: body.testimonialQuote ?? "",
-      testimonialAuthor: body.testimonialAuthor ?? "",
-      testimonialCompany: body.testimonialCompany ?? "",
+      category: body.category,
+      name: body.name,
+      detail: body.detail ?? "",
+      level: body.level ?? "",
+      sortOrder: body.sortOrder ?? 0,
     })
     .returning()
 

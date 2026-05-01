@@ -5,7 +5,7 @@ import Link from "next/link"
 import ReactMarkdown from "react-markdown"
 import { notFound } from "next/navigation"
 
-export const dynamic = "force-dynamic"
+export const revalidate = 60
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>
