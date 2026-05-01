@@ -5,6 +5,7 @@ import { requireAuth } from "@/lib/auth"
 import { revalidatePublic } from "@/lib/cache"
 import { db } from "@/lib/db"
 import { siteSettings } from "@/lib/schema"
+import { eq } from "drizzle-orm"
 
 const SETTINGS_ID = 1
 
@@ -60,6 +61,7 @@ export async function PUT(request: Request) {
     const result = await db
       .update(siteSettings)
       .set(values)
+      .where(eq(siteSettings.id, existing[0].id))
       .returning()
     revalidatePublic()
     return NextResponse.json(result[0])
