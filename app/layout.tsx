@@ -9,7 +9,7 @@ import { Suspense } from "react"
 import { Footer } from "@/components/Footer"
 import SmoothScroll from "@/components/SmoothScroll"
 import { ScrollProgress } from "@/components/ScrollProgress"
-import { getSiteSettings } from "@/lib/data"
+import { getSiteSettings, type SiteSettings } from "@/lib/data"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -92,9 +92,7 @@ export const metadata: Metadata = {
   category: "technology",
 }
 
-async function buildStructuredData() {
-  const settings = await getSiteSettings()
-
+function buildStructuredData(settings: SiteSettings) {
   const sameAs = [settings.linkedinUrl, settings.githubUrl, settings.twitterUrl].filter(
     Boolean
   )
@@ -138,7 +136,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const structuredData = await buildStructuredData()
+  const settings = await getSiteSettings()
+  const structuredData = buildStructuredData(settings)
 
   return (
     <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} antialiased`} suppressHydrationWarning>
@@ -167,7 +166,7 @@ export default async function RootLayout({
             <SmoothScroll>
               <div className="flex min-h-screen flex-col">
                 <main id="main-content" className="flex-1">{children}</main>
-                <Footer />
+                <Footer settings={settings} />
               </div>
             </SmoothScroll>
           </ThemeProvider>

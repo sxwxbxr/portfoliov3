@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { SiGithub, SiLinkedin } from "react-icons/si"
 import { TimeDisplay } from "./TimeDisplay"
-import { getSiteSettings } from "@/lib/data"
+import type { SiteSettings } from "@/lib/data"
 
 const footerNav = [
   {
@@ -24,8 +24,7 @@ const footerNav = [
   },
 ]
 
-export async function Footer() {
-  const settings = await getSiteSettings()
+export function Footer({ settings }: { settings: SiteSettings }) {
   const year = new Date().getFullYear()
   const email = settings.contactEmail || "info@sweber.dev"
 
