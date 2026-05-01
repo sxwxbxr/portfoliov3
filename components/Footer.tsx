@@ -27,15 +27,7 @@ const footerNav = [
 export function Footer({ settings }: { settings: SiteSettings }) {
   const year = new Date().getFullYear()
   const email = settings.contactEmail || "info@sweber.dev"
-
-  const socialLinks = [
-    settings.githubUrl
-      ? { icon: SiGithub, label: "GitHub", href: settings.githubUrl }
-      : null,
-    settings.linkedinUrl
-      ? { icon: SiLinkedin, label: "LinkedIn", href: settings.linkedinUrl }
-      : null,
-  ].filter((link): link is NonNullable<typeof link> => link !== null)
+  const hasSocial = Boolean(settings.githubUrl || settings.linkedinUrl)
 
   const connectGroup = {
     heading: "Connect",
@@ -75,23 +67,30 @@ export function Footer({ settings }: { settings: SiteSettings }) {
           </a>
 
           {/* Social links */}
-          {socialLinks.length > 0 && (
+          {hasSocial && (
             <div className="flex items-center gap-5 mt-8">
-              {socialLinks.map((link) => {
-                const Icon = link.icon
-                return (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-primary transition-colors duration-200"
-                    aria-label={link.label}
-                  >
-                    <Icon className="w-5 h-5" />
-                  </a>
-                )
-              })}
+              {settings.githubUrl && (
+                <a
+                  href={settings.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-primary transition-colors duration-200"
+                  aria-label="GitHub"
+                >
+                  <SiGithub className="w-5 h-5" />
+                </a>
+              )}
+              {settings.linkedinUrl && (
+                <a
+                  href={settings.linkedinUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-primary transition-colors duration-200"
+                  aria-label="LinkedIn"
+                >
+                  <SiLinkedin className="w-5 h-5" />
+                </a>
+              )}
             </div>
           )}
         </div>
