@@ -3,9 +3,8 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useRef } from "react"
-import { X, ExternalLink } from "lucide-react"
+import { X, ExternalLink, Github, Linkedin } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
-import { SiGithub, SiLinkedin } from "react-icons/si"
 import { ThemeToggle } from "./ThemeToggle"
 
 const menuLinks = [
@@ -29,8 +28,8 @@ const subLinks = [
 ]
 
 const socialLinks = [
-  { icon: SiGithub, label: "GitHub", href: "https://github.com/sxwxbxr" },
-  { icon: SiLinkedin, label: "LinkedIn", href: "https://ch.linkedin.com/in/seya-weber-06a592256" },
+  { icon: Github, label: "GitHub", href: "https://github.com/sxwxbxr" },
+  { icon: Linkedin, label: "LinkedIn", href: "https://ch.linkedin.com/in/seya-weber-06a592256" },
 ]
 
 interface FullscreenMenuProps {
@@ -196,18 +195,21 @@ export function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps) {
               className="pb-10 flex items-center justify-between"
             >
               <div className="flex items-center gap-5">
-                {socialLinks.map((link) => (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-primary transition-colors"
-                    aria-label={link.label}
-                  >
-                    <link.icon className="w-5 h-5" />
-                  </a>
-                ))}
+                {socialLinks.map((link) => {
+                  const Icon = link.icon
+                  return (
+                    <a
+                      key={link.href}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-muted-foreground hover:text-primary transition-colors"
+                      aria-label={link.label}
+                    >
+                      <Icon className="w-5 h-5" />
+                    </a>
+                  )
+                })}
               </div>
               <ThemeToggle />
             </motion.div>

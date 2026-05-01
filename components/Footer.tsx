@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { SiGithub, SiLinkedin } from "react-icons/si"
+import { Github, Linkedin } from "lucide-react"
 import { TimeDisplay } from "./TimeDisplay"
 import type { SiteSettings } from "@/lib/data"
 
@@ -77,7 +77,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
                   className="text-muted-foreground hover:text-primary transition-colors duration-200"
                   aria-label="GitHub"
                 >
-                  <SiGithub className="w-5 h-5" />
+                  <Github className="w-5 h-5" />
                 </a>
               )}
               {settings.linkedinUrl && (
@@ -88,7 +88,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
                   className="text-muted-foreground hover:text-primary transition-colors duration-200"
                   aria-label="LinkedIn"
                 >
-                  <SiLinkedin className="w-5 h-5" />
+                  <Linkedin className="w-5 h-5" />
                 </a>
               )}
             </div>
