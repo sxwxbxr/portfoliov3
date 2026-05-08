@@ -3,6 +3,7 @@ import { Section } from "../../../components/PageLayout"
 import { getCaseStudies, getCaseStudyBySlug } from "@/lib/data"
 import Link from "next/link"
 import { notFound } from "next/navigation"
+import { CASE_STUDIES_ENABLED } from "@/lib/features"
 
 export const revalidate = 60
 
@@ -11,6 +12,7 @@ interface CaseStudyPageProps {
 }
 
 export default async function CaseStudy({ params }: CaseStudyPageProps) {
+  if (!CASE_STUDIES_ENABLED) notFound()
   const { slug } = await params
   const [study, allStudies] = await Promise.all([
     getCaseStudyBySlug(slug),

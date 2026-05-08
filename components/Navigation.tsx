@@ -7,6 +7,7 @@ import { Menu, ChevronDown, ExternalLink } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { ThemeToggle } from "./ThemeToggle"
 import { FullscreenMenu } from "./FullscreenMenu"
+import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
 
 const navLinks = [
   { name: "Work", href: "/projects" },
@@ -15,10 +16,18 @@ const navLinks = [
 ]
 
 const moreLinks = [
-  { name: "Case Studies", href: "/case-studies", description: "In-depth project breakdowns" },
+  CASE_STUDIES_ENABLED && {
+    name: "Case Studies",
+    href: "/case-studies",
+    description: "In-depth project breakdowns",
+  },
   { name: "Services", href: "/services", description: "What I offer" },
   { name: "Experience", href: "/experience", description: "Work history" },
-  { name: "Blog", href: "/blog", description: "Thoughts and articles" },
+  BLOG_ENABLED && {
+    name: "Blog",
+    href: "/blog",
+    description: "Thoughts and articles",
+  },
   { name: "Skills", href: "/skills", description: "Technical expertise" },
   { name: "Education", href: "/education", description: "Academic background & certs" },
   {
@@ -27,7 +36,12 @@ const moreLinks = [
     description: "Company Homepage",
     external: true,
   },
-]
+].filter(Boolean) as {
+  name: string
+  href: string
+  description: string
+  external?: boolean
+}[]
 
 export default function Navigation() {
   const [menuOpen, setMenuOpen] = useState(false)

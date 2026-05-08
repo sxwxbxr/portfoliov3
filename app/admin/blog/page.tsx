@@ -4,6 +4,7 @@ import Link from "next/link"
 import { db } from "@/lib/db"
 import { blogPosts } from "@/lib/schema"
 import ContentTable from "@/components/admin/ContentTable"
+import { BLOG_ENABLED } from "@/lib/features"
 
 export default async function AdminBlogPage() {
   const data = await db.select().from(blogPosts)
@@ -16,6 +17,19 @@ export default async function AdminBlogPage() {
 
   return (
     <div className="space-y-6">
+      {!BLOG_ENABLED && (
+        <div className="glass rounded-xl p-4 border border-border flex items-start gap-3">
+          <span className="text-[10px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded bg-muted/60 text-muted-foreground border border-border mt-0.5">
+            Disabled
+          </span>
+          <div className="text-sm text-muted-foreground leading-relaxed">
+            The blog is hidden from the public site. Existing posts stay saved.
+            To re-enable, set <code className="font-mono text-foreground">BLOG_ENABLED = true</code>{" "}
+            in <code className="font-mono text-foreground">lib/features.ts</code>.
+          </div>
+        </div>
+      )}
+
       <div className="flex items-center justify-between">
         <div>
           <h2 className="font-display text-2xl font-semibold tracking-tight">

@@ -5,6 +5,7 @@ import {
   getCaseStudies,
   getSiteSettings,
 } from "@/lib/data"
+import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
 
 export const revalidate = 3600
 
@@ -13,8 +14,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const [projects, blogPosts, caseStudies, settings] = await Promise.all([
     getProjects(),
-    getBlogPosts(),
-    getCaseStudies(),
+    BLOG_ENABLED ? getBlogPosts() : Promise.resolve([]),
+    CASE_STUDIES_ENABLED ? getCaseStudies() : Promise.resolve([]),
     getSiteSettings(),
   ])
 
@@ -43,18 +44,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly",
       priority: 0.9,
     },
-    {
-      url: `${baseUrl}/blog`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/case-studies`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
+    ...(BLOG_ENABLED
+      ? [
+          {
+            url: `${baseUrl}/blog`,
+            lastModified: new Date(),
+            changeFrequency: "weekly" as const,
+            priority: 0.9,
+          },
+        ]
+      : []),
+    ...(CASE_STUDIES_ENABLED
+      ? [
+          {
+            url: `${baseUrl}/case-studies`,
+            lastModified: new Date(),
+            changeFrequency: "monthly" as const,
+            priority: 0.8,
+          },
+        ]
+      : []),
     {
       url: `${baseUrl}/services`,
       lastModified: new Date(),

@@ -1,8 +1,9 @@
-"use client"
-
 import Link from "next/link"
 import Image from "next/image"
 import PageLayout, { Section } from "../../components/PageLayout"
+import { getEducationEntries } from "@/lib/data"
+
+export const revalidate = 60
 
 const expertise = [
   {
@@ -19,25 +20,9 @@ const expertise = [
   },
 ]
 
-const education = [
-  {
-    title: "Berufsmatura TALS",
-    institution: "",
-    period: "2024 -- 2025",
-  },
-  {
-    title: "EFZ in Computer Science",
-    institution: "Application Development -- WISS St. Gallen",
-    period: "2022 -- 2024",
-  },
-  {
-    title: "EFZ in Electrical Planning",
-    institution: "GBS St. Gallen",
-    period: "2018 -- 2022",
-  },
-]
+export default async function About() {
+  const education = await getEducationEntries()
 
-export default function About() {
   return (
     <PageLayout
       title="About"
@@ -124,35 +109,37 @@ export default function About() {
       </Section>
 
       {/* Education */}
-      <Section className="py-24 md:py-32">
-        <div className="max-w-[1200px] mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight mb-12">
-            Education
-          </h2>
+      {education.length > 0 && (
+        <Section className="py-24 md:py-32">
+          <div className="max-w-[1200px] mx-auto px-6">
+            <h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight mb-12">
+              Education
+            </h2>
 
-          <div>
-            {education.map((edu, i) => (
-              <div
-                key={edu.title}
-                className={`flex flex-col md:flex-row md:items-center gap-1 md:gap-0 py-4 ${
-                  i > 0 ? "border-t border-border" : ""
-                }`}
-              >
-                <span className="font-semibold md:flex-1">{edu.title}</span>
-                {edu.institution && (
-                  <span className="text-muted-foreground text-sm md:flex-1">
-                    {edu.institution}
+            <div>
+              {education.map((edu, i) => (
+                <div
+                  key={edu.id}
+                  className={`flex flex-col md:flex-row md:items-center gap-1 md:gap-0 py-4 ${
+                    i > 0 ? "border-t border-border" : ""
+                  }`}
+                >
+                  <span className="font-semibold md:flex-1">{edu.title}</span>
+                  {edu.institution && (
+                    <span className="text-muted-foreground text-sm md:flex-1">
+                      {edu.institution}
+                    </span>
+                  )}
+                  <span className="font-mono text-sm text-muted-foreground md:text-right">
+                    {edu.period}
                   </span>
-                )}
-                <span className="font-mono text-sm text-muted-foreground md:text-right">
-                  {edu.period}
-                </span>
-              </div>
-            ))}
-            <div className="border-t border-border" />
+                </div>
+              ))}
+              <div className="border-t border-border" />
+            </div>
           </div>
-        </div>
-      </Section>
+        </Section>
+      )}
 
       {/* Connect */}
       <Section className="py-24 md:py-32 border-t border-border">

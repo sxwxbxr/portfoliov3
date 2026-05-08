@@ -54,6 +54,15 @@ export const blogPosts = pgTable("blog_posts", {
   featured: boolean("featured").notNull().default(false),
 })
 
+export const educationEntries = pgTable("education_entries", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  institution: text("institution").notNull().default(""),
+  period: text("period").notNull().default(""),
+  description: text("description").notNull().default(""),
+  sortOrder: integer("sort_order").notNull().default(0),
+})
+
 export const certificates = pgTable("certificates", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),

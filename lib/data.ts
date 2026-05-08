@@ -5,6 +5,7 @@ import {
   blogPosts,
   caseStudies,
   certificates,
+  educationEntries,
   siteSettings,
   skills,
   type HeroMetric,
@@ -109,6 +110,13 @@ export async function getCaseStudyBySlug(slug: string) {
 
 export async function getCertificates() {
   return db.select().from(certificates).orderBy(asc(certificates.sortOrder))
+}
+
+export async function getEducationEntries() {
+  return db
+    .select()
+    .from(educationEntries)
+    .orderBy(asc(educationEntries.sortOrder))
 }
 
 export async function getSkills() {

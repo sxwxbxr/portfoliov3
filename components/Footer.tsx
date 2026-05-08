@@ -2,13 +2,16 @@ import Link from "next/link"
 import { Github, Linkedin } from "lucide-react"
 import { TimeDisplay } from "./TimeDisplay"
 import type { SiteSettings } from "@/lib/data"
+import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
 
 const footerNav = [
   {
     heading: "Work",
     links: [
       { name: "Projects", href: "/projects" },
-      { name: "Case Studies", href: "/case-studies" },
+      ...(CASE_STUDIES_ENABLED
+        ? [{ name: "Case Studies", href: "/case-studies" }]
+        : []),
       { name: "Services", href: "/services" },
     ],
   },
@@ -19,7 +22,7 @@ const footerNav = [
       { name: "Experience", href: "/experience" },
       { name: "Education", href: "/education" },
       { name: "Skills", href: "/skills" },
-      { name: "Blog", href: "/blog" },
+      ...(BLOG_ENABLED ? [{ name: "Blog", href: "/blog" }] : []),
     ],
   },
 ]

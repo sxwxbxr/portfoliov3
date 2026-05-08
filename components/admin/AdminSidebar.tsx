@@ -2,14 +2,20 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: "grid" },
   { href: "/admin/projects", label: "Projects", icon: "folder" },
   { href: "/admin/experience", label: "Experience", icon: "briefcase" },
-  { href: "/admin/blog", label: "Blog", icon: "pen" },
-  { href: "/admin/case-studies", label: "Case Studies", icon: "file" },
-  { href: "/admin/certificates", label: "Certificates", icon: "badge" },
+  { href: "/admin/blog", label: "Blog", icon: "pen", disabled: !BLOG_ENABLED },
+  {
+    href: "/admin/case-studies",
+    label: "Case Studies",
+    icon: "file",
+    disabled: !CASE_STUDIES_ENABLED,
+  },
+  { href: "/admin/certificates", label: "Certificates & Education", icon: "badge" },
   { href: "/admin/skills", label: "Skills", icon: "spark" },
   { href: "/admin/settings", label: "Settings", icon: "settings" },
 ]
@@ -78,10 +84,20 @@ export default function AdminSidebar() {
                 isActive
                   ? "bg-primary text-primary-foreground"
                   : "text-muted-foreground hover:text-foreground hover:bg-accent"
-              }`}
+              } ${item.disabled && !isActive ? "opacity-60" : ""}`}
+              title={
+                item.disabled
+                  ? "Hidden from the public site — flip the flag in lib/features.ts to re-enable"
+                  : undefined
+              }
             >
               {icons[item.icon]}
-              {item.label}
+              <span className="flex-1 truncate">{item.label}</span>
+              {item.disabled && (
+                <span className="text-[10px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded bg-muted/60 text-muted-foreground border border-border">
+                  Off
+                </span>
+              )}
             </Link>
           )
         })}

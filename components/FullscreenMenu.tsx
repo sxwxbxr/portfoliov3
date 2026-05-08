@@ -6,6 +6,7 @@ import { useEffect, useRef } from "react"
 import { X, ExternalLink, Github, Linkedin } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { ThemeToggle } from "./ThemeToggle"
+import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
 
 const menuLinks = [
   { name: "Work", href: "/projects" },
@@ -14,10 +15,10 @@ const menuLinks = [
 ]
 
 const subLinks = [
-  { name: "Case Studies", href: "/case-studies" },
+  CASE_STUDIES_ENABLED && { name: "Case Studies", href: "/case-studies" },
   { name: "Services", href: "/services" },
   { name: "Experience", href: "/experience" },
-  { name: "Blog", href: "/blog" },
+  BLOG_ENABLED && { name: "Blog", href: "/blog" },
   { name: "Skills", href: "/skills" },
   { name: "Education", href: "/education" },
   {
@@ -25,7 +26,7 @@ const subLinks = [
     href: "https://nxrthstack.sweber.dev",
     external: true,
   },
-]
+].filter(Boolean) as { name: string; href: string; external?: boolean }[]
 
 const socialLinks = [
   { icon: Github, label: "GitHub", href: "https://github.com/sxwxbxr" },

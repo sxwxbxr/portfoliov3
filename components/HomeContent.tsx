@@ -8,6 +8,7 @@ import { useRef } from "react"
 import { ArrowDown } from "lucide-react"
 import { CursorSpotlight } from "./CursorSpotlight"
 import type { SiteSettings } from "@/lib/data"
+import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
 
 // ── Types ────────────────────────────────────────────
 interface Project {
@@ -199,21 +200,23 @@ export default function HomeContent({
     : Infinity
   const blogIsFresh = monthsSinceNewest <= 12
 
-  const latestPosts =
-    featuredPosts.length > 0
+  const latestPosts = !BLOG_ENABLED
+    ? []
+    : featuredPosts.length > 0
       ? featuredPosts.slice(0, 2)
       : blogIsFresh
         ? sortedByDate.slice(0, 2)
         : []
   // Only feature testimonials with both an author and a company — anonymous
   // quotes hurt rather than help credibility.
-  const featuredTestimonial =
-    caseStudies.find(
-      (cs) =>
-        cs.testimonialQuote &&
-        cs.testimonialAuthor.trim() &&
-        cs.testimonialCompany.trim()
-    ) ?? null
+  const featuredTestimonial = CASE_STUDIES_ENABLED
+    ? (caseStudies.find(
+        (cs) =>
+          cs.testimonialQuote &&
+          cs.testimonialAuthor.trim() &&
+          cs.testimonialCompany.trim()
+      ) ?? null)
+    : null
 
   const heroMetrics =
     settings.heroMetrics.length > 0

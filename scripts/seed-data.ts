@@ -279,6 +279,33 @@ export const caseStudies = [
   },
 ]
 
+export const educationEntries = [
+  {
+    title: "Berufsmatura TALS",
+    institution: "",
+    period: "2024 -- 2025",
+    description:
+      "Advanced vocational education focusing on technical and scientific subjects, preparing for higher education in engineering and technology fields.",
+    sortOrder: 0,
+  },
+  {
+    title: "EFZ in Computer Science",
+    institution: "Application Development -- WISS St. Gallen",
+    period: "2022 -- 2024",
+    description:
+      "Comprehensive training in software development, focusing on .NET technologies, database management, and modern application development practices.",
+    sortOrder: 1,
+  },
+  {
+    title: "EFZ in Electrical Planning",
+    institution: "GBS St. Gallen",
+    period: "2018 -- 2022",
+    description:
+      "Specialized training in electrical systems design, planning, and implementation, providing a strong foundation in technical problem-solving.",
+    sortOrder: 2,
+  },
+]
+
 export const skills = [
   // Development
   { category: "Development", name: "C# / .NET", detail: "Production .NET 8 services and WPF tooling at Telsonic and InnoForce.", level: "Expert", sortOrder: 0 },

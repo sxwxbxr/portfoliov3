@@ -1,10 +1,13 @@
 import Link from "next/link"
+import { notFound } from "next/navigation"
 import PageLayout from "../../components/PageLayout"
 import { getBlogPosts } from "@/lib/data"
+import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
 
 export const revalidate = 60
 
 export default async function Blog() {
+  if (!BLOG_ENABLED) notFound()
   const blogPosts = await getBlogPosts()
 
   return (
@@ -44,14 +47,16 @@ export default async function Blog() {
             <div className="border-t border-border" />
           </div>
 
-          <div className="mt-8">
-            <Link
-              href="/case-studies"
-              className="link-underline text-primary text-sm font-medium"
-            >
-              Read case studies &rarr;
-            </Link>
-          </div>
+          {CASE_STUDIES_ENABLED && (
+            <div className="mt-8">
+              <Link
+                href="/case-studies"
+                className="link-underline text-primary text-sm font-medium"
+              >
+                Read case studies &rarr;
+              </Link>
+            </div>
+          )}
         </div>
       </section>
     </PageLayout>

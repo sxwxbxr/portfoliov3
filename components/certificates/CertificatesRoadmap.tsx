@@ -67,6 +67,25 @@ function buildRoadmap(certs: Certificate[]) {
   return { entries: built, months }
 }
 
+function getTodayPosition(months: string[]) {
+  if (months.length === 0) return null
+  const [firstY, firstM] = months[0].split("-").map(Number)
+  const minMonthIdx = firstY * 12 + (firstM - 1)
+  const totalMonths = months.length
+
+  const now = new Date()
+  const todayMonthIdx = now.getFullYear() * 12 + now.getMonth()
+  const daysInMonth = new Date(
+    now.getFullYear(),
+    now.getMonth() + 1,
+    0
+  ).getDate()
+  const dayFrac = (now.getDate() - 1) / daysInMonth
+  const offset = todayMonthIdx - minMonthIdx + dayFrac
+  if (offset < 0 || offset > totalMonths) return null
+  return (offset / totalMonths) * 100
+}
+
 export default function CertificatesRoadmap({
   certs,
 }: {
@@ -76,6 +95,7 @@ export default function CertificatesRoadmap({
   if (entries.length === 0) return null
 
   const totalMonths = months.length
+  const todayLeft = getTodayPosition(months)
 
   return (
     <div className="glass rounded-xl p-6 md:p-8">
@@ -110,8 +130,26 @@ export default function CertificatesRoadmap({
         })}
       </div>
 
+      {/* Today label — aligned with the bar column below so the pill sits
+          directly over the line that runs through each phase bar. */}
+      {todayLeft !== null && (
+        <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] items-center gap-3 md:gap-5 mt-4">
+          <div className="hidden md:block" />
+          <div className="relative h-4">
+            <div
+              className="absolute -translate-x-1/2 top-0"
+              style={{ left: `${todayLeft}%` }}
+            >
+              <span className="px-2 py-0.5 rounded-full text-[9px] font-mono uppercase tracking-[0.18em] bg-foreground text-background shadow-sm whitespace-nowrap">
+                Today
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Phase bars */}
-      <div className="mt-6 space-y-3">
+      <div className={todayLeft !== null ? "mt-2 space-y-3" : "mt-6 space-y-3"}>
         {entries.map(({ cert, startOffset, span, startLabel, endLabel }) => {
           const left = (startOffset / totalMonths) * 100
           const width = (span / totalMonths) * 100
@@ -157,6 +195,18 @@ export default function CertificatesRoadmap({
                     {span} mo · {cert.category || cert.provider || cert.name}
                   </span>
                 </div>
+                {todayLeft !== null && (
+                  <div
+                    className="pointer-events-none absolute top-0 bottom-0 z-10"
+                    style={{
+                      left: `${todayLeft}%`,
+                      width: "1.5px",
+                      background: "var(--foreground)",
+                      opacity: 0.55,
+                      transform: "translateX(-0.75px)",
+                    }}
+                  />
+                )}
               </div>
             </div>
           )

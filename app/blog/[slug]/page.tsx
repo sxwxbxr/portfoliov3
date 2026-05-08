@@ -4,6 +4,7 @@ import { getBlogPosts, getBlogPostBySlug } from "@/lib/data"
 import Link from "next/link"
 import ReactMarkdown from "react-markdown"
 import { notFound } from "next/navigation"
+import { BLOG_ENABLED } from "@/lib/features"
 
 export const revalidate = 60
 
@@ -12,6 +13,7 @@ interface BlogPostPageProps {
 }
 
 export default async function BlogPost({ params }: BlogPostPageProps) {
+  if (!BLOG_ENABLED) notFound()
   const { slug } = await params
   const [post, allPosts] = await Promise.all([
     getBlogPostBySlug(slug),

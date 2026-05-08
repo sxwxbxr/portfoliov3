@@ -6,6 +6,7 @@ import {
   experience,
   blogPosts,
   caseStudies,
+  educationEntries,
   skills,
   siteSettings,
 } from "./seed-data"
@@ -24,6 +25,7 @@ async function seed() {
   await db.delete(schema.experienceEntries)
   await db.delete(schema.blogPosts)
   await db.delete(schema.caseStudies)
+  await db.delete(schema.educationEntries)
   await db.delete(schema.skills)
   await db.delete(schema.siteSettings)
 
@@ -95,6 +97,12 @@ async function seed() {
     })
   }
   console.log(`Inserted ${caseStudies.length} case studies`)
+
+  // Insert education entries
+  for (const edu of educationEntries) {
+    await db.insert(schema.educationEntries).values(edu)
+  }
+  console.log(`Inserted ${educationEntries.length} education entries`)
 
   // Insert skills
   for (const skill of skills) {
