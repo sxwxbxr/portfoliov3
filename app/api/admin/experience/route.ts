@@ -5,6 +5,7 @@ import { requireAuth } from "@/lib/auth"
 import { revalidatePublic } from "@/lib/cache"
 import { db } from "@/lib/db"
 import { experienceEntries } from "@/lib/schema"
+import { deriveExperiencePeriod } from "@/lib/experience-period"
 import { asc } from "drizzle-orm"
 
 export async function GET() {
@@ -30,20 +31,26 @@ export async function POST(request: Request) {
 
   const body = await request.json()
 
-  if (!body.company || !body.role || !body.period) {
+  if (!body.company || !body.role || !body.startDate) {
     return NextResponse.json(
-      { error: "company, role, and period are required" },
+      { error: "company, role, and startDate are required" },
       { status: 400 }
     )
   }
+
+  const startDate = String(body.startDate)
+  const endDate = body.endDate ? String(body.endDate) : ""
+  const { period, current } = deriveExperiencePeriod(startDate, endDate)
 
   const result = await db
     .insert(experienceEntries)
     .values({
       company: body.company,
       role: body.role,
-      period: body.period,
-      current: body.current ?? false,
+      startDate,
+      endDate,
+      period,
+      current,
       description: body.description ?? "",
       responsibilities: body.responsibilities ?? [],
       sortOrder: body.sortOrder ?? 0,

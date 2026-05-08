@@ -33,6 +33,10 @@ export const experienceEntries = pgTable("experience", {
   id: serial("id").primaryKey(),
   company: text("company").notNull(),
   role: text("role").notNull(),
+  // Source of truth for the date range: "YYYY-MM" strings. `period` and
+  // `current` are derived from these on save and persisted for fast reads.
+  startDate: text("start_date").notNull().default(""),
+  endDate: text("end_date").notNull().default(""),
   period: text("period").notNull(),
   current: boolean("current").notNull().default(false),
   description: text("description").notNull().default(""),

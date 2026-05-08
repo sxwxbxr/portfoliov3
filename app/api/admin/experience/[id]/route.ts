@@ -5,6 +5,7 @@ import { requireAuth } from "@/lib/auth"
 import { revalidatePublic } from "@/lib/cache"
 import { db } from "@/lib/db"
 import { experienceEntries } from "@/lib/schema"
+import { deriveExperiencePeriod } from "@/lib/experience-period"
 import { eq } from "drizzle-orm"
 
 export async function GET(
@@ -43,13 +44,19 @@ export async function PUT(
   const { id } = await params
   const body = await request.json()
 
+  const startDate = body.startDate ? String(body.startDate) : ""
+  const endDate = body.endDate ? String(body.endDate) : ""
+  const { period, current } = deriveExperiencePeriod(startDate, endDate)
+
   const result = await db
     .update(experienceEntries)
     .set({
       company: body.company,
       role: body.role,
-      period: body.period,
-      current: body.current,
+      startDate,
+      endDate,
+      period,
+      current,
       description: body.description,
       responsibilities: body.responsibilities,
       sortOrder: body.sortOrder,

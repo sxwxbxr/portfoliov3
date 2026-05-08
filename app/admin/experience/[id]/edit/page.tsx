@@ -3,7 +3,7 @@
 import { useState, useEffect, use } from "react"
 import { useRouter } from "next/navigation"
 import FormField from "@/components/admin/FormField"
-import CheckboxField from "@/components/admin/CheckboxField"
+import { deriveExperiencePeriod } from "@/lib/experience-period"
 
 export default function EditExperiencePage({
   params,
@@ -15,11 +15,12 @@ export default function EditExperiencePage({
   const [loading, setLoading] = useState(false)
   const [fetching, setFetching] = useState(true)
   const [error, setError] = useState("")
+  const [legacyPeriod, setLegacyPeriod] = useState("")
   const [form, setForm] = useState({
     company: "",
     role: "",
-    period: "",
-    current: false,
+    startDate: "",
+    endDate: "",
     description: "",
     responsibilities: "",
     sortOrder: "0",
@@ -32,12 +33,15 @@ export default function EditExperiencePage({
         setForm({
           company: data.company || "",
           role: data.role || "",
-          period: data.period || "",
-          current: data.current || false,
+          startDate: data.startDate || "",
+          endDate: data.endDate || "",
           description: data.description || "",
           responsibilities: (data.responsibilities || []).join("\n"),
           sortOrder: String(data.sortOrder ?? 0),
         })
+        if (!data.startDate && data.period) {
+          setLegacyPeriod(data.period)
+        }
         setFetching(false)
       })
       .catch(() => {
@@ -46,13 +50,22 @@ export default function EditExperiencePage({
       })
   }, [id])
 
-  function updateField(field: string, value: string | boolean) {
+  function updateField(field: string, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }))
   }
+
+  const { period: previewPeriod, current: previewCurrent } =
+    deriveExperiencePeriod(form.startDate, form.endDate)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError("")
+
+    if (form.endDate && form.startDate && form.endDate < form.startDate) {
+      setError("End date cannot be before start date.")
+      return
+    }
+
     setLoading(true)
 
     try {
@@ -60,7 +73,11 @@ export default function EditExperiencePage({
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...form,
+          company: form.company,
+          role: form.role,
+          startDate: form.startDate,
+          endDate: form.endDate,
+          description: form.description,
           responsibilities: form.responsibilities
             ? form.responsibilities.split("\n").map((r) => r.trim()).filter(Boolean)
             : [],
@@ -116,19 +133,44 @@ export default function EditExperiencePage({
           onChange={(e) => updateField("role", e.target.value)}
           required
         />
-        <FormField
-          label="Period"
-          name="period"
-          value={form.period}
-          onChange={(e) => updateField("period", e.target.value)}
-          required
-        />
-        <CheckboxField
-          label="Currently working here"
-          name="current"
-          checked={form.current}
-          onChange={(e) => updateField("current", e.target.checked)}
-        />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <FormField
+            label="Start (month)"
+            name="startDate"
+            type="month"
+            value={form.startDate}
+            onChange={(e) => updateField("startDate", e.target.value)}
+            required
+          />
+          <FormField
+            label="End (month)"
+            name="endDate"
+            type="month"
+            value={form.endDate}
+            onChange={(e) => updateField("endDate", e.target.value)}
+            hint="Leave empty (or pick a future month) to mark this role as current."
+          />
+        </div>
+        <p className="text-xs text-muted-foreground">
+          Preview:{" "}
+          <span className="font-mono">
+            {previewPeriod || legacyPeriod || "(set start month)"}
+          </span>
+          {previewCurrent && form.startDate && (
+            <span className="ml-2 inline-flex items-center gap-1.5 text-primary">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-40" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-primary" />
+              </span>
+              current
+            </span>
+          )}
+        </p>
+        {!form.startDate && legacyPeriod && (
+          <p className="text-xs text-muted-foreground/80 -mt-3">
+            Legacy period text: <span className="font-mono">{legacyPeriod}</span>. Pick start/end months above to replace it.
+          </p>
+        )}
         <FormField
           label="Description"
           name="description"
