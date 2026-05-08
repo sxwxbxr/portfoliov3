@@ -24,6 +24,11 @@ export default function EditProjectPage({
     github: "",
     demo: "",
     sortOrder: "0",
+    client: "",
+    duration: "",
+    challenge: "",
+    solution: "",
+    results: "",
   })
 
   useEffect(() => {
@@ -40,6 +45,11 @@ export default function EditProjectPage({
           github: data.github || "",
           demo: data.demo || "",
           sortOrder: String(data.sortOrder ?? 0),
+          client: data.client || "",
+          duration: data.duration || "",
+          challenge: data.challenge || "",
+          solution: data.solution || "",
+          results: (data.results || []).join("\n"),
         })
         setFetching(false)
       })
@@ -66,6 +76,9 @@ export default function EditProjectPage({
           ...form,
           tags: form.tags
             ? form.tags.split(",").map((t) => t.trim()).filter(Boolean)
+            : [],
+          results: form.results
+            ? form.results.split("\n").map((r) => r.trim()).filter(Boolean)
             : [],
           sortOrder: parseInt(form.sortOrder) || 0,
           github: form.github || "#",
@@ -170,6 +183,56 @@ export default function EditProjectPage({
           value={form.sortOrder}
           onChange={(e) => updateField("sortOrder", e.target.value)}
         />
+
+        <div className="pt-4 border-t border-border space-y-5">
+          <div>
+            <h3 className="font-display text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+              Case study (optional)
+            </h3>
+            <p className="text-xs text-muted-foreground mt-1">
+              Fill these in to render a richer Challenge / Solution / Results
+              layout on the project detail page.
+            </p>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              label="Client"
+              name="client"
+              value={form.client}
+              onChange={(e) => updateField("client", e.target.value)}
+            />
+            <FormField
+              label="Duration"
+              name="duration"
+              value={form.duration}
+              onChange={(e) => updateField("duration", e.target.value)}
+            />
+          </div>
+          <FormField
+            label="Challenge"
+            name="challenge"
+            value={form.challenge}
+            onChange={(e) => updateField("challenge", e.target.value)}
+            multiline
+            rows={4}
+          />
+          <FormField
+            label="Solution"
+            name="solution"
+            value={form.solution}
+            onChange={(e) => updateField("solution", e.target.value)}
+            multiline
+            rows={4}
+          />
+          <FormField
+            label="Results (one per line)"
+            name="results"
+            value={form.results}
+            onChange={(e) => updateField("results", e.target.value)}
+            multiline
+            rows={5}
+          />
+        </div>
 
         {error && <p className="text-sm text-destructive">{error}</p>}
 

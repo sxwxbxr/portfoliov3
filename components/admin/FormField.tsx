@@ -10,6 +10,7 @@ interface FormFieldProps {
   required?: boolean
   multiline?: boolean
   rows?: number
+  hint?: string
 }
 
 export default function FormField({
@@ -22,6 +23,7 @@ export default function FormField({
   required = false,
   multiline = false,
   rows = 4,
+  hint,
 }: FormFieldProps) {
   const inputClasses =
     "w-full px-4 py-2.5 bg-transparent border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground/50"
@@ -54,6 +56,9 @@ export default function FormField({
           required={required}
           className={inputClasses}
         />
+      )}
+      {hint && (
+        <p className="text-xs text-muted-foreground/80 leading-relaxed">{hint}</p>
       )}
     </div>
   )

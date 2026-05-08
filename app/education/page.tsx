@@ -1,37 +1,16 @@
-export const dynamic = "force-dynamic"
+export const revalidate = 60
 
 import Link from "next/link"
 import PageLayout, { Section } from "../../components/PageLayout"
 import CertificateCard from "@/components/certificates/CertificateCard"
 import CertificatesRoadmap from "@/components/certificates/CertificatesRoadmap"
-import { getCertificates } from "@/lib/data"
-
-const education = [
-  {
-    title: "Berufsmatura TALS",
-    institution: "",
-    period: "2024 -- 2025",
-    description:
-      "Advanced vocational education focusing on technical and scientific subjects, preparing for higher education in engineering and technology fields.",
-  },
-  {
-    title: "EFZ in Computer Science",
-    institution: "Application Development -- WISS St. Gallen",
-    period: "2022 -- 2024",
-    description:
-      "Comprehensive training in software development, focusing on .NET technologies, database management, and modern application development practices.",
-  },
-  {
-    title: "EFZ in Electrical Planning",
-    institution: "GBS St. Gallen",
-    period: "2018 -- 2022",
-    description:
-      "Specialized training in electrical systems design, planning, and implementation, providing a strong foundation in technical problem-solving.",
-  },
-]
+import { getCertificates, getEducationEntries } from "@/lib/data"
 
 export default async function Education() {
-  const certificates = await getCertificates()
+  const [certificates, education] = await Promise.all([
+    getCertificates(),
+    getEducationEntries(),
+  ])
 
   const completed = certificates.filter((c) => c.status === "completed")
   const inProgress = certificates.filter((c) => c.status === "in-progress")
@@ -53,37 +32,41 @@ export default async function Education() {
       subtitle="My academic journey -- and the certifications mapping the road ahead."
     >
       {/* Academic background */}
-      <section className="pb-16 md:pb-20">
-        <div className="max-w-[1200px] mx-auto px-6">
-          <div>
-            {education.map((edu, i) => (
-              <Section key={edu.title} delay={i * 0.05}>
-                <div
-                  className={`py-8 ${i > 0 ? "border-t border-border" : ""}`}
-                >
-                  <div className="flex flex-col md:flex-row md:items-start gap-2 md:gap-0 mb-3">
-                    <h3 className="font-semibold text-lg md:flex-1">
-                      {edu.title}
-                    </h3>
-                    {edu.institution && (
-                      <span className="text-muted-foreground text-sm md:flex-1">
-                        {edu.institution}
+      {education.length > 0 && (
+        <section className="pb-16 md:pb-20">
+          <div className="max-w-[1200px] mx-auto px-6">
+            <div>
+              {education.map((edu, i) => (
+                <Section key={edu.id} delay={i * 0.05}>
+                  <div
+                    className={`py-8 ${i > 0 ? "border-t border-border" : ""}`}
+                  >
+                    <div className="flex flex-col md:flex-row md:items-start gap-2 md:gap-0 mb-3">
+                      <h3 className="font-semibold text-lg md:flex-1">
+                        {edu.title}
+                      </h3>
+                      {edu.institution && (
+                        <span className="text-muted-foreground text-sm md:flex-1">
+                          {edu.institution}
+                        </span>
+                      )}
+                      <span className="font-mono text-sm text-muted-foreground md:text-right">
+                        {edu.period}
                       </span>
+                    </div>
+                    {edu.description && (
+                      <p className="text-muted-foreground leading-relaxed max-w-2xl">
+                        {edu.description}
+                      </p>
                     )}
-                    <span className="font-mono text-sm text-muted-foreground md:text-right">
-                      {edu.period}
-                    </span>
                   </div>
-                  <p className="text-muted-foreground leading-relaxed max-w-2xl">
-                    {edu.description}
-                  </p>
-                </div>
-              </Section>
-            ))}
-            <div className="border-t border-border" />
+                </Section>
+              ))}
+              <div className="border-t border-border" />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Certificates */}
       <Section className="py-16 md:py-24 border-t border-border">
@@ -108,27 +91,29 @@ export default async function Education() {
             </div>
           ) : (
             <>
-              <dl className="grid grid-cols-3 border-y border-border mb-12">
-                {[
-                  { label: "Completed", value: completed.length },
-                  { label: "In Progress", value: inProgress.length },
-                  { label: "Planned", value: planned.length },
-                ].map((stat, i) => (
-                  <div
-                    key={stat.label}
-                    className={`py-6 px-4 ${
-                      i > 0 ? "border-l border-border" : ""
-                    }`}
-                  >
-                    <dt className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-                      {stat.label}
-                    </dt>
-                    <dd className="font-display text-3xl md:text-4xl font-semibold mt-2">
-                      {String(stat.value).padStart(2, "0")}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
+              {completed.length + inProgress.length > 0 && (
+                <dl className="grid grid-cols-3 border-y border-border mb-12">
+                  {[
+                    { label: "Completed", value: completed.length },
+                    { label: "In Progress", value: inProgress.length },
+                    { label: "Planned", value: planned.length },
+                  ].map((stat, i) => (
+                    <div
+                      key={stat.label}
+                      className={`py-6 px-4 ${
+                        i > 0 ? "border-l border-border" : ""
+                      }`}
+                    >
+                      <dt className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+                        {stat.label}
+                      </dt>
+                      <dd className="font-display text-3xl md:text-4xl font-semibold mt-2">
+                        {String(stat.value).padStart(2, "0")}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
 
               <div className="space-y-12 md:space-y-16">
                 {groups.map((group) => (

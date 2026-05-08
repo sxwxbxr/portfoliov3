@@ -4,14 +4,16 @@ import { getBlogPosts, getBlogPostBySlug } from "@/lib/data"
 import Link from "next/link"
 import ReactMarkdown from "react-markdown"
 import { notFound } from "next/navigation"
+import { BLOG_ENABLED } from "@/lib/features"
 
-export const dynamic = "force-dynamic"
+export const revalidate = 60
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>
 }
 
 export default async function BlogPost({ params }: BlogPostPageProps) {
+  if (!BLOG_ENABLED) notFound()
   const { slug } = await params
   const [post, allPosts] = await Promise.all([
     getBlogPostBySlug(slug),

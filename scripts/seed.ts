@@ -1,7 +1,15 @@
 import { neon } from "@neondatabase/serverless"
 import { drizzle } from "drizzle-orm/neon-http"
 import * as schema from "../lib/schema"
-import { projects, experience, blogPosts, caseStudies } from "../src/config"
+import {
+  projects,
+  experience,
+  blogPosts,
+  caseStudies,
+  educationEntries,
+  skills,
+  siteSettings,
+} from "./seed-data"
 
 // Load env vars
 import "dotenv/config"
@@ -17,6 +25,9 @@ async function seed() {
   await db.delete(schema.experienceEntries)
   await db.delete(schema.blogPosts)
   await db.delete(schema.caseStudies)
+  await db.delete(schema.educationEntries)
+  await db.delete(schema.skills)
+  await db.delete(schema.siteSettings)
 
   // Insert projects
   for (let i = 0; i < projects.length; i++) {
@@ -86,6 +97,22 @@ async function seed() {
     })
   }
   console.log(`Inserted ${caseStudies.length} case studies`)
+
+  // Insert education entries
+  for (const edu of educationEntries) {
+    await db.insert(schema.educationEntries).values(edu)
+  }
+  console.log(`Inserted ${educationEntries.length} education entries`)
+
+  // Insert skills
+  for (const skill of skills) {
+    await db.insert(schema.skills).values(skill)
+  }
+  console.log(`Inserted ${skills.length} skills`)
+
+  // Insert site settings (singleton)
+  await db.insert(schema.siteSettings).values({ id: 1, ...siteSettings })
+  console.log("Inserted site settings")
 
   console.log("Seeding complete!")
 }

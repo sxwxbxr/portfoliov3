@@ -18,7 +18,15 @@ This is a **Next.js 15 App Router** portfolio site deployed on Vercel at sweber.
 
 ### Data layer
 
-All content (projects, case studies, blog posts, navigation links) lives in **`src/config.ts`** as plain TypeScript arrays. There is no CMS or database — pages read directly from these exported constants. Dynamic routes (`/projects/[slug]`, `/case-studies/[slug]`, `/blog/[slug]`) look up items by `slug` from these arrays. Additional page data comes from `data/pages.json`.
+Content (projects, experience, blog posts, case studies, certificates, skills, site settings) lives in a Neon Postgres database accessed via Drizzle ORM (`lib/schema.ts`, `lib/db.ts`, `lib/data.ts`). Public pages call `lib/data.ts` helpers (e.g. `getProjects`, `getBlogPosts`, `getSiteSettings`). The admin UI under `/admin` (gated by JWT cookie auth in `lib/auth.ts`) writes via REST routes in `app/api/admin/*`. Initial seed data lives in `scripts/seed-data.ts` and is loaded by `npm run db:seed`.
+
+`site_settings` is a singleton (one row) controlling hero metrics, social URLs, contact details, JSON-LD identity fields, and the privacy notice rendered at `/privacy`.
+
+After schema changes run `npm run db:push` (idempotent diff); `db:generate` is for tracked migrations and is not currently used.
+
+### Caching
+
+Public pages use `export const revalidate = 60` (ISR). Admin mutation routes call `revalidatePublic()` from `lib/cache.ts` after every write to invalidate the entire site cache so saved content is visible on the next request. Admin and `/api/admin/*` routes stay `force-dynamic`.
 
 ### Routing
 
@@ -42,7 +50,7 @@ Tailwind CSS 4 with CSS variables defined in `app/globals.css` (oklch color toke
 
 - Path alias: `@/*` maps to the project root (e.g., `@/components/Button`).
 - Fonts: Inter (body), Space Grotesk (display), and JetBrains Mono (mono) loaded via `next/font/google` as CSS variables.
-- Images are unoptimized (`next.config.mjs`: `images.unoptimized: true`).
+- Image optimization is enabled (Next.js Image component is the default for project artwork).
 - SEO: `app/robots.ts`, `app/sitemap.ts`, JSON-LD structured data in layout, OpenGraph metadata per page.
 - Analytics: Vercel Analytics loaded in root layout.
 - Animations: Framer Motion for transitions, DotLottie for the contact success animation (`public/animations/checkmark.lottie`).

@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic"
 
 import { NextResponse } from "next/server"
 import { requireAuth } from "@/lib/auth"
+import { revalidatePublic } from "@/lib/cache"
 import { db } from "@/lib/db"
 import { projects } from "@/lib/schema"
 import { eq } from "drizzle-orm"
@@ -54,6 +55,11 @@ export async function PUT(
       github: body.github,
       demo: body.demo,
       sortOrder: body.sortOrder,
+      client: body.client ?? "",
+      duration: body.duration ?? "",
+      challenge: body.challenge ?? "",
+      solution: body.solution ?? "",
+      results: body.results ?? [],
     })
     .where(eq(projects.id, parseInt(id)))
     .returning()
@@ -62,6 +68,7 @@ export async function PUT(
     return NextResponse.json({ error: "Not found" }, { status: 404 })
   }
 
+  revalidatePublic()
   return NextResponse.json(result[0])
 }
 
@@ -78,5 +85,6 @@ export async function DELETE(
   const { id } = await params
   await db.delete(projects).where(eq(projects.id, parseInt(id)))
 
+  revalidatePublic()
   return NextResponse.json({ success: true })
 }

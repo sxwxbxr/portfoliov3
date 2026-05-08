@@ -3,10 +3,10 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useRef } from "react"
-import { X, ExternalLink } from "lucide-react"
+import { X, ExternalLink, Github, Linkedin } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
-import { SiGithub, SiLinkedin } from "react-icons/si"
 import { ThemeToggle } from "./ThemeToggle"
+import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
 
 const menuLinks = [
   { name: "Work", href: "/projects" },
@@ -15,10 +15,10 @@ const menuLinks = [
 ]
 
 const subLinks = [
-  { name: "Case Studies", href: "/case-studies" },
+  CASE_STUDIES_ENABLED && { name: "Case Studies", href: "/case-studies" },
   { name: "Services", href: "/services" },
   { name: "Experience", href: "/experience" },
-  { name: "Blog", href: "/blog" },
+  BLOG_ENABLED && { name: "Blog", href: "/blog" },
   { name: "Skills", href: "/skills" },
   { name: "Education", href: "/education" },
   {
@@ -26,11 +26,11 @@ const subLinks = [
     href: "https://nxrthstack.sweber.dev",
     external: true,
   },
-]
+].filter(Boolean) as { name: string; href: string; external?: boolean }[]
 
 const socialLinks = [
-  { icon: SiGithub, label: "GitHub", href: "https://github.com/sxwxbxr" },
-  { icon: SiLinkedin, label: "LinkedIn", href: "https://ch.linkedin.com/in/seya-weber-06a592256" },
+  { icon: Github, label: "GitHub", href: "https://github.com/sxwxbxr" },
+  { icon: Linkedin, label: "LinkedIn", href: "https://ch.linkedin.com/in/seya-weber-06a592256" },
 ]
 
 interface FullscreenMenuProps {
@@ -196,18 +196,21 @@ export function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps) {
               className="pb-10 flex items-center justify-between"
             >
               <div className="flex items-center gap-5">
-                {socialLinks.map((link) => (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-primary transition-colors"
-                    aria-label={link.label}
-                  >
-                    <link.icon className="w-5 h-5" />
-                  </a>
-                ))}
+                {socialLinks.map((link) => {
+                  const Icon = link.icon
+                  return (
+                    <a
+                      key={link.href}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-muted-foreground hover:text-primary transition-colors"
+                      aria-label={link.label}
+                    >
+                      <Icon className="w-5 h-5" />
+                    </a>
+                  )
+                })}
               </div>
               <ThemeToggle />
             </motion.div>

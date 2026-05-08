@@ -6,7 +6,7 @@ import Navigation from "../../../components/Navigation"
 import fs from "fs"
 import path from "path"
 
-export const dynamic = "force-dynamic"
+export const revalidate = 60
 
 interface ProjectPageProps {
   params: Promise<{ slug: string }>
@@ -31,6 +31,18 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
     .split(/\n+/)
     .map((paragraph) => paragraph.trim())
     .filter(Boolean)
+
+  // Prefer fields set on the project itself; fall back to the matching legacy
+  // caseStudies row so older projects keep rendering.
+  const client = project.client || study?.client || ""
+  const duration = project.duration || study?.duration || ""
+  const challenge = project.challenge || study?.challenge || ""
+  const solution = project.solution || study?.solution || ""
+  const results: string[] =
+    project.results.length > 0
+      ? project.results
+      : ((study?.results as string[]) ?? [])
+  const hasCaseStudyContent = Boolean(challenge || solution || results.length)
 
   // Find next project
   const currentIndex = allProjects.findIndex((p) => p.slug === slug)
@@ -61,17 +73,17 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
           {/* Meta bar */}
           <div className="glass rounded-lg p-4 md:p-6 mt-8">
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-sm text-muted-foreground">
-              {study?.client && (
+              {client && (
                 <>
-                  <span>{study.client}</span>
+                  <span>{client}</span>
                   <span className="hidden md:inline text-border">|</span>
                 </>
               )}
               <span>{(project.tags as string[]).join(", ")}</span>
-              {study?.duration && (
+              {duration && (
                 <>
                   <span className="hidden md:inline text-border">|</span>
-                  <span>{study.duration}</span>
+                  <span>{duration}</span>
                 </>
               )}
             </div>
@@ -160,74 +172,80 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
               </div>
 
               {/* Case study sections */}
-              {study && (
+              {hasCaseStudyContent && (
                 <div className="mt-20 space-y-16">
-                  {/* Challenge */}
-                  <div>
-                    <h2 className="text-2xl md:text-3xl font-display font-bold tracking-tight mb-4">
-                      The Challenge
-                    </h2>
-                    <p className="text-muted-foreground leading-relaxed text-lg">
-                      {study.challenge}
-                    </p>
-                  </div>
-
-                  {/* Solution */}
-                  <div>
-                    <h2 className="text-2xl md:text-3xl font-display font-bold tracking-tight mb-4">
-                      The Solution
-                    </h2>
-                    <p className="text-muted-foreground leading-relaxed text-lg">
-                      {study.solution}
-                    </p>
-                  </div>
-
-                  {/* Results */}
-                  <div>
-                    <h2 className="text-2xl md:text-3xl font-display font-bold tracking-tight mb-8">
-                      Results
-                    </h2>
-                    <div className="space-y-0">
-                      {(study.results as string[]).map((result, index) => (
-                        <div
-                          key={index}
-                          className={`flex items-start gap-4 py-4 ${
-                            index > 0 ? "border-t border-border" : ""
-                          }`}
-                        >
-                          <span className="font-mono text-sm text-muted-foreground mt-0.5">
-                            {String(index + 1).padStart(2, "0")}
-                          </span>
-                          <span className="text-foreground/90">{result}</span>
-                        </div>
-                      ))}
-                      <div className="border-t border-border" />
+                  {challenge && (
+                    <div>
+                      <h2 className="text-2xl md:text-3xl font-display font-bold tracking-tight mb-4">
+                        The Challenge
+                      </h2>
+                      <p className="text-muted-foreground leading-relaxed text-lg">
+                        {challenge}
+                      </p>
                     </div>
-                  </div>
+                  )}
 
-                  {/* Testimonial */}
-                  {study.testimonialQuote && (
-                    <div className="mt-8">
-                      <div className="text-muted-foreground/30 font-display text-5xl leading-none select-none mb-4">
-                        &ldquo;
-                      </div>
-                      <blockquote className="text-xl md:text-2xl font-display leading-relaxed -mt-6">
-                        {study.testimonialQuote}
-                      </blockquote>
-                      <div className="mt-6">
-                        <p className="font-semibold">{study.testimonialAuthor}</p>
-                        <p className="text-sm text-muted-foreground">{study.testimonialCompany}</p>
+                  {solution && (
+                    <div>
+                      <h2 className="text-2xl md:text-3xl font-display font-bold tracking-tight mb-4">
+                        The Solution
+                      </h2>
+                      <p className="text-muted-foreground leading-relaxed text-lg">
+                        {solution}
+                      </p>
+                    </div>
+                  )}
+
+                  {results.length > 0 && (
+                    <div>
+                      <h2 className="text-2xl md:text-3xl font-display font-bold tracking-tight mb-8">
+                        Results
+                      </h2>
+                      <div className="space-y-0">
+                        {results.map((result, index) => (
+                          <div
+                            key={index}
+                            className={`flex items-start gap-4 py-4 ${
+                              index > 0 ? "border-t border-border" : ""
+                            }`}
+                          >
+                            <span className="font-mono text-sm text-muted-foreground mt-0.5">
+                              {String(index + 1).padStart(2, "0")}
+                            </span>
+                            <span className="text-foreground/90">{result}</span>
+                          </div>
+                        ))}
+                        <div className="border-t border-border" />
                       </div>
                     </div>
                   )}
 
-                  {/* Technologies */}
-                  <div>
-                    <h3 className="font-display font-semibold text-sm mb-4">Technologies</h3>
-                    <p className="text-muted-foreground">
-                      {(study.technologies as string[]).join(", ")}
-                    </p>
-                  </div>
+                  {/* Testimonial — only when author and company are set. */}
+                  {study?.testimonialQuote &&
+                    study.testimonialAuthor.trim() &&
+                    study.testimonialCompany.trim() && (
+                      <div className="mt-8">
+                        <div className="text-muted-foreground/30 font-display text-5xl leading-none select-none mb-4">
+                          &ldquo;
+                        </div>
+                        <blockquote className="text-xl md:text-2xl font-display leading-relaxed -mt-6">
+                          {study.testimonialQuote}
+                        </blockquote>
+                        <div className="mt-6">
+                          <p className="font-semibold">{study.testimonialAuthor}</p>
+                          <p className="text-sm text-muted-foreground">{study.testimonialCompany}</p>
+                        </div>
+                      </div>
+                    )}
+
+                  {study?.technologies && (study.technologies as string[]).length > 0 && (
+                    <div>
+                      <h3 className="font-display font-semibold text-sm mb-4">Technologies</h3>
+                      <p className="text-muted-foreground">
+                        {(study.technologies as string[]).join(", ")}
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

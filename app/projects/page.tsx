@@ -2,8 +2,9 @@ import Link from "next/link"
 import PageLayout from "../../components/PageLayout"
 import { ProjectListItem } from "../../components/ProjectListItem"
 import { getProjects } from "@/lib/data"
+import { CASE_STUDIES_ENABLED } from "@/lib/features"
 
-export const dynamic = "force-dynamic"
+export const revalidate = 60
 
 export default async function Projects() {
   const projects = await getProjects()
@@ -22,14 +23,16 @@ export default async function Projects() {
             <div className="border-t border-border" />
           </div>
 
-          <div className="mt-12">
-            <Link
-              href="/case-studies"
-              className="link-underline text-primary text-sm font-medium"
-            >
-              View case studies &rarr;
-            </Link>
-          </div>
+          {CASE_STUDIES_ENABLED && (
+            <div className="mt-12">
+              <Link
+                href="/case-studies"
+                className="link-underline text-primary text-sm font-medium"
+              >
+                View case studies &rarr;
+              </Link>
+            </div>
+          )}
         </div>
       </section>
     </PageLayout>

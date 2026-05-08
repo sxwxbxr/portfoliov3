@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import FormField from "@/components/admin/FormField"
+import CheckboxField from "@/components/admin/CheckboxField"
 
 export default function NewBlogPostPage() {
   const router = useRouter()
@@ -18,11 +19,12 @@ export default function NewBlogPostPage() {
     author: "Seya Weber",
     tags: "",
     image: "",
+    featured: false,
   })
 
-  function updateField(field: string, value: string) {
+  function updateField(field: string, value: string | boolean) {
     setForm((prev) => ({ ...prev, [field]: value }))
-    if (field === "title" && !form.slug) {
+    if (field === "title" && !form.slug && typeof value === "string") {
       setForm((prev) => ({
         ...prev,
         [field]: value,
@@ -148,6 +150,12 @@ export default function NewBlogPostPage() {
           value={form.image}
           onChange={(e) => updateField("image", e.target.value)}
           placeholder="/images/blog-post.png"
+        />
+        <CheckboxField
+          label="Feature on homepage (overrides recency check)"
+          name="featured"
+          checked={form.featured}
+          onChange={(e) => updateField("featured", e.target.checked)}
         />
 
         {error && <p className="text-sm text-destructive">{error}</p>}

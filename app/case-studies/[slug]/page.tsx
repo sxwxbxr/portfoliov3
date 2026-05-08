@@ -3,14 +3,16 @@ import { Section } from "../../../components/PageLayout"
 import { getCaseStudies, getCaseStudyBySlug } from "@/lib/data"
 import Link from "next/link"
 import { notFound } from "next/navigation"
+import { CASE_STUDIES_ENABLED } from "@/lib/features"
 
-export const dynamic = "force-dynamic"
+export const revalidate = 60
 
 interface CaseStudyPageProps {
   params: Promise<{ slug: string }>
 }
 
 export default async function CaseStudy({ params }: CaseStudyPageProps) {
+  if (!CASE_STUDIES_ENABLED) notFound()
   const { slug } = await params
   const [study, allStudies] = await Promise.all([
     getCaseStudyBySlug(slug),
@@ -108,8 +110,10 @@ export default async function CaseStudy({ params }: CaseStudyPageProps) {
                 </div>
               </Section>
 
-              {/* Testimonial */}
-              {study.testimonialQuote && (
+              {/* Testimonial — only show if author and company are filled in. */}
+              {study.testimonialQuote &&
+                study.testimonialAuthor.trim() &&
+                study.testimonialCompany.trim() && (
                 <Section delay={0.3}>
                   <div className="glass rounded-xl p-8 md:p-10">
                     <div className="text-muted-foreground/30 font-display text-6xl md:text-7xl leading-none select-none mb-6">

@@ -1,20 +1,17 @@
-"use client"
-
 import Link from "next/link"
-import { SiGithub, SiLinkedin } from "react-icons/si"
+import { Github, Linkedin } from "lucide-react"
 import { TimeDisplay } from "./TimeDisplay"
-
-const socialLinks = [
-  { icon: SiGithub, label: "GitHub", href: "https://github.com/sxwxbxr" },
-  { icon: SiLinkedin, label: "LinkedIn", href: "https://ch.linkedin.com/in/seya-weber-06a592256" },
-]
+import type { SiteSettings } from "@/lib/data"
+import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
 
 const footerNav = [
   {
     heading: "Work",
     links: [
       { name: "Projects", href: "/projects" },
-      { name: "Case Studies", href: "/case-studies" },
+      ...(CASE_STUDIES_ENABLED
+        ? [{ name: "Case Studies", href: "/case-studies" }]
+        : []),
       { name: "Services", href: "/services" },
     ],
   },
@@ -25,21 +22,33 @@ const footerNav = [
       { name: "Experience", href: "/experience" },
       { name: "Education", href: "/education" },
       { name: "Skills", href: "/skills" },
-      { name: "Blog", href: "/blog" },
-    ],
-  },
-  {
-    heading: "Connect",
-    links: [
-      { name: "Contact", href: "/contact" },
-      { name: "GitHub", href: "https://github.com/sxwxbxr" },
-      { name: "LinkedIn", href: "https://ch.linkedin.com/in/seya-weber-06a592256" },
-      { name: "Nxrthstack", href: "https://nxrthstack.sweber.dev" },
+      ...(BLOG_ENABLED ? [{ name: "Blog", href: "/blog" }] : []),
     ],
   },
 ]
 
-export function Footer() {
+export function Footer({ settings }: { settings: SiteSettings }) {
+  const year = new Date().getFullYear()
+  const email = settings.contactEmail || "info@sweber.dev"
+  const hasSocial = Boolean(settings.githubUrl || settings.linkedinUrl)
+
+  const connectGroup = {
+    heading: "Connect",
+    links: [
+      { name: "Contact", href: "/contact", external: false },
+      ...(settings.githubUrl
+        ? [{ name: "GitHub", href: settings.githubUrl, external: true }]
+        : []),
+      ...(settings.linkedinUrl
+        ? [{ name: "LinkedIn", href: settings.linkedinUrl, external: true }]
+        : []),
+      { name: "Nxrthstack", href: "https://nxrthstack.sweber.dev", external: true },
+      ...(settings.privacyContent.trim()
+        ? [{ name: "Privacy", href: "/privacy", external: false }]
+        : []),
+    ],
+  }
+
   return (
     <footer className="border-t border-border">
       <div className="max-w-[1200px] mx-auto px-6">
@@ -53,41 +62,56 @@ export function Footer() {
           </p>
 
           <a
-            href="mailto:info@sweber.dev"
+            href={`mailto:${email}`}
             className="inline-block mt-6 link-underline text-primary font-medium"
             style={{ fontSize: "clamp(1.125rem, 2.5vw, 1.5rem)" }}
           >
-            info@sweber.dev
+            {email}
           </a>
 
           {/* Social links */}
-          <div className="flex items-center gap-5 mt-8">
-            {socialLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors duration-200"
-                aria-label={link.label}
-              >
-                <link.icon className="w-5 h-5" />
-              </a>
-            ))}
-          </div>
+          {hasSocial && (
+            <div className="flex items-center gap-5 mt-8">
+              {settings.githubUrl && (
+                <a
+                  href={settings.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-primary transition-colors duration-200"
+                  aria-label="GitHub"
+                >
+                  <Github className="w-5 h-5" />
+                </a>
+              )}
+              {settings.linkedinUrl && (
+                <a
+                  href={settings.linkedinUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-primary transition-colors duration-200"
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin className="w-5 h-5" />
+                </a>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Navigation link grid */}
         <div className="border-t border-border py-12">
           <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
-            {footerNav.map((group) => (
+            {[...footerNav, connectGroup].map((group) => (
               <div key={group.heading}>
                 <p className="font-mono text-xs text-muted-foreground/60 uppercase tracking-wider mb-4">
                   {group.heading}
                 </p>
                 <ul className="space-y-2.5">
                   {group.links.map((link) => {
-                    const isExternal = link.href.startsWith("http")
+                    const isExternal =
+                      "external" in link
+                        ? link.external
+                        : link.href.startsWith("http")
                     return (
                       <li key={link.name}>
                         {isExternal ? (
@@ -118,8 +142,8 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className="border-t border-border py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
-          <p>&copy; 2026 Seya Weber</p>
-          <p>St. Gallen, Switzerland</p>
+          <p>&copy; {year} Seya Weber</p>
+          <p>{settings.contactLocation || "St. Gallen, Switzerland"}</p>
           <div className="flex items-center gap-4">
             <Link
               href="/login"

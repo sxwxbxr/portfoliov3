@@ -1,10 +1,13 @@
 import Link from "next/link"
+import { notFound } from "next/navigation"
 import PageLayout from "../../components/PageLayout"
 import { getCaseStudies } from "@/lib/data"
+import { CASE_STUDIES_ENABLED } from "@/lib/features"
 
-export const dynamic = "force-dynamic"
+export const revalidate = 60
 
 export default async function CaseStudies() {
+  if (!CASE_STUDIES_ENABLED) notFound()
   const caseStudies = await getCaseStudies()
 
   return (
