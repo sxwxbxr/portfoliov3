@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic"
 
 import Link from "next/link"
 import { db } from "@/lib/db"
-import { projects, experienceEntries, blogPosts, caseStudies, certificates } from "@/lib/schema"
+import { projects, experienceEntries, blogPosts, caseStudies, certificates, skills } from "@/lib/schema"
 import { count } from "drizzle-orm"
 import { getSession } from "@/lib/auth"
 import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
@@ -16,12 +16,14 @@ export default async function AdminDashboardPage() {
     [blogCount],
     [caseStudyCount],
     [certificateCount],
+    [skillCount],
   ] = await Promise.all([
     db.select({ value: count() }).from(projects),
     db.select({ value: count() }).from(experienceEntries),
     db.select({ value: count() }).from(blogPosts),
     db.select({ value: count() }).from(caseStudies),
     db.select({ value: count() }).from(certificates),
+    db.select({ value: count() }).from(skills),
   ])
 
   const stats = [
@@ -51,6 +53,11 @@ export default async function AdminDashboardPage() {
       label: "Certificates",
       count: certificateCount.value,
       href: "/admin/certificates",
+    },
+    {
+      label: "Skills",
+      count: skillCount.value,
+      href: "/admin/skills",
     },
   ]
 
@@ -125,6 +132,12 @@ export default async function AdminDashboardPage() {
             className="bg-primary text-primary-foreground rounded-lg px-4 py-2 text-sm font-medium hover:opacity-90 transition-opacity"
           >
             New Education Entry
+          </Link>
+          <Link
+            href="/admin/skills/new"
+            className="bg-primary text-primary-foreground rounded-lg px-4 py-2 text-sm font-medium hover:opacity-90 transition-opacity"
+          >
+            New Skill
           </Link>
         </div>
       </div>

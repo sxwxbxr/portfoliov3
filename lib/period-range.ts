@@ -32,7 +32,7 @@ export function isCurrentRange(endDate: string): boolean {
   return endDate >= currentYearMonth()
 }
 
-export function deriveExperiencePeriod(
+export function derivePeriodRange(
   startDate: string,
   endDate: string,
 ): { period: string; current: boolean } {

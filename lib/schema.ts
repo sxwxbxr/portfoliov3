@@ -62,6 +62,9 @@ export const educationEntries = pgTable("education_entries", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
   institution: text("institution").notNull().default(""),
+  // Source of truth: "YYYY-MM" strings. `period` is derived on save.
+  startDate: text("start_date").notNull().default(""),
+  endDate: text("end_date").notNull().default(""),
   period: text("period").notNull().default(""),
   description: text("description").notNull().default(""),
   sortOrder: integer("sort_order").notNull().default(0),

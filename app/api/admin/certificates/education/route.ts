@@ -5,6 +5,7 @@ import { requireAuth } from "@/lib/auth"
 import { revalidatePublic } from "@/lib/cache"
 import { db } from "@/lib/db"
 import { educationEntries } from "@/lib/schema"
+import { derivePeriodRange } from "@/lib/period-range"
 import { asc } from "drizzle-orm"
 
 export async function GET() {
@@ -34,12 +35,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "title is required" }, { status: 400 })
   }
 
+  const startDate = body.startDate ? String(body.startDate) : ""
+  const endDate = body.endDate ? String(body.endDate) : ""
+  const { period } = derivePeriodRange(startDate, endDate)
+
   const result = await db
     .insert(educationEntries)
     .values({
       title: body.title,
       institution: body.institution ?? "",
-      period: body.period ?? "",
+      startDate,
+      endDate,
+      period,
       description: body.description ?? "",
       sortOrder: body.sortOrder ?? 0,
     })

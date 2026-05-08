@@ -3,6 +3,7 @@
 import { useState, useEffect, use } from "react"
 import { useRouter } from "next/navigation"
 import FormField from "@/components/admin/FormField"
+import { derivePeriodRange } from "@/lib/period-range"
 
 export default function EditEducationEntryPage({
   params,
@@ -14,10 +15,12 @@ export default function EditEducationEntryPage({
   const [loading, setLoading] = useState(false)
   const [fetching, setFetching] = useState(true)
   const [error, setError] = useState("")
+  const [legacyPeriod, setLegacyPeriod] = useState("")
   const [form, setForm] = useState({
     title: "",
     institution: "",
-    period: "",
+    startDate: "",
+    endDate: "",
     description: "",
     sortOrder: "0",
   })
@@ -32,10 +35,14 @@ export default function EditEducationEntryPage({
         setForm({
           title: data.title || "",
           institution: data.institution || "",
-          period: data.period || "",
+          startDate: data.startDate || "",
+          endDate: data.endDate || "",
           description: data.description || "",
           sortOrder: String(data.sortOrder ?? 0),
         })
+        if (!data.startDate && data.period) {
+          setLegacyPeriod(data.period)
+        }
         setFetching(false)
       })
       .catch(() => {
@@ -48,9 +55,18 @@ export default function EditEducationEntryPage({
     setForm((prev) => ({ ...prev, [field]: value }))
   }
 
+  const { period: previewPeriod, current: previewCurrent } =
+    derivePeriodRange(form.startDate, form.endDate)
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError("")
+
+    if (form.endDate && form.startDate && form.endDate < form.startDate) {
+      setError("End date cannot be before start date.")
+      return
+    }
+
     setLoading(true)
 
     try {
@@ -58,7 +74,11 @@ export default function EditEducationEntryPage({
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...form,
+          title: form.title,
+          institution: form.institution,
+          startDate: form.startDate,
+          endDate: form.endDate,
+          description: form.description,
           sortOrder: parseInt(form.sortOrder) || 0,
         }),
       })
@@ -110,12 +130,43 @@ export default function EditEducationEntryPage({
           value={form.institution}
           onChange={(e) => updateField("institution", e.target.value)}
         />
-        <FormField
-          label="Period"
-          name="period"
-          value={form.period}
-          onChange={(e) => updateField("period", e.target.value)}
-        />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <FormField
+            label="Start (month)"
+            name="startDate"
+            type="month"
+            value={form.startDate}
+            onChange={(e) => updateField("startDate", e.target.value)}
+          />
+          <FormField
+            label="End (month)"
+            name="endDate"
+            type="month"
+            value={form.endDate}
+            onChange={(e) => updateField("endDate", e.target.value)}
+            hint="Leave empty (or pick a future month) to mark this as ongoing."
+          />
+        </div>
+        <p className="text-xs text-muted-foreground">
+          Preview:{" "}
+          <span className="font-mono">
+            {previewPeriod || legacyPeriod || "(set start month)"}
+          </span>
+          {previewCurrent && form.startDate && (
+            <span className="ml-2 inline-flex items-center gap-1.5 text-primary">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-40" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-primary" />
+              </span>
+              ongoing
+            </span>
+          )}
+        </p>
+        {!form.startDate && legacyPeriod && (
+          <p className="text-xs text-muted-foreground/80 -mt-3">
+            Legacy period text: <span className="font-mono">{legacyPeriod}</span>. Pick start/end months above to replace it.
+          </p>
+        )}
         <FormField
           label="Description"
           name="description"

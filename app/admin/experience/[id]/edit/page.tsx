@@ -3,7 +3,7 @@
 import { useState, useEffect, use } from "react"
 import { useRouter } from "next/navigation"
 import FormField from "@/components/admin/FormField"
-import { deriveExperiencePeriod } from "@/lib/experience-period"
+import { derivePeriodRange } from "@/lib/period-range"
 
 export default function EditExperiencePage({
   params,
@@ -55,7 +55,7 @@ export default function EditExperiencePage({
   }
 
   const { period: previewPeriod, current: previewCurrent } =
-    deriveExperiencePeriod(form.startDate, form.endDate)
+    derivePeriodRange(form.startDate, form.endDate)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
