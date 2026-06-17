@@ -9,6 +9,8 @@ import { Suspense } from "react"
 import { Footer } from "@/components/Footer"
 import SmoothScroll from "@/components/SmoothScroll"
 import { ScrollProgress } from "@/components/ScrollProgress"
+import { ChatWidget } from "@/components/chat-widget/ChatWidget"
+import { AI_FEATURES_ENABLED } from "@/lib/features"
 import { getSiteSettings, type SiteSettings } from "@/lib/data"
 
 const inter = Inter({
@@ -169,6 +171,7 @@ export default async function RootLayout({
                 <Footer settings={settings} />
               </div>
             </SmoothScroll>
+            {AI_FEATURES_ENABLED && <ChatWidget />}
           </ThemeProvider>
         </Suspense>
         <Analytics />

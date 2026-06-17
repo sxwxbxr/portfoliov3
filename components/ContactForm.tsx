@@ -8,7 +8,8 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { AlertCircle, Send, Loader2 } from "lucide-react"
+import { AlertCircle, Send, Loader2, Sparkles } from "lucide-react"
+import { Skeleton } from "@/components/ui/skeleton"
 import { CheckmarkAnimation } from "@/components/CheckmarkAnimation"
 
 interface FormData {
@@ -41,6 +42,12 @@ export function ContactForm() {
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const closeButtonRef = useRef<HTMLButtonElement>(null)
+
+  // AI match analysis — purely informational. It runs on-blur of the message
+  // field and is never sent with the form submission.
+  const [analysis, setAnalysis] = useState<string | null>(null)
+  const [analysisLoading, setAnalysisLoading] = useState(false)
+  const analyzedMessageRef = useRef<string>("")
 
   const closeSuccessModal = useCallback(() => setShowSuccessModal(false), [])
 
@@ -136,6 +143,46 @@ export function ContactForm() {
     }
     if (submitError) {
       setSubmitError(null)
+    }
+  }
+
+  const handleMessageChange = (value: string) => {
+    handleInputChange("message", value)
+    // Hide stale analysis once the message diverges from what was analyzed.
+    if (value.trim() !== analyzedMessageRef.current) {
+      setAnalysis(null)
+    }
+  }
+
+  const analyzeMessage = async () => {
+    const message = formData.message.trim()
+    if (message.length < 30) return
+    if (message === analyzedMessageRef.current || analysisLoading) return
+
+    analyzedMessageRef.current = message
+    setAnalysisLoading(true)
+    try {
+      const response = await fetch("/api/contact-analysis", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message,
+          projectType: formData.projectType || null,
+          company: formData.company || null,
+        }),
+      })
+      if (!response.ok) throw new Error("analysis failed")
+      const data = await response.json()
+      setAnalysis(
+        typeof data.analysis === "string" && data.analysis.trim()
+          ? data.analysis.trim()
+          : null
+      )
+    } catch {
+      // Silent fail — the form stays fully functional without the analysis.
+      setAnalysis(null)
+    } finally {
+      setAnalysisLoading(false)
     }
   }
 
@@ -253,7 +300,8 @@ export function ContactForm() {
           <Textarea
             id="message"
             value={formData.message}
-            onChange={(e) => handleInputChange("message", e.target.value)}
+            onChange={(e) => handleMessageChange(e.target.value)}
+            onBlur={analyzeMessage}
             placeholder="Tell me about your project, goals, and any specific requirements..."
             rows={5}
             className={`bg-transparent border-border ${errors.message ? "border-red-500 focus:ring-red-500" : ""}`}
@@ -265,6 +313,26 @@ export function ContactForm() {
             </div>
           )}
           <div className="text-xs text-muted-foreground">{formData.message.length}/5000 characters</div>
+
+          {(analysisLoading || analysis) && (
+            <div className="mt-3 rounded-lg border border-border bg-card/40 p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <Sparkles className="w-3.5 h-3.5 text-primary" />
+                <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  AI Match Analysis
+                </span>
+              </div>
+              {analysisLoading ? (
+                <div className="space-y-2">
+                  <Skeleton className="h-3 w-full" />
+                  <Skeleton className="h-3 w-[92%]" />
+                  <Skeleton className="h-3 w-3/4" />
+                </div>
+              ) : (
+                <p className="text-sm text-foreground/90 leading-relaxed">{analysis}</p>
+              )}
+            </div>
+          )}
         </div>
 
         {submitError && (

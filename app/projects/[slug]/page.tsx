@@ -3,6 +3,8 @@ import Image from "next/image"
 import { notFound } from "next/navigation"
 import { getProjectBySlug, getProjects, getCaseStudyBySlug } from "@/lib/data"
 import Navigation from "../../../components/Navigation"
+import { ProjectDeepDive } from "@/components/project-deepdive/DeepDiveButton"
+import { AI_FEATURES_ENABLED } from "@/lib/features"
 import fs from "fs"
 import path from "path"
 
@@ -170,6 +172,15 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
                   </p>
                 )}
               </div>
+
+              {AI_FEATURES_ENABLED && (
+                <ProjectDeepDive
+                  slug={project.slug}
+                  title={project.title}
+                  description={project.description}
+                  techStack={project.tags as string[]}
+                />
+              )}
 
               {/* Case study sections */}
               {hasCaseStudyContent && (

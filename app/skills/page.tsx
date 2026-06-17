@@ -1,6 +1,8 @@
 import Link from "next/link"
 import PageLayout, { Section } from "../../components/PageLayout"
 import { getSkills } from "@/lib/data"
+import { SkillPopover } from "@/components/skill-explorer/SkillPopover"
+import { AI_FEATURES_ENABLED } from "@/lib/features"
 
 export const revalidate = 60
 
@@ -65,28 +67,36 @@ export default async function Skills() {
                       {group.category}
                     </h2>
                     <div className="space-y-0">
-                      {group.items.map((skill, i) => (
-                        <div
-                          key={`${skill.category}-${skill.name}-${i}`}
-                          className={`flex flex-col md:flex-row md:items-baseline md:justify-between gap-1 md:gap-6 py-4 ${
-                            i > 0 ? "border-t border-border" : ""
-                          }`}
-                        >
-                          <div className="md:flex-1">
-                            <p className="font-semibold">{skill.name}</p>
-                            {skill.detail && (
-                              <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
-                                {skill.detail}
-                              </p>
+                      {group.items.map((skill, i) =>
+                        AI_FEATURES_ENABLED ? (
+                          <SkillPopover
+                            key={`${skill.category}-${skill.name}-${i}`}
+                            skill={skill}
+                            isFirst={i === 0}
+                          />
+                        ) : (
+                          <div
+                            key={`${skill.category}-${skill.name}-${i}`}
+                            className={`flex flex-col md:flex-row md:items-baseline md:justify-between gap-1 md:gap-6 py-4 ${
+                              i > 0 ? "border-t border-border" : ""
+                            }`}
+                          >
+                            <div className="md:flex-1">
+                              <p className="font-semibold">{skill.name}</p>
+                              {skill.detail && (
+                                <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
+                                  {skill.detail}
+                                </p>
+                              )}
+                            </div>
+                            {skill.level && (
+                              <span className="font-mono text-xs text-muted-foreground md:text-right shrink-0">
+                                {skill.level}
+                              </span>
                             )}
                           </div>
-                          {skill.level && (
-                            <span className="font-mono text-xs text-muted-foreground md:text-right shrink-0">
-                              {skill.level}
-                            </span>
-                          )}
-                        </div>
-                      ))}
+                        )
+                      )}
                     </div>
                   </div>
                 </Section>

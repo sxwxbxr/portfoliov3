@@ -8,6 +8,7 @@ import {
   educationEntries,
   siteSettings,
   skills,
+  aiSettings,
   type HeroMetric,
 } from "./schema"
 import { eq, asc } from "drizzle-orm"
@@ -121,4 +122,59 @@ export async function getEducationEntries() {
 
 export async function getSkills() {
   return db.select().from(skills).orderBy(asc(skills.sortOrder))
+}
+
+// --- AI feature configuration -------------------------------------------------
+
+export type AiFeature = "chat" | "contact" | "deepdive" | "pitch" | "skill"
+
+export type AiSettings = {
+  chatPrimary: string
+  chatFallback: string
+  contactPrimary: string
+  contactFallback: string
+  deepdivePrimary: string
+  deepdiveFallback: string
+  pitchPrimary: string
+  pitchFallback: string
+  skillPrimary: string
+  skillFallback: string
+  dailyLimit: number
+}
+
+const FREE_DEFAULT = "deepseek/deepseek-chat-v3-0324:free"
+const PAID_DEFAULT = "deepseek/deepseek-chat"
+
+export const DEFAULT_AI_SETTINGS: AiSettings = {
+  chatPrimary: FREE_DEFAULT,
+  chatFallback: PAID_DEFAULT,
+  contactPrimary: FREE_DEFAULT,
+  contactFallback: PAID_DEFAULT,
+  deepdivePrimary: FREE_DEFAULT,
+  deepdiveFallback: PAID_DEFAULT,
+  pitchPrimary: FREE_DEFAULT,
+  pitchFallback: PAID_DEFAULT,
+  skillPrimary: FREE_DEFAULT,
+  skillFallback: PAID_DEFAULT,
+  dailyLimit: 500,
+}
+
+export async function getAiSettings(): Promise<AiSettings> {
+  const rows = await db.select().from(aiSettings).limit(1)
+  const row = rows[0]
+  if (!row) return DEFAULT_AI_SETTINGS
+
+  return {
+    chatPrimary: row.chatPrimary,
+    chatFallback: row.chatFallback,
+    contactPrimary: row.contactPrimary,
+    contactFallback: row.contactFallback,
+    deepdivePrimary: row.deepdivePrimary,
+    deepdiveFallback: row.deepdiveFallback,
+    pitchPrimary: row.pitchPrimary,
+    pitchFallback: row.pitchFallback,
+    skillPrimary: row.skillPrimary,
+    skillFallback: row.skillFallback,
+    dailyLimit: row.dailyLimit,
+  }
 }

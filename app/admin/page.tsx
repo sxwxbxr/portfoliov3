@@ -139,6 +139,12 @@ export default async function AdminDashboardPage() {
           >
             New Skill
           </Link>
+          <Link
+            href="/admin/ai-settings"
+            className="border border-border rounded-lg px-4 py-2 text-sm font-medium hover:bg-accent transition-colors"
+          >
+            Configure AI Models
+          </Link>
         </div>
       </div>
     </div>

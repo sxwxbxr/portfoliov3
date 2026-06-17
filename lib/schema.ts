@@ -152,3 +152,25 @@ export const siteSettings = pgTable("site_settings", {
   privacyContent: text("privacy_content").notNull().default(""),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 })
+
+// AI feature configuration (singleton, one row, id = 1). Each public AI feature
+// has a primary model (a free OpenRouter `:free` model) and a paid fallback
+// (a Chinese model) — chosen in the admin dashboard from the live OpenRouter
+// model list. `dailyLimit` is the durable global request cap (kill-switch).
+// Defaults use DeepSeek so the features work before any admin edit; confirm the
+// exact IDs against the live list via the admin dropdown.
+export const aiSettings = pgTable("ai_settings", {
+  id: serial("id").primaryKey(),
+  chatPrimary: text("chat_primary").notNull().default("deepseek/deepseek-chat-v3-0324:free"),
+  chatFallback: text("chat_fallback").notNull().default("deepseek/deepseek-chat"),
+  contactPrimary: text("contact_primary").notNull().default("deepseek/deepseek-chat-v3-0324:free"),
+  contactFallback: text("contact_fallback").notNull().default("deepseek/deepseek-chat"),
+  deepdivePrimary: text("deepdive_primary").notNull().default("deepseek/deepseek-chat-v3-0324:free"),
+  deepdiveFallback: text("deepdive_fallback").notNull().default("deepseek/deepseek-chat"),
+  pitchPrimary: text("pitch_primary").notNull().default("deepseek/deepseek-chat-v3-0324:free"),
+  pitchFallback: text("pitch_fallback").notNull().default("deepseek/deepseek-chat"),
+  skillPrimary: text("skill_primary").notNull().default("deepseek/deepseek-chat-v3-0324:free"),
+  skillFallback: text("skill_fallback").notNull().default("deepseek/deepseek-chat"),
+  dailyLimit: integer("daily_limit").notNull().default(500),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+})
