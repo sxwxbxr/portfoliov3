@@ -4,6 +4,7 @@ import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/ThemeProvider"
 import { Analytics } from "@/components/Analytics"
+import { SpeedInsights } from "@/components/SpeedInsights"
 import { JsonLd } from "@/components/JsonLd"
 import { Suspense } from "react"
 import { Footer } from "@/components/Footer"
@@ -175,6 +176,7 @@ export default async function RootLayout({
           </ThemeProvider>
         </Suspense>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )
