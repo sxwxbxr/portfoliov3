@@ -29,7 +29,7 @@ const nextConfig = {
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https:",
-              "connect-src 'self' https://api.github.com https://va.vercel-scripts.com",
+              "connect-src 'self' https://api.github.com https://va.vercel-scripts.com https://vitals.vercel-insights.com",
               "font-src 'self' https://fonts.gstatic.com",
               "frame-ancestors 'none'",
             ].join("; "),
