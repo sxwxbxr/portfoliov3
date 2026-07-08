@@ -5,7 +5,13 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { CASE_STUDIES_ENABLED } from "@/lib/features"
 
-export const revalidate = 60
+export const revalidate = 86400
+
+export async function generateStaticParams() {
+  if (!CASE_STUDIES_ENABLED) return []
+  const all = await getCaseStudies()
+  return all.map((study) => ({ slug: study.slug }))
+}
 
 interface CaseStudyPageProps {
   params: Promise<{ slug: string }>

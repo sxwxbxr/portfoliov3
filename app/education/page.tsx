@@ -1,4 +1,4 @@
-export const revalidate = 60
+export const revalidate = 86400
 
 import Link from "next/link"
 import PageLayout, { Section } from "../../components/PageLayout"

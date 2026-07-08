@@ -6,7 +6,13 @@ import ReactMarkdown from "react-markdown"
 import { notFound } from "next/navigation"
 import { BLOG_ENABLED } from "@/lib/features"
 
-export const revalidate = 60
+export const revalidate = 86400
+
+export async function generateStaticParams() {
+  if (!BLOG_ENABLED) return []
+  const all = await getBlogPosts()
+  return all.map((post) => ({ slug: post.slug }))
+}
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>

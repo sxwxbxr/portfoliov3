@@ -8,7 +8,14 @@ import { AI_FEATURES_ENABLED } from "@/lib/features"
 import fs from "fs"
 import path from "path"
 
-export const revalidate = 60
+export const revalidate = 86400
+
+// Pre-render every project detail page at build time so the first visit is a
+// CDN cache hit instead of a cold on-demand render.
+export async function generateStaticParams() {
+  const all = await getProjects()
+  return all.map((project) => ({ slug: project.slug }))
+}
 
 interface ProjectPageProps {
   params: Promise<{ slug: string }>

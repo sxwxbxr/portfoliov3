@@ -2,7 +2,7 @@ import Link from "next/link"
 import PageLayout, { Section } from "../../components/PageLayout"
 import { getExperience } from "@/lib/data"
 
-export const revalidate = 60
+export const revalidate = 86400
 
 export default async function Experience() {
   const experience = await getExperience()

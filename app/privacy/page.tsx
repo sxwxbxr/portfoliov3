@@ -3,7 +3,7 @@ import ReactMarkdown from "react-markdown"
 import PageLayout, { Section } from "../../components/PageLayout"
 import { getSiteSettings } from "@/lib/data"
 
-export const revalidate = 60
+export const revalidate = 86400
 
 export const metadata = {
   title: "Privacy",

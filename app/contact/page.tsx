@@ -2,7 +2,7 @@ import PageLayout, { Section } from "../../components/PageLayout"
 import { ContactForm } from "../../components/ContactForm"
 import { getSiteSettings } from "@/lib/data"
 
-export const revalidate = 60
+export const revalidate = 86400
 
 export default async function Contact() {
   const settings = await getSiteSettings()

@@ -4,7 +4,7 @@ import { getSkills } from "@/lib/data"
 import { SkillPopover } from "@/components/skill-explorer/SkillPopover"
 import { AI_FEATURES_ENABLED } from "@/lib/features"
 
-export const revalidate = 60
+export const revalidate = 86400
 
 interface SkillRow {
   category: string

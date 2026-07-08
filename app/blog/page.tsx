@@ -4,7 +4,7 @@ import PageLayout from "../../components/PageLayout"
 import { getBlogPosts } from "@/lib/data"
 import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
 
-export const revalidate = 60
+export const revalidate = 86400
 
 export default async function Blog() {
   if (!BLOG_ENABLED) notFound()

@@ -1,3 +1,4 @@
+import { cache } from "react"
 import { db } from "./db"
 import {
   projects,
@@ -55,7 +56,7 @@ const DEFAULT_SETTINGS: SiteSettings = {
   privacyContent: "",
 }
 
-export async function getSiteSettings(): Promise<SiteSettings> {
+export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
   const rows = await db.select().from(siteSettings).limit(1)
   const row = rows[0]
   if (!row) return DEFAULT_SETTINGS
@@ -76,53 +77,53 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     knowsAbout: row.knowsAbout ?? [],
     privacyContent: row.privacyContent,
   }
-}
+})
 
-export async function getProjects() {
+export const getProjects = cache(async () => {
   return db.select().from(projects).orderBy(asc(projects.sortOrder))
-}
+})
 
-export async function getProjectBySlug(slug: string) {
+export const getProjectBySlug = cache(async (slug: string) => {
   const results = await db.select().from(projects).where(eq(projects.slug, slug))
   return results[0] ?? null
-}
+})
 
-export async function getExperience() {
+export const getExperience = cache(async () => {
   return db.select().from(experienceEntries).orderBy(asc(experienceEntries.sortOrder))
-}
+})
 
-export async function getBlogPosts() {
+export const getBlogPosts = cache(async () => {
   return db.select().from(blogPosts)
-}
+})
 
-export async function getBlogPostBySlug(slug: string) {
+export const getBlogPostBySlug = cache(async (slug: string) => {
   const results = await db.select().from(blogPosts).where(eq(blogPosts.slug, slug))
   return results[0] ?? null
-}
+})
 
-export async function getCaseStudies() {
+export const getCaseStudies = cache(async () => {
   return db.select().from(caseStudies)
-}
+})
 
-export async function getCaseStudyBySlug(slug: string) {
+export const getCaseStudyBySlug = cache(async (slug: string) => {
   const results = await db.select().from(caseStudies).where(eq(caseStudies.slug, slug))
   return results[0] ?? null
-}
+})
 
-export async function getCertificates() {
+export const getCertificates = cache(async () => {
   return db.select().from(certificates).orderBy(asc(certificates.sortOrder))
-}
+})
 
-export async function getEducationEntries() {
+export const getEducationEntries = cache(async () => {
   return db
     .select()
     .from(educationEntries)
     .orderBy(asc(educationEntries.sortOrder))
-}
+})
 
-export async function getSkills() {
+export const getSkills = cache(async () => {
   return db.select().from(skills).orderBy(asc(skills.sortOrder))
-}
+})
 
 // --- AI feature configuration -------------------------------------------------
 
@@ -159,7 +160,7 @@ export const DEFAULT_AI_SETTINGS: AiSettings = {
   dailyLimit: 500,
 }
 
-export async function getAiSettings(): Promise<AiSettings> {
+export const getAiSettings = cache(async (): Promise<AiSettings> => {
   const rows = await db.select().from(aiSettings).limit(1)
   const row = rows[0]
   if (!row) return DEFAULT_AI_SETTINGS
@@ -177,4 +178,4 @@ export async function getAiSettings(): Promise<AiSettings> {
     skillFallback: row.skillFallback,
     dailyLimit: row.dailyLimit,
   }
-}
+})
