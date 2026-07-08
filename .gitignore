@@ -23,6 +23,12 @@ yarn-error.log*
 # vercel
 .vercel
 
+# db migration snapshot (contains admin password_hash)
+/scripts/db-snapshot.json
+
+# claude code local settings (may contain machine-specific paths / secrets)
+/.claude/settings.local.json
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
