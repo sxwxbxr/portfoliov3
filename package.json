@@ -11,6 +11,8 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:seed": "npx tsx scripts/seed.ts",
+    "db:export": "npx tsx scripts/export-db.ts",
+    "db:import": "npx tsx scripts/import-db.ts",
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
