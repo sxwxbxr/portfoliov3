@@ -11,7 +11,6 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { AlertCircle, Send, Loader2, Sparkles } from "lucide-react"
-import { Skeleton } from "@/components/ui/skeleton"
 import { CheckmarkAnimation } from "@/components/CheckmarkAnimation"
 
 interface FormData {
@@ -218,7 +217,9 @@ export function ContactForm({
     }
   }
 
-  const selectCls = "field w-full px-4 py-2.5 text-sm h-auto"
+  // SelectTrigger carries `.field` and SelectContent carries `.cast` in
+  // components/ui/select.tsx, so the triggers need no per-call restyling and
+  // stay pixel-identical to the plain <input> fields beside them.
 
   return (
     <div className="relative">
@@ -278,11 +279,10 @@ export function ContactForm({
                 id="projectType"
                 aria-invalid={Boolean(errors.projectType)}
                 aria-describedby="projectType-error"
-                className={selectCls}
               >
                 <SelectValue placeholder="Projekttyp wählen" />
               </SelectTrigger>
-              <SelectContent className="cast">
+              <SelectContent>
                 <SelectItem value="automation">Prozessautomatisierung</SelectItem>
                 <SelectItem value="web-development">Webentwicklung</SelectItem>
                 <SelectItem value="data-integration">Datenintegration</SelectItem>
@@ -299,10 +299,10 @@ export function ContactForm({
               value={formData.budget}
               onValueChange={(value) => handleInputChange("budget", value)}
             >
-              <SelectTrigger id="budget" className={selectCls}>
+              <SelectTrigger id="budget">
                 <SelectValue placeholder="Budget wählen" />
               </SelectTrigger>
-              <SelectContent className="cast">
+              <SelectContent>
                 <SelectItem value="under-10k">&lt; CHF 10’000</SelectItem>
                 <SelectItem value="10k-25k">CHF 10’000 – 25’000</SelectItem>
                 <SelectItem value="25k-50k">CHF 25’000 – 50’000</SelectItem>
@@ -320,10 +320,10 @@ export function ContactForm({
             value={formData.timeline}
             onValueChange={(value) => handleInputChange("timeline", value)}
           >
-            <SelectTrigger id="timeline" className={selectCls}>
+            <SelectTrigger id="timeline">
               <SelectValue placeholder="Wann soll es fertig sein?" />
             </SelectTrigger>
-            <SelectContent className="cast">
+            <SelectContent>
               <SelectItem value="asap">So bald wie möglich</SelectItem>
               <SelectItem value="1-month">Innerhalb eines Monats</SelectItem>
               <SelectItem value="3-months">Innerhalb von 3 Monaten</SelectItem>
@@ -361,10 +361,15 @@ export function ContactForm({
                 AI Match Analysis
               </span>
               {analysisLoading ? (
-                <div className="flex flex-col gap-2" aria-live="polite">
-                  <Skeleton className="h-3 w-full" />
-                  <Skeleton className="h-3 w-[92%]" />
-                  <Skeleton className="h-3 w-3/4" />
+                // Seats rising out of the tray. ui/skeleton's `bg-accent
+                // animate-pulse` is a utility-layer fill with no polarity, and
+                // a sunken bar inside a sunken tray is invisible — both wells
+                // share one background token.
+                <div className="flex flex-col gap-2" role="status" aria-live="polite">
+                  <span className="sr-only">Analyse läuft …</span>
+                  <div className="cast-sm h-3 w-full" aria-hidden="true" />
+                  <div className="cast-sm h-3 w-[92%]" aria-hidden="true" />
+                  <div className="cast-sm h-3 w-3/4" aria-hidden="true" />
                 </div>
               ) : (
                 <p className="text-sm leading-relaxed" aria-live="polite">
@@ -403,7 +408,7 @@ export function ContactForm({
         <button
           type="submit"
           disabled={isSubmitting}
-          className="control control-primary inline-flex items-center justify-center gap-2 self-start px-6 py-3 text-sm font-medium"
+          className="control control-primary inline-flex items-center justify-center gap-2 self-start px-5 py-3 text-sm font-medium"
         >
           {isSubmitting ? (
             <>
@@ -443,7 +448,7 @@ export function ContactForm({
             <button
               ref={closeButtonRef}
               onClick={closeSuccessModal}
-              className="control w-full px-5 py-2.5 text-sm font-medium"
+              className="control w-full px-5 py-3 text-sm font-medium"
             >
               Schliessen
             </button>

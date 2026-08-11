@@ -123,7 +123,7 @@ export default function Services() {
               <h3 className="flex items-center gap-2.5 font-display text-sm font-semibold md:text-base">
                 {model.title}
                 {model.recommended && (
-                  <span className="well-sm px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-signal">
+                  <span className="well-sm annotate px-2.5 py-1 text-signal">
                     Empfohlen
                   </span>
                 )}

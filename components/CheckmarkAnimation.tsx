@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react"
 
-import { CheckCircle, Loader2 } from "lucide-react"
+import { Check, Loader2 } from "lucide-react"
+import { useReducedMotion } from "framer-motion"
 
 import { cn } from "@/lib/utils"
 
@@ -19,12 +20,38 @@ interface CheckmarkAnimationProps {
   className?: string
 }
 
+/** The recess the mark is cast into. Same frame for every state. */
+function Frame({
+  className,
+  children,
+}: {
+  className?: string
+  children: React.ReactNode
+}) {
+  return (
+    <div
+      aria-hidden="true"
+      className={cn(
+        "well flex h-24 w-24 items-center justify-center overflow-visible rounded-full p-3",
+        className,
+      )}
+    >
+      {children}
+    </div>
+  )
+}
+
 export function CheckmarkAnimation({ className }: CheckmarkAnimationProps) {
   const playerRef = useRef<DotLottiePlayerElement | null>(null)
   const [isReady, setIsReady] = useState(false)
   const [hasError, setHasError] = useState(false)
+  // The lottie used to play for everyone, including people who asked the OS
+  // not to animate anything. Now it is opt-in by motion preference.
+  const prefersReducedMotion = useReducedMotion()
 
   useEffect(() => {
+    if (prefersReducedMotion) return
+
     let cancelled = false
 
     const registerPlayer = async () => {
@@ -54,10 +81,10 @@ export function CheckmarkAnimation({ className }: CheckmarkAnimationProps) {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [prefersReducedMotion])
 
   useEffect(() => {
-    if (!playerRef.current || hasError || !isReady) {
+    if (prefersReducedMotion || !playerRef.current || hasError || !isReady) {
       return
     }
 
@@ -94,21 +121,21 @@ export function CheckmarkAnimation({ className }: CheckmarkAnimationProps) {
       node.removeEventListener("ready", handleReady)
       node.removeEventListener("load", handleReady)
     }
-  }, [hasError, isReady])
+  }, [hasError, isReady, prefersReducedMotion])
+
+  // Reduced motion, or the player never arrived: the same struck mark, cast
+  // into the recess. No spinner, no dependency, no dev-facing string.
+  if (prefersReducedMotion || hasError) {
+    return (
+      <Frame className={className}>
+        <Check className="h-10 w-10 text-signal" strokeWidth={2.5} />
+      </Frame>
+    )
+  }
 
   return (
-    <div
-      className={cn(
-        "flex h-24 w-24 items-center justify-center overflow-visible rounded-full border-2 border-dashed border-primary/40 bg-primary/5 p-3",
-        className,
-      )}
-    >
-      {hasError ? (
-        <div className="flex flex-col items-center justify-center gap-1 text-primary">
-          <CheckCircle className="h-8 w-8" />
-          <span className="text-center text-xs font-medium text-primary/80">Add checkmark.lottie</span>
-        </div>
-      ) : isReady ? (
+    <Frame className={className}>
+      {isReady ? (
         <dotlottie-player
           ref={playerRef}
           autoplay
@@ -124,8 +151,8 @@ export function CheckmarkAnimation({ className }: CheckmarkAnimationProps) {
           }}
         />
       ) : (
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-8 w-8 animate-spin text-fg-subtle motion-reduce:animate-none" />
       )}
-    </div>
+    </Frame>
   )
 }

@@ -1,7 +1,6 @@
 "use client"
 
 import { Markdown } from "@/components/ai/Markdown"
-import { Skeleton } from "@/components/ui/skeleton"
 
 interface DeepDiveContentProps {
   content: string
@@ -19,29 +18,31 @@ export function DeepDiveContent({
   // Error with nothing streamed yet — offer a retry.
   if (error && !content) {
     return (
-      <p className="text-sm text-muted-foreground">
-        {error}{" "}
+      <div className="well flex flex-col items-center gap-4 p-8 text-center">
+        <p className="text-sm text-fg-muted">{error}</p>
         <button
           type="button"
           onClick={onRetry}
-          className="text-primary underline underline-offset-2"
+          className="control px-4 py-2.5 text-sm font-medium"
         >
-          Try again
+          Nochmal versuchen
         </button>
-      </p>
+      </div>
     )
   }
 
-  // Loading with nothing streamed yet — three paragraph placeholders.
+  // Loading with nothing streamed yet — three paragraph placeholders, milled
+  // into the plate rather than pulsing on top of it.
   if (loading && !content) {
     return (
-      <div className="space-y-5">
+      <div role="status" className="flex flex-col gap-5">
+        <span className="sr-only">Analyse wird geladen …</span>
         {[0, 1, 2].map((i) => (
-          <div key={i} className="space-y-2">
-            <Skeleton className="h-4 w-44" />
-            <Skeleton className="h-3 w-full" />
-            <Skeleton className="h-3 w-11/12" />
-            <Skeleton className="h-3 w-4/5" />
+          <div key={i} className="flex flex-col gap-2.5" aria-hidden="true">
+            <div className="well-sm h-4 w-44" />
+            <div className="well-sm h-3 w-full" />
+            <div className="well-sm h-3 w-11/12" />
+            <div className="well-sm h-3 w-4/5" />
           </div>
         ))}
       </div>
@@ -49,7 +50,7 @@ export function DeepDiveContent({
   }
 
   return (
-    <div className="text-sm text-foreground/90">
+    <div className="measure text-sm leading-relaxed text-fg-muted">
       <Markdown>{content}</Markdown>
     </div>
   )

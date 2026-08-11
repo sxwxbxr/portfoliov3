@@ -28,11 +28,20 @@ export function ScrollProgress() {
   if (reducedMotion || scrollProgress < 1) return null
 
   return (
-    <div className="fixed top-0 left-0 w-full h-[2px] z-[60] pointer-events-none">
-      <div
-        className="h-full bg-primary/80 transition-[width] duration-150 ease-out"
-        style={{ width: `${scrollProgress}%` }}
-      />
+    // `.scroll-progress` is the hook the print stylesheet has always aimed at
+    // and this component never set; `.no-print` is what the current sheet
+    // actually keys on. Both are here so neither drifts again.
+    <div
+      className="scroll-progress no-print pointer-events-none fixed inset-x-0 top-0 z-[60] h-1"
+      aria-hidden="true"
+    >
+      <div className="well-sm h-full w-full rounded-none">
+        {/* scaleX, not width: a width transition relayouts every frame. */}
+        <div
+          className="h-full w-full origin-left bg-signal transition-transform duration-150 ease-out"
+          style={{ transform: `scaleX(${Math.min(scrollProgress, 100) / 100})` }}
+        />
+      </div>
     </div>
   )
 }

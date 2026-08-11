@@ -70,147 +70,135 @@ export default function SignupPage() {
   }
 
   return (
-    <>
+    <div className="min-h-screen bg-ground">
       <Navigation />
-      <main className="min-h-screen flex items-center justify-center px-6 pt-16">
-        <div className="w-full max-w-[400px]">
-          <div className="glass rounded-2xl p-8">
-            <h1 className="font-display text-2xl font-semibold tracking-tight text-foreground mb-1">
+
+      <div className="flex min-h-screen items-center justify-center px-6 pb-16 pt-24">
+        <div className="cast rim flex w-full max-w-[420px] flex-col gap-7 p-7 md:p-8">
+          <div className="flex flex-col gap-2">
+            <span className="tab annotate self-start">Admin</span>
+            <h1 className="font-display text-2xl font-semibold tracking-tight">
               Create account
             </h1>
 
             {available === null && (
-              <p className="text-sm text-muted-foreground mb-8">
-                Checking availability...
-              </p>
-            )}
-
-            {available === false && (
-              <div className="mt-4">
-                <p className="text-sm text-muted-foreground mb-6">
-                  Signup is disabled. An account already exists.
-                </p>
-                <Link
-                  href="/login"
-                  className="inline-block w-full py-3 bg-primary text-primary-foreground rounded-full font-medium hover:opacity-90 transition-opacity text-center text-sm"
-                >
-                  Go to sign in
-                </Link>
-              </div>
+              <p className="text-sm text-fg-muted">Checking availability...</p>
             )}
 
             {available === true && (
-              <>
-                <p className="text-sm text-muted-foreground mb-8">
-                  Set up your admin account
-                </p>
-
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="name"
-                      className="text-sm font-medium text-foreground"
-                    >
-                      Name
-                    </label>
-                    <input
-                      id="name"
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      required
-                      autoComplete="name"
-                      placeholder="Your name"
-                      className="w-full px-4 py-3 bg-transparent border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground/50"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="email"
-                      className="text-sm font-medium text-foreground"
-                    >
-                      Email
-                    </label>
-                    <input
-                      id="email"
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                      autoComplete="email"
-                      placeholder="you@example.com"
-                      className="w-full px-4 py-3 bg-transparent border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground/50"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="password"
-                      className="text-sm font-medium text-foreground"
-                    >
-                      Password
-                    </label>
-                    <input
-                      id="password"
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      autoComplete="new-password"
-                      placeholder="At least 8 characters"
-                      className="w-full px-4 py-3 bg-transparent border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground/50"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="confirm-password"
-                      className="text-sm font-medium text-foreground"
-                    >
-                      Confirm password
-                    </label>
-                    <input
-                      id="confirm-password"
-                      type="password"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      required
-                      autoComplete="new-password"
-                      placeholder="Repeat your password"
-                      className="w-full px-4 py-3 bg-transparent border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground/50"
-                    />
-                  </div>
-
-                  {error && (
-                    <p className="text-sm text-destructive">{error}</p>
-                  )}
-
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full py-3 bg-primary text-primary-foreground rounded-full font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {loading ? "Creating account..." : "Create account"}
-                  </button>
-                </form>
-
-                <div className="mt-6 pt-6 border-t border-border">
-                  <p className="text-sm text-muted-foreground text-center">
-                    Already have an account?{" "}
-                    <Link
-                      href="/login"
-                      className="text-primary hover:opacity-80 transition-opacity"
-                    >
-                      Sign in
-                    </Link>
-                  </p>
-                </div>
-              </>
+              <p className="text-sm text-fg-muted">Set up your admin account</p>
             )}
           </div>
+
+          {available === false && (
+            <div className="flex flex-col gap-5">
+              {/* Closed door: a recess, not a form. */}
+              <div className="well p-6 text-center text-sm text-fg-muted">
+                Signup is disabled. An account already exists.
+              </div>
+              <Link
+                href="/login"
+                className="control control-primary w-full px-5 py-3 text-center text-sm font-medium"
+              >
+                Go to sign in
+              </Link>
+            </div>
+          )}
+
+          {available === true && (
+            <>
+              <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="name" className="annotate">
+                    Name
+                  </label>
+                  <input
+                    id="name"
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    autoComplete="name"
+                    placeholder="Your name"
+                    className="field w-full px-4 py-3 text-sm"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="email" className="annotate">
+                    Email
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    autoComplete="email"
+                    placeholder="you@example.com"
+                    className="field w-full px-4 py-3 text-sm"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="password" className="annotate">
+                    Password
+                  </label>
+                  <input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    autoComplete="new-password"
+                    placeholder="At least 8 characters"
+                    className="field w-full px-4 py-3 text-sm"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="confirm-password" className="annotate">
+                    Confirm password
+                  </label>
+                  <input
+                    id="confirm-password"
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                    autoComplete="new-password"
+                    placeholder="Repeat your password"
+                    className="field w-full px-4 py-3 text-sm"
+                  />
+                </div>
+
+                {error && (
+                  <p role="alert" className="well-sm p-3 text-sm text-destructive">
+                    {error}
+                  </p>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="control control-primary w-full px-5 py-3 text-sm font-medium"
+                >
+                  {loading ? "Creating account..." : "Create account"}
+                </button>
+              </form>
+
+              <div className="well-sm px-4 py-3 text-center">
+                <p className="text-sm text-fg-muted">
+                  Already have an account?{" "}
+                  <Link href="/login" className="link-underline text-signal">
+                    Sign in
+                  </Link>
+                </p>
+              </div>
+            </>
+          )}
         </div>
-      </main>
-    </>
+      </div>
+    </div>
   )
 }

@@ -1,5 +1,7 @@
 import Link from "next/link"
+import { ArrowUpRight } from "lucide-react"
 import PageLayout, { Section } from "../../components/PageLayout"
+import { EmptyState } from "../../components/EmptyState"
 import { getSkills } from "@/lib/data"
 import { SkillPopover } from "@/components/skill-explorer/SkillPopover"
 import { AI_FEATURES_ENABLED } from "@/lib/features"
@@ -37,83 +39,89 @@ export default async function Skills() {
 
   return (
     <PageLayout
+      label={
+        groups.length > 0
+          ? `${groups.length} ${
+              groups.length === 1 ? "Kategorie" : "Kategorien"
+            } · ${skills.length} Skills`
+          : "Kompetenzen"
+      }
       title="Skills & Expertise"
-      subtitle="Technical expertise and competencies developed across software development, project management, and engineering."
+      subtitle="Technische Expertise und Kompetenzen aus Softwareentwicklung, Projektleitung und Engineering."
     >
-      <section className="pb-24 md:pb-32">
-        <div className="max-w-[1200px] mx-auto px-6">
-          {groups.length === 0 ? (
-            <div className="glass rounded-xl p-10 md:p-14 text-center">
-              <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground mb-4">
-                Nothing posted yet
-              </p>
-              <h3 className="font-display text-2xl md:text-3xl font-semibold tracking-tight">
-                Skills inventory in progress.
-              </h3>
-              <p className="mt-4 text-muted-foreground max-w-xl mx-auto leading-relaxed">
-                Add entries through the admin panel to populate this section.
-              </p>
-            </div>
-          ) : (
-            <div>
-              {groups.map((group, gi) => (
-                <Section key={group.category} delay={gi * 0.04}>
-                  <div
-                    className={`grid grid-cols-1 md:grid-cols-[220px_1fr] gap-3 md:gap-12 py-10 ${
-                      gi > 0 ? "border-t border-border" : ""
-                    }`}
-                  >
-                    <h2 className="font-display font-semibold text-base md:sticky md:top-24 self-start">
-                      {group.category}
-                    </h2>
-                    <div className="space-y-0">
-                      {group.items.map((skill, i) =>
-                        AI_FEATURES_ENABLED ? (
-                          <SkillPopover
-                            key={`${skill.category}-${skill.name}-${i}`}
-                            skill={skill}
-                            isFirst={i === 0}
-                          />
-                        ) : (
-                          <div
-                            key={`${skill.category}-${skill.name}-${i}`}
-                            className={`flex flex-col md:flex-row md:items-baseline md:justify-between gap-1 md:gap-6 py-4 ${
-                              i > 0 ? "border-t border-border" : ""
-                            }`}
-                          >
-                            <div className="md:flex-1">
-                              <p className="font-semibold">{skill.name}</p>
-                              {skill.detail && (
-                                <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
-                                  {skill.detail}
-                                </p>
-                              )}
-                            </div>
-                            {skill.level && (
-                              <span className="font-mono text-xs text-muted-foreground md:text-right shrink-0">
-                                {skill.level}
-                              </span>
-                            )}
-                          </div>
-                        )
-                      )}
-                    </div>
-                  </div>
-                </Section>
-              ))}
-              <div className="border-t border-border" />
-            </div>
-          )}
+      <section className="sheet flex flex-col gap-10 pb-24 md:pb-32">
+        {groups.length === 0 ? (
+          <EmptyState
+            label="Noch nichts hinterlegt"
+            title="Die Skill-Übersicht entsteht gerade."
+          >
+            Sobald die Einträge gepflegt sind, erscheinen sie hier nach
+            Kategorie sortiert.
+          </EmptyState>
+        ) : (
+          // One sunken tray per category, with each skill seated in it as a
+          // raised chip. No proficiency bars: a self-assessed meter invents a
+          // precision the data does not have. The level stays a mono word.
+          <div className="flex flex-col gap-8">
+            {groups.map((group, gi) => (
+              <Section
+                key={group.category}
+                delay={gi * 0.04}
+                className="flex flex-col gap-3"
+              >
+                <div className="flex items-baseline justify-between gap-4 px-1">
+                  <h2 className="font-display text-lg font-semibold tracking-tight md:text-xl">
+                    {group.category}
+                  </h2>
+                  <span className="annotate">
+                    {String(group.items.length).padStart(2, "0")}
+                  </span>
+                </div>
 
-          <div className="mt-12">
-            <Link
-              href="/about"
-              className="link-underline text-primary text-sm font-medium"
-            >
-              More about me &rarr;
-            </Link>
+                <ul className="well grid gap-2 p-3 sm:grid-cols-2 md:p-4">
+                  {group.items.map((skill, i) =>
+                    AI_FEATURES_ENABLED ? (
+                      <SkillPopover
+                        key={`${skill.category}-${skill.name}-${i}`}
+                        skill={skill}
+                        isFirst={i === 0}
+                      />
+                    ) : (
+                      // Keep this seat in sync with the one rendered by
+                      // components/skill-explorer/SkillPopover.tsx.
+                      <li
+                        key={`${skill.category}-${skill.name}-${i}`}
+                        className="cast-sm flex flex-col gap-1.5 px-4 py-3.5"
+                      >
+                        <div className="flex items-baseline justify-between gap-3">
+                          <p className="font-semibold">{skill.name}</p>
+                          {skill.level && (
+                            <span className="annotate shrink-0">
+                              {skill.level}
+                            </span>
+                          )}
+                        </div>
+                        {skill.detail && (
+                          <p className="text-sm leading-relaxed text-fg-muted">
+                            {skill.detail}
+                          </p>
+                        )}
+                      </li>
+                    )
+                  )}
+                </ul>
+              </Section>
+            ))}
           </div>
-        </div>
+        )}
+
+        <Link
+          href="/about"
+          className="control inline-flex items-center gap-2 self-start px-4 py-2.5 text-sm font-medium"
+        >
+          Mehr über mich
+          <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+        </Link>
       </section>
     </PageLayout>
   )

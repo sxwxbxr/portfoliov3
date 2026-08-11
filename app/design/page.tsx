@@ -79,16 +79,16 @@ export default function DesignSystem() {
 
         <Row label="Controls" note="Material trägt die Optik · der Border trägt die Affordanz">
           <div className="flex flex-wrap items-center gap-4">
-            <button type="button" className="control px-5 py-2.5 text-sm font-medium">
+            <button type="button" className="control px-4 py-2.5 text-sm font-medium">
               Sekundär
             </button>
-            <button type="button" className="control control-primary px-5 py-2.5 text-sm font-medium">
+            <button type="button" className="control control-primary px-5 py-3 text-sm font-medium">
               Nachricht senden
             </button>
-            <button type="button" className="control px-5 py-2.5 text-sm font-medium" data-pressed="true">
+            <button type="button" className="control px-4 py-2.5 text-sm font-medium" data-pressed="true">
               Gedrückt
             </button>
-            <button type="button" className="control px-5 py-2.5 text-sm font-medium" disabled>
+            <button type="button" className="control px-4 py-2.5 text-sm font-medium" disabled>
               Deaktiviert
             </button>
           </div>
@@ -98,6 +98,44 @@ export default function DesignSystem() {
             Schatten aus dem Stylesheet — genau das tut <code className="font-mono text-xs">forced-colors</code> —
             und das Control bleibt identifizierbar und hält weiterhin 3:1. Das ist die
             Freiheit, die klassischer Neumorphismus aufgibt, indem er den Rand löscht.
+          </p>
+        </Row>
+
+        <Row label="Control-Grössen" note="drei Stufen — globals.css kennt keine, also gilt diese Tabelle">
+          <div className="well flex flex-wrap items-end gap-3 p-3 md:p-4">
+            <button type="button" className="control px-3.5 py-2 text-xs font-medium">
+              sm · px-3.5 py-2 text-xs
+            </button>
+            <button type="button" className="control px-4 py-2.5 text-sm font-medium">
+              md · px-4 py-2.5 text-sm
+            </button>
+            <button type="button" className="control px-5 py-3 text-sm font-medium">
+              lg · px-5 py-3 text-sm
+            </button>
+          </div>
+          <p className="max-w-[62ch] text-sm text-fg-muted leading-relaxed">
+            <strong>sm</strong> für Chips und Icon-Zeilen in Karten, <strong>md</strong> als
+            Standard für jede Inline-Aktion, <strong>lg</strong> für den einen Abschluss-CTA
+            einer Seite und für volle Breite in Formularen. Es gab zwischenzeitlich fünf
+            Kombinationen für dasselbe semantische Gewicht — <code className="font-mono text-xs">px-6&nbsp;py-3</code> und{" "}
+            <code className="font-mono text-xs">px-5&nbsp;py-2.5</code> sind zurückgeführt.
+          </p>
+        </Row>
+
+        <Row label="Dropdown" note="Trigger ist ein Feld, das Panel eine Platte">
+          <p className="max-w-[62ch] text-sm text-fg-muted leading-relaxed">
+            <strong>Kaskadenfalle:</strong> shadcn-Primitives backen{" "}
+            <code className="font-mono text-xs">border shadow-md</code> in die
+            Utilities-Ebene. Tailwind ordnet Utilities NACH{" "}
+            <code className="font-mono text-xs">@layer components</code>, wo{" "}
+            <code className="font-mono text-xs">.cast</code> und{" "}
+            <code className="font-mono text-xs">.well</code> leben — ein{" "}
+            <code className="font-mono text-xs">className=&quot;cast&quot;</code> auf so einem
+            Element bleibt wirkungslos, ohne Fehler.{" "}
+            <code className="font-mono text-xs">components/ui/select.tsx</code> und{" "}
+            <code className="font-mono text-xs">checkbox.tsx</code> tragen das Material jetzt
+            selbst; <code className="font-mono text-xs">popover.tsx</code> wird stattdessen am
+            Aufrufort neutralisiert (Panel als innere Platte).
           </p>
         </Row>
 

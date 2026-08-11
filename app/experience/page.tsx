@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { ArrowUpRight } from "lucide-react"
 import PageLayout, { Section } from "../../components/PageLayout"
+import { EmptyState } from "../../components/EmptyState"
 import { getExperience } from "@/lib/data"
 
 export const revalidate = 86400
@@ -82,9 +83,7 @@ export default async function Experience() {
             ))}
           </div>
         ) : (
-          <div className="well p-12 text-center text-sm text-fg-muted">
-            Noch keine Stationen hinterlegt.
-          </div>
+          <EmptyState>Noch keine Stationen hinterlegt.</EmptyState>
         )}
 
         <Link

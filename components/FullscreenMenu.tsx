@@ -4,9 +4,11 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useRef } from "react"
 import { X, ExternalLink, Github, Linkedin } from "lucide-react"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence, useReducedMotion, type MotionProps } from "framer-motion"
 import { ThemeToggle } from "./ThemeToggle"
 import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
+
+const EASE = [0.23, 1, 0.32, 1] as const
 
 const menuLinks = [
   { name: "Work", href: "/projects" },
@@ -42,6 +44,19 @@ export function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps) {
   const pathname = usePathname()
   const menuRef = useRef<HTMLDivElement>(null)
   const closeButtonRef = useRef<HTMLButtonElement>(null)
+  const reduce = useReducedMotion()
+
+  // The whole overlay used to animate roughly 700ms of staggered entrances with
+  // no reduced-motion path at all. Now every stagger collapses to a plain mount.
+  const step = (i: number): MotionProps =>
+    reduce
+      ? {}
+      : {
+          initial: { opacity: 0, y: 14 },
+          animate: { opacity: 1, y: 0 },
+          exit: { opacity: 0, y: 8 },
+          transition: { delay: 0.05 + i * 0.045, duration: 0.32, ease: EASE },
+        }
 
   // Auto-focus close button when menu opens
   useEffect(() => {
@@ -93,109 +108,101 @@ export function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps) {
           ref={menuRef}
           role="dialog"
           aria-modal="true"
-          aria-label="Navigation menu"
-          initial={{ opacity: 0 }}
+          aria-label="Navigation"
+          initial={reduce ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
-          className="fixed inset-0 z-50 lg:hidden"
+          transition={{ duration: reduce ? 0 : 0.22, ease: EASE }}
+          // Opaque ground, no blur: the menu is the sheet you are on now, not
+          // a pane of frosted glass laid over the old one.
+          className="fixed inset-0 z-50 bg-ground lg:hidden"
         >
-          {/* Background */}
-          <div className="absolute inset-0 bg-background/98 backdrop-blur-md" />
-
-          {/* Content */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3, delay: 0.05 }}
-            className="relative flex flex-col h-full px-8"
+          <div
+            data-lenis-prevent
+            className="flex h-full flex-col gap-8 overflow-y-auto px-6 pb-8 pt-5"
           >
-            {/* Close button */}
-            <div className="flex justify-end pt-5">
+            {/* Index bar */}
+            <div className="flex items-center justify-between gap-4">
+              <span className="annotate">Menü</span>
               <button
                 ref={closeButtonRef}
                 onClick={onClose}
-                className="p-2 text-foreground hover:text-primary transition-colors"
-                aria-label="Close menu"
+                className="control inline-flex h-10 w-10 items-center justify-center"
+                aria-label="Menü schliessen"
               >
-                <X className="w-6 h-6" />
+                <X className="h-5 w-5" aria-hidden="true" />
               </button>
             </div>
 
-            {/* Primary navigation links */}
-            <nav className="flex-1 flex flex-col justify-center -mt-16">
-              <div className="space-y-2">
-                {menuLinks.map((link, i) => (
-                  <motion.div
-                    key={link.href}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    transition={{ delay: 0.1 + i * 0.05, duration: 0.4 }}
-                  >
-                    <Link
-                      href={link.href}
-                      onClick={onClose}
-                      className={`block text-5xl font-display font-semibold tracking-tight py-3 transition-colors ${
-                        pathname === link.href
-                          ? "text-primary"
-                          : "text-foreground hover:text-primary"
-                      }`}
-                    >
-                      {link.name}
-                    </Link>
-                  </motion.div>
-                ))}
+            <nav aria-label="Hauptnavigation" className="flex flex-1 flex-col justify-center gap-8">
+              {/* Primary routes. The current one is seated into the ground —
+                  position answers "where am I", colour only confirms it. */}
+              <div className="flex flex-col items-start gap-2">
+                {menuLinks.map((link, i) => {
+                  const active = pathname === link.href
+                  return (
+                    <motion.div key={link.href} {...step(i)}>
+                      <Link
+                        href={link.href}
+                        onClick={onClose}
+                        aria-current={active ? "page" : undefined}
+                        className={
+                          "inline-flex px-4 py-2.5 font-display text-4xl font-semibold tracking-tight transition-colors duration-150 sm:text-5xl " +
+                          (active ? "well-sm text-signal" : "text-fg hover:text-signal")
+                        }
+                      >
+                        {link.name}
+                      </Link>
+                    </motion.div>
+                  )
+                })}
               </div>
 
-              {/* Subpage links */}
+              {/* Secondary routes: chips seated in a channel. */}
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ delay: 0.28, duration: 0.4 }}
-                className="mt-8 flex flex-wrap gap-x-5 gap-y-2"
+                {...step(menuLinks.length)}
+                className="well flex flex-wrap gap-2 p-3"
               >
-                {subLinks.map((link) =>
-                  link.external ? (
+                {subLinks.map((link) => {
+                  const active = !link.external && pathname === link.href
+                  const cls =
+                    "inline-flex items-center gap-1.5 px-3.5 py-2 text-sm transition-colors duration-150 " +
+                    (active
+                      ? "well-sm font-medium text-signal"
+                      : "cast-sm text-fg-muted hover:text-signal")
+                  return link.external ? (
                     <a
                       key={link.href}
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={onClose}
-                      className="flex items-center gap-1 text-sm text-muted-foreground hover:text-primary transition-colors"
+                      className={cls}
                     >
                       {link.name}
-                      <ExternalLink className="w-3 h-3" aria-hidden="true" />
+                      <ExternalLink className="h-3 w-3" aria-hidden="true" />
                     </a>
                   ) : (
                     <Link
                       key={link.href}
                       href={link.href}
                       onClick={onClose}
-                      className={`text-sm transition-colors ${
-                        pathname === link.href
-                          ? "text-primary"
-                          : "text-muted-foreground hover:text-primary"
-                      }`}
+                      aria-current={active ? "page" : undefined}
+                      className={cls}
                     >
                       {link.name}
                     </Link>
                   )
-                )}
+                })}
               </motion.div>
             </nav>
 
-            {/* Bottom section: socials + theme toggle */}
+            {/* Base rail: socials + theme */}
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3, duration: 0.4 }}
-              className="pb-10 flex items-center justify-between"
+              {...step(menuLinks.length + 1)}
+              className="well-sm flex items-center justify-between gap-4 p-2.5"
             >
-              <div className="flex items-center gap-5">
+              <div className="flex items-center gap-2.5">
                 {socialLinks.map((link) => {
                   const Icon = link.icon
                   return (
@@ -204,17 +211,17 @@ export function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps) {
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-muted-foreground hover:text-primary transition-colors"
+                      className="control inline-flex h-10 w-10 items-center justify-center"
                       aria-label={link.label}
                     >
-                      <Icon className="w-5 h-5" />
+                      <Icon className="h-4 w-4" aria-hidden="true" />
                     </a>
                   )
                 })}
               </div>
               <ThemeToggle />
             </motion.div>
-          </motion.div>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

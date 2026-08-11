@@ -6,6 +6,7 @@ import { ArrowDown, ArrowUpRight } from "lucide-react"
 import { motion, useInView, useReducedMotion, type Variants } from "framer-motion"
 import Navigation from "./Navigation"
 import { ProjectListItem } from "./ProjectListItem"
+import { EmptyState } from "./EmptyState"
 import type { SiteSettings } from "@/lib/data"
 import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
 
@@ -361,9 +362,7 @@ export default function HomeContent({
               ))}
             </div>
           ) : (
-            <div className="well p-10 text-center text-sm text-fg-muted">
-              Noch keine Projekte hinterlegt.
-            </div>
+            <EmptyState>Noch keine Projekte hinterlegt.</EmptyState>
           )}
         </div>
       </Reveal>

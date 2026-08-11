@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { ArrowUpRight } from "lucide-react"
 import PageLayout from "../../components/PageLayout"
+import { EmptyState } from "../../components/EmptyState"
 import { ProjectListItem } from "../../components/ProjectListItem"
 import { getProjects } from "@/lib/data"
 import { CASE_STUDIES_ENABLED } from "@/lib/features"
@@ -32,9 +33,7 @@ export default async function Projects() {
             ))}
           </div>
         ) : (
-          <div className="well p-12 text-center text-sm text-fg-muted">
-            Noch keine Projekte hinterlegt.
-          </div>
+          <EmptyState>Noch keine Projekte hinterlegt.</EmptyState>
         )}
 
         {CASE_STUDIES_ENABLED && (

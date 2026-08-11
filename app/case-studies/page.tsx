@@ -1,6 +1,8 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import PageLayout from "../../components/PageLayout"
+import { ArrowUpRight } from "lucide-react"
+import PageLayout, { Section } from "../../components/PageLayout"
+import { EmptyState } from "../../components/EmptyState"
 import { getCaseStudies } from "@/lib/data"
 import { CASE_STUDIES_ENABLED } from "@/lib/features"
 
@@ -12,63 +14,55 @@ export default async function CaseStudies() {
 
   return (
     <PageLayout
+      label={
+        caseStudies.length === 1
+          ? "1 Case Study"
+          : `${caseStudies.length} Case Studies`
+      }
       title="Case Studies"
-      subtitle="Real-world projects, challenges overcome, and measurable results achieved for clients across different industries."
+      subtitle="Echte Projekte, gelöste Probleme und messbare Ergebnisse aus verschiedenen Branchen."
     >
-      <section className="pb-24 md:pb-32">
-        <div className="max-w-[1200px] mx-auto px-6">
-          <div>
+      <section className="sheet flex flex-col gap-10 pb-24 md:pb-32">
+        {caseStudies.length > 0 ? (
+          // A collection, so: tiles. The row list this replaced gave every
+          // study the same hairline and no object shape of its own.
+          <div className="grid gap-5 md:grid-cols-2">
             {caseStudies.map((study, i) => (
-              <Link
-                key={study.slug}
-                href={`/case-studies/${study.slug}`}
-                className="group block"
-              >
-                <div
-                  className={`grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4 py-6 md:py-8 ${
-                    i > 0 ? "border-t border-border" : ""
-                  }`}
+              <Section key={study.slug} delay={i * 0.04} className="h-full">
+                <Link
+                  href={`/case-studies/${study.slug}`}
+                  className="cast rim group flex h-full flex-col gap-4 p-6 transition-transform duration-150 ease-out hover:-translate-y-0.5 motion-reduce:transform-none md:p-7"
                 >
-                  <div>
-                    <h3 className="text-xl md:text-2xl font-semibold tracking-tight group-hover:text-primary transition-colors duration-200">
-                      {study.title}
-                    </h3>
-                    <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
-                      <span className="font-mono">{study.client}</span>
-                      <span className="hidden md:inline text-border">|</span>
-                      <span>{study.industry}</span>
-                      <span className="hidden md:inline text-border">|</span>
-                      <span className="font-mono">{study.duration}</span>
-                    </div>
-                    <p className="mt-3 text-muted-foreground leading-relaxed max-w-2xl">
-                      {study.challenge}
-                    </p>
-                  </div>
-                  <div className="flex items-center">
-                    <span className="text-muted-foreground group-hover:text-primary transition-colors duration-200" aria-hidden="true">
-                      <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 16 16"
-                        fill="none"
-                        className="transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200"
-                      >
-                        <path
-                          d="M4.5 11.5L11.5 4.5M11.5 4.5H5.5M11.5 4.5V10.5"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
+                  <div className="flex items-baseline justify-between gap-4">
+                    <span className="annotate" aria-hidden="true">
+                      {String(i + 1).padStart(2, "0")}
                     </span>
+                    <ArrowUpRight
+                      className="h-4 w-4 shrink-0 text-fg-subtle transition-colors duration-150 group-hover:text-signal"
+                      aria-hidden="true"
+                    />
                   </div>
-                </div>
-              </Link>
+
+                  <h2 className="font-display text-xl font-semibold tracking-tight transition-colors duration-150 group-hover:text-signal md:text-2xl">
+                    {study.title}
+                  </h2>
+
+                  <p className="measure text-sm leading-relaxed text-fg-muted">
+                    {study.challenge}
+                  </p>
+
+                  <div className="mt-auto flex flex-wrap items-center gap-2 pt-1">
+                    <span className="well-sm annotate px-2.5 py-1">{study.client}</span>
+                    <span className="well-sm annotate px-2.5 py-1">{study.industry}</span>
+                    <span className="well-sm annotate px-2.5 py-1">{study.duration}</span>
+                  </div>
+                </Link>
+              </Section>
             ))}
-            <div className="border-t border-border" />
           </div>
-        </div>
+        ) : (
+          <EmptyState>Noch keine Case Studies hinterlegt.</EmptyState>
+        )}
       </section>
     </PageLayout>
   )

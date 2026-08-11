@@ -25,9 +25,7 @@ export function TimeDisplay() {
 
   if (!time) return null
 
-  return (
-    <span className="text-sm text-muted-foreground font-mono tabular-nums">
-      {time} CET
-    </span>
-  )
+  // Sits in the footer's base rail next to the other annotations, so it takes
+  // the same mono/tabular treatment instead of open-coding one.
+  return <span className="annotate">{time} CET</span>
 }

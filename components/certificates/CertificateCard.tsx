@@ -1,27 +1,36 @@
+import { ArrowUpRight } from "lucide-react"
 import { certificates } from "@/lib/schema"
 import { formatMonth } from "@/lib/utils"
 import type { InferSelectModel } from "drizzle-orm"
 
 export type Certificate = InferSelectModel<typeof certificates>
 
+/**
+ * A certificate as a cast tile.
+ *
+ * Status is a seated chip rather than a coloured pill: the accent is rationed
+ * to the one certificate that is actually in motion, so a page full of planned
+ * credentials does not read as a page full of alerts. The inlay along the top
+ * edge carries the per-certificate colour from the database when one is set.
+ */
 const STATUS_META: Record<
   string,
-  { label: string; tone: string; dot: string }
+  { label: string; dot: string; text: string }
 > = {
   completed: {
     label: "Completed",
-    tone: "bg-primary/10 text-primary border-primary/30",
-    dot: "bg-primary",
+    dot: "bg-fg-muted",
+    text: "text-fg-muted",
   },
   "in-progress": {
     label: "In Progress",
-    tone: "bg-foreground/5 text-foreground border-foreground/20",
-    dot: "bg-foreground/80",
+    dot: "bg-signal-bright",
+    text: "text-signal",
   },
   planned: {
     label: "Planned",
-    tone: "bg-muted text-muted-foreground border-border",
-    dot: "bg-muted-foreground/60",
+    dot: "bg-edge",
+    text: "",
   },
 }
 
@@ -29,96 +38,97 @@ export default function CertificateCard({ cert }: { cert: Certificate }) {
   const status = STATUS_META[cert.status] ?? STATUS_META.planned
   const isLifetime =
     cert.status === "completed" && Boolean(cert.issueDate) && !cert.expiryDate
-  const accent = cert.accentColor || undefined
+
+  // The inlay is the only place a certificate's own colour appears. Without
+  // one, in-progress gets the accent and everything else gets a hairline.
+  const inlay =
+    cert.accentColor ||
+    (cert.status === "in-progress" ? "var(--signal)" : "var(--edge-soft)")
+
+  const hasStats =
+    cert.estimatedHours > 0 ||
+    Boolean(cert.estimatedCost) ||
+    cert.difficulty > 0 ||
+    Boolean(cert.plannedStart)
+
+  const hasFooter = Boolean(cert.credentialUrl || cert.issueDate)
 
   return (
-    <article className="relative glass rounded-xl p-7 flex flex-col h-full overflow-hidden">
+    <article className="cast rim relative flex h-full flex-col gap-5 overflow-hidden p-6 md:p-7">
       <span
-        className="absolute top-0 left-0 right-0 h-[3px]"
-        style={{ background: accent ?? "var(--primary)" }}
+        className="absolute inset-x-0 top-0 h-[3px]"
+        style={{ background: inlay }}
         aria-hidden="true"
       />
 
-      <header className="flex items-start justify-between gap-3 mb-4">
-        <span
-          className={`inline-flex items-center gap-2 px-2.5 py-1 rounded-full border text-[10px] font-mono uppercase tracking-[0.18em] ${status.tone}`}
-        >
+      <header className="flex flex-wrap items-center gap-2">
+        <span className="well-sm inline-flex items-center gap-2 px-2.5 py-1">
           <span
-            className={`w-1.5 h-1.5 rounded-full ${status.dot}`}
+            className={`h-1.5 w-1.5 shrink-0 rounded-full ${status.dot}`}
             aria-hidden="true"
           />
-          {status.label}
+          <span className={`annotate ${status.text}`}>{status.label}</span>
         </span>
         {isLifetime && (
-          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary border border-primary/30 bg-primary/5 rounded-full px-2.5 py-1">
-            ∞ Lifetime
+          <span className="well-sm inline-flex items-center px-2.5 py-1">
+            <span className="annotate text-signal">&#8734; Unbefristet</span>
           </span>
         )}
       </header>
 
-      <h3 className="font-display text-xl md:text-2xl font-semibold tracking-tight">
-        {cert.name}
-      </h3>
-      {cert.fullTitle && (
-        <p className="mt-1 text-sm text-muted-foreground leading-snug">
-          {cert.fullTitle}
-        </p>
-      )}
-      {(cert.provider || cert.category) && (
-        <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.15em] text-muted-foreground">
-          {[cert.provider, cert.category].filter(Boolean).join(" · ")}
-        </p>
-      )}
+      <div className="flex flex-col gap-1.5">
+        <h3 className="font-display text-xl font-semibold tracking-tight md:text-2xl">
+          {cert.name}
+        </h3>
+        {cert.fullTitle && (
+          <p className="text-sm leading-snug text-fg-muted">{cert.fullTitle}</p>
+        )}
+        {(cert.provider || cert.category) && (
+          <p className="annotate mt-1">
+            {[cert.provider, cert.category].filter(Boolean).join(" · ")}
+          </p>
+        )}
+      </div>
 
-      {(cert.estimatedHours > 0 ||
-        cert.estimatedCost ||
-        cert.difficulty > 0 ||
-        cert.plannedStart) && (
-        <dl className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-3 py-4 border-y border-border">
+      {/* Four facts, seated in a recess instead of ruled off by borders. */}
+      {hasStats && (
+        <dl className="well grid grid-cols-2 gap-2 p-2 sm:grid-cols-4">
           {cert.plannedStart && (
-            <div>
-              <dt className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
-                Window
-              </dt>
-              <dd className="font-display text-sm font-semibold mt-1">
+            <div className="cast-sm flex flex-col gap-1 px-3 py-2.5">
+              <dt className="annotate">Zeitfenster</dt>
+              <dd className="font-display text-sm font-semibold tabular">
                 {formatMonth(cert.plannedStart)}
-                {cert.plannedEnd ? ` -- ${formatMonth(cert.plannedEnd)}` : ""}
+                {cert.plannedEnd ? ` – ${formatMonth(cert.plannedEnd)}` : ""}
               </dd>
             </div>
           )}
           {cert.estimatedHours > 0 && (
-            <div>
-              <dt className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
-                Hours
-              </dt>
-              <dd className="font-display text-sm font-semibold mt-1">
+            <div className="cast-sm flex flex-col gap-1 px-3 py-2.5">
+              <dt className="annotate">Stunden</dt>
+              <dd className="font-display text-sm font-semibold tabular">
                 ~{cert.estimatedHours}h
               </dd>
             </div>
           )}
           {cert.estimatedCost && (
-            <div>
-              <dt className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
-                Cost
-              </dt>
-              <dd className="font-display text-sm font-semibold mt-1">
+            <div className="cast-sm flex flex-col gap-1 px-3 py-2.5">
+              <dt className="annotate">Kosten</dt>
+              <dd className="font-display text-sm font-semibold tabular">
                 {cert.estimatedCost}
               </dd>
             </div>
           )}
           {cert.difficulty > 0 && (
-            <div>
-              <dt className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
-                Difficulty
-              </dt>
+            <div className="cast-sm flex flex-col gap-1 px-3 py-2.5">
+              <dt className="annotate">Schwierigkeit</dt>
               <dd
-                className="font-display text-sm font-semibold mt-1"
-                aria-label={`${cert.difficulty} out of 5`}
+                className="font-display text-sm font-semibold"
+                aria-label={`${cert.difficulty} von 5`}
               >
-                <span className="text-primary">
+                <span className="text-signal">
                   {"★".repeat(cert.difficulty)}
                 </span>
-                <span className="text-muted-foreground/40">
+                <span className="text-fg-subtle/40">
                   {"★".repeat(5 - cert.difficulty)}
                 </span>
               </dd>
@@ -128,18 +138,15 @@ export default function CertificateCard({ cert }: { cert: Certificate }) {
       )}
 
       {cert.description && (
-        <p className="mt-5 text-sm text-foreground/85 leading-relaxed">
+        <p className="measure text-sm leading-relaxed text-fg-muted">
           {cert.description}
         </p>
       )}
 
       {cert.skills.length > 0 && (
-        <ul className="mt-5 flex flex-wrap gap-1.5">
+        <ul className="flex flex-wrap gap-2">
           {cert.skills.map((skill) => (
-            <li
-              key={skill}
-              className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground border border-border rounded-full px-2.5 py-0.5"
-            >
+            <li key={skill} className="well-sm annotate px-2.5 py-1 text-fg-muted">
               {skill}
             </li>
           ))}
@@ -147,43 +154,39 @@ export default function CertificateCard({ cert }: { cert: Certificate }) {
       )}
 
       {cert.whyPoints.length > 0 && (
-        <div className="mt-5">
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground mb-2">
-            Why it matters
-          </p>
-          <ul className="space-y-1.5">
+        <div className="flex flex-col gap-2.5">
+          <p className="annotate">Warum es zählt</p>
+          <ul className="flex flex-col gap-2">
             {cert.whyPoints.map((point) => (
-              <li
-                key={point}
-                className="relative pl-4 text-sm text-foreground/85 leading-relaxed"
-              >
+              <li key={point} className="flex items-start gap-3 text-sm">
                 <span
-                  className="absolute left-0 top-[0.55rem] w-2 h-px bg-primary"
+                  className="mt-2 h-px w-3 shrink-0 bg-edge"
                   aria-hidden="true"
                 />
-                {point}
+                <span className="leading-relaxed text-fg-muted">{point}</span>
               </li>
             ))}
           </ul>
         </div>
       )}
 
-      <div className="mt-auto pt-6">
-        {cert.credentialUrl ? (
-          <a
-            href={cert.credentialUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="link-slide text-sm text-primary font-medium"
-          >
-            View credential &rarr;
-          </a>
-        ) : cert.issueDate ? (
-          <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-muted-foreground">
-            Issued {formatMonth(cert.issueDate)}
-          </p>
-        ) : null}
-      </div>
+      {hasFooter && (
+        <div className="mt-auto flex items-center pt-1">
+          {cert.credentialUrl ? (
+            <a
+              href={cert.credentialUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="control inline-flex items-center gap-2 px-3.5 py-2 text-xs font-medium"
+            >
+              Credential ansehen
+              <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+            </a>
+          ) : (
+            <p className="annotate">Ausgestellt {formatMonth(cert.issueDate)}</p>
+          )}
+        </div>
+      )}
     </article>
   )
 }
