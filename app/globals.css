@@ -3,75 +3,121 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ══════════════════════════════════════════════════════════════════════
+   CAST — a tactile material system.
+
+   Objects are cast OUT OF the ground rather than laid on top of it: one
+   light source at the top-left, a raised polarity and a sunken polarity,
+   and nothing floating. Two rules keep it out of 2020:
+
+   1. Geometry is halved. Canonical soft-UI uses 8-9px offsets and 16-18px
+      blur, which is what reads as "pillow". CAST uses 6px/14px with tight
+      radii, which reads as milled.
+   2. Every control carries a REAL border. The shadow is the material; the
+      border is the affordance. That separation is what lets the surface
+      stay soft while the edge still clears 3:1 — the degree of freedom
+      classic neumorphism gives up by deleting the border.
+
+   Every colour below was solved, not picked: each text and edge token is
+   the value closest to its ground that still clears its contrast target
+   against the WORST surface it can land on (the sunken well in light mode,
+   the raised plate in dark mode), clamped to the sRGB gamut.
+   ══════════════════════════════════════════════════════════════════════ */
+
 :root {
-  --background: oklch(0.98 0.003 90);
-  --foreground: oklch(0.12 0.01 260);
-  --card: oklch(0.96 0.003 90);
-  --card-foreground: oklch(0.12 0.01 260);
-  --popover: oklch(0.98 0.003 90);
-  --popover-foreground: oklch(0.12 0.01 260);
-  --primary: oklch(0.50 0.16 160);
-  --primary-foreground: oklch(0.98 0.003 90);
-  --secondary: oklch(0.94 0.003 90);
-  --secondary-foreground: oklch(0.12 0.01 260);
-  --muted: oklch(0.94 0.005 90);
-  --muted-foreground: oklch(0.50 0.01 260);
-  --accent: oklch(0.94 0.003 90);
-  --accent-foreground: oklch(0.12 0.01 260);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.98 0.003 90);
-  --border: oklch(0.90 0.005 90);
-  --input: oklch(0.90 0.005 90);
-  --ring: oklch(0.50 0.16 160 / 0.3);
-  --chart-1: oklch(0.50 0.16 160);
-  --chart-2: oklch(0.60 0.12 200);
-  --chart-3: oklch(0.55 0.14 140);
-  --chart-4: oklch(0.65 0.10 180);
-  --chart-5: oklch(0.45 0.12 220);
-  --radius: 0.75rem;
-  --sidebar: oklch(0.96 0.003 90);
-  --sidebar-foreground: oklch(0.12 0.01 260);
-  --sidebar-primary: oklch(0.50 0.16 160);
-  --sidebar-primary-foreground: oklch(0.98 0.003 90);
-  --sidebar-accent: oklch(0.94 0.003 90);
-  --sidebar-accent-foreground: oklch(0.12 0.01 260);
-  --sidebar-border: oklch(0.90 0.005 90);
-  --sidebar-ring: oklch(0.50 0.16 160 / 0.3);
+  /* ── Ground and its two poles ─────────────────────────────────── */
+  --ground:      oklch(0.920 0.006 250);
+  --cast-hi:     oklch(0.982 0.006 250);   /* light source, top-left      */
+  --cast-lo:     oklch(0.808 0.010 250);   /* cast shadow, bottom-right   */
+
+  /* ── Surfaces text can land on ────────────────────────────────── */
+  --plate:       oklch(0.938 0.006 250);   /* raised                      */
+  --well:        oklch(0.898 0.008 250);   /* sunken — worst case (light) */
+
+  /* ── Type ─────────────────────────────────────────────────────── */
+  --fg:          oklch(0.301 0.018 258);   /* 10.02:1 on well             */
+  --fg-muted:    oklch(0.490 0.014 258);   /*  4.62:1 on well             */
+  --fg-subtle:   oklch(0.584 0.012 258);   /*  3.11:1 on well             */
+
+  /* ── Edges: the affordance layer, never decorative ────────────── */
+  --edge:        oklch(0.584 0.014 258);   /*  3.11:1 on well             */
+  --edge-soft:   oklch(0.700 0.010 258);   /* dividers only, non-semantic */
+
+  /* ── Accent. Rationed: state, focus, and the current thing. ───── */
+  --signal:      oklch(0.478 0.100 165);   /*  4.62:1 on well — text-safe */
+  --signal-bright: oklch(0.569 0.119 165); /*  3.11:1 — graphics only     */
+  --signal-fg:   oklch(0.985 0.004 250);
+
+  --danger:      oklch(0.470 0.170 25);
+  --danger-fg:   oklch(0.985 0.004 250);
+
+  /* ── Material geometry. Halved on purpose. ────────────────────── */
+  --cast-x:      6px;
+  --cast-blur:   14px;
+  --cast-x-sm:   3px;
+  --cast-blur-sm: 7px;
+
+  --radius:      0.625rem;
+  --radius-ctl:  0.5rem;
+
+  /* ── Motion. Weight comes from settle, not from shadow depth. ─── */
+  --ease-out:    cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-press:   120ms;
+  --dur-hover:   160ms;
+  --dur-panel:   220ms;
+
+  /* ── shadcn/ui aliases. Keeps components/ui and /admin working. ─ */
+  --background: var(--ground);
+  --foreground: var(--fg);
+  --card: var(--plate);
+  --card-foreground: var(--fg);
+  --popover: var(--plate);
+  --popover-foreground: var(--fg);
+  --primary: var(--signal);
+  --primary-foreground: var(--signal-fg);
+  --secondary: var(--well);
+  --secondary-foreground: var(--fg);
+  --muted: var(--well);
+  --muted-foreground: var(--fg-muted);
+  --accent: var(--well);
+  --accent-foreground: var(--fg);
+  --destructive: var(--danger);
+  --destructive-foreground: var(--danger-fg);
+  --border: var(--edge-soft);
+  --input: var(--edge);
+  --ring: var(--signal);
+  --sidebar: var(--plate);
+  --sidebar-foreground: var(--fg);
+  --sidebar-primary: var(--signal);
+  --sidebar-primary-foreground: var(--signal-fg);
+  --sidebar-accent: var(--well);
+  --sidebar-accent-foreground: var(--fg);
+  --sidebar-border: var(--edge-soft);
+  --sidebar-ring: var(--signal);
 }
 
 .dark {
-  --background: oklch(0.09 0.005 260);
-  --foreground: oklch(0.95 0.005 90);
-  --card: oklch(0.12 0.005 260);
-  --card-foreground: oklch(0.95 0.005 90);
-  --popover: oklch(0.11 0.005 260);
-  --popover-foreground: oklch(0.95 0.005 90);
-  --primary: oklch(0.75 0.15 160);
-  --primary-foreground: oklch(0.09 0.005 260);
-  --secondary: oklch(0.15 0.005 260);
-  --secondary-foreground: oklch(0.95 0.005 90);
-  --muted: oklch(0.18 0.005 260);
-  --muted-foreground: oklch(0.55 0.01 260);
-  --accent: oklch(0.15 0.005 260);
-  --accent-foreground: oklch(0.95 0.005 90);
-  --destructive: oklch(0.6 0.25 25);
-  --destructive-foreground: oklch(0.95 0.005 90);
-  --border: oklch(0.18 0.005 260);
-  --input: oklch(0.18 0.005 260);
-  --ring: oklch(0.75 0.15 160 / 0.3);
-  --chart-1: oklch(0.75 0.15 160);
-  --chart-2: oklch(0.65 0.12 200);
-  --chart-3: oklch(0.70 0.14 140);
-  --chart-4: oklch(0.60 0.10 180);
-  --chart-5: oklch(0.55 0.12 220);
-  --sidebar: oklch(0.12 0.005 260);
-  --sidebar-foreground: oklch(0.95 0.005 90);
-  --sidebar-primary: oklch(0.75 0.15 160);
-  --sidebar-primary-foreground: oklch(0.09 0.005 260);
-  --sidebar-accent: oklch(0.15 0.005 260);
-  --sidebar-accent-foreground: oklch(0.95 0.005 90);
-  --sidebar-border: oklch(0.18 0.005 260);
-  --sidebar-ring: oklch(0.75 0.15 160 / 0.3);
+  --ground:      oklch(0.300 0.012 262);
+  --cast-hi:     oklch(0.362 0.012 262);
+  --cast-lo:     oklch(0.212 0.020 262);
+
+  --plate:       oklch(0.328 0.012 262);   /* raised — worst case (dark)  */
+  --well:        oklch(0.268 0.012 262);
+
+  --fg:          oklch(0.930 0.018 254);   /* 10.03:1 on plate            */
+  --fg-muted:    oklch(0.700 0.014 254);   /*  4.61:1 on plate            */
+  --fg-subtle:   oklch(0.599 0.012 254);   /*  3.11:1 on plate            */
+
+  --edge:        oklch(0.599 0.014 254);   /*  3.11:1 on plate            */
+  --edge-soft:   oklch(0.460 0.012 254);
+
+  --signal:      oklch(0.682 0.143 165);   /*  4.61:1 on plate — text-safe*/
+  --signal-bright: oklch(0.780 0.140 165);
+  --signal-fg:   oklch(0.180 0.010 262);
+
+  --danger:      oklch(0.700 0.160 25);
+  --danger-fg:   oklch(0.180 0.010 262);
 }
 
 @theme inline {
@@ -94,15 +140,6 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -112,142 +149,294 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  /* CAST-native colour utilities */
+  --color-ground: var(--ground);
+  --color-plate: var(--plate);
+  --color-well: var(--well);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
+  --color-edge: var(--edge);
+  --color-edge-soft: var(--edge-soft);
+  --color-signal: var(--signal);
+  --color-signal-bright: var(--signal-bright);
+  --color-signal-fg: var(--signal-fg);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 10px);
+
+  /* BUGFIX: these previously named the font FAMILIES literally ("Inter",
+     "Space Grotesk", "JetBrains Mono") while app/layout.tsx declares the
+     variables below. next/font self-hosts under hashed family names that
+     are ONLY reachable through these variables, so every visitor without
+     those fonts installed locally was served ui-sans-serif. */
+  --font-sans:    var(--font-inter),          ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-space-grotesk),  ui-sans-serif, system-ui, sans-serif;
+  --font-mono:    var(--font-jetbrains-mono), ui-monospace, monospace;
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground font-sans;
+    border-color: var(--border);
   }
 
-  /* scroll-behavior handled by Lenis smooth scroll provider */
+  body {
+    background: var(--ground);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
 
   ::selection {
-    background: oklch(0.50 0.16 160 / 0.2);
-    color: oklch(0.12 0.01 260);
+    background: color-mix(in oklab, var(--signal) 26%, transparent);
+    color: var(--fg);
   }
 
-  .dark ::selection {
-    background: oklch(0.75 0.15 160 / 0.25);
-    color: oklch(0.95 0.005 90);
+  /* One visible focus style, everywhere, with no baked-in alpha.
+     The previous system halved an already-transparent ring twice and
+     ended up at roughly 15% opacity. */
+  :where(a, button, [role="button"], input, textarea, select, summary, [tabindex]):focus-visible {
+    outline: 2px solid var(--signal);
+    outline-offset: 2px;
+    border-radius: 3px;
   }
 
-  /* Text balance utility */
-  .text-balance {
-    text-wrap: balance;
+  .text-balance { text-wrap: balance; }
+}
+
+@layer components {
+  /* ── RAISED. The default object polarity. ─────────────────────── */
+  .cast {
+    background: var(--plate);
+    border-radius: var(--radius);
+    box-shadow:
+      calc(var(--cast-x) * -1) calc(var(--cast-x) * -1) var(--cast-blur) var(--cast-hi),
+      var(--cast-x) var(--cast-x) var(--cast-blur) var(--cast-lo);
   }
 
-  /* Grain texture overlay */
-  .grain-overlay::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: 40;
-    pointer-events: none;
-    opacity: 0.02;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    background-repeat: repeat;
-    background-size: 256px 256px;
+  .cast-sm {
+    background: var(--plate);
+    border-radius: var(--radius-ctl);
+    box-shadow:
+      calc(var(--cast-x-sm) * -1) calc(var(--cast-x-sm) * -1) var(--cast-blur-sm) var(--cast-hi),
+      var(--cast-x-sm) var(--cast-x-sm) var(--cast-blur-sm) var(--cast-lo);
   }
 
-  .dark .grain-overlay::before {
-    opacity: 0.03;
+  /* ── SUNKEN. Inputs, tracks, containers that hold things. ─────── */
+  .well {
+    background: var(--well);
+    border-radius: var(--radius);
+    box-shadow:
+      inset calc(var(--cast-x) * -1) calc(var(--cast-x) * -1) var(--cast-blur) var(--cast-hi),
+      inset var(--cast-x) var(--cast-x) var(--cast-blur) var(--cast-lo);
   }
 
-  /* Glassmorphism utility */
-  .glass {
-    background: oklch(0.98 0.003 90 / 0.7);
-    backdrop-filter: blur(12px) saturate(180%);
-    border: 1px solid oklch(0.12 0.01 260 / 0.05);
+  .well-sm {
+    background: var(--well);
+    border-radius: var(--radius-ctl);
+    box-shadow:
+      inset calc(var(--cast-x-sm) * -1) calc(var(--cast-x-sm) * -1) var(--cast-blur-sm) var(--cast-hi),
+      inset var(--cast-x-sm) var(--cast-x-sm) var(--cast-blur-sm) var(--cast-lo);
   }
 
-  .dark .glass {
-    background: oklch(0.09 0.005 260 / 0.7);
-    border: 1px solid oklch(0.95 0.005 90 / 0.05);
-  }
-
-  /* Hover line animation for links */
-  .link-underline {
+  /* ── A hairline rim. Catches the light along the top edge and
+        stops large plates from looking like blurry blobs. ───────── */
+  .rim {
     position: relative;
   }
-
-  .link-underline::after {
+  .rim::before {
     content: "";
     position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 0;
-    height: 1.5px;
-    background: var(--primary);
-    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(145deg,
+      color-mix(in oklab, var(--cast-hi) 90%, transparent),
+      transparent 42%,
+      color-mix(in oklab, var(--cast-lo) 55%, transparent));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask-composite: exclude;
+    pointer-events: none;
   }
 
-  .link-underline:hover::after {
-    width: 100%;
+  /* ── CONTROLS. Raised material + a real border.
+        Three independent state cues: polarity, fill, and rim. Strip
+        every shadow (forced-colors does exactly that) and the control
+        is still identifiable and still clears 3:1. ───────────────── */
+  .control {
+    background: var(--plate);
+    color: var(--fg);
+    border: 1px solid var(--edge);
+    border-radius: var(--radius-ctl);
+    box-shadow:
+      calc(var(--cast-x-sm) * -1) calc(var(--cast-x-sm) * -1) var(--cast-blur-sm) var(--cast-hi),
+      var(--cast-x-sm) var(--cast-x-sm) var(--cast-blur-sm) var(--cast-lo);
+    transition:
+      background-color var(--dur-hover) var(--ease-out),
+      box-shadow var(--dur-press) var(--ease-out),
+      transform var(--dur-press) var(--ease-out),
+      border-color var(--dur-hover) var(--ease-out);
   }
 
-  /* Interactive link with underline slide (thinner variant) */
-  .link-slide {
-    position: relative;
-    display: inline-block;
+  @media (hover: hover) and (pointer: fine) {
+    .control:hover {
+      background: color-mix(in oklab, var(--plate) 92%, var(--cast-hi));
+      border-color: var(--signal);
+    }
   }
 
+  .control:active,
+  .control[data-pressed="true"],
+  .control[aria-pressed="true"] {
+    transform: translateY(1px);
+    background: color-mix(in oklab, var(--well) 88%, var(--cast-lo));
+    box-shadow:
+      inset calc(var(--cast-x-sm) * -1) calc(var(--cast-x-sm) * -1) var(--cast-blur-sm) var(--cast-hi),
+      inset var(--cast-x-sm) var(--cast-x-sm) var(--cast-blur-sm) var(--cast-lo);
+  }
+
+  .control:disabled,
+  .control[aria-disabled="true"] {
+    opacity: 0.55;
+    box-shadow: none;
+    transform: none;
+    cursor: not-allowed;
+  }
+
+  /* Primary action. The one place the accent fills a surface. */
+  .control-primary {
+    background: var(--signal);
+    color: var(--signal-fg);
+    border-color: var(--signal);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .control-primary:hover {
+      background: color-mix(in oklab, var(--signal) 88%, var(--cast-hi));
+      border-color: var(--signal);
+    }
+  }
+  .control-primary:active {
+    background: color-mix(in oklab, var(--signal) 86%, var(--cast-lo));
+  }
+
+  /* ── Sunken text inputs. Opposite polarity to buttons, so you can
+        see at a glance what you type into and what you press. ───── */
+  .field {
+    background: var(--well);
+    color: var(--fg);
+    border: 1px solid var(--edge);
+    border-radius: var(--radius-ctl);
+    box-shadow:
+      inset 2px 2px 5px var(--cast-lo),
+      inset -2px -2px 5px var(--cast-hi);
+    transition: border-color var(--dur-hover) var(--ease-out),
+                box-shadow var(--dur-hover) var(--ease-out);
+  }
+  .field::placeholder { color: var(--fg-subtle); }
+  .field:focus,
+  .field:focus-visible {
+    border-color: var(--signal);
+    outline: 2px solid var(--signal);
+    outline-offset: 2px;
+  }
+
+  /* ── Mono annotation, tabular by default. ─────────────────────── */
+  .annotate {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums lining-nums;
+    color: var(--fg-subtle);
+  }
+  .tabular { font-variant-numeric: tabular-nums lining-nums; }
+
+  /* ── Compatibility shims ──────────────────────────────────────────
+     The old system's utilities are still referenced in ~50 places, most
+     of them under /admin which is not part of this redesign. Aliasing
+     them to CAST keeps those surfaces coherent instead of unstyled while
+     the public pages are converted properly. Delete once /admin is done. */
+  .glass {
+    background: var(--plate);
+    box-shadow:
+      calc(var(--cast-x) * -1) calc(var(--cast-x) * -1) var(--cast-blur) var(--cast-hi),
+      var(--cast-x) var(--cast-x) var(--cast-blur) var(--cast-lo);
+    backdrop-filter: none;
+  }
+  .grain-overlay { /* retired: the material carries the texture now */ }
+  .link-slide { position: relative; }
   .link-slide::after {
     content: "";
     position: absolute;
-    bottom: -1px;
     left: 0;
+    bottom: -1px;
     width: 0;
     height: 1px;
-    background: var(--primary);
-    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: var(--signal);
+    transition: width var(--dur-hover) var(--ease-out);
   }
+  .link-slide:hover::after { width: 100%; }
 
-  .link-slide:hover::after {
-    width: 100%;
+  /* ── Link underline that grows from the left. ─────────────────── */
+  .link-underline { position: relative; }
+  .link-underline::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 0;
+    height: 1.5px;
+    background: var(--signal);
+    transition: width var(--dur-hover) var(--ease-out);
   }
+  .link-underline:hover::after { width: 100%; }
+}
 
-  /* Smooth focus ring for accessibility */
-  .focus-ring {
-    outline: none;
+/* ══ Accessibility signals read from the OS, not from a widget. ══════
+   Under 1% of sites implement prefers-contrast. When the user has asked
+   for firmer edges, the soft material steps back and real borders take
+   over — no toggle to discover, no state to persist. ═══════════════ */
+@media (prefers-contrast: more) {
+  :root {
+    --edge-soft: var(--edge);
+    --cast-hi: oklch(1 0 0);
+    --cast-lo: oklch(0.700 0.014 250);
   }
+  .dark {
+    --edge-soft: var(--edge);
+    --cast-lo: oklch(0.140 0.014 262);
+  }
+  .cast, .cast-sm, .well, .well-sm { border: 1px solid var(--edge); }
+}
 
-  .focus-ring:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
-    border-radius: 2px;
+@media (forced-colors: active) {
+  .cast, .cast-sm, .well, .well-sm, .control, .field {
+    box-shadow: none;
+    border: 1px solid ButtonBorder;
   }
+  .control-primary { border-color: Highlight; }
+}
 
-  /* Smooth reveal mask */
-  @keyframes reveal-up {
-    from {
-      clip-path: inset(100% 0 0 0);
-      opacity: 0;
-    }
-    to {
-      clip-path: inset(0 0 0 0);
-      opacity: 1;
-    }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
-
-  .reveal-up {
-    animation: reveal-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
+  .control:active { transform: none; }
 }
 
 @media print {
-  .grain-overlay::before,
-  nav,
-  .scroll-progress {
-    display: none !important;
-  }
-  body {
-    background: white !important;
-    color: black !important;
+  nav, .no-print { display: none !important; }
+  body { background: #fff !important; color: #000 !important; }
+  .cast, .cast-sm, .well, .well-sm, .control, .field {
+    box-shadow: none !important;
+    border: 1px solid #999 !important;
   }
 }
