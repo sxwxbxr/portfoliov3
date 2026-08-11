@@ -70,12 +70,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",
       priority: 0.7,
     },
-    {
-      url: `${baseUrl}/skills`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
+    // /skills was folded into /about#skills. A 301 in next.config.mjs keeps
+    // any indexed URL working; it must not stay listed here as a canonical.
     {
       url: `${baseUrl}/education`,
       lastModified: new Date(),

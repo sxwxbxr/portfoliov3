@@ -21,7 +21,7 @@ const subLinks = [
   { name: "Services", href: "/services" },
   { name: "Experience", href: "/experience" },
   BLOG_ENABLED && { name: "Blog", href: "/blog" },
-  { name: "Skills", href: "/skills" },
+  { name: "Skills", href: "/about#skills" },
   { name: "Education", href: "/education" },
   {
     name: "Nxrthstack",

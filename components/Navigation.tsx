@@ -26,7 +26,6 @@ const moreLinks = [
   },
   { name: "Experience", href: "/experience", description: "Work history" },
   { name: "Education", href: "/education", description: "Academic background & certs" },
-  { name: "Skills", href: "/skills", description: "Technical expertise" },
   BLOG_ENABLED && {
     name: "Blog",
     href: "/blog",

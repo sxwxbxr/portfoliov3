@@ -21,7 +21,7 @@ const footerNav = [
       { name: "About", href: "/about" },
       { name: "Experience", href: "/experience" },
       { name: "Education", href: "/education" },
-      { name: "Skills", href: "/skills" },
+      { name: "Skills", href: "/about#skills" },
       ...(BLOG_ENABLED ? [{ name: "Blog", href: "/blog" }] : []),
     ],
   },

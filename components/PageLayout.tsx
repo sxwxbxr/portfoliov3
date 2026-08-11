@@ -24,10 +24,13 @@ export function Section({
   children,
   className = "",
   delay = 0,
+  id,
 }: {
   children: React.ReactNode
   className?: string
   delay?: number
+  /** Set when the section is a link target, e.g. /about#skills. */
+  id?: string
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true, margin: "-72px" })
@@ -36,6 +39,9 @@ export function Section({
   return (
     <motion.div
       ref={ref}
+      id={id}
+      // Clears the sticky nav when the section is jumped to by hash.
+      style={id ? { scrollMarginTop: "6rem" } : undefined}
       className={className}
       initial={reduce ? false : { opacity: 0, y: 8 }}
       animate={reduce || isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}

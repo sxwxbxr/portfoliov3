@@ -2,8 +2,10 @@ import Link from "next/link"
 import Image from "next/image"
 import { ArrowUpRight, Download } from "lucide-react"
 import PageLayout, { Section } from "../../components/PageLayout"
-import { getEducationEntries } from "@/lib/data"
+import { SkillGroups, groupByCategory, type SkillRow } from "../../components/SkillGroups"
+import { getEducationEntries, getSkills } from "@/lib/data"
 import { resolveImage } from "@/lib/project-image"
+import { copy } from "@/lib/copy"
 
 export const revalidate = 86400
 
@@ -35,7 +37,12 @@ const facts = [
 ]
 
 export default async function About() {
-  const education = await getEducationEntries()
+  const [education, skills] = await Promise.all([
+    getEducationEntries(),
+    getSkills(),
+  ])
+  const hasSkills = skills.length > 0
+  const skillGroupCount = groupByCategory(skills as SkillRow[]).length
   const portrait = resolveImage("/260216_professionalMG.jpeg")
   // The CV has been linked unconditionally while public/documents/ does not
   // exist. A dead download on the one page that asks for trust is worse than
@@ -103,34 +110,50 @@ export default async function About() {
         </div>
       </Section>
 
-      {/* ─── Expertise ─── */}
-      <Section className="sheet flex flex-col gap-8 py-20 md:py-28">
+      {/* ─── Expertise ───────────────────────────────────────────────────
+          One section, two sources. /skills used to be a separate route that
+          rendered the database rows; it was empty and advertised in the nav,
+          which is worse than not existing. It lives here now.
+
+          When the skills table has rows they ARE this section — grouped by
+          category, one tray each. When it is empty the hand-written summary
+          below stands in, so filling the admin upgrades the page instead of
+          producing a second section that says the same thing twice. */}
+      <Section id="skills" className="sheet flex flex-col gap-8 py-20 md:py-28">
         <div className="flex flex-col gap-2">
-          <span className="annotate">Expertise · {expertise.length} Bereiche</span>
+          <span className="annotate">
+            {hasSkills
+              ? copy.about.skillsEyebrow(skillGroupCount, skills.length)
+              : copy.about.expertiseEyebrow(expertise.length)}
+          </span>
           <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
-            Expertise
+            {copy.about.expertise}
           </h2>
         </div>
 
-        <div className="flex flex-col gap-4">
-          {expertise.map((area) => (
-            <div key={area.category} className="cast rim def-grid p-6">
-              <h3 className="font-display text-sm font-semibold md:text-base">
-                {area.category}
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {area.skills.map((skill) => (
-                  <span
-                    key={skill}
-                    className="well-sm px-2.5 py-1 font-mono text-xs text-fg-muted"
-                  >
-                    {skill}
-                  </span>
-                ))}
+        {hasSkills ? (
+          <SkillGroups skills={skills as SkillRow[]} />
+        ) : (
+          <div className="flex flex-col gap-4">
+            {expertise.map((area) => (
+              <div key={area.category} className="cast rim def-grid p-6">
+                <h3 className="font-display text-sm font-semibold md:text-base">
+                  {area.category}
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {area.skills.map((skill) => (
+                    <span
+                      key={skill}
+                      className="well-sm px-2.5 py-1 font-mono text-xs text-fg-muted"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </Section>
 
       {/* ─── Education ─── */}
