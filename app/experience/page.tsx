@@ -17,9 +17,11 @@ export default async function Experience() {
   return (
     <PageLayout
       label={
-        firstYear
-          ? `${experience.length} Stationen · seit ${firstYear}`
-          : `${experience.length} Stationen`
+        experience.length === 0
+          ? "Werdegang"
+          : firstYear
+            ? `${experience.length} Stationen · seit ${firstYear}`
+            : `${experience.length} Stationen`
       }
       title="Experience"
       subtitle="Mein Weg durch Softwareentwicklung, Projektleitung und Engineering."

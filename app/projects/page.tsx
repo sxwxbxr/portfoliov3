@@ -15,7 +15,11 @@ export default async function Projects() {
 
   return (
     <PageLayout
-      label={`${projects.length} ${projects.length === 1 ? "Projekt" : "Projekte"}`}
+      label={
+        projects.length > 0
+          ? `${projects.length} ${projects.length === 1 ? "Projekt" : "Projekte"}`
+          : "Arbeit"
+      }
       title="Projects"
       subtitle="Eine Auswahl aus Healthcare, Energie, SaaS und Developer Tools."
     >

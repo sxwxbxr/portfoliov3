@@ -207,12 +207,19 @@ export default function HomeContent({
     .filter((n) => Number.isFinite(n))
     .sort((a, b) => a - b)[0]
 
+  // A derived metric is only shown when it actually counts something. Rendering
+  // "0 Projekte geliefert" on an unseeded database is worse than rendering
+  // nothing, and the tiles are the first objects a visitor sees.
   const heroMetrics =
     settings.heroMetrics.length > 0
       ? settings.heroMetrics
       : [
-          { value: String(projects.length), label: "Projekte geliefert" },
-          { value: String(experience.length), label: "Arbeitgeber" },
+          ...(projects.length > 0
+            ? [{ value: String(projects.length), label: "Projekte geliefert" }]
+            : []),
+          ...(experience.length > 0
+            ? [{ value: String(experience.length), label: "Arbeitgeber" }]
+            : []),
           ...(firstYear ? [{ value: `seit ${firstYear}`, label: "im Feld" }] : []),
         ]
 
@@ -333,8 +340,9 @@ export default function HomeContent({
           <div className="flex flex-wrap items-baseline justify-between gap-4">
             <div className="flex flex-col gap-2">
               <span className="annotate">
-                Ausgewählte Arbeit · {projects.length}{" "}
-                {projects.length === 1 ? "Projekt" : "Projekte"}
+                Ausgewählte Arbeit
+                {projects.length > 0 &&
+                  ` · ${projects.length} ${projects.length === 1 ? "Projekt" : "Projekte"}`}
               </span>
               <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
                 Selected Work
