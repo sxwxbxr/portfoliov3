@@ -4,11 +4,12 @@ import * as React from "react"
 import { Monitor, Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 import { cn } from "@/lib/utils"
+import { copy } from "@/lib/copy"
 
 const OPTIONS = [
-  { value: "system", label: "System", Icon: Monitor },
-  { value: "light", label: "Hell", Icon: Sun },
-  { value: "dark", label: "Dunkel", Icon: Moon },
+  { value: "system", label: copy.nav.themeSystem, Icon: Monitor },
+  { value: "light", label: copy.nav.themeLight, Icon: Sun },
+  { value: "dark", label: copy.nav.themeDark, Icon: Moon },
 ] as const
 
 /**
@@ -29,7 +30,7 @@ export function ThemeToggle({ className }: { className?: string }) {
   return (
     <div
       role="radiogroup"
-      aria-label="Farbschema"
+      aria-label={copy.nav.colorScheme}
       className={cn("well-sm inline-flex items-center gap-0.5 p-1", className)}
     >
       {OPTIONS.map(({ value, label, Icon }) => {

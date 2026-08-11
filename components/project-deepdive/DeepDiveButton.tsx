@@ -4,6 +4,7 @@ import { useId, useState } from "react"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { Terminal, ChevronDown } from "lucide-react"
 import { DeepDiveContent } from "./DeepDiveContent"
+import { copy } from "@/lib/copy"
 
 const EASE = [0.16, 1, 0.3, 1] as const
 
@@ -58,7 +59,7 @@ export function ProjectDeepDive({
       if (!acc.trim()) throw new Error("empty response")
       setLoaded(true)
     } catch {
-      setError("Details konnten nicht geladen werden.")
+      setError(copy.deepDive.error)
     } finally {
       setLoading(false)
     }
@@ -82,7 +83,7 @@ export function ProjectDeepDive({
         className="control inline-flex items-center gap-2.5 self-start px-4 py-2.5 text-sm font-medium"
       >
         <Terminal className="h-4 w-4 text-signal" aria-hidden="true" />
-        Technical Deep Dive
+        {copy.deepDive.toggle}
         <ChevronDown
           className={
             "h-4 w-4 transition-transform duration-200 motion-reduce:transition-none " +
@@ -107,7 +108,7 @@ export function ProjectDeepDive({
           >
             <div className="px-4 pb-4">
               <div className="cast rim flex flex-col gap-4 p-6 md:p-8">
-                <span className="annotate">KI-generierte Analyse</span>
+                <span className="annotate">{copy.deepDive.generated}</span>
                 <DeepDiveContent
                   content={content}
                   loading={loading}

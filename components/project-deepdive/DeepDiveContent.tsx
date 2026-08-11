@@ -1,6 +1,7 @@
 "use client"
 
 import { Markdown } from "@/components/ai/Markdown"
+import { copy } from "@/lib/copy"
 
 interface DeepDiveContentProps {
   content: string
@@ -25,7 +26,7 @@ export function DeepDiveContent({
           onClick={onRetry}
           className="control px-4 py-2.5 text-sm font-medium"
         >
-          Nochmal versuchen
+          {copy.deepDive.retry}
         </button>
       </div>
     )
@@ -36,7 +37,7 @@ export function DeepDiveContent({
   if (loading && !content) {
     return (
       <div role="status" className="flex flex-col gap-5">
-        <span className="sr-only">Analyse wird geladen …</span>
+        <span className="sr-only">{copy.deepDive.loading}</span>
         {[0, 1, 2].map((i) => (
           <div key={i} className="flex flex-col gap-2.5" aria-hidden="true">
             <div className="well-sm h-4 w-44" />

@@ -13,6 +13,7 @@ import { ScrollProgress } from "@/components/ScrollProgress"
 import { ChatWidget } from "@/components/chat-widget/ChatWidget"
 import { AI_FEATURES_ENABLED } from "@/lib/features"
 import { getSiteSettings, type SiteSettings } from "@/lib/data"
+import { copy } from "@/lib/copy"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -161,7 +162,7 @@ export default async function RootLayout({
           href="#main-content"
           className="control sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2.5 focus:text-sm focus:font-medium"
         >
-          Skip to main content
+          {copy.common.skipToContent}
         </a>
         <Suspense fallback={null}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation"
 import PageLayout, { Section } from "../../components/PageLayout"
 import { ProseMarkdown } from "../../components/ProseMarkdown"
 import { getSiteSettings } from "@/lib/data"
+import { copy } from "@/lib/copy"
 
 export const revalidate = 86400
 
@@ -20,9 +21,9 @@ export default async function Privacy() {
 
   return (
     <PageLayout
-      label="Datenschutz"
-      title="Privacy"
-      subtitle="How data submitted through this site is processed."
+      label={copy.privacy.label}
+      title={copy.privacy.title}
+      subtitle={copy.privacy.subtitle}
     >
       <section className="sheet pb-24 md:pb-32">
         <Section>

@@ -1,10 +1,11 @@
 import type { Certificate } from "./CertificateCard"
 import { formatMonth, getReadableTextColor } from "@/lib/utils"
+import { copy } from "@/lib/copy"
 
 const STATUS_LABEL: Record<string, string> = {
-  completed: "Completed",
-  "in-progress": "In Progress",
-  planned: "Planned",
+  completed: copy.education.statusCompleted,
+  "in-progress": copy.education.statusInProgress,
+  planned: copy.education.statusPlanned,
 }
 
 function parseMonth(value: string): number | null {
@@ -95,7 +96,7 @@ function currentMonthKey() {
  * The roadmap as a milled gantt.
  *
  * Every row is the same object twice over: a sunken channel for the month
- * range, and a raised bar seated in it for the phase. The scale, the "Heute"
+ * range, and a raised bar seated in it for the phase. The scale, the "Today"
  * marker and every track share one grid column and one horizontal padding, so
  * a percentage means the same distance in all three — none of the underlying
  * geometry changed, only what the percentages are measured against.
@@ -123,10 +124,13 @@ export default function CertificatesRoadmap({
     <div className="cast rim flex flex-col gap-6 p-6 md:p-8">
       <header className="flex flex-col gap-2 md:flex-row md:items-baseline md:justify-between">
         <h3 className="font-display text-lg font-semibold tracking-tight md:text-xl">
-          {entries.length} Zertifikat{entries.length !== 1 ? "e" : ""} auf dem Plan
+          {copy.education.roadmapHeading(entries.length)}
         </h3>
         <p className="annotate">
-          {formatMonth(months[0])} – {formatMonth(months[months.length - 1])}
+          {copy.education.roadmapRange(
+            formatMonth(months[0]),
+            formatMonth(months[months.length - 1])
+          )}
         </p>
       </header>
 
@@ -137,7 +141,9 @@ export default function CertificatesRoadmap({
         >
           {/* Month scale — a sunken track, current month raised out of it. */}
           <div className="grid grid-cols-1 items-center gap-2 md:grid-cols-[180px_1fr] md:gap-5">
-            <p className="annotate hidden md:block md:text-right">Zeitachse</p>
+            <p className="annotate hidden md:block md:text-right">
+              {copy.education.roadmapAxis}
+            </p>
             <div
               className="well grid p-1.5 text-center"
               style={{
@@ -164,7 +170,7 @@ export default function CertificatesRoadmap({
                         (isNow ? "text-signal" : "text-fg")
                       }
                     >
-                      M{i + 1}
+                      {copy.education.roadmapMonthIndex(i + 1)}
                     </span>
                     <span className="annotate">
                       {date.toLocaleString("en-US", { month: "short" })}
@@ -175,7 +181,7 @@ export default function CertificatesRoadmap({
             </div>
           </div>
 
-          {/* "Heute" sits in the same column and the same inset as the tracks,
+          {/* "Today" sits in the same column and the same inset as the tracks,
               so the tab stands directly over the line in every row. */}
           {todayLeft !== null && (
             <div className="grid grid-cols-1 items-center gap-2 md:grid-cols-[180px_1fr] md:gap-5">
@@ -191,7 +197,9 @@ export default function CertificatesRoadmap({
                         className="h-1.5 w-1.5 shrink-0 rounded-full bg-signal-bright"
                         aria-hidden="true"
                       />
-                      <span className="annotate text-signal">Heute</span>
+                      <span className="annotate text-signal">
+                        {copy.education.roadmapToday}
+                      </span>
                     </span>
                   </div>
                 </div>
@@ -231,9 +239,11 @@ export default function CertificatesRoadmap({
                       {cert.name}
                     </span>
                     <span className="annotate">
-                      {STATUS_LABEL[cert.status] ?? cert.status}
-                      {startLabel && ` · ${startLabel}`}
-                      {endLabel && ` – ${endLabel}`}
+                      {copy.education.roadmapRowMeta(
+                        STATUS_LABEL[cert.status] ?? cert.status,
+                        startLabel,
+                        endLabel
+                      )}
                     </span>
                   </div>
 
@@ -252,7 +262,10 @@ export default function CertificatesRoadmap({
                         }}
                       >
                         <span className="min-w-0 truncate">
-                          {span} Mt. · {cert.category || cert.provider || cert.name}
+                          {copy.education.roadmapBar(
+                            span,
+                            cert.category || cert.provider || cert.name
+                          )}
                         </span>
                       </div>
                       {todayLeft !== null && (

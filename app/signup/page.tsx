@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Navigation from "@/components/Navigation"
+import { copy } from "@/lib/copy"
 
 export default function SignupPage() {
   const router = useRouter()
@@ -33,12 +34,12 @@ export default function SignupPage() {
     setError("")
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match")
+      setError(copy.auth.errors.passwordMismatch)
       return
     }
 
     if (password.length < 8) {
-      setError("Password must be at least 8 characters")
+      setError(copy.auth.errors.passwordShort)
       return
     }
 
@@ -54,7 +55,7 @@ export default function SignupPage() {
       const data = await res.json()
 
       if (!res.ok) {
-        setError(data.error || "Signup failed")
+        setError(data.error || copy.auth.errors.signUpFailed)
         if (res.status === 403) {
           setAvailable(false)
         }
@@ -63,7 +64,7 @@ export default function SignupPage() {
 
       router.push("/login?registered=true")
     } catch {
-      setError("Something went wrong. Please try again.")
+      setError(copy.auth.errors.generic)
     } finally {
       setLoading(false)
     }
@@ -76,17 +77,17 @@ export default function SignupPage() {
       <div className="flex min-h-screen items-center justify-center px-6 pb-16 pt-24">
         <div className="cast rim flex w-full max-w-[420px] flex-col gap-7 p-7 md:p-8">
           <div className="flex flex-col gap-2">
-            <span className="tab annotate self-start">Admin</span>
+            <span className="tab annotate self-start">{copy.auth.label}</span>
             <h1 className="font-display text-2xl font-semibold tracking-tight">
-              Create account
+              {copy.auth.signUpTitle}
             </h1>
 
             {available === null && (
-              <p className="text-sm text-fg-muted">Checking availability...</p>
+              <p className="text-sm text-fg-muted">{copy.auth.checkingAvailability}</p>
             )}
 
             {available === true && (
-              <p className="text-sm text-fg-muted">Set up your admin account</p>
+              <p className="text-sm text-fg-muted">{copy.auth.signUpSubtitle}</p>
             )}
           </div>
 
@@ -94,13 +95,13 @@ export default function SignupPage() {
             <div className="flex flex-col gap-5">
               {/* Closed door: a recess, not a form. */}
               <div className="well p-6 text-center text-sm text-fg-muted">
-                Signup is disabled. An account already exists.
+                {copy.auth.signUpDisabled}
               </div>
               <Link
                 href="/login"
                 className="control control-primary w-full px-5 py-3 text-center text-sm font-medium"
               >
-                Go to sign in
+                {copy.auth.goToSignIn}
               </Link>
             </div>
           )}
@@ -110,7 +111,7 @@ export default function SignupPage() {
               <form onSubmit={handleSubmit} className="flex flex-col gap-5">
                 <div className="flex flex-col gap-2">
                   <label htmlFor="name" className="annotate">
-                    Name
+                    {copy.auth.name}
                   </label>
                   <input
                     id="name"
@@ -119,14 +120,14 @@ export default function SignupPage() {
                     onChange={(e) => setName(e.target.value)}
                     required
                     autoComplete="name"
-                    placeholder="Your name"
+                    placeholder={copy.auth.namePlaceholder}
                     className="field w-full px-4 py-3 text-sm"
                   />
                 </div>
 
                 <div className="flex flex-col gap-2">
                   <label htmlFor="email" className="annotate">
-                    Email
+                    {copy.auth.email}
                   </label>
                   <input
                     id="email"
@@ -135,14 +136,14 @@ export default function SignupPage() {
                     onChange={(e) => setEmail(e.target.value)}
                     required
                     autoComplete="email"
-                    placeholder="you@example.com"
+                    placeholder={copy.auth.emailPlaceholder}
                     className="field w-full px-4 py-3 text-sm"
                   />
                 </div>
 
                 <div className="flex flex-col gap-2">
                   <label htmlFor="password" className="annotate">
-                    Password
+                    {copy.auth.password}
                   </label>
                   <input
                     id="password"
@@ -151,14 +152,14 @@ export default function SignupPage() {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     autoComplete="new-password"
-                    placeholder="At least 8 characters"
+                    placeholder={copy.auth.newPasswordPlaceholder}
                     className="field w-full px-4 py-3 text-sm"
                   />
                 </div>
 
                 <div className="flex flex-col gap-2">
                   <label htmlFor="confirm-password" className="annotate">
-                    Confirm password
+                    {copy.auth.confirmPassword}
                   </label>
                   <input
                     id="confirm-password"
@@ -167,7 +168,7 @@ export default function SignupPage() {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
                     autoComplete="new-password"
-                    placeholder="Repeat your password"
+                    placeholder={copy.auth.confirmPasswordPlaceholder}
                     className="field w-full px-4 py-3 text-sm"
                   />
                 </div>
@@ -183,15 +184,15 @@ export default function SignupPage() {
                   disabled={loading}
                   className="control control-primary w-full px-5 py-3 text-sm font-medium"
                 >
-                  {loading ? "Creating account..." : "Create account"}
+                  {loading ? copy.auth.signingUp : copy.auth.signUp}
                 </button>
               </form>
 
               <div className="well-sm px-4 py-3 text-center">
                 <p className="text-sm text-fg-muted">
-                  Already have an account?{" "}
+                  {copy.auth.haveAccount}{" "}
                   <Link href="/login" className="link-underline text-signal">
-                    Sign in
+                    {copy.auth.signIn}
                   </Link>
                 </p>
               </div>

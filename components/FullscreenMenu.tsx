@@ -7,32 +7,37 @@ import { X, ExternalLink, Github, Linkedin } from "lucide-react"
 import { motion, AnimatePresence, useReducedMotion, type MotionProps } from "framer-motion"
 import { ThemeToggle } from "./ThemeToggle"
 import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
+import { copy } from "@/lib/copy"
 
 const EASE = [0.23, 1, 0.32, 1] as const
 
 const menuLinks = [
-  { name: "Work", href: "/projects" },
-  { name: "About", href: "/about" },
-  { name: "Contact", href: "/contact" },
+  { name: copy.nav.work, href: "/projects" },
+  { name: copy.nav.about, href: "/about" },
+  { name: copy.nav.contact, href: "/contact" },
 ]
 
 const subLinks = [
-  CASE_STUDIES_ENABLED && { name: "Case Studies", href: "/case-studies" },
-  { name: "Services", href: "/services" },
-  { name: "Experience", href: "/experience" },
-  BLOG_ENABLED && { name: "Blog", href: "/blog" },
-  { name: "Skills", href: "/about#skills" },
-  { name: "Education", href: "/education" },
+  CASE_STUDIES_ENABLED && { name: copy.nav.caseStudies, href: "/case-studies" },
+  { name: copy.nav.services, href: "/services" },
+  { name: copy.nav.experience, href: "/experience" },
+  BLOG_ENABLED && { name: copy.nav.blog, href: "/blog" },
+  { name: copy.nav.skills, href: "/about#skills" },
+  { name: copy.nav.education, href: "/education" },
   {
-    name: "Nxrthstack",
+    name: copy.nav.nxrthstack,
     href: "https://nxrthstack.sweber.dev",
     external: true,
   },
 ].filter(Boolean) as { name: string; href: string; external?: boolean }[]
 
 const socialLinks = [
-  { icon: Github, label: "GitHub", href: "https://github.com/sxwxbxr" },
-  { icon: Linkedin, label: "LinkedIn", href: "https://ch.linkedin.com/in/seya-weber-06a592256" },
+  { icon: Github, label: copy.nav.github, href: "https://github.com/sxwxbxr" },
+  {
+    icon: Linkedin,
+    label: copy.nav.linkedin,
+    href: "https://ch.linkedin.com/in/seya-weber-06a592256",
+  },
 ]
 
 interface FullscreenMenuProps {
@@ -108,7 +113,7 @@ export function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps) {
           ref={menuRef}
           role="dialog"
           aria-modal="true"
-          aria-label="Navigation"
+          aria-label={copy.nav.navigationLabel}
           initial={reduce ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -123,18 +128,21 @@ export function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps) {
           >
             {/* Index bar */}
             <div className="flex items-center justify-between gap-4">
-              <span className="annotate">Menü</span>
+              <span className="annotate">{copy.nav.menu}</span>
               <button
                 ref={closeButtonRef}
                 onClick={onClose}
                 className="control inline-flex h-10 w-10 items-center justify-center"
-                aria-label="Menü schliessen"
+                aria-label={copy.nav.closeMenu}
               >
                 <X className="h-5 w-5" aria-hidden="true" />
               </button>
             </div>
 
-            <nav aria-label="Hauptnavigation" className="flex flex-1 flex-col justify-center gap-8">
+            <nav
+              aria-label={copy.nav.mainNavigation}
+              className="flex flex-1 flex-col justify-center gap-8"
+            >
               {/* Primary routes. The current one is seated into the ground —
                   position answers "where am I", colour only confirms it. */}
               <div className="flex flex-col items-start gap-2">

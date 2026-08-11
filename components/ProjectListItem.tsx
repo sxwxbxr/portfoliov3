@@ -1,6 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowUpRight } from "lucide-react"
+import { copy } from "@/lib/copy"
 
 interface Project {
   title: string
@@ -62,10 +63,7 @@ export function ProjectListItem({
 
       <div className="flex flex-col gap-2 px-1 pb-1">
         <div className="flex items-center justify-between gap-3">
-          <span className="annotate">
-            {indexLabel}
-            {category && ` · ${category}`}
-          </span>
+          <span className="annotate">{copy.projects.itemMeta(indexLabel, category)}</span>
           <ArrowUpRight
             className="h-4 w-4 shrink-0 text-fg-subtle transition-[transform,color] duration-150 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-signal motion-reduce:transform-none"
             aria-hidden="true"

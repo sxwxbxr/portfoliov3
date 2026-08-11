@@ -3,6 +3,7 @@ import { ArrowUpRight } from "lucide-react"
 import PageLayout, { Section } from "../../components/PageLayout"
 import { EmptyState } from "../../components/EmptyState"
 import { getExperience } from "@/lib/data"
+import { copy } from "@/lib/copy"
 
 export const revalidate = 86400
 
@@ -16,15 +17,9 @@ export default async function Experience() {
 
   return (
     <PageLayout
-      label={
-        experience.length === 0
-          ? "Werdegang"
-          : firstYear
-            ? `${experience.length} Stationen · seit ${firstYear}`
-            : `${experience.length} Stationen`
-      }
-      title="Experience"
-      subtitle="Mein Weg durch Softwareentwicklung, Projektleitung und Engineering."
+      label={copy.experience.label(experience.length, firstYear)}
+      title={copy.experience.title}
+      subtitle={copy.experience.subtitle}
     >
       <section className="sheet flex flex-col gap-8 pb-24 md:pb-32">
         {experience.length > 0 ? (
@@ -85,14 +80,14 @@ export default async function Experience() {
             ))}
           </div>
         ) : (
-          <EmptyState>Noch keine Stationen hinterlegt.</EmptyState>
+          <EmptyState>{copy.experience.empty}</EmptyState>
         )}
 
         <Link
           href="/about"
           className="control inline-flex items-center gap-2 self-start px-4 py-2.5 text-sm font-medium"
         >
-          Mehr über mich
+          {copy.common.moreAboutMe}
           <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
         </Link>
       </section>

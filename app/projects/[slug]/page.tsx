@@ -7,6 +7,7 @@ import Navigation from "../../../components/Navigation"
 import { ProjectDeepDive } from "@/components/project-deepdive/DeepDiveButton"
 import { AI_FEATURES_ENABLED } from "@/lib/features"
 import { resolveImage } from "@/lib/project-image"
+import { copy } from "@/lib/copy"
 
 export const revalidate = 86400
 
@@ -72,7 +73,7 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
             className="annotate inline-flex items-center gap-1.5 self-start hover:text-signal transition-colors duration-150"
           >
             <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
-            Zurück zu den Projekten
+            {copy.projects.backToProjects}
           </Link>
 
           <h1 className="font-display text-4xl font-bold leading-[1.05] tracking-tight text-balance md:text-5xl lg:text-6xl">
@@ -107,7 +108,7 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
                   rel="noopener noreferrer"
                   className="control control-primary inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium"
                 >
-                  Live ansehen
+                  {copy.projects.viewLive}
                   <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
                 </a>
               )}
@@ -119,7 +120,7 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
                   className="control inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium"
                 >
                   <Github className="h-4 w-4" aria-hidden="true" />
-                  Source Code
+                  {copy.projects.sourceCode}
                 </a>
               )}
             </div>
@@ -176,9 +177,9 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
             <div className="flex flex-col gap-6">
               {challenge && (
                 <div className="cast rim flex flex-col gap-3 p-7 md:p-8">
-                  <span className="annotate">Ausgangslage</span>
+                  <span className="annotate">{copy.projects.challengeEyebrow}</span>
                   <h2 className="font-display text-2xl font-bold tracking-tight">
-                    The Challenge
+                    {copy.projects.challenge}
                   </h2>
                   <p className="measure leading-relaxed text-fg-muted">{challenge}</p>
                 </div>
@@ -186,9 +187,9 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
 
               {solution && (
                 <div className="cast rim flex flex-col gap-3 p-7 md:p-8">
-                  <span className="annotate">Vorgehen</span>
+                  <span className="annotate">{copy.projects.solutionEyebrow}</span>
                   <h2 className="font-display text-2xl font-bold tracking-tight">
-                    The Solution
+                    {copy.projects.solution}
                   </h2>
                   <p className="measure leading-relaxed text-fg-muted">{solution}</p>
                 </div>
@@ -197,9 +198,11 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
               {results.length > 0 && (
                 <div className="flex flex-col gap-5">
                   <div className="flex flex-col gap-2">
-                    <span className="annotate">Ergebnis · {results.length}</span>
+                    <span className="annotate">
+                      {copy.projects.resultsEyebrow(results.length)}
+                    </span>
                     <h2 className="font-display text-2xl font-bold tracking-tight">
-                      Results
+                      {copy.projects.results}
                     </h2>
                   </div>
                   <ol className="well flex flex-col gap-2 p-3 md:p-4">
@@ -234,7 +237,7 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
 
               {study?.technologies && (study.technologies as string[]).length > 0 && (
                 <div className="flex flex-col gap-3">
-                  <span className="annotate">Technologies</span>
+                  <span className="annotate">{copy.projects.technologies}</span>
                   <div className="flex flex-wrap gap-2">
                     {(study.technologies as string[]).map((tech) => (
                       <span
@@ -259,7 +262,7 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
               className="control inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium md:self-start"
             >
               <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-              Alle Projekte
+              {copy.projects.allProjects}
             </Link>
 
             {nextProject && (
@@ -267,7 +270,7 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
                 href={`/projects/${nextProject.slug}`}
                 className="cast rim group flex flex-col gap-1 p-5 transition-transform duration-150 ease-out hover:-translate-y-0.5 motion-reduce:transform-none md:min-w-[20rem] md:text-right"
               >
-                <span className="annotate">Nächstes Projekt</span>
+                <span className="annotate">{copy.projects.nextProject}</span>
                 <span className="font-display text-lg font-semibold transition-colors duration-150 group-hover:text-signal">
                   {nextProject.title}
                 </span>

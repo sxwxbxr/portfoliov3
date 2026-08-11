@@ -5,6 +5,7 @@ import PageLayout, { Section } from "../../components/PageLayout"
 import { EmptyState } from "../../components/EmptyState"
 import { getCaseStudies } from "@/lib/data"
 import { CASE_STUDIES_ENABLED } from "@/lib/features"
+import { copy } from "@/lib/copy"
 
 export const revalidate = 86400
 
@@ -14,13 +15,9 @@ export default async function CaseStudies() {
 
   return (
     <PageLayout
-      label={
-        caseStudies.length === 1
-          ? "1 Case Study"
-          : `${caseStudies.length} Case Studies`
-      }
-      title="Case Studies"
-      subtitle="Echte Projekte, gelöste Probleme und messbare Ergebnisse aus verschiedenen Branchen."
+      label={copy.caseStudies.label(caseStudies.length)}
+      title={copy.caseStudies.title}
+      subtitle={copy.caseStudies.subtitle}
     >
       <section className="sheet flex flex-col gap-10 pb-24 md:pb-32">
         {caseStudies.length > 0 ? (
@@ -61,7 +58,7 @@ export default async function CaseStudies() {
             ))}
           </div>
         ) : (
-          <EmptyState>Noch keine Case Studies hinterlegt.</EmptyState>
+          <EmptyState>{copy.caseStudies.empty}</EmptyState>
         )}
       </section>
     </PageLayout>

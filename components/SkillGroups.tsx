@@ -1,5 +1,6 @@
 import { SkillPopover } from "@/components/skill-explorer/SkillPopover"
 import { AI_FEATURES_ENABLED } from "@/lib/features"
+import { copy } from "@/lib/copy"
 
 export interface SkillRow {
   category: string
@@ -13,7 +14,7 @@ export function groupByCategory(skills: SkillRow[]) {
   const order: string[] = []
   const groups = new Map<string, SkillRow[]>()
   for (const skill of skills) {
-    const key = skill.category || "Uncategorized"
+    const key = skill.category || copy.about.uncategorised
     if (!groups.has(key)) {
       groups.set(key, [])
       order.push(key)

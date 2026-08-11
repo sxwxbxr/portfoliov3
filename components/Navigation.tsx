@@ -8,33 +8,42 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
 import { ThemeToggle } from "./ThemeToggle"
 import { FullscreenMenu } from "./FullscreenMenu"
 import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
+import { copy } from "@/lib/copy"
 
 // Services moved up out of the overflow menu: it is a conversion surface and
 // does not belong behind a disclosure. What stays in "More" is CV detail.
 const navLinks = [
-  { name: "Work", href: "/projects" },
-  { name: "About", href: "/about" },
-  { name: "Services", href: "/services" },
-  { name: "Contact", href: "/contact" },
+  { name: copy.nav.work, href: "/projects" },
+  { name: copy.nav.about, href: "/about" },
+  { name: copy.nav.services, href: "/services" },
+  { name: copy.nav.contact, href: "/contact" },
 ]
 
 const moreLinks = [
   CASE_STUDIES_ENABLED && {
-    name: "Case Studies",
+    name: copy.nav.caseStudies,
     href: "/case-studies",
-    description: "In-depth project breakdowns",
-  },
-  { name: "Experience", href: "/experience", description: "Work history" },
-  { name: "Education", href: "/education", description: "Academic background & certs" },
-  BLOG_ENABLED && {
-    name: "Blog",
-    href: "/blog",
-    description: "Thoughts and articles",
+    description: copy.nav.caseStudiesDescription,
   },
   {
-    name: "Nxrthstack",
+    name: copy.nav.experience,
+    href: "/experience",
+    description: copy.nav.experienceDescription,
+  },
+  {
+    name: copy.nav.education,
+    href: "/education",
+    description: copy.nav.educationDescription,
+  },
+  BLOG_ENABLED && {
+    name: copy.nav.blog,
+    href: "/blog",
+    description: copy.nav.blogDescription,
+  },
+  {
+    name: copy.nav.nxrthstack,
     href: "https://nxrthstack.sweber.dev",
-    description: "Company homepage",
+    description: copy.nav.nxrthstackDescription,
     external: true,
   },
 ].filter(Boolean) as {
@@ -132,7 +141,7 @@ export default function Navigation() {
               href="/"
               className="font-display text-base font-semibold tracking-tight hover:text-signal transition-colors duration-150"
             >
-              seya weber
+              {copy.nav.brand}
             </Link>
 
             <div className="hidden lg:flex items-center gap-3">
@@ -179,7 +188,7 @@ export default function Navigation() {
                     (moreActive ? "text-signal" : "text-fg-muted")
                   }
                 >
-                  More
+                  {copy.nav.more}
                   <ChevronDown
                     className={
                       "h-3.5 w-3.5 transition-transform duration-200 " +
@@ -260,7 +269,7 @@ export default function Navigation() {
             <button
               onClick={() => setMenuOpen(true)}
               className="control lg:hidden inline-flex h-10 w-10 items-center justify-center"
-              aria-label="Menü öffnen"
+              aria-label={copy.nav.openMenu}
             >
               <Menu className="h-5 w-5" aria-hidden="true" />
             </button>

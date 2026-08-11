@@ -5,6 +5,7 @@ import Link from "next/link"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 import { notFound } from "next/navigation"
 import { CASE_STUDIES_ENABLED } from "@/lib/features"
+import { copy } from "@/lib/copy"
 
 export const revalidate = 86400
 
@@ -49,7 +50,7 @@ export default async function CaseStudy({ params }: CaseStudyPageProps) {
             className="annotate inline-flex items-center gap-1.5 self-start transition-colors duration-150 hover:text-signal"
           >
             <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
-            Alle Case Studies
+            {copy.caseStudies.allCaseStudies}
           </Link>
 
           <h1 className="font-display text-4xl font-bold leading-[1.05] tracking-tight text-balance md:text-5xl lg:text-6xl">
@@ -72,9 +73,9 @@ export default async function CaseStudy({ params }: CaseStudyPageProps) {
           {study.challenge && (
             <Section>
               <div className="cast rim flex flex-col gap-3 p-7 md:p-8">
-                <span className="annotate">Ausgangslage</span>
+                <span className="annotate">{copy.projects.challengeEyebrow}</span>
                 <h2 className="font-display text-2xl font-bold tracking-tight">
-                  The Challenge
+                  {copy.projects.challenge}
                 </h2>
                 <p className="measure leading-relaxed text-fg-muted">
                   {study.challenge}
@@ -86,9 +87,9 @@ export default async function CaseStudy({ params }: CaseStudyPageProps) {
           {study.solution && (
             <Section delay={0.1}>
               <div className="cast rim flex flex-col gap-3 p-7 md:p-8">
-                <span className="annotate">Vorgehen</span>
+                <span className="annotate">{copy.projects.solutionEyebrow}</span>
                 <h2 className="font-display text-2xl font-bold tracking-tight">
-                  The Solution
+                  {copy.projects.solution}
                 </h2>
                 <p className="measure leading-relaxed text-fg-muted">
                   {study.solution}
@@ -101,9 +102,11 @@ export default async function CaseStudy({ params }: CaseStudyPageProps) {
             <Section delay={0.2}>
               <div className="flex flex-col gap-5">
                 <div className="flex flex-col gap-2">
-                  <span className="annotate">Ergebnis · {results.length}</span>
+                  <span className="annotate">
+                    {copy.projects.resultsEyebrow(results.length)}
+                  </span>
                   <h2 className="font-display text-2xl font-bold tracking-tight">
-                    Results
+                    {copy.projects.results}
                   </h2>
                 </div>
                 <ol className="well flex flex-col gap-2 p-3 md:p-4">
@@ -143,7 +146,7 @@ export default async function CaseStudy({ params }: CaseStudyPageProps) {
           {technologies.length > 0 && (
             <Section delay={0.4}>
               <div className="flex flex-col gap-3">
-                <span className="annotate">Technologies &amp; Tools</span>
+                <span className="annotate">{copy.caseStudies.technologies}</span>
                 <div className="flex flex-wrap gap-2">
                   {technologies.map((tech) => (
                     <span
@@ -167,7 +170,7 @@ export default async function CaseStudy({ params }: CaseStudyPageProps) {
               className="control inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium md:self-start"
             >
               <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-              Alle Case Studies
+              {copy.caseStudies.allCaseStudies}
             </Link>
 
             {nextStudy && nextStudy.slug !== study.slug && (
@@ -176,7 +179,7 @@ export default async function CaseStudy({ params }: CaseStudyPageProps) {
                 className="cast rim group flex flex-col gap-1 p-5 transition-transform duration-150 ease-out hover:-translate-y-0.5 motion-reduce:transform-none md:min-w-[20rem] md:text-right"
               >
                 <span className="annotate inline-flex items-center gap-1.5 md:self-end">
-                  Nächste Case Study
+                  {copy.caseStudies.nextCaseStudy}
                   <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                 </span>
                 <span className="font-display text-lg font-semibold transition-colors duration-150 group-hover:text-signal">

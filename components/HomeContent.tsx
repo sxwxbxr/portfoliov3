@@ -9,6 +9,7 @@ import { ProjectListItem } from "./ProjectListItem"
 import { EmptyState } from "./EmptyState"
 import type { SiteSettings } from "@/lib/data"
 import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
+import { copy } from "@/lib/copy"
 
 // ── Types ────────────────────────────────────────────
 interface Project {
@@ -77,25 +78,7 @@ interface HomeContentProps {
   settings: SiteSettings
 }
 
-const expertise = [
-  {
-    category: "Development",
-    skills: ["C#", ".NET", "TypeScript", "React", "Next.js", "SQL", "REST APIs", "Python"],
-  },
-  {
-    category: "Project Management",
-    skills: [
-      "Agile / Scrum",
-      "Stakeholder Management",
-      "Requirements Engineering",
-      "Risk Management",
-    ],
-  },
-  {
-    category: "Tools & Platforms",
-    skills: ["Azure DevOps", "Git", "Docker", "Vercel", "Jira", "Supabase"],
-  },
-]
+const expertise = copy.common.expertiseAreas
 
 // ── Motion ────────────────────────────────────────────
 const EASE = [0.23, 1, 0.32, 1] as const
@@ -208,19 +191,26 @@ export default function HomeContent({
     .sort((a, b) => a - b)[0]
 
   // A derived metric is only shown when it actually counts something. Rendering
-  // "0 Projekte geliefert" on an unseeded database is worse than rendering
+  // "0 Projects delivered" on an unseeded database is worse than rendering
   // nothing, and the tiles are the first objects a visitor sees.
   const heroMetrics =
     settings.heroMetrics.length > 0
       ? settings.heroMetrics
       : [
           ...(projects.length > 0
-            ? [{ value: String(projects.length), label: "Projekte geliefert" }]
+            ? [{ value: String(projects.length), label: copy.home.metricProjects }]
             : []),
           ...(experience.length > 0
-            ? [{ value: String(experience.length), label: "Arbeitgeber" }]
+            ? [{ value: String(experience.length), label: copy.home.metricEmployers }]
             : []),
-          ...(firstYear ? [{ value: `seit ${firstYear}`, label: "im Feld" }] : []),
+          ...(firstYear
+            ? [
+                {
+                  value: copy.home.metricSinceValue(firstYear),
+                  label: copy.home.metricSince,
+                },
+              ]
+            : []),
         ]
 
   const current = experience.find((e) => e.current)
@@ -245,7 +235,7 @@ export default function HomeContent({
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-signal-bright" />
                 </span>
                 <span className="annotate">
-                  {settings.heroAvailabilityLabel || "Verfügbar für Projekte"}
+                  {settings.heroAvailabilityLabel || copy.home.availabilityFallback}
                 </span>
               </span>
             )}
@@ -258,16 +248,16 @@ export default function HomeContent({
             </h1>
 
             <p className="text-xl text-fg md:text-2xl">
-              {settings.currentRole || "Project Manager & Software Developer"}
+              {settings.currentRole || copy.home.roleFallback}
               {settings.currentEmployer && (
                 <span className="text-fg-muted"> · {settings.currentEmployer}</span>
               )}
             </p>
 
             <p className="measure text-base leading-relaxed text-fg-muted">
-              Ich baue schlanke digitale Lösungen in{" "}
-              {settings.contactLocation || "St. Gallen, Schweiz"} — von
-              Automatisierungs-Workflows bis zu Full-Stack-Anwendungen.
+              {copy.home.locationLead(
+                settings.contactLocation || copy.common.locationFallback
+              )}
             </p>
           </motion.div>
 
@@ -300,7 +290,7 @@ export default function HomeContent({
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.5 }}
         >
-          <span className="annotate">Scroll</span>
+          <span className="annotate">{copy.common.scroll}</span>
           <motion.span
             animate={reduce ? {} : { y: [0, 4, 0] }}
             transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
@@ -313,22 +303,15 @@ export default function HomeContent({
       {/* ─── Introduction ─── */}
       <Reveal className="py-20 md:py-28">
         <div className="sheet flex flex-col gap-6">
-          <span className="annotate">Kurz gesagt</span>
-          <h2 className="sr-only">Einführung</h2>
+          <span className="annotate">{copy.home.introEyebrow}</span>
+          <h2 className="sr-only">{copy.home.introHeading}</h2>
           <p className="measure text-xl leading-relaxed md:text-2xl">
-            Ich übersetze komplexe operative Anforderungen in schlanke, wartbare
-            Software — und weil ich beide Seiten gelernt habe, verstehe ich sowohl
-            die Anforderung als auch das System, das sie erfüllen muss.
+            {copy.home.introLead}
           </p>
-          <p className="measure leading-relaxed text-fg-muted">
-            Mein Weg lief über Elektroplanung, Energieoptimierung,
-            Healthcare-Technologie und SaaS-Entwicklung. Diese Breite ist der Grund,
-            warum ich in Projekten meist die Übersetzungsarbeit zwischen Fachbereich
-            und Technik übernehme.
-          </p>
+          <p className="measure leading-relaxed text-fg-muted">{copy.home.introBody}</p>
           {current && (
             <p className="annotate">
-              Aktuell · {current.role} bei {current.company}
+              {copy.home.currentRole(current.role, current.company)}
             </p>
           )}
         </div>
@@ -340,19 +323,19 @@ export default function HomeContent({
           <div className="flex flex-wrap items-baseline justify-between gap-4">
             <div className="flex flex-col gap-2">
               <span className="annotate">
-                Ausgewählte Arbeit
-                {projects.length > 0 &&
-                  ` · ${projects.length} ${projects.length === 1 ? "Projekt" : "Projekte"}`}
+                {projects.length > 0
+                  ? copy.home.selectedWorkEyebrowCount(projects.length)
+                  : copy.home.selectedWorkEyebrow}
               </span>
               <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
-                Selected Work
+                {copy.home.selectedWork}
               </h2>
             </div>
             <Link
               href="/projects"
               className="control inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium"
             >
-              Alle Projekte
+              {copy.projects.allProjects}
               <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
@@ -370,7 +353,7 @@ export default function HomeContent({
               ))}
             </div>
           ) : (
-            <EmptyState>Noch keine Projekte hinterlegt.</EmptyState>
+            <EmptyState>{copy.projects.empty}</EmptyState>
           )}
         </div>
       </Reveal>
@@ -379,9 +362,11 @@ export default function HomeContent({
       <Reveal className="py-20 md:py-28">
         <div className="sheet flex flex-col gap-10">
           <div className="flex flex-col gap-2">
-            <span className="annotate">Expertise · {expertise.length} Bereiche</span>
+            <span className="annotate">
+              {copy.home.expertiseEyebrow(expertise.length)}
+            </span>
             <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
-              Expertise
+              {copy.home.expertise}
             </h2>
           </div>
 
@@ -414,18 +399,17 @@ export default function HomeContent({
             <div className="flex flex-wrap items-baseline justify-between gap-4">
               <div className="flex flex-col gap-2">
                 <span className="annotate">
-                  Werdegang · {experience.length} Stationen
-                  {firstYear ? ` · seit ${firstYear}` : ""}
+                  {copy.home.experienceEyebrow(experience.length, firstYear)}
                 </span>
                 <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
-                  Experience
+                  {copy.home.experience}
                 </h2>
               </div>
               <Link
                 href="/experience"
                 className="control inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium"
               >
-                Vollständiger Werdegang
+                {copy.home.fullCareer}
                 <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </div>
@@ -471,9 +455,9 @@ export default function HomeContent({
         <Reveal className="py-20 md:py-28">
           <div className="sheet flex flex-col gap-10">
             <div className="flex flex-col gap-2">
-              <span className="annotate">Referenz</span>
+              <span className="annotate">{copy.home.testimonialEyebrow}</span>
               <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
-                What partners say
+                {copy.home.testimonials}
               </h2>
             </div>
 
@@ -489,7 +473,7 @@ export default function HomeContent({
                 href={`/case-studies/${featuredTestimonial.slug}`}
                 className="link-underline mt-6 inline-block text-sm font-medium text-signal"
               >
-                Case Study lesen &rarr;
+                {copy.home.readCaseStudy} &rarr;
               </Link>
             </div>
           </div>
@@ -501,9 +485,11 @@ export default function HomeContent({
         <Reveal className="py-20 md:py-28">
           <div className="sheet flex flex-col gap-10">
             <div className="flex flex-col gap-2">
-              <span className="annotate">Writing · {latestPosts.length}</span>
+              <span className="annotate">
+                {copy.home.writingEyebrow(latestPosts.length)}
+              </span>
               <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
-                Writing
+                {copy.home.writing}
               </h2>
             </div>
 
@@ -519,10 +505,10 @@ export default function HomeContent({
                     </h3>
                     <div className="flex items-center gap-4">
                       <span className="annotate">
-                        {new Date(post.publishedAt).toLocaleDateString("de-CH", {
-                          month: "short",
-                          year: "numeric",
-                        })}
+                        {new Date(post.publishedAt).toLocaleDateString(
+                          copy.common.dateLocale,
+                          { month: "short", year: "numeric" }
+                        )}
                       </span>
                       <span className="annotate">{post.readTime}</span>
                     </div>
@@ -535,7 +521,7 @@ export default function HomeContent({
               href="/blog"
               className="link-underline self-start text-sm font-medium text-signal"
             >
-              Alle Artikel &rarr;
+              {copy.blog.allArticles} &rarr;
             </Link>
           </div>
         </Reveal>

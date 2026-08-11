@@ -3,26 +3,27 @@ import { ArrowUpRight, Github, Linkedin, Mail } from "lucide-react"
 import { TimeDisplay } from "./TimeDisplay"
 import type { SiteSettings } from "@/lib/data"
 import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
+import { copy } from "@/lib/copy"
 
 const footerNav = [
   {
-    heading: "Work",
+    heading: copy.nav.work,
     links: [
-      { name: "Projects", href: "/projects" },
+      { name: copy.nav.projects, href: "/projects" },
       ...(CASE_STUDIES_ENABLED
-        ? [{ name: "Case Studies", href: "/case-studies" }]
+        ? [{ name: copy.nav.caseStudies, href: "/case-studies" }]
         : []),
-      { name: "Services", href: "/services" },
+      { name: copy.nav.services, href: "/services" },
     ],
   },
   {
-    heading: "About",
+    heading: copy.nav.about,
     links: [
-      { name: "About", href: "/about" },
-      { name: "Experience", href: "/experience" },
-      { name: "Education", href: "/education" },
-      { name: "Skills", href: "/about#skills" },
-      ...(BLOG_ENABLED ? [{ name: "Blog", href: "/blog" }] : []),
+      { name: copy.nav.about, href: "/about" },
+      { name: copy.nav.experience, href: "/experience" },
+      { name: copy.nav.education, href: "/education" },
+      { name: copy.nav.skills, href: "/about#skills" },
+      ...(BLOG_ENABLED ? [{ name: copy.nav.blog, href: "/blog" }] : []),
     ],
   },
 ]
@@ -33,18 +34,22 @@ export function Footer({ settings }: { settings: SiteSettings }) {
   const hasSocial = Boolean(settings.githubUrl || settings.linkedinUrl)
 
   const connectGroup = {
-    heading: "Connect",
+    heading: copy.nav.connect,
     links: [
-      { name: "Contact", href: "/contact", external: false },
+      { name: copy.nav.contact, href: "/contact", external: false },
       ...(settings.githubUrl
-        ? [{ name: "GitHub", href: settings.githubUrl, external: true }]
+        ? [{ name: copy.nav.github, href: settings.githubUrl, external: true }]
         : []),
       ...(settings.linkedinUrl
-        ? [{ name: "LinkedIn", href: settings.linkedinUrl, external: true }]
+        ? [{ name: copy.nav.linkedin, href: settings.linkedinUrl, external: true }]
         : []),
-      { name: "Nxrthstack", href: "https://nxrthstack.sweber.dev", external: true },
+      {
+        name: copy.nav.nxrthstack,
+        href: "https://nxrthstack.sweber.dev",
+        external: true,
+      },
       ...(settings.privacyContent.trim()
-        ? [{ name: "Privacy", href: "/privacy", external: false }]
+        ? [{ name: copy.nav.privacy, href: "/privacy", external: false }]
         : []),
     ],
   }
@@ -59,7 +64,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
             className="font-display font-bold tracking-tight text-balance leading-[1.08]"
             style={{ fontSize: "clamp(1.9rem, 4.6vw, 3.4rem)" }}
           >
-            Lass uns zusammenarbeiten.
+            {copy.common.footerCtaTitle}
           </p>
 
           <div className="flex flex-wrap items-center gap-4">
@@ -75,7 +80,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
               href="/contact"
               className="control inline-flex items-center gap-2 px-5 py-3 text-sm font-medium"
             >
-              Projekt anfragen
+              {copy.common.footerCtaAction}
               <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
             </Link>
 
@@ -86,7 +91,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
                     href={settings.githubUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label="GitHub"
+                    aria-label={copy.nav.github}
                     className="control inline-flex h-11 w-11 items-center justify-center"
                   >
                     <Github className="h-4 w-4" aria-hidden="true" />
@@ -97,7 +102,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
                     href={settings.linkedinUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label="LinkedIn"
+                    aria-label={copy.nav.linkedin}
                     className="control inline-flex h-11 w-11 items-center justify-center"
                   >
                     <Linkedin className="h-4 w-4" aria-hidden="true" />
@@ -109,7 +114,10 @@ export function Footer({ settings }: { settings: SiteSettings }) {
         </div>
 
         {/* Link grid sits on the ground — it is navigation, not an object. */}
-        <nav aria-label="Footer" className="grid grid-cols-2 md:grid-cols-3 gap-8 px-1 pt-2">
+        <nav
+          aria-label={copy.nav.footerLabel}
+          className="grid grid-cols-2 md:grid-cols-3 gap-8 px-1 pt-2"
+        >
           {[...footerNav, connectGroup].map((group) => (
             <div key={group.heading} className="flex flex-col gap-3.5">
               <p className="annotate">{group.heading}</p>
@@ -145,16 +153,16 @@ export function Footer({ settings }: { settings: SiteSettings }) {
 
         {/* Sunken base rail: the page rests on it. */}
         <div className="well-sm flex flex-col md:flex-row items-center justify-between gap-3 px-5 py-3.5">
-          <p className="annotate">&copy; {year} Seya Weber</p>
+          <p className="annotate">{copy.common.copyright(year)}</p>
           <p className="annotate">
-            {settings.contactLocation || "St. Gallen, Switzerland"}
+            {settings.contactLocation || copy.common.locationFallback}
           </p>
           <div className="flex items-center gap-4">
             <Link
               href="/login"
               className="annotate hover:text-signal transition-colors duration-150"
             >
-              Login
+              {copy.nav.login}
             </Link>
             <TimeDisplay />
           </div>

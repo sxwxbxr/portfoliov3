@@ -1,6 +1,7 @@
 import { ArrowUpRight } from "lucide-react"
 import { certificates } from "@/lib/schema"
 import { formatMonth } from "@/lib/utils"
+import { copy } from "@/lib/copy"
 import type { InferSelectModel } from "drizzle-orm"
 
 export type Certificate = InferSelectModel<typeof certificates>
@@ -18,17 +19,17 @@ const STATUS_META: Record<
   { label: string; dot: string; text: string }
 > = {
   completed: {
-    label: "Completed",
+    label: copy.education.statusCompleted,
     dot: "bg-fg-muted",
     text: "text-fg-muted",
   },
   "in-progress": {
-    label: "In Progress",
+    label: copy.education.statusInProgress,
     dot: "bg-signal-bright",
     text: "text-signal",
   },
   planned: {
-    label: "Planned",
+    label: copy.education.statusPlanned,
     dot: "bg-edge",
     text: "",
   },
@@ -71,7 +72,9 @@ export default function CertificateCard({ cert }: { cert: Certificate }) {
         </span>
         {isLifetime && (
           <span className="well-sm inline-flex items-center px-2.5 py-1">
-            <span className="annotate text-signal">&#8734; Unbefristet</span>
+            <span className="annotate text-signal">
+              &#8734; {copy.education.lifetime}
+            </span>
           </span>
         )}
       </header>
@@ -85,7 +88,7 @@ export default function CertificateCard({ cert }: { cert: Certificate }) {
         )}
         {(cert.provider || cert.category) && (
           <p className="annotate mt-1">
-            {[cert.provider, cert.category].filter(Boolean).join(" · ")}
+            {copy.education.certMeta(cert.provider, cert.category)}
           </p>
         )}
       </div>
@@ -95,16 +98,18 @@ export default function CertificateCard({ cert }: { cert: Certificate }) {
         <dl className="well grid grid-cols-2 gap-2 p-2 sm:grid-cols-4">
           {cert.plannedStart && (
             <div className="cast-sm flex flex-col gap-1 px-3 py-2.5">
-              <dt className="annotate">Zeitfenster</dt>
+              <dt className="annotate">{copy.education.certWindow}</dt>
               <dd className="font-display text-sm font-semibold tabular">
-                {formatMonth(cert.plannedStart)}
-                {cert.plannedEnd ? ` – ${formatMonth(cert.plannedEnd)}` : ""}
+                {copy.education.certWindowValue(
+                  formatMonth(cert.plannedStart),
+                  cert.plannedEnd ? formatMonth(cert.plannedEnd) : ""
+                )}
               </dd>
             </div>
           )}
           {cert.estimatedHours > 0 && (
             <div className="cast-sm flex flex-col gap-1 px-3 py-2.5">
-              <dt className="annotate">Stunden</dt>
+              <dt className="annotate">{copy.education.certHours}</dt>
               <dd className="font-display text-sm font-semibold tabular">
                 ~{cert.estimatedHours}h
               </dd>
@@ -112,7 +117,7 @@ export default function CertificateCard({ cert }: { cert: Certificate }) {
           )}
           {cert.estimatedCost && (
             <div className="cast-sm flex flex-col gap-1 px-3 py-2.5">
-              <dt className="annotate">Kosten</dt>
+              <dt className="annotate">{copy.education.certCost}</dt>
               <dd className="font-display text-sm font-semibold tabular">
                 {cert.estimatedCost}
               </dd>
@@ -120,10 +125,10 @@ export default function CertificateCard({ cert }: { cert: Certificate }) {
           )}
           {cert.difficulty > 0 && (
             <div className="cast-sm flex flex-col gap-1 px-3 py-2.5">
-              <dt className="annotate">Schwierigkeit</dt>
+              <dt className="annotate">{copy.education.certDifficulty}</dt>
               <dd
                 className="font-display text-sm font-semibold"
-                aria-label={`${cert.difficulty} von 5`}
+                aria-label={copy.education.certDifficultyAria(cert.difficulty)}
               >
                 <span className="text-signal">
                   {"★".repeat(cert.difficulty)}
@@ -155,7 +160,7 @@ export default function CertificateCard({ cert }: { cert: Certificate }) {
 
       {cert.whyPoints.length > 0 && (
         <div className="flex flex-col gap-2.5">
-          <p className="annotate">Warum es zählt</p>
+          <p className="annotate">{copy.education.certWhy}</p>
           <ul className="flex flex-col gap-2">
             {cert.whyPoints.map((point) => (
               <li key={point} className="flex items-start gap-3 text-sm">
@@ -179,11 +184,13 @@ export default function CertificateCard({ cert }: { cert: Certificate }) {
               rel="noopener noreferrer"
               className="control inline-flex items-center gap-2 px-3.5 py-2 text-xs font-medium"
             >
-              Credential ansehen
+              {copy.education.certViewCredential}
               <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
             </a>
           ) : (
-            <p className="annotate">Ausgestellt {formatMonth(cert.issueDate)}</p>
+            <p className="annotate">
+              {copy.education.certIssued(formatMonth(cert.issueDate))}
+            </p>
           )}
         </div>
       )}

@@ -3,11 +3,11 @@
 import { useEffect, useRef } from "react"
 import { Markdown } from "@/components/ai/Markdown"
 import { cn } from "@/lib/utils"
+import { copy } from "@/lib/copy"
 
 export type Message = { role: "user" | "assistant"; content: string }
 
-export const GREETING =
-  "Hi! Ich bin Seyas KI-Assistent. Frag mich alles über seine Arbeit, seine Projekte oder seine Verfügbarkeit."
+export const GREETING = copy.chat.greeting
 
 interface ChatMessagesProps {
   messages: Message[]
@@ -17,7 +17,7 @@ interface ChatMessagesProps {
 
 function TypingDots() {
   return (
-    <span className="flex items-center gap-1 py-1" aria-label="Assistent tippt">
+    <span className="flex items-center gap-1 py-1" aria-label={copy.chat.typing}>
       {[0, 1, 2].map((i) => (
         <span
           key={i}

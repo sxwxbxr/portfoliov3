@@ -5,6 +5,7 @@ import PageLayout, { Section } from "../../components/PageLayout"
 import { EmptyState } from "../../components/EmptyState"
 import { getBlogPosts } from "@/lib/data"
 import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
+import { copy } from "@/lib/copy"
 
 export const revalidate = 86400
 
@@ -14,13 +15,9 @@ export default async function Blog() {
 
   return (
     <PageLayout
-      label={
-        blogPosts.length === 1
-          ? "1 Artikel"
-          : `${blogPosts.length} Artikel`
-      }
-      title="Writing"
-      subtitle="Notizen zu Softwareentwicklung, Projektleitung und digitaler Transformation."
+      label={copy.blog.label(blogPosts.length)}
+      title={copy.blog.title}
+      subtitle={copy.blog.subtitle}
     >
       <section className="sheet flex flex-col gap-10 pb-24 md:pb-32">
         {blogPosts.length > 0 ? (
@@ -41,10 +38,10 @@ export default async function Blog() {
                       {post.title}
                     </h2>
                     <span className="annotate">
-                      {new Date(post.publishedAt).toLocaleDateString("en-US", {
-                        month: "short",
-                        year: "numeric",
-                      })}
+                      {new Date(post.publishedAt).toLocaleDateString(
+                        copy.common.dateLocale,
+                        { month: "short", year: "numeric" }
+                      )}
                     </span>
                     <span className="annotate md:w-20 md:text-right">
                       {post.readTime}
@@ -55,7 +52,7 @@ export default async function Blog() {
             ))}
           </ol>
         ) : (
-          <EmptyState>Noch keine Artikel veröffentlicht.</EmptyState>
+          <EmptyState>{copy.blog.empty}</EmptyState>
         )}
 
         {CASE_STUDIES_ENABLED && (
@@ -63,7 +60,7 @@ export default async function Blog() {
             href="/case-studies"
             className="control inline-flex items-center gap-2 self-start px-4 py-2.5 text-sm font-medium"
           >
-            Case Studies ansehen
+            {copy.projects.viewCaseStudies}
             <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         )}

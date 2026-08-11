@@ -11,23 +11,12 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
+import { copy } from "@/lib/copy"
 
-const ROLE_OPTIONS = [
-  "Recruiter",
-  "Startup Founder",
-  "Agency",
-  "Enterprise PM",
-  "Other",
-]
-
-const NEED_OPTIONS = [
-  "Full-Stack Development",
-  "Project Management",
-  "Automation & OPC-UA",
-  "SaaS / Cloud Architecture",
-  "Short-term Freelance",
-  "Long-term Collaboration",
-]
+// The role and need options double as the wire format for /api/generate-pitch,
+// so the label is the value.
+const ROLE_OPTIONS = copy.pitch.roleOptions
+const NEED_OPTIONS = copy.pitch.needOptions
 
 const MAX_REQUIREMENTS = 300
 
@@ -78,7 +67,7 @@ export default function PitchPage() {
       }
       if (!acc.trim()) throw new Error("empty response")
     } catch {
-      setError("Could not generate a pitch right now. Please try again.")
+      setError(copy.pitch.error)
     } finally {
       setGenerating(false)
     }
@@ -110,20 +99,17 @@ export default function PitchPage() {
             className="control inline-flex items-center gap-2 self-start px-4 py-2.5 text-sm font-medium"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            Back to sweber.dev
+            {copy.pitch.back}
           </Link>
 
           <div className="flex flex-col gap-4">
             <span className="tab annotate self-start">
-              {step === "form" ? "Schritt 1 · Angaben" : "Schritt 2 · Ergebnis"}
+              {step === "form" ? copy.pitch.stepForm : copy.pitch.stepResult}
             </span>
             <h1 className="font-display text-3xl md:text-4xl font-bold tracking-tight text-balance">
-              Generate a pitch
+              {copy.pitch.title}
             </h1>
-            <p className="measure leading-relaxed text-fg-muted">
-              Tell me a little about what you&apos;re looking for and I&apos;ll
-              generate a tailored summary of how Seya could help — ready to forward.
-            </p>
+            <p className="measure leading-relaxed text-fg-muted">{copy.pitch.intro}</p>
           </div>
 
           {step === "form" ? (
@@ -131,13 +117,13 @@ export default function PitchPage() {
             <div className="cast rim flex flex-col gap-7 p-6 md:p-8">
               <div className="flex flex-col gap-2">
                 <label htmlFor="pitch-role" className="annotate">
-                  Your role / context
+                  {copy.pitch.roleLabel}
                 </label>
                 <Select value={role} onValueChange={setRole}>
                   {/* SelectTrigger is `.field` and SelectContent is `.cast`
                       in components/ui/select.tsx — no per-call restyling. */}
                   <SelectTrigger id="pitch-role">
-                    <SelectValue placeholder="Select your role" />
+                    <SelectValue placeholder={copy.pitch.rolePlaceholder} />
                   </SelectTrigger>
                   <SelectContent>
                     {ROLE_OPTIONS.map((option) => (
@@ -155,7 +141,7 @@ export default function PitchPage() {
                 className="flex flex-col gap-2"
               >
                 <span id="needs-label" className="annotate">
-                  What are you looking for?
+                  {copy.pitch.needsLabel}
                 </span>
                 {/* Sunken tray, options seated in it. A chosen option is
                     pressed into the tray, so selection survives without
@@ -184,7 +170,7 @@ export default function PitchPage() {
 
               <div className="flex flex-col gap-2">
                 <label htmlFor="requirements" className="annotate">
-                  Any specific requirements? (optional)
+                  {copy.pitch.requirementsLabel}
                 </label>
                 <textarea
                   id="requirements"
@@ -194,11 +180,11 @@ export default function PitchPage() {
                   }
                   rows={4}
                   maxLength={MAX_REQUIREMENTS}
-                  placeholder="e.g. a 3-month engagement building a TypeScript automation pipeline..."
+                  placeholder={copy.pitch.requirementsPlaceholder}
                   className="field resize-y px-4 py-3 text-sm leading-relaxed"
                 />
                 <span className="annotate self-end">
-                  {requirements.length}/{MAX_REQUIREMENTS} characters
+                  {copy.pitch.requirementsCount(requirements.length, MAX_REQUIREMENTS)}
                 </span>
               </div>
 
@@ -208,14 +194,14 @@ export default function PitchPage() {
                 disabled={!role}
                 className="control control-primary inline-flex items-center justify-center gap-2 self-start px-5 py-3 text-sm font-medium"
               >
-                Generate Pitch
+                {copy.pitch.generate}
                 <span aria-hidden="true">&rarr;</span>
               </button>
             </div>
           ) : (
             <div className="flex flex-col gap-5">
               <div className="cast rim flex flex-col gap-5 p-6 md:p-8">
-                <span className="annotate">Your pitch</span>
+                <span className="annotate">{copy.pitch.resultLabel}</span>
 
                 {/* The generated text sits in a recess: it is material the
                     page produced, not a control you act on. */}
@@ -230,7 +216,7 @@ export default function PitchPage() {
                         className="h-4 w-4 animate-spin motion-reduce:animate-none"
                         aria-hidden="true"
                       />
-                      Writing your pitch...
+                      {copy.pitch.writing}
                     </div>
                   ) : error && !content ? (
                     <p className="text-sm text-destructive">{error}</p>
@@ -249,12 +235,12 @@ export default function PitchPage() {
                     {copied ? (
                       <>
                         <Check className="h-4 w-4" aria-hidden="true" />
-                        Copied
+                        {copy.common.copied}
                       </>
                     ) : (
                       <>
                         <Copy className="h-4 w-4" aria-hidden="true" />
-                        Copy to Clipboard
+                        {copy.pitch.copyToClipboard}
                       </>
                     )}
                   </button>
@@ -265,14 +251,13 @@ export default function PitchPage() {
                     className="control inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium"
                   >
                     <RotateCcw className="h-4 w-4" aria-hidden="true" />
-                    Start over
+                    {copy.pitch.startOver}
                   </button>
                 </div>
               </div>
 
               <p className="text-xs leading-relaxed text-fg-muted">
-                This pitch was generated by AI based on Seya&apos;s actual profile.
-                For direct contact:{" "}
+                {copy.pitch.disclaimer}{" "}
                 <a
                   href="mailto:info@sweber.dev"
                   className="link-underline text-signal"

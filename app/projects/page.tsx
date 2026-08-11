@@ -6,6 +6,7 @@ import { ProjectListItem } from "../../components/ProjectListItem"
 import { getProjects } from "@/lib/data"
 import { CASE_STUDIES_ENABLED } from "@/lib/features"
 import { resolveImage } from "@/lib/project-image"
+import { copy } from "@/lib/copy"
 
 export const revalidate = 86400
 
@@ -15,13 +16,9 @@ export default async function Projects() {
 
   return (
     <PageLayout
-      label={
-        projects.length > 0
-          ? `${projects.length} ${projects.length === 1 ? "Projekt" : "Projekte"}`
-          : "Arbeit"
-      }
-      title="Projects"
-      subtitle="Eine Auswahl aus Healthcare, Energie, SaaS und Developer Tools."
+      label={copy.projects.label(projects.length)}
+      title={copy.projects.title}
+      subtitle={copy.projects.subtitle}
     >
       <section className="sheet flex flex-col gap-10 pb-24 md:pb-32">
         {withImages.length > 0 ? (
@@ -37,7 +34,7 @@ export default async function Projects() {
             ))}
           </div>
         ) : (
-          <EmptyState>Noch keine Projekte hinterlegt.</EmptyState>
+          <EmptyState>{copy.projects.empty}</EmptyState>
         )}
 
         {CASE_STUDIES_ENABLED && (
@@ -45,7 +42,7 @@ export default async function Projects() {
             href="/case-studies"
             className="control inline-flex items-center gap-2 self-start px-4 py-2.5 text-sm font-medium"
           >
-            Case Studies ansehen
+            {copy.projects.viewCaseStudies}
             <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         )}

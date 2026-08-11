@@ -7,6 +7,7 @@ import { EmptyState } from "../../components/EmptyState"
 import CertificateCard from "@/components/certificates/CertificateCard"
 import CertificatesRoadmap from "@/components/certificates/CertificatesRoadmap"
 import { getCertificates, getEducationEntries } from "@/lib/data"
+import { copy } from "@/lib/copy"
 
 export default async function Education() {
   const [certificates, education] = await Promise.all([
@@ -19,34 +20,20 @@ export default async function Education() {
   const planned = certificates.filter((c) => c.status === "planned")
 
   const groups = [
-    { key: "in-progress", label: "In Progress", items: inProgress },
-    { key: "completed", label: "Completed", items: completed },
-    { key: "planned", label: "Planned", items: planned },
+    { key: "in-progress", label: copy.education.statusInProgress, items: inProgress },
+    { key: "completed", label: copy.education.statusCompleted, items: completed },
+    { key: "planned", label: copy.education.statusPlanned, items: planned },
   ].filter((g) => g.items.length > 0)
 
   const hasRoadmap = certificates.some(
     (c) => c.status !== "completed" && c.plannedStart
   )
 
-  const labelParts: string[] = []
-  if (education.length > 0) {
-    labelParts.push(
-      `${education.length} ${education.length === 1 ? "Station" : "Stationen"}`
-    )
-  }
-  if (certificates.length > 0) {
-    labelParts.push(
-      `${certificates.length} ${
-        certificates.length === 1 ? "Zertifikat" : "Zertifikate"
-      }`
-    )
-  }
-
   return (
     <PageLayout
-      label={labelParts.length > 0 ? labelParts.join(" · ") : "Ausbildung"}
-      title="Education"
-      subtitle="Mein akademischer Weg — und die Zertifikate, die den Weg nach vorn markieren."
+      label={copy.education.label(education.length, certificates.length)}
+      title={copy.education.title}
+      subtitle={copy.education.subtitle}
     >
       {/* ─── Academic background ───────────────────────────────────────
           Tiles, not a seated channel. /about and /experience already render
@@ -56,11 +43,10 @@ export default async function Education() {
         <section className="sheet flex flex-col gap-8 pb-20 md:pb-28">
           <Section className="flex flex-col gap-2">
             <span className="annotate">
-              Ausbildung · {education.length}{" "}
-              {education.length === 1 ? "Station" : "Stationen"}
+              {copy.education.academicEyebrow(education.length)}
             </span>
             <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
-              Academic background
+              {copy.education.academicBackground}
             </h2>
           </Section>
 
@@ -98,20 +84,20 @@ export default async function Education() {
       {/* ─── Credentials ─── */}
       <section className="sheet flex flex-col gap-8 pb-20 md:pb-28">
         <Section className="flex flex-col gap-2">
-          <span className="annotate">Zertifikate · {certificates.length}</span>
+          <span className="annotate">
+            {copy.education.credentialsEyebrow(certificates.length)}
+          </span>
           <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
-            Credentials &amp; roadmap
+            {copy.education.credentials}
           </h2>
         </Section>
 
         {certificates.length === 0 ? (
           <EmptyState
-            label="Noch nichts hinterlegt"
-            title="Das Regal ist noch leer — vorerst."
+            label={copy.education.empty}
+            title={copy.education.emptyTitle}
           >
-            Der nächste Stapel Zertifizierungen rund um AI, Security und Cloud
-            ist in Planung. Sobald das erste Zertifikat läuft, erscheint es hier
-            mit Fortschritt und Roadmap.
+            {copy.education.emptyBody}
           </EmptyState>
         ) : (
           <>
@@ -121,9 +107,9 @@ export default async function Education() {
               // number still reads first.
               <dl className="grid gap-4 sm:grid-cols-3">
                 {[
-                  { label: "Completed", value: completed.length },
-                  { label: "In Progress", value: inProgress.length },
-                  { label: "Planned", value: planned.length },
+                  { label: copy.education.statusCompleted, value: completed.length },
+                  { label: copy.education.statusInProgress, value: inProgress.length },
+                  { label: copy.education.statusPlanned, value: planned.length },
                 ].map((stat) => (
                   <div
                     key={stat.label}
@@ -165,9 +151,9 @@ export default async function Education() {
       {hasRoadmap && (
         <Section className="sheet flex flex-col gap-8 pb-20 md:pb-28">
           <div className="flex flex-col gap-2">
-            <span className="annotate">Roadmap</span>
+            <span className="annotate">{copy.education.roadmapEyebrow}</span>
             <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
-              What&apos;s next on the bench.
+              {copy.education.roadmapTitle}
             </h2>
           </div>
           <CertificatesRoadmap certs={certificates} />
@@ -179,7 +165,7 @@ export default async function Education() {
           href="/about"
           className="control inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium"
         >
-          Mehr über mich
+          {copy.common.moreAboutMe}
           <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
         </Link>
       </section>

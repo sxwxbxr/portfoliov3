@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Navigation from "@/components/Navigation"
+import { copy } from "@/lib/copy"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -27,13 +28,13 @@ export default function LoginPage() {
       const data = await res.json()
 
       if (!res.ok) {
-        setError(data.error || "Login failed")
+        setError(data.error || copy.auth.errors.signInFailed)
         return
       }
 
       router.push("/admin")
     } catch {
-      setError("Something went wrong. Please try again.")
+      setError(copy.auth.errors.generic)
     } finally {
       setLoading(false)
     }
@@ -48,19 +49,17 @@ export default function LoginPage() {
             page, so it carries the rim. */}
         <div className="cast rim flex w-full max-w-[420px] flex-col gap-7 p-7 md:p-8">
           <div className="flex flex-col gap-2">
-            <span className="tab annotate self-start">Admin</span>
+            <span className="tab annotate self-start">{copy.auth.label}</span>
             <h1 className="font-display text-2xl font-semibold tracking-tight">
-              Sign in
+              {copy.auth.signInTitle}
             </h1>
-            <p className="text-sm text-fg-muted">
-              Enter your credentials to continue
-            </p>
+            <p className="text-sm text-fg-muted">{copy.auth.signInSubtitle}</p>
           </div>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div className="flex flex-col gap-2">
               <label htmlFor="email" className="annotate">
-                Email
+                {copy.auth.email}
               </label>
               <input
                 id="email"
@@ -69,14 +68,14 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 autoComplete="email"
-                placeholder="you@example.com"
+                placeholder={copy.auth.emailPlaceholder}
                 className="field w-full px-4 py-3 text-sm"
               />
             </div>
 
             <div className="flex flex-col gap-2">
               <label htmlFor="password" className="annotate">
-                Password
+                {copy.auth.password}
               </label>
               <input
                 id="password"
@@ -85,7 +84,7 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 autoComplete="current-password"
-                placeholder="••••••••"
+                placeholder={copy.auth.passwordPlaceholder}
                 className="field w-full px-4 py-3 text-sm"
               />
             </div>
@@ -101,16 +100,16 @@ export default function LoginPage() {
               disabled={loading}
               className="control control-primary w-full px-5 py-3 text-sm font-medium"
             >
-              {loading ? "Signing in..." : "Sign in"}
+              {loading ? copy.auth.signingIn : copy.auth.signIn}
             </button>
           </form>
 
           {/* Sunken base rail closes the card. */}
           <div className="well-sm px-4 py-3 text-center">
             <p className="text-sm text-fg-muted">
-              No account yet?{" "}
+              {copy.auth.noAccount}{" "}
               <Link href="/signup" className="link-underline text-signal">
-                Create account
+                {copy.auth.signUp}
               </Link>
             </p>
           </div>

@@ -3,64 +3,17 @@
 import Link from "next/link"
 import { ArrowUpRight, Check } from "lucide-react"
 import PageLayout, { Section } from "../../components/PageLayout"
+import { copy } from "@/lib/copy"
 
-const servicePackages = [
-  {
-    title: "Delivery Leadership",
-    description:
-      "Projektleitung auf Zeit für Digitalisierungsprogramme, komplexe Migrationen und Automatisierungsvorhaben.",
-    outcomes: [
-      "Klarer Scope, Roadmap und Stakeholder-Alignment",
-      "Risiko- und Abhängigkeitsmanagement über Teams hinweg",
-      "Reporting-Rhythmus, der zur Führungsebene passt",
-    ],
-  },
-  {
-    title: "Solution Acceleration",
-    description:
-      "Praktische Umsetzung: validierte Konzepte werden produktionsreife Werkzeuge und Workflows.",
-    outcomes: [
-      "Schnelle Proof-of-Concepts und MVP-Builds",
-      "Dokumentation und Schulung für eine saubere Übergabe",
-      "QA-Support und Instrumentierung für laufende Verbesserung",
-    ],
-  },
-  {
-    title: "Process & Product Coaching",
-    description:
-      "Begleitung für Teams, die agile Praktiken einführen, Product Discovery schärfen und ihre Lieferrituale verbessern.",
-    outcomes: [
-      "Discovery- und Delivery-Frameworks, die dein Team selbst fahren kann",
-      "Templates, Checklisten und Playbooks für Wiederholbarkeit",
-      "Eingebettetes Coaching, das neue Gewohnheiten verankert",
-    ],
-  },
-]
-
-const engagementModels = [
-  {
-    title: "Projektbasiert",
-    description: "Fixer Scope mit definierten Meilensteinen und Lieferergebnissen.",
-  },
-  {
-    title: "Retainer",
-    description:
-      "Laufende Beratung und Umsetzung für Teams, die einen strategischen Partner auf Abruf wollen.",
-    recommended: true,
-  },
-  {
-    title: "Workshops",
-    description:
-      "Fokussierte Sessions, um Entscheidungen zu lösen, Discovery zu moderieren oder das interne Team zu befähigen.",
-  },
-]
+const servicePackages = copy.services.packages
+const engagementModels = copy.services.engagementModels
 
 export default function Services() {
   return (
     <PageLayout
-      label="Leistungen"
-      title="Services"
-      subtitle="Komplexe Vorhaben von der Idee zur Wirkung — mit der richtigen Mischung aus Strategie und Umsetzung."
+      label={copy.services.label}
+      title={copy.services.title}
+      subtitle={copy.services.subtitle}
     >
       {/* ─── Packages: the most raised objects on the site ─── */}
       <section className="sheet pb-20 md:pb-28">
@@ -70,7 +23,7 @@ export default function Services() {
               <article className="cast rim flex h-full flex-col gap-5 p-7 md:p-8">
                 <div className="flex flex-col gap-2">
                   <span className="annotate">
-                    Paket {String(i + 1).padStart(2, "0")}
+                    {copy.services.packageEyebrow(i + 1)}
                   </span>
                   <h3 className="font-display text-lg font-semibold tracking-tight">
                     {service.title}
@@ -97,7 +50,7 @@ export default function Services() {
                   href="/contact"
                   className="control inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium"
                 >
-                  Anfragen
+                  {copy.services.enquire}
                   <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
               </article>
@@ -110,10 +63,10 @@ export default function Services() {
       <section className="sheet flex flex-col gap-8 pb-24 md:pb-32">
         <Section className="flex flex-col gap-2">
           <span className="annotate">
-            Zusammenarbeit · {engagementModels.length} Modelle
+            {copy.services.modelsEyebrow(engagementModels.length)}
           </span>
           <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
-            Engagement Models
+            {copy.services.models}
           </h2>
         </Section>
 
@@ -124,7 +77,7 @@ export default function Services() {
                 {model.title}
                 {model.recommended && (
                   <span className="well-sm annotate px-2.5 py-1 text-signal">
-                    Empfohlen
+                    {copy.common.recommended}
                   </span>
                 )}
               </h3>
@@ -139,17 +92,15 @@ export default function Services() {
           <div className="cast rim flex flex-col items-start justify-between gap-5 p-8 md:flex-row md:items-center md:p-10">
             <div className="flex flex-col gap-2">
               <h2 className="font-display text-2xl font-bold tracking-tight">
-                Passt eines davon?
+                {copy.services.ctaTitle}
               </h2>
-              <p className="text-sm text-fg-muted">
-                Erzähl mir kurz, worum es geht — ich melde mich innerhalb von 24 Stunden.
-              </p>
+              <p className="text-sm text-fg-muted">{copy.services.ctaBody}</p>
             </div>
             <Link
               href="/contact"
               className="control control-primary inline-flex items-center gap-2 px-5 py-3 text-sm font-medium"
             >
-              Gespräch starten
+              {copy.services.startConversation}
               <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>

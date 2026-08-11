@@ -2,6 +2,7 @@
 
 import { useState, type KeyboardEvent } from "react"
 import { ArrowUp } from "lucide-react"
+import { copy } from "@/lib/copy"
 
 interface ChatInputProps {
   onSend: (text: string) => void
@@ -32,7 +33,7 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
     // press the raised one.
     <div className="flex items-end gap-2 border-t border-edge-soft p-3">
       <label htmlFor="chat-input" className="sr-only">
-        Nachricht
+        {copy.chat.inputLabel}
       </label>
       <textarea
         id="chat-input"
@@ -41,14 +42,14 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
         onKeyDown={handleKeyDown}
         rows={1}
         maxLength={MAX_LENGTH}
-        placeholder="Schreib deine Nachricht…"
+        placeholder={copy.chat.inputPlaceholder}
         className="field max-h-32 min-h-9 flex-1 resize-none px-3 py-2 text-sm"
       />
       <button
         type="button"
         onClick={submit}
         disabled={disabled || !value.trim()}
-        aria-label="Nachricht senden"
+        aria-label={copy.chat.send}
         className="control control-primary inline-flex h-9 w-9 shrink-0 items-center justify-center"
       >
         <ArrowUp className="h-4 w-4" aria-hidden="true" />

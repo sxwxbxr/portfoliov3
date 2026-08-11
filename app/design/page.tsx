@@ -30,11 +30,11 @@ function Row({
 }
 
 const MEASURED: Array<[string, string, string]> = [
-  ["Fliesstext auf schlechtester Fläche", "10.02:1", "10.03:1"],
-  ["Muted-Text auf schlechtester Fläche", "4.62:1", "4.61:1"],
-  ["Annotation auf schlechtester Fläche", "3.11:1", "3.11:1"],
-  ["Control-Kante auf schlechtester Fläche", "3.11:1", "3.11:1"],
-  ["Akzent als Text", "4.62:1", "4.61:1"],
+  ["Body text on the worst surface", "10.02:1", "10.03:1"],
+  ["Muted text on the worst surface", "4.62:1", "4.61:1"],
+  ["Annotation on the worst surface", "3.11:1", "3.11:1"],
+  ["Control edge on the worst surface", "3.11:1", "3.11:1"],
+  ["Accent as text", "4.62:1", "4.61:1"],
 ]
 
 export default function DesignSystem() {
@@ -44,7 +44,7 @@ export default function DesignSystem() {
         <header className="flex flex-col gap-5">
           <div className="flex items-start justify-between gap-6 flex-wrap">
             <div className="flex flex-col gap-2">
-              <span className="annotate">Materialsystem · Branch newDesignV3</span>
+              <span className="annotate">Material system · Branch newDesignV3</span>
               <h1 className="font-display text-4xl md:text-5xl font-bold tracking-tight">
                 CAST
               </h1>
@@ -52,56 +52,56 @@ export default function DesignSystem() {
             <ThemeToggle />
           </div>
           <p className="max-w-[62ch] text-fg-muted leading-relaxed">
-            Objekte werden aus dem Grund <em>gegossen</em>, nicht darauf gelegt. Eine
-            Lichtquelle oben links, zwei Polaritäten — erhaben und vertieft — und nichts,
-            was schwebt. Die Geometrie ist gegenüber klassischem Soft-UI halbiert
-            (6&nbsp;px Versatz statt 8–9, 14&nbsp;px Blur statt 16–18); das ist der
-            Unterschied zwischen <em>gefräst</em> und <em>Kissen</em>.
+            Objects are <em>cast</em> out of the ground, not laid on top of it. One light
+            source at the top left, two polarities — raised and sunken — and nothing that
+            floats. The geometry is halved against classic soft UI (6&nbsp;px offset
+            instead of 8–9, 14&nbsp;px blur instead of 16–18); that is the difference
+            between <em>milled</em> and <em>cushion</em>.
           </p>
         </header>
 
-        <Row label="Flächen" note="Grund · Plate erhaben · Well vertieft">
+        <Row label="Surfaces" note="Ground · plate raised · well sunken">
           <div className="grid gap-5 sm:grid-cols-3">
             <div className="cast rim p-6 flex flex-col gap-1">
               <span className="annotate">.cast</span>
-              <span className="text-sm text-fg-muted">Erhaben. Karten, Kacheln, Panels.</span>
+              <span className="text-sm text-fg-muted">Raised. Cards, tiles, panels.</span>
             </div>
             <div className="well p-6 flex flex-col gap-1">
               <span className="annotate">.well</span>
-              <span className="text-sm text-fg-muted">Vertieft. Behälter, Tracks, Eingaben.</span>
+              <span className="text-sm text-fg-muted">Sunken. Containers, tracks, inputs.</span>
             </div>
             <div className="p-6 flex flex-col gap-1 border border-edge-soft rounded-lg">
-              <span className="annotate">Grund</span>
-              <span className="text-sm text-fg-muted">Die Fläche, aus der alles austritt.</span>
+              <span className="annotate">Ground</span>
+              <span className="text-sm text-fg-muted">The surface everything emerges from.</span>
             </div>
           </div>
         </Row>
 
-        <Row label="Controls" note="Material trägt die Optik · der Border trägt die Affordanz">
+        <Row label="Controls" note="material carries the look · the border carries the affordance">
           <div className="flex flex-wrap items-center gap-4">
             <button type="button" className="control px-4 py-2.5 text-sm font-medium">
-              Sekundär
+              Secondary
             </button>
             <button type="button" className="control control-primary px-5 py-3 text-sm font-medium">
-              Nachricht senden
+              Send message
             </button>
             <button type="button" className="control px-4 py-2.5 text-sm font-medium" data-pressed="true">
-              Gedrückt
+              Pressed
             </button>
             <button type="button" className="control px-4 py-2.5 text-sm font-medium" disabled>
-              Deaktiviert
+              Disabled
             </button>
           </div>
           <p className="max-w-[62ch] text-sm text-fg-muted leading-relaxed">
-            Drei unabhängige Zustands-Cues: <strong>Polarität</strong> (erhaben wird
-            vertieft), <strong>Füllung</strong> und <strong>Rim</strong>. Lösch jeden
-            Schatten aus dem Stylesheet — genau das tut <code className="font-mono text-xs">forced-colors</code> —
-            und das Control bleibt identifizierbar und hält weiterhin 3:1. Das ist die
-            Freiheit, die klassischer Neumorphismus aufgibt, indem er den Rand löscht.
+            Three independent state cues: <strong>polarity</strong> (raised becomes
+            sunken), <strong>fill</strong> and <strong>rim</strong>. Delete every shadow
+            from the stylesheet — which is exactly what <code className="font-mono text-xs">forced-colors</code> does —
+            and the control stays identifiable and still holds 3:1. That is the freedom
+            classic neumorphism gives up when it deletes the edge.
           </p>
         </Row>
 
-        <Row label="Control-Grössen" note="drei Stufen — globals.css kennt keine, also gilt diese Tabelle">
+        <Row label="Control sizes" note="three steps — globals.css defines none, so this table is the rule">
           <div className="well flex flex-wrap items-end gap-3 p-3 md:p-4">
             <button type="button" className="control px-3.5 py-2 text-xs font-medium">
               sm · px-3.5 py-2 text-xs
@@ -114,36 +114,36 @@ export default function DesignSystem() {
             </button>
           </div>
           <p className="max-w-[62ch] text-sm text-fg-muted leading-relaxed">
-            <strong>sm</strong> für Chips und Icon-Zeilen in Karten, <strong>md</strong> als
-            Standard für jede Inline-Aktion, <strong>lg</strong> für den einen Abschluss-CTA
-            einer Seite und für volle Breite in Formularen. Es gab zwischenzeitlich fünf
-            Kombinationen für dasselbe semantische Gewicht — <code className="font-mono text-xs">px-6&nbsp;py-3</code> und{" "}
-            <code className="font-mono text-xs">px-5&nbsp;py-2.5</code> sind zurückgeführt.
+            <strong>sm</strong> for chips and icon rows inside cards, <strong>md</strong> as
+            the default for every inline action, <strong>lg</strong> for a page&apos;s one
+            closing CTA and for full width in forms. There were five combinations for the
+            same semantic weight at one point — <code className="font-mono text-xs">px-6&nbsp;py-3</code> and{" "}
+            <code className="font-mono text-xs">px-5&nbsp;py-2.5</code> have been folded back in.
           </p>
         </Row>
 
-        <Row label="Dropdown" note="Trigger ist ein Feld, das Panel eine Platte">
+        <Row label="Dropdown" note="the trigger is a field, the panel a plate">
           <p className="max-w-[62ch] text-sm text-fg-muted leading-relaxed">
-            <strong>Kaskadenfalle:</strong> shadcn-Primitives backen{" "}
-            <code className="font-mono text-xs">border shadow-md</code> in die
-            Utilities-Ebene. Tailwind ordnet Utilities NACH{" "}
-            <code className="font-mono text-xs">@layer components</code>, wo{" "}
-            <code className="font-mono text-xs">.cast</code> und{" "}
-            <code className="font-mono text-xs">.well</code> leben — ein{" "}
-            <code className="font-mono text-xs">className=&quot;cast&quot;</code> auf so einem
-            Element bleibt wirkungslos, ohne Fehler.{" "}
-            <code className="font-mono text-xs">components/ui/select.tsx</code> und{" "}
-            <code className="font-mono text-xs">checkbox.tsx</code> tragen das Material jetzt
-            selbst; <code className="font-mono text-xs">popover.tsx</code> wird stattdessen am
-            Aufrufort neutralisiert (Panel als innere Platte).
+            <strong>Cascade trap:</strong> shadcn primitives bake{" "}
+            <code className="font-mono text-xs">border shadow-md</code> into the utilities
+            layer. Tailwind orders utilities AFTER{" "}
+            <code className="font-mono text-xs">@layer components</code>, where{" "}
+            <code className="font-mono text-xs">.cast</code> and{" "}
+            <code className="font-mono text-xs">.well</code> live — a{" "}
+            <code className="font-mono text-xs">className=&quot;cast&quot;</code> on such an
+            element has no effect, and no error.{" "}
+            <code className="font-mono text-xs">components/ui/select.tsx</code> and{" "}
+            <code className="font-mono text-xs">checkbox.tsx</code> now carry the material
+            themselves; <code className="font-mono text-xs">popover.tsx</code> is neutralised
+            at the call site instead (panel as an inner plate).
           </p>
         </Row>
 
-        <Row label="Eingaben" note="Gegenpolarität zum Button">
+        <Row label="Inputs" note="opposite polarity to the button">
           <div className="grid gap-4 sm:grid-cols-2 max-w-2xl">
             <label className="flex flex-col gap-2">
               <span className="annotate">Name</span>
-              <input className="field px-4 py-2.5 text-sm" placeholder="Wie heisst du?" />
+              <input className="field px-4 py-2.5 text-sm" placeholder="What's your name?" />
             </label>
             <label className="flex flex-col gap-2">
               <span className="annotate">Budget</span>
@@ -151,23 +151,23 @@ export default function DesignSystem() {
             </label>
           </div>
           <p className="max-w-[62ch] text-sm text-fg-muted leading-relaxed">
-            Man sieht auf einen Blick, worein man tippt und was man drückt — Eingaben sind
-            vertieft, Buttons erhaben. Der Focus-Ring liegt auf dem Element selbst, nicht
-            im Schatten.
+            You can see at a glance what you type into and what you press — inputs are
+            sunken, buttons raised. The focus ring sits on the element itself, not in the
+            shadow.
           </p>
         </Row>
 
-        <Row label="Typografie" note="Space Grotesk · Inter · JetBrains Mono">
+        <Row label="Typography" note="Space Grotesk · Inter · JetBrains Mono">
           <div className="cast rim p-7 flex flex-col gap-4">
             <h3 className="font-display text-3xl font-bold tracking-tight">
               Project Manager &amp; Software Developer
             </h3>
             <p className="max-w-[62ch] leading-relaxed">
-              Fliesstext in Inter. Diese drei Schriften waren bisher geladen, aber nie
-              angewendet — <code className="font-mono text-xs">globals.css</code> nannte die
-              Familien wörtlich, während <code className="font-mono text-xs">layout.tsx</code> sie
-              als Variablen deklariert. Wenn du hier Space Grotesk und JetBrains Mono
-              siehst, ist der Bug behoben.
+              Body text in Inter. These three faces were loaded but never applied —{" "}
+              <code className="font-mono text-xs">globals.css</code> named the families
+              literally while <code className="font-mono text-xs">layout.tsx</code> declares
+              them as variables. If you see Space Grotesk and JetBrains Mono here, the bug
+              is fixed.
             </p>
             <div className="flex flex-wrap gap-x-8 gap-y-2">
               <span className="annotate">Annotation · Tabular 0123456789</span>
@@ -176,25 +176,25 @@ export default function DesignSystem() {
           </div>
         </Row>
 
-        <Row label="Akzent" note="rationiert auf Zustand, Fokus und das Aktuelle">
+        <Row label="Accent" note="rationed to state, focus and the current thing">
           <div className="flex flex-wrap items-center gap-6">
             <span className="inline-flex items-center gap-2.5">
               <span className="h-2.5 w-2.5 rounded-full bg-signal-bright" />
-              <span className="text-sm">Verfügbar für Projekte</span>
+              <span className="text-sm">Available for projects</span>
             </span>
             <a href="#top" className="link-underline text-signal text-sm font-medium">
-              Als Link
+              As a link
             </a>
-            <span className="well-sm px-3 py-1.5 text-xs font-mono text-signal">Aktuell</span>
+            <span className="well-sm px-3 py-1.5 text-xs font-mono text-signal">Current</span>
           </div>
         </Row>
 
-        <Row label="Gemessen" note="abgeleitet, nicht geschätzt — gegen die jeweils schlechteste Fläche">
+        <Row label="Measured" note="derived, not estimated — against the worst surface in each mode">
           <div className="well p-1 overflow-x-auto">
             <table className="w-full text-sm min-w-[420px]">
               <thead>
                 <tr className="text-left">
-                  <th className="annotate p-3 font-normal">Paar</th>
+                  <th className="annotate p-3 font-normal">Pair</th>
                   <th className="annotate p-3 font-normal text-right">Light</th>
                   <th className="annotate p-3 font-normal text-right">Dark</th>
                 </tr>
@@ -211,10 +211,10 @@ export default function DesignSystem() {
             </table>
           </div>
           <p className="max-w-[62ch] text-sm text-fg-muted leading-relaxed">
-            Die schlechteste Fläche unterscheidet sich je Modus: in Light Mode ist es der
-            vertiefte Well (dunkler Text auf dunklerer Fläche), in Dark Mode die erhabene
-            Plate. Jeder Token oben ist der Wert, der seinem Grund am nächsten liegt und
-            sein Ziel trotzdem noch erreicht — im sRGB-Gamut, nicht abgeschnitten.
+            The worst surface differs per mode: in light mode it is the sunken well (dark
+            text on a darker surface), in dark mode the raised plate. Every token above is
+            the value closest to its ground that still hits its target — inside the sRGB
+            gamut, not clipped.
           </p>
         </Row>
       </div>

@@ -12,6 +12,10 @@ import {
 } from "@/components/ui/select"
 import { AlertCircle, Send, Loader2, Sparkles } from "lucide-react"
 import { CheckmarkAnimation } from "@/components/CheckmarkAnimation"
+import { copy } from "@/lib/copy"
+
+const form = copy.contact.form
+const MAX_MESSAGE_LENGTH = 5000
 
 interface FormData {
   name: string
@@ -107,26 +111,26 @@ export function ContactForm({
     const newErrors: FormErrors = {}
 
     if (!formData.name.trim()) {
-      newErrors.name = "Name ist erforderlich"
+      newErrors.name = form.errors.nameRequired
     } else if (formData.name.trim().length < 2) {
-      newErrors.name = "Name muss mindestens 2 Zeichen haben"
+      newErrors.name = form.errors.nameShort
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!formData.email.trim()) {
-      newErrors.email = "E-Mail ist erforderlich"
+      newErrors.email = form.errors.emailRequired
     } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = "Bitte eine gültige E-Mail-Adresse eingeben"
+      newErrors.email = form.errors.emailInvalid
     }
 
     if (!formData.projectType) {
-      newErrors.projectType = "Bitte einen Projekttyp wählen"
+      newErrors.projectType = form.errors.projectTypeRequired
     }
 
     if (!formData.message.trim()) {
-      newErrors.message = "Nachricht ist erforderlich"
+      newErrors.message = form.errors.messageRequired
     } else if (formData.message.trim().length < 10) {
-      newErrors.message = "Nachricht muss mindestens 10 Zeichen haben"
+      newErrors.message = form.errors.messageShort
     }
 
     setErrors(newErrors)
@@ -149,7 +153,7 @@ export function ContactForm({
 
       if (!response.ok) {
         const body = await response.json().catch(() => ({}))
-        throw new Error(body.error || "Nachricht konnte nicht gesendet werden.")
+        throw new Error(body.error || form.errors.sendFailed)
       }
 
       setFormData({
@@ -165,9 +169,7 @@ export function ContactForm({
     } catch (error) {
       console.error("Form submission error:", error)
       setSubmitError(
-        error instanceof Error
-          ? error.message
-          : "Etwas ist schiefgelaufen. Schreib mir direkt an info@sweber.dev."
+        error instanceof Error ? error.message : form.errors.generic
       )
     } finally {
       setIsSubmitting(false)
@@ -226,13 +228,13 @@ export function ContactForm({
       <form onSubmit={handleSubmit} className="flex flex-col gap-5" noValidate>
         <div className="grid gap-5 md:grid-cols-2">
           <div className="flex flex-col gap-2">
-            <FieldLabel htmlFor="name">Name *</FieldLabel>
+            <FieldLabel htmlFor="name">{form.name}</FieldLabel>
             <input
               id="name"
               type="text"
               value={formData.name}
               onChange={(e) => handleInputChange("name", e.target.value)}
-              placeholder="Dein vollständiger Name"
+              placeholder={form.namePlaceholder}
               aria-invalid={Boolean(errors.name)}
               aria-describedby="name-error"
               className="field px-4 py-2.5 text-sm"
@@ -241,13 +243,13 @@ export function ContactForm({
           </div>
 
           <div className="flex flex-col gap-2">
-            <FieldLabel htmlFor="email">E-Mail *</FieldLabel>
+            <FieldLabel htmlFor="email">{form.email}</FieldLabel>
             <input
               id="email"
               type="email"
               value={formData.email}
               onChange={(e) => handleInputChange("email", e.target.value)}
-              placeholder="deine.mail@beispiel.ch"
+              placeholder={form.emailPlaceholder}
               aria-invalid={Boolean(errors.email)}
               aria-describedby="email-error"
               className="field px-4 py-2.5 text-sm"
@@ -257,20 +259,20 @@ export function ContactForm({
         </div>
 
         <div className="flex flex-col gap-2">
-          <FieldLabel htmlFor="company">Firma</FieldLabel>
+          <FieldLabel htmlFor="company">{form.company}</FieldLabel>
           <input
             id="company"
             type="text"
             value={formData.company}
             onChange={(e) => handleInputChange("company", e.target.value)}
-            placeholder="Optional"
+            placeholder={form.companyPlaceholder}
             className="field px-4 py-2.5 text-sm"
           />
         </div>
 
         <div className="grid gap-5 md:grid-cols-2">
           <div className="flex flex-col gap-2">
-            <FieldLabel htmlFor="projectType">Projekttyp *</FieldLabel>
+            <FieldLabel htmlFor="projectType">{form.projectType}</FieldLabel>
             <Select
               value={formData.projectType}
               onValueChange={(value) => handleInputChange("projectType", value)}
@@ -280,34 +282,34 @@ export function ContactForm({
                 aria-invalid={Boolean(errors.projectType)}
                 aria-describedby="projectType-error"
               >
-                <SelectValue placeholder="Projekttyp wählen" />
+                <SelectValue placeholder={form.projectTypePlaceholder} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="automation">Prozessautomatisierung</SelectItem>
-                <SelectItem value="web-development">Webentwicklung</SelectItem>
-                <SelectItem value="data-integration">Datenintegration</SelectItem>
-                <SelectItem value="consulting">Technische Beratung</SelectItem>
-                <SelectItem value="other">Anderes</SelectItem>
+                {form.projectTypeOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
             <FieldError id="projectType-error" message={errors.projectType} />
           </div>
 
           <div className="flex flex-col gap-2">
-            <FieldLabel htmlFor="budget">Budgetrahmen</FieldLabel>
+            <FieldLabel htmlFor="budget">{form.budget}</FieldLabel>
             <Select
               value={formData.budget}
               onValueChange={(value) => handleInputChange("budget", value)}
             >
               <SelectTrigger id="budget">
-                <SelectValue placeholder="Budget wählen" />
+                <SelectValue placeholder={form.budgetPlaceholder} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="under-10k">&lt; CHF 10’000</SelectItem>
-                <SelectItem value="10k-25k">CHF 10’000 – 25’000</SelectItem>
-                <SelectItem value="25k-50k">CHF 25’000 – 50’000</SelectItem>
-                <SelectItem value="50k-plus">CHF 50’000+</SelectItem>
-                <SelectItem value="discuss">Besprechen wir</SelectItem>
+                {form.budgetOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
             <div className="min-h-[1.125rem]" aria-hidden="true" />
@@ -315,34 +317,34 @@ export function ContactForm({
         </div>
 
         <div className="flex flex-col gap-2">
-          <FieldLabel htmlFor="timeline">Zeitrahmen</FieldLabel>
+          <FieldLabel htmlFor="timeline">{form.timeline}</FieldLabel>
           <Select
             value={formData.timeline}
             onValueChange={(value) => handleInputChange("timeline", value)}
           >
             <SelectTrigger id="timeline">
-              <SelectValue placeholder="Wann soll es fertig sein?" />
+              <SelectValue placeholder={form.timelinePlaceholder} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="asap">So bald wie möglich</SelectItem>
-              <SelectItem value="1-month">Innerhalb eines Monats</SelectItem>
-              <SelectItem value="3-months">Innerhalb von 3 Monaten</SelectItem>
-              <SelectItem value="6-months">Innerhalb von 6 Monaten</SelectItem>
-              <SelectItem value="flexible">Flexibel</SelectItem>
+              {form.timelineOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
 
         <div className="flex flex-col gap-2">
-          <FieldLabel htmlFor="message">Nachricht *</FieldLabel>
+          <FieldLabel htmlFor="message">{form.message}</FieldLabel>
           <textarea
             id="message"
             value={formData.message}
             onChange={(e) => handleMessageChange(e.target.value)}
             onBlur={analyzeMessage}
-            placeholder="Erzähl mir von deinem Projekt, den Zielen und konkreten Anforderungen…"
+            placeholder={form.messagePlaceholder}
             rows={5}
-            maxLength={5000}
+            maxLength={MAX_MESSAGE_LENGTH}
             aria-invalid={Boolean(errors.message)}
             aria-describedby="message-error"
             className="field resize-y px-4 py-3 text-sm leading-relaxed"
@@ -350,7 +352,7 @@ export function ContactForm({
           <div className="flex items-start justify-between gap-4">
             <FieldError id="message-error" message={errors.message} />
             <span className="annotate shrink-0 tabular">
-              {formData.message.length}/5000
+              {form.messageCount(formData.message.length, MAX_MESSAGE_LENGTH)}
             </span>
           </div>
 
@@ -358,7 +360,7 @@ export function ContactForm({
             <div className="well-sm mt-1 flex flex-col gap-2 p-4">
               <span className="annotate inline-flex items-center gap-1.5">
                 <Sparkles className="h-3.5 w-3.5 text-signal" aria-hidden="true" />
-                AI Match Analysis
+                {form.analysisTitle}
               </span>
               {analysisLoading ? (
                 // Seats rising out of the tray. ui/skeleton's `bg-accent
@@ -366,7 +368,7 @@ export function ContactForm({
                 // a sunken bar inside a sunken tray is invisible — both wells
                 // share one background token.
                 <div className="flex flex-col gap-2" role="status" aria-live="polite">
-                  <span className="sr-only">Analyse läuft …</span>
+                  <span className="sr-only">{form.analysisLoading}</span>
                   <div className="cast-sm h-3 w-full" aria-hidden="true" />
                   <div className="cast-sm h-3 w-[92%]" aria-hidden="true" />
                   <div className="cast-sm h-3 w-3/4" aria-hidden="true" />
@@ -391,14 +393,13 @@ export function ContactForm({
         )}
 
         <p className="text-xs leading-relaxed text-fg-muted">
-          Mit dem Absenden stimmst du zu, dass deine Daten zur Beantwortung deiner
-          Anfrage verarbeitet werden.
+          {form.privacyLead}
           {privacyAvailable && (
             <>
               {" "}
-              Details in der{" "}
+              {form.privacyTail}{" "}
               <a href="/privacy" className="link-underline text-signal">
-                Datenschutzerklärung
+                {form.privacyLink}
               </a>
               .
             </>
@@ -413,12 +414,12 @@ export function ContactForm({
           {isSubmitting ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-              Wird gesendet…
+              {form.submitting}
             </>
           ) : (
             <>
               <Send className="h-4 w-4" aria-hidden="true" />
-              Nachricht senden
+              {form.submit}
             </>
           )}
         </button>
@@ -439,18 +440,16 @@ export function ContactForm({
             <CheckmarkAnimation />
             <div className="flex flex-col gap-2">
               <h3 id="success-heading" className="font-display text-2xl font-bold">
-                Nachricht gesendet
+                {form.successTitle}
               </h3>
-              <p className="text-sm text-fg-muted">
-                Danke für deine Anfrage. Ich melde mich innerhalb von 24 Stunden.
-              </p>
+              <p className="text-sm text-fg-muted">{form.successBody}</p>
             </div>
             <button
               ref={closeButtonRef}
               onClick={closeSuccessModal}
               className="control w-full px-5 py-3 text-sm font-medium"
             >
-              Schliessen
+              {copy.common.close}
             </button>
           </div>
         </div>

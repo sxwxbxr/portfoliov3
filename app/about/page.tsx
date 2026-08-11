@@ -9,31 +9,13 @@ import { copy } from "@/lib/copy"
 
 export const revalidate = 86400
 
-const expertise = [
-  {
-    category: "Development",
-    skills: ["C#", ".NET", "TypeScript", "React", "Next.js", "SQL", "REST APIs", "Python"],
-  },
-  {
-    category: "Project Management",
-    skills: [
-      "Agile / Scrum",
-      "Stakeholder Management",
-      "Requirements Engineering",
-      "Risk Management",
-    ],
-  },
-  {
-    category: "Tools & Platforms",
-    skills: ["Azure DevOps", "Git", "Docker", "Vercel", "Jira", "Supabase"],
-  },
-]
+const expertise = copy.common.expertiseAreas
 
 const facts = [
-  { label: "Standort", value: "St. Gallen, CH" },
-  { label: "Erfahrung", value: "3+ Jahre" },
-  { label: "Fokus", value: "Automation & PM" },
-  { label: "Sprachen", value: "DE, EN, FR" },
+  { label: copy.about.factLocation, value: copy.about.factLocationValue },
+  { label: copy.about.factExperience, value: copy.about.factExperienceValue },
+  { label: copy.about.factFocus, value: copy.about.factFocusValue },
+  { label: copy.about.factLanguages, value: copy.about.factLanguagesValue },
 ]
 
 export default async function About() {
@@ -51,34 +33,26 @@ export default async function About() {
 
   return (
     <PageLayout
-      label="Über mich"
-      title="About"
-      subtitle="Project Manager, Entwickler und Baumeister schlanker digitaler Lösungen in St. Gallen."
+      label={copy.about.label}
+      title={copy.about.title}
+      subtitle={copy.about.subtitle}
     >
       {/* ─── Bio ─── */}
       <Section className="sheet pb-20 md:pb-28">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-[1.6fr_1fr]">
           <div className="measure flex flex-col gap-5">
-            <p className="text-xl leading-relaxed md:text-2xl">
-              Ich bin Project Manager für Software und Digitalisierung bei Telsonic
-              und baue kundenspezifische Automatisierungs-Workflows in
-              geschäftskritischen Systemen. Daneben führe ich Weber Development und
-              entwickle massgeschneiderte Software für verschiedene Firmen.
-            </p>
-            <p className="leading-relaxed text-fg-muted">
-              Mit einem doppelten Hintergrund in Softwareentwicklung und
-              Elektroplanung übersetze ich komplexe operative Anforderungen in klare
-              Spezifikationen, schlanke Prozesse und wartbare Lösungen. Mein Weg lief
-              über Elektroplanung, Energieoptimierung für ein Schweizer
-              Bankenportfolio, Healthcare-Datenmigration und jetzt industrielle
-              Automatisierung und SaaS-Produktentwicklung.
-            </p>
-            <p className="leading-relaxed text-fg-muted">
-              Ich baue Lösungen, die nicht nur das akute Problem lösen, sondern mit
-              dem Geschäft mitwachsen. Weil ich sowohl selbst entwickle als auch
-              Projekte führe, kann ich zwischen technischer Umsetzung und
-              betrieblichen Zielen übersetzen.
-            </p>
+            {copy.about.bio.map((paragraph, i) => (
+              <p
+                key={i}
+                className={
+                  i === 0
+                    ? "text-xl leading-relaxed md:text-2xl"
+                    : "leading-relaxed text-fg-muted"
+                }
+              >
+                {paragraph}
+              </p>
+            ))}
           </div>
 
           <div className="flex flex-col gap-5">
@@ -86,7 +60,7 @@ export default async function About() {
               <div className="well relative aspect-[3/4] w-full overflow-hidden">
                 <Image
                   src={portrait}
-                  alt="Seya Weber, Project Manager und Software Developer"
+                  alt={copy.about.portraitAlt}
                   fill
                   sizes="(min-width: 768px) 420px, 100vw"
                   className="object-cover object-top"
@@ -160,9 +134,11 @@ export default async function About() {
       {education.length > 0 && (
         <Section className="sheet flex flex-col gap-8 py-20 md:py-28">
           <div className="flex flex-col gap-2">
-            <span className="annotate">Ausbildung · {education.length} Stationen</span>
+            <span className="annotate">
+              {copy.about.educationEyebrow(education.length)}
+            </span>
             <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
-              Education
+              {copy.about.education}
             </h2>
           </div>
 
@@ -190,18 +166,16 @@ export default async function About() {
         <div className="cast rim flex flex-col items-start justify-between gap-6 p-8 md:flex-row md:items-center md:p-10">
           <div className="flex flex-col gap-2">
             <h2 className="font-display text-2xl font-bold tracking-tight md:text-3xl">
-              Zusammenarbeiten?
+              {copy.about.ctaTitle}
             </h2>
-            <p className="text-sm text-fg-muted">
-              Ich bin offen für neue Projekte und Kooperationen.
-            </p>
+            <p className="text-sm text-fg-muted">{copy.about.ctaBody}</p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
             <Link
               href="/contact"
               className="control control-primary inline-flex items-center gap-2 px-5 py-3 text-sm font-medium"
             >
-              Kontakt aufnehmen
+              {copy.about.getInTouch}
               <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
             </Link>
             {cv && (
@@ -211,7 +185,7 @@ export default async function About() {
                 className="control inline-flex items-center gap-2 px-5 py-3 text-sm font-medium"
               >
                 <Download className="h-4 w-4" aria-hidden="true" />
-                CV herunterladen
+                {copy.about.downloadCv}
               </a>
             )}
           </div>

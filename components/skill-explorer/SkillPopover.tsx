@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { ChevronDown, X } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { copy } from "@/lib/copy"
 
 type SkillDetail = { description: string; relatedProjects: string[] }
 
@@ -16,7 +17,7 @@ interface SkillPopoverProps {
 }
 
 const FALLBACK: SkillDetail = {
-  description: "Used in various projects — see the Projects page for details.",
+  description: copy.about.skillDetailFallback,
   relatedProjects: [],
 }
 
@@ -98,7 +99,7 @@ export function SkillPopover({ skill }: SkillPopoverProps) {
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
-                  aria-label="Schliessen"
+                  aria-label={copy.common.close}
                   className="-mr-1 -mt-1 rounded p-1 text-fg-subtle transition-colors duration-150 hover:text-fg"
                 >
                   <X className="h-3.5 w-3.5" aria-hidden="true" />
@@ -110,7 +111,7 @@ export function SkillPopover({ skill }: SkillPopoverProps) {
                 // contact-form analysis. ui/skeleton's `bg-accent animate-pulse`
                 // is a utility-layer fill that paints over the recess.
                 <div role="status" className="flex flex-col gap-2">
-                  <span className="sr-only">Details werden geladen …</span>
+                  <span className="sr-only">{copy.about.skillDetailLoading}</span>
                   <div className="well-sm h-3 w-full" aria-hidden="true" />
                   <div className="well-sm h-3 w-4/5" aria-hidden="true" />
                 </div>
