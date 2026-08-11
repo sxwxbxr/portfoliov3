@@ -12,6 +12,14 @@ interface PageLayoutProps {
   label?: string
 }
 
+/**
+ * Scroll-reveal wrapper.
+ *
+ * Travel is 8px, not the previous 32px. A long slide reads as a template;
+ * content that resolves near its final position reads as authored. The
+ * distinction matters because this wrapper is the most repeated component
+ * on the site.
+ */
 export function Section({
   children,
   className = "",
@@ -22,59 +30,59 @@ export function Section({
   delay?: number
 }) {
   const ref = useRef<HTMLDivElement>(null)
-  const isInView = useInView(ref, { once: true, margin: "-80px" })
-  const prefersReducedMotion = useReducedMotion()
+  const isInView = useInView(ref, { once: true, margin: "-72px" })
+  const reduce = useReducedMotion()
 
   return (
     <motion.div
       ref={ref}
       className={className}
-      initial={prefersReducedMotion ? false : { opacity: 0, y: 32 }}
-      animate={
-        prefersReducedMotion
-          ? { opacity: 1, y: 0 }
-          : isInView
-            ? { opacity: 1, y: 0 }
-            : { opacity: 0, y: 32 }
-      }
-      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay }}
+      initial={reduce ? false : { opacity: 0, y: 8 }}
+      animate={reduce || isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+      transition={{ duration: 0.42, ease: [0.23, 1, 0.32, 1], delay }}
     >
       {children}
     </motion.div>
   )
 }
 
-export default function PageLayout({ children, title, subtitle, label }: PageLayoutProps) {
+export default function PageLayout({
+  children,
+  title,
+  subtitle,
+  label,
+}: PageLayoutProps) {
+  const reduce = useReducedMotion()
+
   return (
-    <div className="min-h-screen bg-background grain-overlay">
+    <div className="min-h-screen bg-ground">
       <Navigation />
 
       <div className="pt-32">
         {title && (
-          <section className="max-w-[1200px] mx-auto px-6 pb-16 md:pb-20">
+          <header className="sheet pb-14 md:pb-20">
             <motion.div
-              initial={{ opacity: 0, y: 24 }}
+              className="flex flex-col gap-5"
+              initial={reduce ? false : { opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+              transition={{ duration: 0.42, ease: [0.23, 1, 0.32, 1], delay: 0.05 }}
             >
               {label && (
-                <p className="font-mono text-sm text-muted-foreground mb-4">
-                  {label}
-                </p>
+                <span className="tab annotate self-start">{label}</span>
               )}
-              <h1 className="text-4xl md:text-5xl font-display font-bold tracking-tight">
+              <h1 className="font-display text-4xl md:text-5xl font-bold tracking-tight text-balance">
                 {title}
               </h1>
               {subtitle && (
-                <p className="mt-4 text-lg text-muted-foreground max-w-2xl leading-relaxed">
+                <p className="measure text-lg text-fg-muted leading-relaxed">
                   {subtitle}
                 </p>
               )}
             </motion.div>
-          </section>
+          </header>
         )}
 
-        <div>{children}</div>
+        {children}
       </div>
     </div>
   )

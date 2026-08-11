@@ -1,84 +1,86 @@
-"use client"
-
 import Link from "next/link"
+import Image from "next/image"
+import { ArrowUpRight } from "lucide-react"
 
 interface Project {
   title: string
   shortDescription: string
-  description: string
-  image: string
   tags: string[]
   slug: string
-  github: string
-  demo: string
 }
 
 interface ProjectListItemProps {
   project: Project
   index: number
+  /** Pre-resolved by the server via lib/project-image.ts; null when absent. */
+  imageSrc?: string | null
+  /** First two tiles on a page are above the fold and load eagerly. */
+  priority?: boolean
 }
 
-export function ProjectListItem({ project, index }: ProjectListItemProps) {
+/**
+ * A project as a cast tile.
+ *
+ * The screen is recessed into the plate rather than sitting on it, which is
+ * the one place the material metaphor is literally true — and it means the
+ * tile still reads as a deliberate object when no image exists, because the
+ * recess is then filled by an engraved index instead of a broken frame.
+ */
+export function ProjectListItem({
+  project,
+  index,
+  imageSrc = null,
+  priority = false,
+}: ProjectListItemProps) {
   const indexLabel = String(index + 1).padStart(2, "0")
-
-  // Derive a category from the first tag
   const category = project.tags[0] ?? ""
 
   return (
-    <Link href={`/projects/${project.slug}`} className="block group">
-      <div
-        className={[
-          "relative grid grid-cols-[auto_1fr_auto] md:grid-cols-[3rem_1fr_auto_auto] items-center gap-4 md:gap-6",
-          "py-5 md:py-6 border-t border-border",
-          // Hover background
-          "transition-[background-color] duration-200 ease-out",
-          "group-hover:bg-background/60 group-hover:backdrop-blur-sm",
-        ].join(" ")}
-      >
-        {/* Left border accent — animates height on hover */}
-        <span
-          className={[
-            "absolute left-0 top-0 w-[2px] bg-primary",
-            "h-0 group-hover:h-full",
-            "transition-[height] duration-300 ease-out",
-            "motion-reduce:transition-none",
-          ].join(" ")}
-          aria-hidden="true"
-        />
+    <Link
+      href={`/projects/${project.slug}`}
+      className="cast rim group flex flex-col gap-4 p-4 transition-transform duration-150 ease-out hover:-translate-y-0.5 active:translate-y-0 motion-reduce:transform-none"
+    >
+      <div className="well relative aspect-[16/10] overflow-hidden">
+        {imageSrc ? (
+          <Image
+            src={imageSrc}
+            alt={project.title}
+            fill
+            sizes="(min-width: 1024px) 45vw, 100vw"
+            priority={priority}
+            className="object-cover transition-transform duration-300 ease-out group-hover:scale-[1.02] motion-reduce:transform-none"
+          />
+        ) : (
+          <span
+            aria-hidden="true"
+            className="absolute inset-0 flex items-center justify-center font-display text-6xl font-bold tabular text-fg-subtle/45 select-none"
+          >
+            {indexLabel}
+          </span>
+        )}
+      </div>
 
-        {/* Index */}
-        <span className="font-mono text-sm text-muted-foreground transition-colors duration-200 group-hover:text-primary">
-          {indexLabel}
-        </span>
+      <div className="flex flex-col gap-2 px-1 pb-1">
+        <div className="flex items-center justify-between gap-3">
+          <span className="annotate">
+            {indexLabel}
+            {category && ` · ${category}`}
+          </span>
+          <ArrowUpRight
+            className="h-4 w-4 shrink-0 text-fg-subtle transition-[transform,color] duration-150 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-signal motion-reduce:transform-none"
+            aria-hidden="true"
+          />
+        </div>
 
-        {/* Title */}
-        <h3 className="text-lg md:text-xl lg:text-2xl font-semibold tracking-tight transition-colors duration-200 group-hover:text-primary truncate">
+        <h3 className="font-display text-lg md:text-xl font-semibold tracking-tight transition-colors duration-150 group-hover:text-signal">
           {project.title}
         </h3>
 
-        {/* Category — hidden on mobile */}
-        <span className="hidden md:block text-sm text-muted-foreground">
-          {category}
-        </span>
-
-        {/* Arrow indicator */}
-        <span className="text-muted-foreground group-hover:text-primary transition-colors duration-200" aria-hidden="true">
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            className="transform group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform duration-200 ease-out motion-reduce:transform-none"
-          >
-            <path
-              d="M4.5 11.5L11.5 4.5M11.5 4.5H5.5M11.5 4.5V10.5"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </span>
+        {project.shortDescription && (
+          <p className="text-sm leading-relaxed text-fg-muted line-clamp-2">
+            {project.shortDescription}
+          </p>
+        )}
       </div>
     </Link>
   )

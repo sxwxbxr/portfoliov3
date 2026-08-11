@@ -356,6 +356,41 @@
   }
   .tabular { font-variant-numeric: tabular-nums lining-nums; }
 
+  /* ── Layout primitives ────────────────────────────────────────────
+     The old design open-coded the same container and the same two-column
+     definition list at three different label widths (200/220/250px), which
+     read as drift rather than as a system. One class each, one width. */
+  .sheet {
+    width: 100%;
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  .measure { max-width: 68ch; }
+
+  .def-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem 3rem;
+  }
+  @media (min-width: 768px) {
+    .def-grid { grid-template-columns: 220px 1fr; }
+  }
+
+  /* An index tab: a small raised marker that names the sheet you are on. */
+  .tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: var(--radius-ctl);
+    background: var(--plate);
+    box-shadow:
+      calc(var(--cast-x-sm) * -1) calc(var(--cast-x-sm) * -1) var(--cast-blur-sm) var(--cast-hi),
+      var(--cast-x-sm) var(--cast-x-sm) var(--cast-blur-sm) var(--cast-lo);
+  }
+
   /* ── Compatibility shims ──────────────────────────────────────────
      The old system's utilities are still referenced in ~50 places, most
      of them under /admin which is not part of this redesign. Aliasing
