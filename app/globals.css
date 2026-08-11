@@ -253,10 +253,16 @@
     inset: 0;
     border-radius: inherit;
     padding: 1px;
-    background: linear-gradient(145deg,
-      color-mix(in oklab, var(--cast-hi) 90%, transparent),
-      transparent 42%,
-      color-mix(in oklab, var(--cast-lo) 55%, transparent));
+    /* Highlight only. There used to be a --cast-lo stop closing the gradient
+       on the bottom-right, which traced a near-black hairline around half of
+       every large plate (--cast-lo is #141922 in dark mode). A milled edge
+       catches light along its lit side and falls into its own drop shadow on
+       the other — it does not get an outline. The shadow already does that
+       work, so the rim now fades to nothing. */
+    background: linear-gradient(155deg,
+      color-mix(in oklab, var(--cast-hi) 85%, transparent) 0%,
+      color-mix(in oklab, var(--cast-hi) 30%, transparent) 28%,
+      transparent 55%);
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
             mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);

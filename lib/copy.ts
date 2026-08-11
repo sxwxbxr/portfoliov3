@@ -38,7 +38,6 @@ export const copy = {
     about: "About",
     services: "Services",
     contact: "Contact",
-    more: "More",
     openMenu: "Open menu",
     closeMenu: "Close menu",
     colorScheme: "Colour scheme",
@@ -62,11 +61,6 @@ export const copy = {
     nxrthstack: "Nxrthstack",
     github: "GitHub",
     linkedin: "LinkedIn",
-    caseStudiesDescription: "In-depth project breakdowns",
-    experienceDescription: "Work history",
-    educationDescription: "Academic background & certs",
-    blogDescription: "Thoughts and articles",
-    nxrthstackDescription: "Company homepage",
   },
 
   common: {
