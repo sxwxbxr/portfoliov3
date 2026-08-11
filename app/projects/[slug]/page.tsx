@@ -1,12 +1,12 @@
 import Link from "next/link"
 import Image from "next/image"
 import { notFound } from "next/navigation"
+import { ArrowLeft, ArrowUpRight, Github } from "lucide-react"
 import { getProjectBySlug, getProjects, getCaseStudyBySlug } from "@/lib/data"
 import Navigation from "../../../components/Navigation"
 import { ProjectDeepDive } from "@/components/project-deepdive/DeepDiveButton"
 import { AI_FEATURES_ENABLED } from "@/lib/features"
-import fs from "fs"
-import path from "path"
+import { resolveImage } from "@/lib/project-image"
 
 export const revalidate = 86400
 
@@ -35,6 +35,7 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
 
   const hasDemoLink = Boolean(project.demo && project.demo !== "#")
   const hasRepoLink = Boolean(project.github && project.github !== "#")
+  const heroImage = resolveImage(project.image)
 
   const descriptionParagraphs = project.description
     .split(/\n+/)
@@ -53,62 +54,61 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
       : ((study?.results as string[]) ?? [])
   const hasCaseStudyContent = Boolean(challenge || solution || results.length)
 
-  // Find next project
   const currentIndex = allProjects.findIndex((p) => p.slug === slug)
-  const nextProject = currentIndex >= 0 ? allProjects[(currentIndex + 1) % allProjects.length] : null
+  const nextProject =
+    currentIndex >= 0 ? allProjects[(currentIndex + 1) % allProjects.length] : null
+
+  const tags = project.tags as string[]
 
   return (
-    <div className="min-h-screen bg-background grain-overlay">
+    <div className="min-h-screen bg-ground">
       <Navigation />
 
-      <div className="pt-32">
-        {/* Hero */}
-        <section className="max-w-[1200px] mx-auto px-6 pb-16 md:pb-20">
+      <div className="flex flex-col gap-14 pt-32 md:gap-20">
+        {/* ─── Hero ─── */}
+        <section className="sheet flex flex-col gap-6">
           <Link
             href="/projects"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
+            className="annotate inline-flex items-center gap-1.5 self-start hover:text-signal transition-colors duration-150"
           >
-            &larr; Back to projects
+            <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
+            Zurück zu den Projekten
           </Link>
 
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight leading-[1.05]">
+          <h1 className="font-display text-4xl font-bold leading-[1.05] tracking-tight text-balance md:text-5xl lg:text-6xl">
             {project.title}
           </h1>
 
-          <p className="mt-4 text-lg text-muted-foreground max-w-2xl leading-relaxed">
-            {project.shortDescription}
-          </p>
+          {project.shortDescription && (
+            <p className="measure text-lg leading-relaxed text-fg-muted">
+              {project.shortDescription}
+            </p>
+          )}
 
-          {/* Meta bar */}
-          <div className="glass rounded-lg p-4 md:p-6 mt-8">
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-sm text-muted-foreground">
-              {client && (
-                <>
-                  <span>{client}</span>
-                  <span className="hidden md:inline text-border">|</span>
-                </>
-              )}
-              <span>{(project.tags as string[]).join(", ")}</span>
-              {duration && (
-                <>
-                  <span className="hidden md:inline text-border">|</span>
-                  <span>{duration}</span>
-                </>
-              )}
-            </div>
+          {/* Facts as seated chips rather than a pipe-separated string. */}
+          <div className="flex flex-wrap items-center gap-2">
+            {client && <span className="well-sm px-3 py-1.5 annotate">{client}</span>}
+            {duration && <span className="well-sm px-3 py-1.5 annotate">{duration}</span>}
+            {tags.map((tag) => (
+              <span key={tag} className="well-sm px-3 py-1.5 font-mono text-xs text-fg-muted">
+                {tag}
+              </span>
+            ))}
           </div>
 
-          {/* Links */}
+          {/* Dead "#" links are not rendered at all — a button that goes
+              nowhere costs more credibility than a missing one. */}
           {(hasDemoLink || hasRepoLink) && (
-            <div className="mt-8 flex flex-wrap items-center gap-6">
+            <div className="flex flex-wrap items-center gap-3">
               {hasDemoLink && (
                 <a
                   href={project.demo}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="link-underline text-primary text-sm font-medium"
+                  className="control control-primary inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium"
                 >
-                  View live site &rarr;
+                  Live ansehen
+                  <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
                 </a>
               )}
               {hasRepoLink && (
@@ -116,182 +116,165 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
                   href={project.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="link-underline text-primary text-sm font-medium"
+                  className="control inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium"
                 >
-                  Source code &rarr;
+                  <Github className="h-4 w-4" aria-hidden="true" />
+                  Source Code
                 </a>
               )}
             </div>
           )}
         </section>
 
-        {/* Project image or placeholder */}
-        {(() => {
-          const imageExists =
-            project.image &&
-            fs.existsSync(path.join(process.cwd(), "public", project.image))
-          if (imageExists) {
-            return (
-              <div className="max-w-[1200px] mx-auto px-6 pb-12">
-                <div className="relative w-full aspect-[16/9] overflow-hidden border border-border">
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    className="object-cover"
-                    priority
-                  />
-                </div>
-              </div>
-            )
-          }
-          return (
-            <div className="max-w-[1200px] mx-auto px-6 pb-12">
-              <div className="relative w-full aspect-[16/9] overflow-hidden border border-border bg-muted/30 flex items-center justify-center">
-                <span
-                  className="font-display font-bold text-muted-foreground/10 select-none"
-                  style={{ fontSize: "clamp(6rem, 15vw, 14rem)" }}
-                >
-                  {project.title.charAt(0)}
-                </span>
-              </div>
-            </div>
-          )
-        })()}
-
-        <div className="border-t border-border" />
-
-        {/* Content */}
-        <div className="py-24 md:py-32">
-          <div className="max-w-[1200px] mx-auto px-6">
-            <div className="max-w-3xl">
-              {/* Description */}
-              <div className="space-y-4">
-                {descriptionParagraphs.length ? (
-                  descriptionParagraphs.map((paragraph, index) => (
-                    <p key={index} className="text-lg leading-relaxed text-foreground/90">
-                      {paragraph}
-                    </p>
-                  ))
-                ) : (
-                  <p className="text-lg leading-relaxed text-foreground/90">
-                    {project.description}
-                  </p>
-                )}
-              </div>
-
-              {AI_FEATURES_ENABLED && (
-                <ProjectDeepDive
-                  slug={project.slug}
-                  title={project.title}
-                  description={project.description}
-                  techStack={project.tags as string[]}
-                />
-              )}
-
-              {/* Case study sections */}
-              {hasCaseStudyContent && (
-                <div className="mt-20 space-y-16">
-                  {challenge && (
-                    <div>
-                      <h2 className="text-2xl md:text-3xl font-display font-bold tracking-tight mb-4">
-                        The Challenge
-                      </h2>
-                      <p className="text-muted-foreground leading-relaxed text-lg">
-                        {challenge}
-                      </p>
-                    </div>
-                  )}
-
-                  {solution && (
-                    <div>
-                      <h2 className="text-2xl md:text-3xl font-display font-bold tracking-tight mb-4">
-                        The Solution
-                      </h2>
-                      <p className="text-muted-foreground leading-relaxed text-lg">
-                        {solution}
-                      </p>
-                    </div>
-                  )}
-
-                  {results.length > 0 && (
-                    <div>
-                      <h2 className="text-2xl md:text-3xl font-display font-bold tracking-tight mb-8">
-                        Results
-                      </h2>
-                      <div className="space-y-0">
-                        {results.map((result, index) => (
-                          <div
-                            key={index}
-                            className={`flex items-start gap-4 py-4 ${
-                              index > 0 ? "border-t border-border" : ""
-                            }`}
-                          >
-                            <span className="font-mono text-sm text-muted-foreground mt-0.5">
-                              {String(index + 1).padStart(2, "0")}
-                            </span>
-                            <span className="text-foreground/90">{result}</span>
-                          </div>
-                        ))}
-                        <div className="border-t border-border" />
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Testimonial — only when author and company are set. */}
-                  {study?.testimonialQuote &&
-                    study.testimonialAuthor.trim() &&
-                    study.testimonialCompany.trim() && (
-                      <div className="mt-8">
-                        <div className="text-muted-foreground/30 font-display text-5xl leading-none select-none mb-4">
-                          &ldquo;
-                        </div>
-                        <blockquote className="text-xl md:text-2xl font-display leading-relaxed -mt-6">
-                          {study.testimonialQuote}
-                        </blockquote>
-                        <div className="mt-6">
-                          <p className="font-semibold">{study.testimonialAuthor}</p>
-                          <p className="text-sm text-muted-foreground">{study.testimonialCompany}</p>
-                        </div>
-                      </div>
-                    )}
-
-                  {study?.technologies && (study.technologies as string[]).length > 0 && (
-                    <div>
-                      <h3 className="font-display font-semibold text-sm mb-4">Technologies</h3>
-                      <p className="text-muted-foreground">
-                        {(study.technologies as string[]).join(", ")}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
+        {/* ─── The screen, recessed into the sheet ─── */}
+        <section className="sheet">
+          <div className="well relative aspect-[16/9] w-full overflow-hidden">
+            {heroImage ? (
+              <Image
+                src={heroImage}
+                alt={project.title}
+                fill
+                sizes="(min-width: 1200px) 1200px, 100vw"
+                className="object-cover"
+                priority
+              />
+            ) : (
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 flex select-none items-center justify-center font-display font-bold text-fg-subtle/25"
+                style={{ fontSize: "clamp(6rem, 15vw, 14rem)" }}
+              >
+                {project.title.charAt(0)}
+              </span>
+            )}
           </div>
-        </div>
+        </section>
 
-        {/* Navigation footer */}
-        <div className="border-t border-border">
-          <div className="max-w-[1200px] mx-auto px-6 py-16 md:py-20 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        {/* ─── Content ─── */}
+        <section className="sheet flex flex-col gap-16">
+          <div className="measure flex flex-col gap-4">
+            {(descriptionParagraphs.length
+              ? descriptionParagraphs
+              : [project.description]
+            ).map((paragraph, index) => (
+              <p key={index} className="text-lg leading-relaxed">
+                {paragraph}
+              </p>
+            ))}
+          </div>
+
+          {AI_FEATURES_ENABLED && (
+            <ProjectDeepDive
+              slug={project.slug}
+              title={project.title}
+              description={project.description}
+              techStack={tags}
+            />
+          )}
+
+          {hasCaseStudyContent && (
+            <div className="flex flex-col gap-6">
+              {challenge && (
+                <div className="cast rim flex flex-col gap-3 p-7 md:p-8">
+                  <span className="annotate">Ausgangslage</span>
+                  <h2 className="font-display text-2xl font-bold tracking-tight">
+                    The Challenge
+                  </h2>
+                  <p className="measure leading-relaxed text-fg-muted">{challenge}</p>
+                </div>
+              )}
+
+              {solution && (
+                <div className="cast rim flex flex-col gap-3 p-7 md:p-8">
+                  <span className="annotate">Vorgehen</span>
+                  <h2 className="font-display text-2xl font-bold tracking-tight">
+                    The Solution
+                  </h2>
+                  <p className="measure leading-relaxed text-fg-muted">{solution}</p>
+                </div>
+              )}
+
+              {results.length > 0 && (
+                <div className="flex flex-col gap-5">
+                  <div className="flex flex-col gap-2">
+                    <span className="annotate">Ergebnis · {results.length}</span>
+                    <h2 className="font-display text-2xl font-bold tracking-tight">
+                      Results
+                    </h2>
+                  </div>
+                  <ol className="well flex flex-col gap-2 p-3 md:p-4">
+                    {results.map((result, index) => (
+                      <li
+                        key={index}
+                        className="cast-sm flex items-start gap-4 px-4 py-3.5"
+                      >
+                        <span className="annotate mt-0.5 shrink-0">
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+                        <span className="text-sm leading-relaxed">{result}</span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              )}
+
+              {study?.testimonialQuote &&
+                study.testimonialAuthor.trim() &&
+                study.testimonialCompany.trim() && (
+                  <div className="cast rim flex flex-col gap-6 p-7 md:p-8">
+                    <blockquote className="font-display text-xl leading-relaxed md:text-2xl">
+                      &ldquo;{study.testimonialQuote}&rdquo;
+                    </blockquote>
+                    <div className="flex flex-col gap-0.5">
+                      <p className="font-semibold">{study.testimonialAuthor}</p>
+                      <p className="annotate">{study.testimonialCompany}</p>
+                    </div>
+                  </div>
+                )}
+
+              {study?.technologies && (study.technologies as string[]).length > 0 && (
+                <div className="flex flex-col gap-3">
+                  <span className="annotate">Technologies</span>
+                  <div className="flex flex-wrap gap-2">
+                    {(study.technologies as string[]).map((tech) => (
+                      <span
+                        key={tech}
+                        className="well-sm px-2.5 py-1 font-mono text-xs text-fg-muted"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </section>
+
+        {/* ─── Pager ─── */}
+        <section className="sheet pb-8">
+          <div className="flex flex-col items-stretch gap-4 md:flex-row md:items-center md:justify-between">
             <Link
               href="/projects"
-              className="link-underline text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="control inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium md:self-start"
             >
-              &larr; All projects
+              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+              Alle Projekte
             </Link>
+
             {nextProject && (
               <Link
                 href={`/projects/${nextProject.slug}`}
-                className="group text-right"
+                className="cast rim group flex flex-col gap-1 p-5 transition-transform duration-150 ease-out hover:-translate-y-0.5 motion-reduce:transform-none md:min-w-[20rem] md:text-right"
               >
-                <span className="text-sm text-muted-foreground">Next project</span>
-                <p className="font-display font-semibold text-lg group-hover:text-primary transition-colors">
-                  {nextProject.title} &rarr;
-                </p>
+                <span className="annotate">Nächstes Projekt</span>
+                <span className="font-display text-lg font-semibold transition-colors duration-150 group-hover:text-signal">
+                  {nextProject.title}
+                </span>
               </Link>
             )}
           </div>
-        </div>
+        </section>
       </div>
     </div>
   )
