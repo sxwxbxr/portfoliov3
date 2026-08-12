@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import FormField from "@/components/admin/FormField"
+import ImageField from "@/components/admin/ImageField"
 import CheckboxField from "@/components/admin/CheckboxField"
 
 export default function NewBlogPostPage() {
@@ -144,13 +145,13 @@ export default function NewBlogPostPage() {
           onChange={(e) => updateField("tags", e.target.value)}
           placeholder="JavaScript, Web Dev, Tutorial"
         />
-        <FormField
-          label="Image URL"
-          name="image"
-          value={form.image}
-          onChange={(e) => updateField("image", e.target.value)}
-          placeholder="/images/blog-post.png"
-        />
+        <ImageField
+            label="Image"
+            name="image"
+            value={form.image}
+            onChange={(value) => updateField("image", value)}
+            hint="Upload a file, or paste a path like /chr0no.png for an image committed under public/."
+          />
         <CheckboxField
           label="Feature on homepage (overrides recency check)"
           name="featured"

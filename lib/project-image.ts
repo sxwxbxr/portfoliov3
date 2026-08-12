@@ -16,7 +16,15 @@ const seen = new Map<string, boolean>()
  * in app/projects/[slug]/page.tsx.
  */
 export function resolveImage(src: string | null | undefined): string | null {
-  if (!src || !src.startsWith("/")) return null
+  if (!src) return null
+
+  // Uploaded images live in Vercel Blob and arrive as absolute URLs. There is
+  // nothing on disk to stat, so they pass straight through — the alternative
+  // would be an HTTP request per image on every render, and a slow blob store
+  // would then blank the artwork rather than merely delay it.
+  if (/^https?:\/\//i.test(src)) return src
+
+  if (!src.startsWith("/")) return null
   let ok = seen.get(src)
   if (ok === undefined) {
     try {

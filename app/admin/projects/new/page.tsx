@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import FormField from "@/components/admin/FormField"
+import ImageField from "@/components/admin/ImageField"
 
 export default function NewProjectPage() {
   const router = useRouter()
@@ -122,13 +123,13 @@ export default function NewProjectPage() {
           multiline
           rows={6}
         />
-        <FormField
-          label="Image URL"
-          name="image"
-          value={form.image}
-          onChange={(e) => updateField("image", e.target.value)}
-          placeholder="/images/project.png"
-        />
+        <ImageField
+            label="Image"
+            name="image"
+            value={form.image}
+            onChange={(value) => updateField("image", value)}
+            hint="Upload a file, or paste a path like /chr0no.png for an image committed under public/."
+          />
         <FormField
           label="Tags (comma-separated)"
           name="tags"

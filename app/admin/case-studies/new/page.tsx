@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import FormField from "@/components/admin/FormField"
+import ImageField from "@/components/admin/ImageField"
 
 export default function NewCaseStudyPage() {
   const router = useRouter()
@@ -167,13 +168,13 @@ export default function NewCaseStudyPage() {
           onChange={(e) => updateField("technologies", e.target.value)}
           placeholder="React, Node.js, PostgreSQL"
         />
-        <FormField
-          label="Image URL"
-          name="image"
-          value={form.image}
-          onChange={(e) => updateField("image", e.target.value)}
-          placeholder="/images/case-study.png"
-        />
+        <ImageField
+            label="Image"
+            name="image"
+            value={form.image}
+            onChange={(value) => updateField("image", value)}
+            hint="Upload a file, or paste a path like /chr0no.png for an image committed under public/."
+          />
 
         <div className="border-t border-border pt-5 mt-5 space-y-5">
           <p className="text-sm font-medium text-muted-foreground">

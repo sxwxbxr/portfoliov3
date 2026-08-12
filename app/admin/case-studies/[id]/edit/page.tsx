@@ -3,6 +3,7 @@
 import { useState, useEffect, use } from "react"
 import { useRouter } from "next/navigation"
 import FormField from "@/components/admin/FormField"
+import ImageField from "@/components/admin/ImageField"
 
 export default function EditCaseStudyPage({
   params,
@@ -189,12 +190,13 @@ export default function EditCaseStudyPage({
           value={form.technologies}
           onChange={(e) => updateField("technologies", e.target.value)}
         />
-        <FormField
-          label="Image URL"
-          name="image"
-          value={form.image}
-          onChange={(e) => updateField("image", e.target.value)}
-        />
+        <ImageField
+            label="Image"
+            name="image"
+            value={form.image}
+            onChange={(value) => updateField("image", value)}
+            hint="Upload a file, or paste a path like /chr0no.png for an image committed under public/."
+          />
 
         <div className="border-t border-border pt-5 mt-5 space-y-5">
           <p className="text-sm font-medium text-muted-foreground">

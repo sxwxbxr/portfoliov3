@@ -6,6 +6,17 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
+  images: {
+    remotePatterns: [
+      {
+        // Images uploaded through /admin land in Vercel Blob. Without this,
+        // next/image refuses the host and the artwork simply does not render.
+        protocol: "https",
+        hostname: "*.public.blob.vercel-storage.com",
+      },
+    ],
+  },
+
   async redirects() {
     return [
       {
