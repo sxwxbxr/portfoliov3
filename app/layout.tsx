@@ -1,6 +1,6 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google"
+import localFont from "next/font/local"
 import "./globals.css"
 import { ThemeProvider } from "@/components/ThemeProvider"
 import { Analytics } from "@/components/Analytics"
@@ -15,28 +15,53 @@ import { AI_FEATURES_ENABLED } from "@/lib/features"
 import { getSiteSettings, type SiteSettings } from "@/lib/data"
 import { copy } from "@/lib/copy"
 
-const inter = Inter({
-  subsets: ["latin"],
+/**
+ * Self-hosted rather than fetched from Google at build time.
+ *
+ * next/font/google downloads the woff2 files from fonts.gstatic.com during
+ * `next build`. A Vercel build failed when three Space Grotesk instances did
+ * not come back, and next/font reports that as
+ * `TypeError: Cannot read properties of null (reading '1')` rather than as a
+ * network error — an opaque failure for something entirely outside our
+ * control. Making the site's typography depend on a third party being
+ * reachable at build time is not a trade worth keeping, especially right
+ * after fixing the bug that stopped these faces rendering at all.
+ *
+ * These are the latin subsets of the same files Google serves, all three
+ * SIL OFL licensed (see app/fonts/OFL.md). They are VARIABLE fonts, so the
+ * declared weight ranges cover every step the design uses — which also fixes
+ * synthesised weights: the previous config loaded Inter 400 and 500 only,
+ * while the UI asks for `font-semibold` (600) in several places and the
+ * browser had to fake it.
+ */
+const inter = localFont({
+  src: "./fonts/Inter-Variable-latin.woff2",
+  weight: "100 900",
+  style: "normal",
   display: "swap",
-  weight: ["400", "500"],
   variable: "--font-inter",
   preload: true,
+  fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
 })
 
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
+const spaceGrotesk = localFont({
+  src: "./fonts/SpaceGrotesk-Variable-latin.woff2",
+  weight: "300 700",
+  style: "normal",
   display: "swap",
-  weight: ["500", "600", "700"],
   variable: "--font-space-grotesk",
   preload: true,
+  fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
 })
 
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
+const jetbrainsMono = localFont({
+  src: "./fonts/JetBrainsMono-Variable-latin.woff2",
+  weight: "100 800",
+  style: "normal",
   display: "swap",
-  weight: ["400"],
   variable: "--font-jetbrains-mono",
   preload: false,
+  fallback: ["ui-monospace", "monospace"],
 })
 
 export const metadata: Metadata = {

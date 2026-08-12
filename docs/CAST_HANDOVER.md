@@ -137,6 +137,16 @@ Specific calls worth keeping:
 
 ---
 
+## 4b. Fonts are self-hosted, deliberately
+
+`app/layout.tsx` uses `next/font/local` against three woff2 files in `app/fonts/`, not `next/font/google`.
+
+A Vercel build failed because three Space Grotesk instances did not come back from `fonts.gstatic.com`. `next/font/google` downloads the files during `next build`, and it reports that failure as `TypeError: Cannot read properties of null (reading '1')` rather than as a network error — an opaque failure for something entirely outside our control. Making the site's typography depend on a third party being reachable at build time is not a trade worth keeping, least of all right after fixing the bug that stopped those faces rendering at all.
+
+The vendored files are the **latin subsets of the same variable fonts** Google serves, all SIL OFL licensed — see `app/fonts/OFL.md` for the licence and for how to refresh them. Because they are variable, the declared ranges cover every weight the design uses, which also fixed a smaller pre-existing problem: the old config loaded Inter 400 and 500 only, while the UI asks for `font-semibold` (600) in several places, so the browser was synthesising it.
+
+Total cost: ~108 KB across three files, which is what `next/font/google` was downloading and emitting anyway.
+
 ## 5. Traps discovered the hard way
 
 **The `@layer components` cascade trap.** `.cast`, `.well`, `.field` live in `@layer components`, which Tailwind emits **before** utilities. The shadcn primitives bake `border p-4 shadow-md` in as utilities, so they win. A caller writing `className="cast"` on a Radix popover silently got a flat 2020 card, with no error from `tsc` or lint. `components/ui/select.tsx` and `components/ui/popover.tsx` now carry the material themselves — the portalled element **is** the plate. If you add `.cast` to another shadcn primitive, strip its baked `border`/`shadow-*`/`p-*` at the same time.
