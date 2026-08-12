@@ -7,6 +7,7 @@ import {
 } from "@/lib/data"
 import HomeContent from "@/components/HomeContent"
 import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
+import { resolveImage } from "@/lib/project-image"
 
 // Static-first: admin writes invalidate on demand via revalidatePublic().
 // The 24h value is only a self-healing fallback, not the primary refresh path.
@@ -21,9 +22,13 @@ export default async function Home() {
     getSiteSettings(),
   ])
 
+  // Resolved here rather than in the tile: the check touches the filesystem and
+  // must not be dragged into the client bundle.
+  const withImages = projects.map((p) => ({ ...p, imageSrc: resolveImage(p.image) }))
+
   return (
     <HomeContent
-      projects={projects}
+      projects={withImages}
       experience={experience}
       blogPosts={blogPosts}
       caseStudies={caseStudies}

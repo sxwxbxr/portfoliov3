@@ -1,69 +1,95 @@
 import Link from "next/link"
+import { ArrowUpRight } from "lucide-react"
 import PageLayout, { Section } from "../../components/PageLayout"
+import { EmptyState } from "../../components/EmptyState"
 import { getExperience } from "@/lib/data"
+import { copy } from "@/lib/copy"
 
 export const revalidate = 86400
 
 export default async function Experience() {
   const experience = await getExperience()
 
+  const firstYear = experience
+    .map((e) => parseInt(e.period.match(/\d{4}/)?.[0] ?? "", 10))
+    .filter((n) => Number.isFinite(n))
+    .sort((a, b) => a - b)[0]
+
   return (
     <PageLayout
-      title="Experience"
-      subtitle="My professional journey across software development, project management, and engineering."
+      label={copy.experience.label(experience.length, firstYear)}
+      title={copy.experience.title}
+      subtitle={copy.experience.subtitle}
     >
-      <section className="pb-24 md:pb-32">
-        <div className="max-w-[1200px] mx-auto px-6">
-          <div>
+      <section className="sheet flex flex-col gap-8 pb-24 md:pb-32">
+        {experience.length > 0 ? (
+          // A sunken channel with the stations seated in it. The detail pages
+          // differ from the homepage summary by carrying responsibilities, so
+          // each station is a full plate rather than a single row.
+          <div className="well flex flex-col gap-3 p-3 md:p-4">
             {experience.map((exp, i) => (
-              <Section key={exp.company + exp.period} delay={i * 0.05}>
-                <div
-                  className={`py-8 ${
-                    i > 0 ? "border-t border-border" : ""
-                  }`}
+              <Section key={exp.company + exp.period} delay={i * 0.04}>
+                <article
+                  className={
+                    "cast-sm flex flex-col gap-4 p-5 md:p-6 " +
+                    (exp.current ? "border-l-2 border-l-signal" : "")
+                  }
                 >
-                  <div className="flex flex-col md:flex-row md:items-start gap-2 md:gap-0 mb-4">
+                  <header className="flex flex-col gap-1.5 md:flex-row md:items-baseline md:gap-6">
                     <div className="flex items-center gap-2.5 md:flex-1">
                       {exp.current && (
-                        <span className="relative flex h-2 w-2 shrink-0">
-                          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-40" />
-                          <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
-                        </span>
+                        <span
+                          className="h-1.5 w-1.5 shrink-0 rounded-full bg-signal-bright"
+                          aria-hidden="true"
+                        />
                       )}
-                      <h3 className={`font-semibold text-lg ${!exp.current ? "md:ml-[18px]" : ""}`}>
+                      <h2
+                        className={
+                          "font-display text-lg font-semibold tracking-tight " +
+                          (exp.current ? "text-signal" : "")
+                        }
+                      >
                         {exp.company}
-                      </h3>
+                      </h2>
                     </div>
-                    <span className="text-muted-foreground text-sm md:flex-1">
-                      {exp.role}
-                    </span>
-                    <span className="font-mono text-sm text-muted-foreground md:text-right">
-                      {exp.period}
-                    </span>
-                  </div>
-                  <ul className="space-y-2 md:ml-[18px]">
-                    {(exp.responsibilities as string[]).map((item, j) => (
-                      <li key={j} className="flex items-start gap-3 text-sm text-muted-foreground">
-                        <span className="text-border mt-1.5">--</span>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                    <p className="text-sm text-fg-muted md:flex-1">{exp.role}</p>
+                    <span className="annotate md:text-right">{exp.period}</span>
+                  </header>
+
+                  {exp.description && (
+                    <p className="measure text-sm leading-relaxed text-fg-muted">
+                      {exp.description}
+                    </p>
+                  )}
+
+                  {(exp.responsibilities as string[]).length > 0 && (
+                    <ul className="flex flex-col gap-2">
+                      {(exp.responsibilities as string[]).map((item, j) => (
+                        <li key={j} className="flex items-start gap-3 text-sm">
+                          <span
+                            className="mt-2 h-px w-3 shrink-0 bg-edge"
+                            aria-hidden="true"
+                          />
+                          <span className="leading-relaxed text-fg-muted">{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </article>
               </Section>
             ))}
-            <div className="border-t border-border" />
           </div>
+        ) : (
+          <EmptyState>{copy.experience.empty}</EmptyState>
+        )}
 
-          <div className="mt-8">
-            <Link
-              href="/about"
-              className="link-underline text-primary text-sm font-medium"
-            >
-              More about me &rarr;
-            </Link>
-          </div>
-        </div>
+        <Link
+          href="/about"
+          className="control inline-flex items-center gap-2 self-start px-4 py-2.5 text-sm font-medium"
+        >
+          {copy.common.moreAboutMe}
+          <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+        </Link>
       </section>
     </PageLayout>
   )

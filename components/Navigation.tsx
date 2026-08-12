@@ -3,230 +3,157 @@
 import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Menu, ChevronDown, ExternalLink } from "lucide-react"
-import { motion, AnimatePresence } from "framer-motion"
+import { Menu } from "lucide-react"
+import { motion, useReducedMotion } from "framer-motion"
 import { ThemeToggle } from "./ThemeToggle"
 import { FullscreenMenu } from "./FullscreenMenu"
 import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
+import { copy } from "@/lib/copy"
 
+/**
+ * Browse destinations. All of them, with nothing behind a disclosure.
+ *
+ * There used to be a "More" dropdown here: a 540px three-column panel built
+ * for seven entries. Case studies and the blog are feature-flagged off and
+ * skills moved into /about, so it was rendering three links into a mega-menu —
+ * and it sat as a RAISED control immediately beside the SUNKEN track, two
+ * opposite polarities at the same level of hierarchy.
+ *
+ * Both problems have the same fix. Everything lives in the track, one
+ * polarity, nothing hidden. Nxrthstack is a different website rather than a
+ * section of this one, so it stays in the footer and the mobile menu.
+ */
 const navLinks = [
-  { name: "Work", href: "/projects" },
-  { name: "About", href: "/about" },
-  { name: "Contact", href: "/contact" },
+  { name: copy.nav.work, href: "/projects" },
+  { name: copy.nav.about, href: "/about" },
+  { name: copy.nav.services, href: "/services" },
+  { name: copy.nav.experience, href: "/experience" },
+  { name: copy.nav.education, href: "/education" },
+  ...(CASE_STUDIES_ENABLED
+    ? [{ name: copy.nav.caseStudies, href: "/case-studies" }]
+    : []),
+  ...(BLOG_ENABLED ? [{ name: copy.nav.blog, href: "/blog" }] : []),
 ]
-
-const moreLinks = [
-  CASE_STUDIES_ENABLED && {
-    name: "Case Studies",
-    href: "/case-studies",
-    description: "In-depth project breakdowns",
-  },
-  { name: "Services", href: "/services", description: "What I offer" },
-  { name: "Experience", href: "/experience", description: "Work history" },
-  BLOG_ENABLED && {
-    name: "Blog",
-    href: "/blog",
-    description: "Thoughts and articles",
-  },
-  { name: "Skills", href: "/skills", description: "Technical expertise" },
-  { name: "Education", href: "/education", description: "Academic background & certs" },
-  {
-    name: "Nxrthstack",
-    href: "https://nxrthstack.sweber.dev",
-    description: "Company Homepage",
-    external: true,
-  },
-].filter(Boolean) as {
-  name: string
-  href: string
-  description: string
-  external?: boolean
-}[]
 
 export default function Navigation() {
   const [menuOpen, setMenuOpen] = useState(false)
-  const [dropdownOpen, setDropdownOpen] = useState(false)
   const [visible, setVisible] = useState(true)
-  const [scrolled, setScrolled] = useState(false)
+  const [seated, setSeated] = useState(false)
   const lastScrollY = useRef(0)
+  const frame = useRef<number | null>(null)
   const pathname = usePathname()
-  const dropdownRef = useRef<HTMLDivElement>(null)
-  const moreButtonRef = useRef<HTMLButtonElement>(null)
+  const reduce = useReducedMotion()
 
+  // Scroll reads are coalesced into one rAF per frame. The previous version
+  // called setState on every scroll event at the root of the tree, which is a
+  // measurable INP cost for a purely visual state change.
   useEffect(() => {
-    const handleScroll = () => {
-      const currentY = window.scrollY
-
-      // Show/hide based on scroll direction
-      if (currentY < 10) {
+    const read = () => {
+      frame.current = null
+      const y = window.scrollY
+      if (y < 10) {
         setVisible(true)
-        setScrolled(false)
+        setSeated(false)
       } else {
-        setVisible(currentY < lastScrollY.current || currentY < 100)
-        setScrolled(currentY > 50)
+        setVisible(y < lastScrollY.current || y < 100)
+        setSeated(y > 24)
       }
-
-      lastScrollY.current = currentY
+      lastScrollY.current = y
     }
-
-    window.addEventListener("scroll", handleScroll, { passive: true })
-    return () => window.removeEventListener("scroll", handleScroll)
+    const onScroll = () => {
+      if (frame.current === null) frame.current = requestAnimationFrame(read)
+    }
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => {
+      window.removeEventListener("scroll", onScroll)
+      if (frame.current !== null) cancelAnimationFrame(frame.current)
+    }
   }, [])
 
-  // Lock body scroll when mobile menu is open
   useEffect(() => {
-    if (menuOpen) {
-      document.body.style.overflow = "hidden"
-    } else {
-      document.body.style.overflow = ""
-    }
+    document.body.style.overflow = menuOpen ? "hidden" : ""
     return () => {
       document.body.style.overflow = ""
     }
   }, [menuOpen])
 
-  // Close dropdown on Escape and click-outside
-  useEffect(() => {
-    if (!dropdownOpen) return
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setDropdownOpen(false)
-        moreButtonRef.current?.focus()
-      }
-    }
-
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
-      ) {
-        setDropdownOpen(false)
-      }
-    }
-
-    document.addEventListener("keydown", handleKeyDown)
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown)
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [dropdownOpen])
-
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ease-out ${visible ? "translate-y-0" : "-translate-y-full"
-          } ${scrolled
-            ? "glass border-b border-border/50 shadow-sm"
-            : "bg-transparent border-b border-transparent"
-          }`}
+        // Seating on scroll ramps the material, not a blur radius: the plate
+        // rises out of the ground. Retract is critically damped — a nav that
+        // springs reads as cheap.
+        className={[
+          "fixed inset-x-0 top-0 z-50",
+          "transition-[transform,background-color,box-shadow] duration-200 ease-out",
+          visible ? "translate-y-0" : "-translate-y-full",
+          seated ? "bg-plate shadow-[0_6px_18px_-10px_var(--cast-lo)]" : "bg-transparent",
+        ].join(" ")}
       >
-        <div className="max-w-[1200px] mx-auto px-6">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo */}
+        <div className="sheet">
+          <div className="flex h-16 items-center justify-between gap-5">
             <Link
               href="/"
-              className="font-display font-medium text-base tracking-tight text-foreground hover:text-primary transition-colors duration-200"
+              className="shrink-0 font-display text-base font-semibold tracking-tight transition-colors duration-150 hover:text-signal"
             >
-              seya weber
+              {copy.nav.brand}
             </Link>
 
-            {/* Desktop links */}
-            <div className="hidden lg:flex items-center gap-8">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`link-underline text-sm transition-colors duration-200 ${pathname === link.href
-                      ? "text-primary"
-                      : "text-muted-foreground hover:text-foreground"
-                    }`}
-                >
-                  {link.name}
-                </Link>
-              ))}
-
-              {/* More dropdown */}
-              <div className="relative" ref={dropdownRef}>
-                <button
-                  ref={moreButtonRef}
-                  onClick={() => setDropdownOpen((v) => !v)}
-                  aria-expanded={dropdownOpen}
-                  aria-haspopup="true"
-                  className="flex items-center gap-1 link-underline text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
-                >
-                  More
-                  <ChevronDown
-                    className={`w-3.5 h-3.5 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""
-                      }`}
-                  />
-                </button>
-
-                <AnimatePresence>
-                  {dropdownOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -8 }}
-                      transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-                      className="absolute top-full right-0 mt-3 w-[520px] glass rounded-xl border border-border/50 shadow-lg overflow-hidden"
+            <div className="hidden items-center gap-3 lg:flex">
+              {/* Sunken track. The active page is a raised seat inside it, so
+                  "where am I" is answered by physical position, not only hue. */}
+              <div className="well-sm flex items-center gap-0.5 p-1">
+                {navLinks.map((link) => {
+                  const active = pathname === link.href
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      aria-current={active ? "page" : undefined}
+                      className="relative rounded-md px-3 py-1.5 text-sm transition-colors duration-150"
                     >
-                      <div className="grid grid-cols-3 gap-px p-1">
-                        {moreLinks.map((link) =>
-                          link.external ? (
-                            <a
-                              key={link.href}
-                              href={link.href}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              onClick={() => setDropdownOpen(false)}
-                              className="group flex flex-col gap-0.5 rounded-lg p-3 hover:bg-primary/5 transition-colors duration-150"
-                            >
-                              <span className="flex items-center gap-1.5 text-sm font-medium text-foreground group-hover:text-primary transition-colors">
-                                {link.name}
-                                <ExternalLink className="w-3 h-3 text-muted-foreground/60" aria-hidden="true" />
-                              </span>
-                              <span className="text-xs text-muted-foreground">
-                                {link.description}
-                              </span>
-                            </a>
-                          ) : (
-                            <Link
-                              key={link.href}
-                              href={link.href}
-                              onClick={() => setDropdownOpen(false)}
-                              className="group flex flex-col gap-0.5 rounded-lg p-3 hover:bg-primary/5 transition-colors duration-150"
-                            >
-                              <span className={`text-sm font-medium transition-colors ${pathname === link.href ? "text-primary" : "text-foreground group-hover:text-primary"}`}>
-                                {link.name}
-                              </span>
-                              <span className="text-xs text-muted-foreground">
-                                {link.description}
-                              </span>
-                            </Link>
-                          )
-                        )}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                      {active && (
+                        <motion.span
+                          layoutId={reduce ? undefined : "nav-seat"}
+                          className="cast-sm absolute inset-0"
+                          transition={{ duration: 0.24, ease: [0.23, 1, 0.32, 1] }}
+                        />
+                      )}
+                      <span
+                        className={
+                          "relative whitespace-nowrap " +
+                          (active
+                            ? "font-medium text-signal"
+                            : "text-fg-muted hover:text-fg")
+                        }
+                      >
+                        {link.name}
+                      </span>
+                    </Link>
+                  )
+                })}
               </div>
 
-              <div className="w-px h-4 bg-border" />
+              {/* Contact is an action, not a peer destination, so it leaves the
+                  track and becomes the one raised, accent-filled control. */}
+              <Link
+                href="/contact"
+                aria-current={pathname === "/contact" ? "page" : undefined}
+                className="control control-primary shrink-0 px-4 py-2 text-sm font-medium"
+              >
+                {copy.nav.contact}
+              </Link>
+
               <ThemeToggle />
             </div>
 
-            {/* Mobile hamburger */}
-            <div className="lg:hidden">
-              <button
-                onClick={() => setMenuOpen(true)}
-                className="p-2 text-foreground hover:text-primary transition-colors"
-                aria-label="Open menu"
-              >
-                <Menu className="w-5 h-5" />
-              </button>
-            </div>
+            <button
+              onClick={() => setMenuOpen(true)}
+              className="control inline-flex h-10 w-10 items-center justify-center lg:hidden"
+              aria-label={copy.nav.openMenu}
+            >
+              <Menu className="h-5 w-5" aria-hidden="true" />
+            </button>
           </div>
         </div>
       </nav>

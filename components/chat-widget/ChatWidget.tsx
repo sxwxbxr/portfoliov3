@@ -6,6 +6,7 @@ import { X } from "lucide-react"
 import { ChatBubble } from "./ChatBubble"
 import { ChatInput } from "./ChatInput"
 import { ChatMessages, type Message } from "./ChatMessages"
+import { copy } from "@/lib/copy"
 
 const EASE = [0.16, 1, 0.3, 1] as const
 
@@ -53,7 +54,7 @@ export function ChatWidget() {
         throw new Error("empty response")
       }
     } catch {
-      setError("Something went wrong. Please try again.")
+      setError(copy.chat.error)
       // Drop the empty assistant placeholder.
       setMessages((prev) =>
         prev.filter(
@@ -73,25 +74,29 @@ export function ChatWidget() {
         {open && (
           <motion.div
             role="dialog"
-            aria-label="Chat with Seya's AI assistant"
+            aria-label={copy.chat.dialogLabel}
             initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 16, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 16, scale: 0.98 }}
             transition={{ duration: 0.25, ease: EASE }}
-            className="fixed inset-3 z-50 flex flex-col overflow-hidden rounded-2xl border border-border bg-card text-card-foreground shadow-2xl sm:inset-auto sm:bottom-6 sm:right-6 sm:h-[520px] sm:w-[380px]"
+            // One large plate, rimmed. The transcript inside carries the two
+            // polarities; the panel itself stays a single object.
+            className="cast rim no-print fixed inset-3 z-50 flex flex-col overflow-hidden sm:inset-auto sm:bottom-6 sm:right-6 sm:h-[520px] sm:w-[380px]"
           >
-            <header className="flex items-center justify-between border-b border-border px-4 py-3">
-              <div>
-                <p className="text-sm font-semibold">Seya&apos;s AI assistant</p>
-                <p className="text-xs text-muted-foreground">Usually replies instantly</p>
+            <header className="flex items-center justify-between gap-3 border-b border-edge-soft px-4 py-3">
+              <div className="flex flex-col gap-0.5">
+                <p className="font-display text-sm font-semibold tracking-tight">
+                  {copy.chat.title}
+                </p>
+                <p className="annotate">{copy.chat.subtitle}</p>
               </div>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                aria-label="Close chat"
-                className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                aria-label={copy.chat.close}
+                className="control inline-flex h-9 w-9 shrink-0 items-center justify-center"
               >
-                <X className="size-5" />
+                <X className="h-4 w-4" aria-hidden="true" />
               </button>
             </header>
 

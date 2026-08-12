@@ -1,8 +1,11 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import PageLayout from "../../components/PageLayout"
+import { ArrowUpRight } from "lucide-react"
+import PageLayout, { Section } from "../../components/PageLayout"
+import { EmptyState } from "../../components/EmptyState"
 import { getBlogPosts } from "@/lib/data"
 import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
+import { copy } from "@/lib/copy"
 
 export const revalidate = 86400
 
@@ -12,52 +15,55 @@ export default async function Blog() {
 
   return (
     <PageLayout
-      title="Writing"
-      subtitle="Thoughts on software development, project management, and digital transformation."
+      label={copy.blog.label(blogPosts.length)}
+      title={copy.blog.title}
+      subtitle={copy.blog.subtitle}
     >
-      <section className="pb-24 md:pb-32">
-        <div className="max-w-[1200px] mx-auto px-6">
-          <div>
+      <section className="sheet flex flex-col gap-10 pb-24 md:pb-32">
+        {blogPosts.length > 0 ? (
+          // A sequence, so: a sunken channel with each article seated in it —
+          // the same shape /experience uses for its stations.
+          <ol className="well flex flex-col gap-2 p-3 md:p-4">
             {blogPosts.map((post, i) => (
-              <Link
-                key={post.slug}
-                href={`/blog/${post.slug}`}
-                className="group block"
-              >
-                <div
-                  className={`flex flex-col md:flex-row md:items-center gap-1 md:gap-6 py-5 ${
-                    i > 0 ? "border-t border-border" : ""
-                  }`}
-                >
-                  <h3 className="font-semibold md:flex-1 group-hover:text-primary transition-colors duration-200">
-                    {post.title}
-                  </h3>
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <span className="font-mono">
-                      {new Date(post.publishedAt).toLocaleDateString("en-US", {
-                        month: "short",
-                        year: "numeric",
-                      })}
+              <li key={post.slug}>
+                <Section delay={i * 0.04}>
+                  <Link
+                    href={`/blog/${post.slug}`}
+                    className="cast-sm group flex flex-col gap-2 p-5 md:flex-row md:items-baseline md:gap-6"
+                  >
+                    <span className="annotate shrink-0" aria-hidden="true">
+                      {String(i + 1).padStart(2, "0")}
                     </span>
-                    <span>{post.readTime}</span>
-                  </div>
-                </div>
-              </Link>
+                    <h2 className="font-display font-semibold tracking-tight transition-colors duration-150 group-hover:text-signal md:flex-1">
+                      {post.title}
+                    </h2>
+                    <span className="annotate">
+                      {new Date(post.publishedAt).toLocaleDateString(
+                        copy.common.dateLocale,
+                        { month: "short", year: "numeric" }
+                      )}
+                    </span>
+                    <span className="annotate md:w-20 md:text-right">
+                      {post.readTime}
+                    </span>
+                  </Link>
+                </Section>
+              </li>
             ))}
-            <div className="border-t border-border" />
-          </div>
+          </ol>
+        ) : (
+          <EmptyState>{copy.blog.empty}</EmptyState>
+        )}
 
-          {CASE_STUDIES_ENABLED && (
-            <div className="mt-8">
-              <Link
-                href="/case-studies"
-                className="link-underline text-primary text-sm font-medium"
-              >
-                Read case studies &rarr;
-              </Link>
-            </div>
-          )}
-        </div>
+        {CASE_STUDIES_ENABLED && (
+          <Link
+            href="/case-studies"
+            className="control inline-flex items-center gap-2 self-start px-4 py-2.5 text-sm font-medium"
+          >
+            {copy.projects.viewCaseStudies}
+            <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+        )}
       </section>
     </PageLayout>
   )

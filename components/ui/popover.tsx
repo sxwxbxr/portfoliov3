@@ -30,7 +30,15 @@ function PopoverContent({
         align={align}
         sideOffset={sideOffset}
         className={cn(
-          "bg-popover text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 w-72 origin-(--radix-popover-content-transform-origin) rounded-md border p-4 shadow-md outline-hidden",
+          // CAST: the portalled surface IS the plate, so it carries `.cast`
+          // here rather than being neutralised at each call site.
+          //
+          // `border p-4 shadow-md` had to go. Those are utilities-layer
+          // classes and `.cast` lives in @layer components, which Tailwind
+          // emits first — so a caller writing className="cast" silently got a
+          // flat shadowed card with no error anywhere. Padding moves to the
+          // caller so the plate can also hold edge-to-edge content.
+          "cast text-fg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 w-72 origin-(--radix-popover-content-transform-origin) outline-hidden",
           className
         )}
         {...props}

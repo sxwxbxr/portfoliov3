@@ -1,126 +1,110 @@
 "use client"
 
 import Link from "next/link"
+import { ArrowUpRight, Check } from "lucide-react"
 import PageLayout, { Section } from "../../components/PageLayout"
+import { copy } from "@/lib/copy"
 
-const servicePackages = [
-  {
-    title: "Delivery Leadership",
-    description:
-      "Fractional project leadership for digital transformation programs, complex migrations, and automation efforts.",
-    outcomes: [
-      "Clear scope, roadmap, and stakeholder alignment",
-      "Risk and dependency management across teams",
-      "Reporting cadences tailored to executive needs",
-    ],
-  },
-  {
-    title: "Solution Acceleration",
-    description: "Hands-on implementation to turn validated concepts into production-ready tools and workflows.",
-    outcomes: [
-      "Rapid proof-of-concept and MVP builds",
-      "Documentation and training for smooth handover",
-      "QA support and instrumentation for continuous improvement",
-    ],
-  },
-  {
-    title: "Process & Product Coaching",
-    description: "Support for teams adopting agile practices, shaping product discovery, and improving delivery rituals.",
-    outcomes: [
-      "Discovery and delivery frameworks your team can run",
-      "Templates, checklists, and playbooks for repeatability",
-      "Embedded coaching to reinforce new habits",
-    ],
-  },
-]
-
-const engagementModels = [
-  { title: "Project-based", description: "Fixed-scope initiatives with defined milestones and delivery outcomes." },
-  { title: "Retainer", description: "Ongoing advisory and execution support for teams that want a strategic partner on call." },
-  { title: "Workshops", description: "Focused sessions to unblock decisions, facilitate discovery, or upskill your internal team." },
-]
+const servicePackages = copy.services.packages
+const engagementModels = copy.services.engagementModels
 
 export default function Services() {
   return (
     <PageLayout
-      title="Services"
-      subtitle="Partner with me to move complex initiatives from idea to impact with the right blend of strategy and execution."
+      label={copy.services.label}
+      title={copy.services.title}
+      subtitle={copy.services.subtitle}
     >
-      {/* Service packages */}
-      <section className="pb-24 md:pb-32">
-        <div className="max-w-[1200px] mx-auto px-6">
-          <div>
-            {servicePackages.map((service, i) => (
-              <Section key={service.title} delay={i * 0.05}>
-                <div
-                  className={`py-8 ${
-                    i > 0 ? "border-t border-border" : ""
-                  }`}
-                >
-                  <div className="grid grid-cols-1 md:grid-cols-[250px_1fr] gap-4 md:gap-12">
-                    <h3 className="font-display font-semibold text-lg">
-                      {service.title}
-                    </h3>
-                    <div>
-                      <p className="text-muted-foreground leading-relaxed mb-4">
-                        {service.description}
-                      </p>
-                      <ul className="space-y-2">
-                        {service.outcomes.map((outcome) => (
-                          <li key={outcome} className="flex items-start gap-3 text-sm text-muted-foreground">
-                            <span className="text-border mt-1">--</span>
-                            {outcome}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
+      {/* ─── Packages: the most raised objects on the site ─── */}
+      <section className="sheet pb-20 md:pb-28">
+        <div className="grid gap-5 lg:grid-cols-3">
+          {servicePackages.map((service, i) => (
+            <Section key={service.title} delay={i * 0.05} className="h-full">
+              <article className="cast rim flex h-full flex-col gap-5 p-7 md:p-8">
+                <div className="flex flex-col gap-2">
+                  <span className="annotate">
+                    {copy.services.packageEyebrow(i + 1)}
+                  </span>
+                  <h3 className="font-display text-lg font-semibold tracking-tight">
+                    {service.title}
+                  </h3>
                 </div>
-              </Section>
-            ))}
-            <div className="border-t border-border" />
-          </div>
+
+                <p className="text-sm leading-relaxed text-fg-muted">
+                  {service.description}
+                </p>
+
+                <ul className="flex flex-1 flex-col gap-2.5">
+                  {service.outcomes.map((outcome) => (
+                    <li key={outcome} className="flex items-start gap-2.5 text-sm">
+                      <Check
+                        className="mt-0.5 h-4 w-4 shrink-0 text-signal"
+                        aria-hidden="true"
+                      />
+                      <span className="leading-relaxed text-fg-muted">{outcome}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <Link
+                  href="/contact"
+                  className="control inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium"
+                >
+                  {copy.services.enquire}
+                  <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+              </article>
+            </Section>
+          ))}
         </div>
       </section>
 
-      {/* Engagement models */}
-      <section className="py-24 md:py-32 border-t border-border">
-        <div className="max-w-[1200px] mx-auto px-6">
-          <Section>
-            <h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight mb-12">
-              Engagement Models
-            </h2>
-          </Section>
+      {/* ─── Engagement models ─── */}
+      <section className="sheet flex flex-col gap-8 pb-24 md:pb-32">
+        <Section className="flex flex-col gap-2">
+          <span className="annotate">
+            {copy.services.modelsEyebrow(engagementModels.length)}
+          </span>
+          <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
+            {copy.services.models}
+          </h2>
+        </Section>
 
-          <div>
-            {engagementModels.map((model, i) => (
-              <Section key={model.title} delay={i * 0.05}>
-                <div
-                  className={`grid grid-cols-1 md:grid-cols-[200px_1fr] gap-2 md:gap-12 py-6 ${
-                    i > 0 ? "border-t border-border" : ""
-                  }`}
-                >
-                  <h3 className="font-display font-semibold text-sm md:text-base">
-                    {model.title}
-                  </h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {model.description}
-                  </p>
-                </div>
-              </Section>
-            ))}
-            <div className="border-t border-border" />
-          </div>
+        <div className="well flex flex-col gap-2 p-3 md:p-4">
+          {engagementModels.map((model) => (
+            <div key={model.title} className="cast-sm def-grid px-5 py-4">
+              <h3 className="flex items-center gap-2.5 font-display text-sm font-semibold md:text-base">
+                {model.title}
+                {model.recommended && (
+                  <span className="well-sm annotate px-2.5 py-1 text-signal">
+                    {copy.common.recommended}
+                  </span>
+                )}
+              </h3>
+              <p className="text-sm leading-relaxed text-fg-muted">
+                {model.description}
+              </p>
+            </div>
+          ))}
+        </div>
 
-          <div className="mt-12">
+        <Section>
+          <div className="cast rim flex flex-col items-start justify-between gap-5 p-8 md:flex-row md:items-center md:p-10">
+            <div className="flex flex-col gap-2">
+              <h2 className="font-display text-2xl font-bold tracking-tight">
+                {copy.services.ctaTitle}
+              </h2>
+              <p className="text-sm text-fg-muted">{copy.services.ctaBody}</p>
+            </div>
             <Link
               href="/contact"
-              className="link-underline text-primary font-medium"
+              className="control control-primary inline-flex items-center gap-2 px-5 py-3 text-sm font-medium"
             >
-              Start a conversation &rarr;
+              {copy.services.startConversation}
+              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
-        </div>
+        </Section>
       </section>
     </PageLayout>
   )

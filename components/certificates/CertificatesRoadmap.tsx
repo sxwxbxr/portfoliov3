@@ -1,10 +1,11 @@
 import type { Certificate } from "./CertificateCard"
 import { formatMonth, getReadableTextColor } from "@/lib/utils"
+import { copy } from "@/lib/copy"
 
 const STATUS_LABEL: Record<string, string> = {
-  completed: "Completed",
-  "in-progress": "In Progress",
-  planned: "Planned",
+  completed: copy.education.statusCompleted,
+  "in-progress": copy.education.statusInProgress,
+  planned: copy.education.statusPlanned,
 }
 
 function parseMonth(value: string): number | null {
@@ -86,6 +87,23 @@ function getTodayPosition(months: string[]) {
   return (offset / totalMonths) * 100
 }
 
+function currentMonthKey() {
+  const now = new Date()
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`
+}
+
+/**
+ * The roadmap as a milled gantt.
+ *
+ * Every row is the same object twice over: a sunken channel for the month
+ * range, and a raised bar seated in it for the phase. The scale, the "Today"
+ * marker and every track share one grid column and one horizontal padding, so
+ * a percentage means the same distance in all three — none of the underlying
+ * geometry changed, only what the percentages are measured against.
+ *
+ * Bars are never scaled or transformed: the label lives inside the bar, so any
+ * horizontal scaling would smear it. Narrow bars truncate instead.
+ */
 export default function CertificatesRoadmap({
   certs,
 }: {
@@ -96,121 +114,174 @@ export default function CertificatesRoadmap({
 
   const totalMonths = months.length
   const todayLeft = getTodayPosition(months)
+  const nowKey = currentMonthKey()
+
+  // A month column narrower than ~44px cannot hold "Jan" at annotation size,
+  // so the chart scrolls rather than squeezing itself illegible.
+  const chartMinWidth = 200 + totalMonths * 44
 
   return (
-    <div className="glass rounded-xl p-6 md:p-8">
-      <header className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-2 pb-5 border-b border-border mb-6">
-        <h3 className="font-display text-lg md:text-xl font-semibold tracking-tight">
-          {entries.length} certificate{entries.length !== 1 ? "s" : ""} in motion
+    <div className="cast rim flex flex-col gap-6 p-6 md:p-8">
+      <header className="flex flex-col gap-2 md:flex-row md:items-baseline md:justify-between">
+        <h3 className="font-display text-lg font-semibold tracking-tight md:text-xl">
+          {copy.education.roadmapHeading(entries.length)}
         </h3>
-        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-          {formatMonth(months[0])} -- {formatMonth(months[months.length - 1])}
+        <p className="annotate">
+          {copy.education.roadmapRange(
+            formatMonth(months[0]),
+            formatMonth(months[months.length - 1])
+          )}
         </p>
       </header>
 
-      {/* Month grid */}
-      <div
-        className="grid border border-border rounded-lg overflow-hidden text-center"
-        style={{ gridTemplateColumns: `repeat(${totalMonths}, minmax(0, 1fr))` }}
-      >
-        {months.map((m, i) => {
-          const [y, mo] = m.split("-")
-          const date = new Date(Number(y), Number(mo) - 1, 1)
-          return (
+      <div className="overflow-x-auto pb-1">
+        <div
+          className="flex flex-col gap-4"
+          style={{ minWidth: `${chartMinWidth}px` }}
+        >
+          {/* Month scale — a sunken track, current month raised out of it. */}
+          <div className="grid grid-cols-1 items-center gap-2 md:grid-cols-[180px_1fr] md:gap-5">
+            <p className="annotate hidden md:block md:text-right">
+              {copy.education.roadmapAxis}
+            </p>
             <div
-              key={m}
-              className="px-1 py-3 font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground border-r border-border last:border-r-0"
+              className="well grid p-1.5 text-center"
+              style={{
+                gridTemplateColumns: `repeat(${totalMonths}, minmax(0, 1fr))`,
+              }}
             >
-              <div className="font-display text-sm font-semibold text-foreground">
-                M{i + 1}
-              </div>
-              {date.toLocaleString("en-US", { month: "short" })}
-            </div>
-          )
-        })}
-      </div>
-
-      {/* Today label — aligned with the bar column below so the pill sits
-          directly over the line that runs through each phase bar. */}
-      {todayLeft !== null && (
-        <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] items-center gap-3 md:gap-5 mt-4">
-          <div className="hidden md:block" />
-          <div className="relative h-4">
-            <div
-              className="absolute -translate-x-1/2 top-0"
-              style={{ left: `${todayLeft}%` }}
-            >
-              <span className="px-2 py-0.5 rounded-full text-[9px] font-mono uppercase tracking-[0.18em] bg-foreground text-background shadow-sm whitespace-nowrap">
-                Today
-              </span>
+              {months.map((m, i) => {
+                const [y, mo] = m.split("-")
+                const date = new Date(Number(y), Number(mo) - 1, 1)
+                const isNow = m === nowKey
+                return (
+                  <div
+                    key={m}
+                    className={
+                      "flex flex-col gap-0.5 px-1 py-2 " +
+                      (isNow
+                        ? "cast-sm"
+                        : "border-r border-edge-soft last:border-r-0")
+                    }
+                  >
+                    <span
+                      className={
+                        "font-display text-xs font-semibold tabular " +
+                        (isNow ? "text-signal" : "text-fg")
+                      }
+                    >
+                      {copy.education.roadmapMonthIndex(i + 1)}
+                    </span>
+                    <span className="annotate">
+                      {date.toLocaleString("en-US", { month: "short" })}
+                    </span>
+                  </div>
+                )
+              })}
             </div>
           </div>
-        </div>
-      )}
 
-      {/* Phase bars */}
-      <div className={todayLeft !== null ? "mt-2 space-y-3" : "mt-6 space-y-3"}>
-        {entries.map(({ cert, startOffset, span, startLabel, endLabel }) => {
-          const left = (startOffset / totalMonths) * 100
-          const width = (span / totalMonths) * 100
-          const hasAccent = Boolean(cert.accentColor)
-          const fill =
-            cert.accentColor ||
-            (cert.status === "in-progress"
-              ? "var(--primary)"
-              : "var(--muted-foreground)")
-          const textColor = hasAccent
-            ? getReadableTextColor(cert.accentColor)
-            : cert.status === "in-progress"
-              ? "var(--primary-foreground)"
-              : "var(--background)"
-          return (
-            <div
-              key={cert.id}
-              className="grid grid-cols-1 md:grid-cols-[180px_1fr] items-center gap-3 md:gap-5"
-            >
-              <div className="flex flex-col gap-1 md:text-right">
-                <span className="font-display text-sm font-semibold tracking-tight">
-                  {cert.name}
-                </span>
-                <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
-                  {STATUS_LABEL[cert.status] ?? cert.status}
-                  {startLabel && ` · ${startLabel}`}
-                  {endLabel && ` -- ${endLabel}`}
-                </span>
-              </div>
-              <div className="relative h-8 bg-foreground/[0.04] rounded-md overflow-hidden border border-border">
-                <div
-                  className="absolute top-0 bottom-0 flex items-center px-3 text-[10px] font-mono uppercase tracking-[0.12em]"
-                  style={{
-                    left: `${left}%`,
-                    width: `${width}%`,
-                    background: fill,
-                    opacity:
-                      hasAccent || cert.status === "in-progress" ? 1 : 0.65,
-                    color: textColor,
-                  }}
-                >
-                  <span className="truncate">
-                    {span} mo · {cert.category || cert.provider || cert.name}
-                  </span>
-                </div>
-                {todayLeft !== null && (
+          {/* "Today" sits in the same column and the same inset as the tracks,
+              so the tab stands directly over the line in every row. */}
+          {todayLeft !== null && (
+            <div className="grid grid-cols-1 items-center gap-2 md:grid-cols-[180px_1fr] md:gap-5">
+              <div className="hidden md:block" aria-hidden="true" />
+              <div className="px-1.5">
+                <div className="relative h-7">
                   <div
-                    className="pointer-events-none absolute top-0 bottom-0 z-10"
-                    style={{
-                      left: `${todayLeft}%`,
-                      width: "1.5px",
-                      background: "var(--foreground)",
-                      opacity: 0.55,
-                      transform: "translateX(-0.75px)",
-                    }}
-                  />
-                )}
+                    className="absolute top-0 -translate-x-1/2"
+                    style={{ left: `${todayLeft}%` }}
+                  >
+                    <span className="tab whitespace-nowrap">
+                      <span
+                        className="h-1.5 w-1.5 shrink-0 rounded-full bg-signal-bright"
+                        aria-hidden="true"
+                      />
+                      <span className="annotate text-signal">
+                        {copy.education.roadmapToday}
+                      </span>
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
-          )
-        })}
+          )}
+
+          {/* Phase bars */}
+          <div className="flex flex-col gap-3">
+            {entries.map(({ cert, startOffset, span, startLabel, endLabel }) => {
+              const left = (startOffset / totalMonths) * 100
+              const width = (span / totalMonths) * 100
+              const hasAccent = Boolean(cert.accentColor)
+              const isCurrent = cert.status === "in-progress"
+              // No fill means the bar keeps the plate of .cast-sm: planned work
+              // is a raised seat, the accent stays with the current thing.
+              const fill =
+                cert.accentColor || (isCurrent ? "var(--signal)" : undefined)
+              const textColor = hasAccent
+                ? getReadableTextColor(cert.accentColor)
+                : isCurrent
+                  ? "var(--signal-fg)"
+                  : undefined
+
+              return (
+                <div
+                  key={cert.id}
+                  className="grid grid-cols-1 items-center gap-2 md:grid-cols-[180px_1fr] md:gap-5"
+                >
+                  <div className="flex flex-col gap-1 md:text-right">
+                    <span
+                      className={
+                        "font-display text-sm font-semibold tracking-tight " +
+                        (isCurrent ? "text-signal" : "")
+                      }
+                    >
+                      {cert.name}
+                    </span>
+                    <span className="annotate">
+                      {copy.education.roadmapRowMeta(
+                        STATUS_LABEL[cert.status] ?? cert.status,
+                        startLabel,
+                        endLabel
+                      )}
+                    </span>
+                  </div>
+
+                  <div className="well p-1.5">
+                    <div className="relative h-8">
+                      <div
+                        className={
+                          "cast-sm annotate absolute inset-y-0 flex items-center overflow-hidden px-3 " +
+                          (fill ? "" : "text-fg-muted")
+                        }
+                        style={{
+                          left: `${left}%`,
+                          width: `${width}%`,
+                          background: fill,
+                          color: textColor,
+                        }}
+                      >
+                        <span className="min-w-0 truncate">
+                          {copy.education.roadmapBar(
+                            span,
+                            cert.category || cert.provider || cert.name
+                          )}
+                        </span>
+                      </div>
+                      {todayLeft !== null && (
+                        <div
+                          className="pointer-events-none absolute inset-y-0 z-10 w-px -translate-x-1/2 bg-signal"
+                          style={{ left: `${todayLeft}%` }}
+                          aria-hidden="true"
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
       </div>
     </div>
   )

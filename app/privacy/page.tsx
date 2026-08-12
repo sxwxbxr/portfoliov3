@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation"
-import ReactMarkdown from "react-markdown"
 import PageLayout, { Section } from "../../components/PageLayout"
+import { ProseMarkdown } from "../../components/ProseMarkdown"
 import { getSiteSettings } from "@/lib/data"
+import { copy } from "@/lib/copy"
 
 export const revalidate = 86400
 
@@ -20,16 +21,19 @@ export default async function Privacy() {
 
   return (
     <PageLayout
-      title="Privacy"
-      subtitle="How data submitted through this site is processed."
+      label={copy.privacy.label}
+      title={copy.privacy.title}
+      subtitle={copy.privacy.subtitle}
     >
-      <Section className="pb-24 md:pb-32">
-        <div className="max-w-[720px] mx-auto px-6">
-          <article className="prose prose-lg max-w-none dark:prose-invert prose-headings:font-display prose-headings:tracking-tight prose-p:leading-[1.75] prose-a:text-primary prose-a:no-underline hover:prose-a:underline">
-            <ReactMarkdown>{settings.privacyContent}</ReactMarkdown>
+      <section className="sheet pb-24 md:pb-32">
+        <Section>
+          {/* Long-form legal text reads best as one continuous surface, so it
+              gets a single plate rather than a stack of cards. */}
+          <article className="cast rim mx-auto max-w-[860px] p-7 md:p-12">
+            <ProseMarkdown>{settings.privacyContent}</ProseMarkdown>
           </article>
-        </div>
-      </Section>
+        </Section>
+      </section>
     </PageLayout>
   )
 }

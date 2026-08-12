@@ -3,14 +3,19 @@
 import type React from "react"
 
 import { useState, useRef, useEffect, useCallback } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { AlertCircle, Send, Loader2, Sparkles } from "lucide-react"
-import { Skeleton } from "@/components/ui/skeleton"
 import { CheckmarkAnimation } from "@/components/CheckmarkAnimation"
+import { copy } from "@/lib/copy"
+
+const form = copy.contact.form
+const MAX_MESSAGE_LENGTH = 5000
 
 interface FormData {
   name: string
@@ -26,7 +31,48 @@ interface FormErrors {
   [key: string]: string
 }
 
-export function ContactForm() {
+/**
+ * Error slot with a reserved height.
+ *
+ * The message appears and disappears as the user types, and this is the only
+ * conversion funnel on the site — animating height here would shift the form
+ * under the pointer on every keystroke. The row is always present and only
+ * its opacity changes.
+ */
+function FieldError({ id, message }: { id: string; message?: string }) {
+  return (
+    <div
+      id={id}
+      role={message ? "alert" : undefined}
+      className={
+        "flex min-h-[1.125rem] items-center gap-1.5 text-xs text-destructive transition-opacity duration-150 " +
+        (message ? "opacity-100" : "opacity-0")
+      }
+    >
+      {message && (
+        <>
+          <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+          {message}
+        </>
+      )}
+    </div>
+  )
+}
+
+function FieldLabel({ htmlFor, children }: { htmlFor: string; children: React.ReactNode }) {
+  return (
+    <label htmlFor={htmlFor} className="annotate">
+      {children}
+    </label>
+  )
+}
+
+export function ContactForm({
+  privacyAvailable = false,
+}: {
+  /** Only link the privacy notice when the page actually exists. */
+  privacyAvailable?: boolean
+}) {
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
@@ -51,7 +97,6 @@ export function ContactForm() {
 
   const closeSuccessModal = useCallback(() => setShowSuccessModal(false), [])
 
-  // Auto-focus close button and handle Escape key when success modal is open
   useEffect(() => {
     if (!showSuccessModal) return
     closeButtonRef.current?.focus()
@@ -66,26 +111,26 @@ export function ContactForm() {
     const newErrors: FormErrors = {}
 
     if (!formData.name.trim()) {
-      newErrors.name = "Name is required"
+      newErrors.name = form.errors.nameRequired
     } else if (formData.name.trim().length < 2) {
-      newErrors.name = "Name must be at least 2 characters"
+      newErrors.name = form.errors.nameShort
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!formData.email.trim()) {
-      newErrors.email = "Email is required"
+      newErrors.email = form.errors.emailRequired
     } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = "Please enter a valid email address"
+      newErrors.email = form.errors.emailInvalid
     }
 
     if (!formData.projectType) {
-      newErrors.projectType = "Please select a project type"
+      newErrors.projectType = form.errors.projectTypeRequired
     }
 
     if (!formData.message.trim()) {
-      newErrors.message = "Message is required"
+      newErrors.message = form.errors.messageRequired
     } else if (formData.message.trim().length < 10) {
-      newErrors.message = "Message must be at least 10 characters"
+      newErrors.message = form.errors.messageShort
     }
 
     setErrors(newErrors)
@@ -94,10 +139,7 @@ export function ContactForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
-    if (!validateForm()) {
-      return
-    }
+    if (!validateForm()) return
 
     setIsSubmitting(true)
     setSubmitError(null)
@@ -111,8 +153,7 @@ export function ContactForm() {
 
       if (!response.ok) {
         const body = await response.json().catch(() => ({}))
-        const message = body.error || "Failed to send message. Please try again."
-        throw new Error(message)
+        throw new Error(body.error || form.errors.sendFailed)
       }
 
       setFormData({
@@ -124,12 +165,12 @@ export function ContactForm() {
         timeline: "",
         message: "",
       })
-
       setShowSuccessModal(true)
     } catch (error) {
       console.error("Form submission error:", error)
-      const message = error instanceof Error ? error.message : "Something went wrong. Please try again or email me directly at info@sweber.dev."
-      setSubmitError(message)
+      setSubmitError(
+        error instanceof Error ? error.message : form.errors.generic
+      )
     } finally {
       setIsSubmitting(false)
     }
@@ -137,21 +178,13 @@ export function ContactForm() {
 
   const handleInputChange = (field: keyof FormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
-
-    if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: "" }))
-    }
-    if (submitError) {
-      setSubmitError(null)
-    }
+    if (errors[field]) setErrors((prev) => ({ ...prev, [field]: "" }))
+    if (submitError) setSubmitError(null)
   }
 
   const handleMessageChange = (value: string) => {
     handleInputChange("message", value)
-    // Hide stale analysis once the message diverges from what was analyzed.
-    if (value.trim() !== analyzedMessageRef.current) {
-      setAnalysis(null)
-    }
+    if (value.trim() !== analyzedMessageRef.current) setAnalysis(null)
   }
 
   const analyzeMessage = async () => {
@@ -186,214 +219,238 @@ export function ContactForm() {
     }
   }
 
+  // SelectTrigger carries `.field` and SelectContent carries `.cast` in
+  // components/ui/select.tsx, so the triggers need no per-call restyling and
+  // stay pixel-identical to the plain <input> fields beside them.
+
   return (
     <div className="relative">
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <Label htmlFor="name" className="text-sm">Name *</Label>
-            <Input
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5" noValidate>
+        <div className="grid gap-5 md:grid-cols-2">
+          <div className="flex flex-col gap-2">
+            <FieldLabel htmlFor="name">{form.name}</FieldLabel>
+            <input
               id="name"
               type="text"
               value={formData.name}
               onChange={(e) => handleInputChange("name", e.target.value)}
-              placeholder="Your full name"
-              className={`bg-transparent border-border ${errors.name ? "border-red-500 focus:ring-red-500" : ""}`}
+              placeholder={form.namePlaceholder}
+              aria-invalid={Boolean(errors.name)}
+              aria-describedby="name-error"
+              className="field px-4 py-2.5 text-sm"
             />
-            {errors.name && (
-              <div className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400">
-                <AlertCircle className="w-3.5 h-3.5" />
-                {errors.name}
-              </div>
-            )}
+            <FieldError id="name-error" message={errors.name} />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="email" className="text-sm">Email *</Label>
-            <Input
+          <div className="flex flex-col gap-2">
+            <FieldLabel htmlFor="email">{form.email}</FieldLabel>
+            <input
               id="email"
               type="email"
               value={formData.email}
               onChange={(e) => handleInputChange("email", e.target.value)}
-              placeholder="your.email@example.com"
-              className={`bg-transparent border-border ${errors.email ? "border-red-500 focus:ring-red-500" : ""}`}
+              placeholder={form.emailPlaceholder}
+              aria-invalid={Boolean(errors.email)}
+              aria-describedby="email-error"
+              className="field px-4 py-2.5 text-sm"
             />
-            {errors.email && (
-              <div className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400">
-                <AlertCircle className="w-3.5 h-3.5" />
-                {errors.email}
-              </div>
-            )}
+            <FieldError id="email-error" message={errors.email} />
           </div>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="company" className="text-sm">Company</Label>
-          <Input
+        <div className="flex flex-col gap-2">
+          <FieldLabel htmlFor="company">{form.company}</FieldLabel>
+          <input
             id="company"
             type="text"
             value={formData.company}
             onChange={(e) => handleInputChange("company", e.target.value)}
-            placeholder="Your company name (optional)"
-            className="bg-transparent border-border"
+            placeholder={form.companyPlaceholder}
+            className="field px-4 py-2.5 text-sm"
           />
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <Label htmlFor="projectType" className="text-sm">Project Type *</Label>
-            <Select value={formData.projectType} onValueChange={(value) => handleInputChange("projectType", value)}>
-              <SelectTrigger className={`bg-transparent border-border ${errors.projectType ? "border-red-500" : ""}`}>
-                <SelectValue placeholder="Select project type" />
+        <div className="grid gap-5 md:grid-cols-2">
+          <div className="flex flex-col gap-2">
+            <FieldLabel htmlFor="projectType">{form.projectType}</FieldLabel>
+            <Select
+              value={formData.projectType}
+              onValueChange={(value) => handleInputChange("projectType", value)}
+            >
+              <SelectTrigger
+                id="projectType"
+                aria-invalid={Boolean(errors.projectType)}
+                aria-describedby="projectType-error"
+              >
+                <SelectValue placeholder={form.projectTypePlaceholder} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="automation">Process Automation</SelectItem>
-                <SelectItem value="web-development">Web Development</SelectItem>
-                <SelectItem value="data-integration">Data Integration</SelectItem>
-                <SelectItem value="consulting">Technical Consulting</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
+                {form.projectTypeOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
-            {errors.projectType && (
-              <div className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400">
-                <AlertCircle className="w-3.5 h-3.5" />
-                {errors.projectType}
-              </div>
-            )}
+            <FieldError id="projectType-error" message={errors.projectType} />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="budget" className="text-sm">Budget Range</Label>
-            <Select value={formData.budget} onValueChange={(value) => handleInputChange("budget", value)}>
-              <SelectTrigger className="bg-transparent border-border">
-                <SelectValue placeholder="Select budget range" />
+          <div className="flex flex-col gap-2">
+            <FieldLabel htmlFor="budget">{form.budget}</FieldLabel>
+            <Select
+              value={formData.budget}
+              onValueChange={(value) => handleInputChange("budget", value)}
+            >
+              <SelectTrigger id="budget">
+                <SelectValue placeholder={form.budgetPlaceholder} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="under-10k">&lt; CHF 10,000</SelectItem>
-                <SelectItem value="10k-25k">CHF 10,000 - 25,000</SelectItem>
-                <SelectItem value="25k-50k">CHF 25,000 - 50,000</SelectItem>
-                <SelectItem value="50k-plus">CHF 50,000+</SelectItem>
-                <SelectItem value="discuss">Let&apos;s discuss</SelectItem>
+                {form.budgetOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
+            <div className="min-h-[1.125rem]" aria-hidden="true" />
           </div>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="timeline" className="text-sm">Timeline</Label>
-          <Select value={formData.timeline} onValueChange={(value) => handleInputChange("timeline", value)}>
-            <SelectTrigger className="bg-transparent border-border">
-              <SelectValue placeholder="When do you need this completed?" />
+        <div className="flex flex-col gap-2">
+          <FieldLabel htmlFor="timeline">{form.timeline}</FieldLabel>
+          <Select
+            value={formData.timeline}
+            onValueChange={(value) => handleInputChange("timeline", value)}
+          >
+            <SelectTrigger id="timeline">
+              <SelectValue placeholder={form.timelinePlaceholder} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="asap">ASAP</SelectItem>
-              <SelectItem value="1-month">Within 1 month</SelectItem>
-              <SelectItem value="3-months">Within 3 months</SelectItem>
-              <SelectItem value="6-months">Within 6 months</SelectItem>
-              <SelectItem value="flexible">Timeline is flexible</SelectItem>
+              {form.timelineOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="message" className="text-sm">Message *</Label>
-          <Textarea
+        <div className="flex flex-col gap-2">
+          <FieldLabel htmlFor="message">{form.message}</FieldLabel>
+          <textarea
             id="message"
             value={formData.message}
             onChange={(e) => handleMessageChange(e.target.value)}
             onBlur={analyzeMessage}
-            placeholder="Tell me about your project, goals, and any specific requirements..."
+            placeholder={form.messagePlaceholder}
             rows={5}
-            className={`bg-transparent border-border ${errors.message ? "border-red-500 focus:ring-red-500" : ""}`}
+            maxLength={MAX_MESSAGE_LENGTH}
+            aria-invalid={Boolean(errors.message)}
+            aria-describedby="message-error"
+            className="field resize-y px-4 py-3 text-sm leading-relaxed"
           />
-          {errors.message && (
-            <div className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400">
-              <AlertCircle className="w-3.5 h-3.5" />
-              {errors.message}
-            </div>
-          )}
-          <div className="text-xs text-muted-foreground">{formData.message.length}/5000 characters</div>
+          <div className="flex items-start justify-between gap-4">
+            <FieldError id="message-error" message={errors.message} />
+            <span className="annotate shrink-0 tabular">
+              {form.messageCount(formData.message.length, MAX_MESSAGE_LENGTH)}
+            </span>
+          </div>
 
           {(analysisLoading || analysis) && (
-            <div className="mt-3 rounded-lg border border-border bg-card/40 p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <Sparkles className="w-3.5 h-3.5 text-primary" />
-                <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                  AI Match Analysis
-                </span>
-              </div>
+            <div className="well-sm mt-1 flex flex-col gap-2 p-4">
+              <span className="annotate inline-flex items-center gap-1.5">
+                <Sparkles className="h-3.5 w-3.5 text-signal" aria-hidden="true" />
+                {form.analysisTitle}
+              </span>
               {analysisLoading ? (
-                <div className="space-y-2">
-                  <Skeleton className="h-3 w-full" />
-                  <Skeleton className="h-3 w-[92%]" />
-                  <Skeleton className="h-3 w-3/4" />
+                // Seats rising out of the tray. ui/skeleton's `bg-accent
+                // animate-pulse` is a utility-layer fill with no polarity, and
+                // a sunken bar inside a sunken tray is invisible — both wells
+                // share one background token.
+                <div className="flex flex-col gap-2" role="status" aria-live="polite">
+                  <span className="sr-only">{form.analysisLoading}</span>
+                  <div className="cast-sm h-3 w-full" aria-hidden="true" />
+                  <div className="cast-sm h-3 w-[92%]" aria-hidden="true" />
+                  <div className="cast-sm h-3 w-3/4" aria-hidden="true" />
                 </div>
               ) : (
-                <p className="text-sm text-foreground/90 leading-relaxed">{analysis}</p>
+                <p className="text-sm leading-relaxed" aria-live="polite">
+                  {analysis}
+                </p>
               )}
             </div>
           )}
         </div>
 
         {submitError && (
-          <div className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400 p-3 border border-red-200 dark:border-red-900/50">
-            <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
+          <div
+            role="alert"
+            className="well-sm flex items-center gap-2 p-3 text-sm text-destructive"
+          >
+            <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
             {submitError}
           </div>
         )}
 
-        <p className="text-xs text-muted-foreground leading-relaxed">
-          By submitting this form you agree to your data being processed for the
-          purpose of responding to your enquiry. See the{" "}
-          <a href="/privacy" className="link-underline text-foreground">
-            privacy notice
-          </a>{" "}
-          for details.
+        <p className="text-xs leading-relaxed text-fg-muted">
+          {form.privacyLead}
+          {privacyAvailable && (
+            <>
+              {" "}
+              {form.privacyTail}{" "}
+              <a href="/privacy" className="link-underline text-signal">
+                {form.privacyLink}
+              </a>
+              .
+            </>
+          )}
         </p>
 
-        <Button
+        <button
           type="submit"
           disabled={isSubmitting}
-          className="bg-primary text-primary-foreground hover:bg-primary/90 px-8"
+          className="control control-primary inline-flex items-center justify-center gap-2 self-start px-5 py-3 text-sm font-medium"
         >
           {isSubmitting ? (
             <>
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Sending...
+              <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+              {form.submitting}
             </>
           ) : (
             <>
-              <Send className="w-4 h-4 mr-2" />
-              Send Message
+              <Send className="h-4 w-4" aria-hidden="true" />
+              {form.submit}
             </>
           )}
-        </Button>
+        </button>
       </form>
 
       {showSuccessModal && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-ground/85 p-4"
           onClick={closeSuccessModal}
         >
           <div
             role="alertdialog"
             aria-modal="true"
             aria-labelledby="success-heading"
-            className="bg-card border border-border max-w-md w-full mx-4 p-8 text-center space-y-6"
+            className="cast rim flex w-full max-w-md flex-col items-center gap-6 p-8 text-center"
             onClick={(event) => event.stopPropagation()}
           >
-            <div className="flex items-center justify-center">
-              <CheckmarkAnimation />
+            <CheckmarkAnimation />
+            <div className="flex flex-col gap-2">
+              <h3 id="success-heading" className="font-display text-2xl font-bold">
+                {form.successTitle}
+              </h3>
+              <p className="text-sm text-fg-muted">{form.successBody}</p>
             </div>
-            <div className="space-y-2">
-              <h3 id="success-heading" className="text-2xl font-display font-bold">Message Sent</h3>
-              <p className="text-muted-foreground">
-                Thank you for reaching out. I&apos;ll get back to you within 24 hours.
-              </p>
-            </div>
-            <Button ref={closeButtonRef} className="w-full" onClick={closeSuccessModal}>
-              Close
-            </Button>
+            <button
+              ref={closeButtonRef}
+              onClick={closeSuccessModal}
+              className="control w-full px-5 py-3 text-sm font-medium"
+            >
+              {copy.common.close}
+            </button>
           </div>
         </div>
       )}

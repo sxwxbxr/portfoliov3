@@ -1,10 +1,13 @@
 export const revalidate = 86400
 
 import Link from "next/link"
+import { ArrowUpRight } from "lucide-react"
 import PageLayout, { Section } from "../../components/PageLayout"
+import { EmptyState } from "../../components/EmptyState"
 import CertificateCard from "@/components/certificates/CertificateCard"
 import CertificatesRoadmap from "@/components/certificates/CertificatesRoadmap"
 import { getCertificates, getEducationEntries } from "@/lib/data"
+import { copy } from "@/lib/copy"
 
 export default async function Education() {
   const [certificates, education] = await Promise.all([
@@ -17,9 +20,9 @@ export default async function Education() {
   const planned = certificates.filter((c) => c.status === "planned")
 
   const groups = [
-    { key: "in-progress", label: "In Progress", items: inProgress },
-    { key: "completed", label: "Completed", items: completed },
-    { key: "planned", label: "Planned", items: planned },
+    { key: "in-progress", label: copy.education.statusInProgress, items: inProgress },
+    { key: "completed", label: copy.education.statusCompleted, items: completed },
+    { key: "planned", label: copy.education.statusPlanned, items: planned },
   ].filter((g) => g.items.length > 0)
 
   const hasRoadmap = certificates.some(
@@ -28,139 +31,144 @@ export default async function Education() {
 
   return (
     <PageLayout
-      title="Education"
-      subtitle="My academic journey -- and the certifications mapping the road ahead."
+      label={copy.education.label(education.length, certificates.length)}
+      title={copy.education.title}
+      subtitle={copy.education.subtitle}
     >
-      {/* Academic background */}
+      {/* ─── Academic background ───────────────────────────────────────
+          Tiles, not a seated channel. /about and /experience already render
+          their histories as rows in a well; here each station carries a
+          description, so it earns the surface of its own plate. */}
       {education.length > 0 && (
-        <section className="pb-16 md:pb-20">
-          <div className="max-w-[1200px] mx-auto px-6">
-            <div>
-              {education.map((edu, i) => (
-                <Section key={edu.id} delay={i * 0.05}>
-                  <div
-                    className={`py-8 ${i > 0 ? "border-t border-border" : ""}`}
-                  >
-                    <div className="flex flex-col md:flex-row md:items-start gap-2 md:gap-0 mb-3">
-                      <h3 className="font-semibold text-lg md:flex-1">
-                        {edu.title}
-                      </h3>
-                      {edu.institution && (
-                        <span className="text-muted-foreground text-sm md:flex-1">
-                          {edu.institution}
-                        </span>
-                      )}
-                      <span className="font-mono text-sm text-muted-foreground md:text-right">
-                        {edu.period}
-                      </span>
-                    </div>
-                    {edu.description && (
-                      <p className="text-muted-foreground leading-relaxed max-w-2xl">
-                        {edu.description}
-                      </p>
-                    )}
+        <section className="sheet flex flex-col gap-8 pb-20 md:pb-28">
+          <Section className="flex flex-col gap-2">
+            <span className="annotate">
+              {copy.education.academicEyebrow(education.length)}
+            </span>
+            <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
+              {copy.education.academicBackground}
+            </h2>
+          </Section>
+
+          <div className="grid gap-5 md:grid-cols-2">
+            {education.map((edu, i) => (
+              <Section key={edu.id} delay={i * 0.05} className="h-full">
+                <article className="cast rim flex h-full flex-col gap-3 p-6 md:p-7">
+                  <div className="flex items-baseline justify-between gap-4">
+                    <span className="annotate">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    {edu.period && <span className="annotate">{edu.period}</span>}
                   </div>
-                </Section>
-              ))}
-              <div className="border-t border-border" />
-            </div>
+
+                  <h3 className="font-display text-lg font-semibold tracking-tight md:text-xl">
+                    {edu.title}
+                  </h3>
+
+                  {edu.institution && (
+                    <p className="text-sm text-fg-muted">{edu.institution}</p>
+                  )}
+
+                  {edu.description && (
+                    <p className="text-sm leading-relaxed text-fg-muted">
+                      {edu.description}
+                    </p>
+                  )}
+                </article>
+              </Section>
+            ))}
           </div>
         </section>
       )}
 
-      {/* Certificates */}
-      <Section className="py-16 md:py-24 border-t border-border">
-        <div className="max-w-[1200px] mx-auto px-6">
-          <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight mb-10">
-            Credentials &amp; roadmap
+      {/* ─── Credentials ─── */}
+      <section className="sheet flex flex-col gap-8 pb-20 md:pb-28">
+        <Section className="flex flex-col gap-2">
+          <span className="annotate">
+            {copy.education.credentialsEyebrow(certificates.length)}
+          </span>
+          <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
+            {copy.education.credentials}
           </h2>
+        </Section>
 
-          {certificates.length === 0 ? (
-            <div className="glass rounded-xl p-10 md:p-14 text-center">
-              <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground mb-4">
-                Nothing posted yet
-              </p>
-              <h3 className="font-display text-2xl md:text-3xl font-semibold tracking-tight">
-                The shelf is empty -- for now.
-              </h3>
-              <p className="mt-4 text-muted-foreground max-w-xl mx-auto leading-relaxed">
-                The next stack of certifications around AI, security, and cloud
-                is being planned. Once the first cert is in motion it&apos;ll
-                show up here with progress and a roadmap.
-              </p>
-            </div>
-          ) : (
-            <>
-              {completed.length + inProgress.length > 0 && (
-                <dl className="grid grid-cols-3 border-y border-border mb-12">
-                  {[
-                    { label: "Completed", value: completed.length },
-                    { label: "In Progress", value: inProgress.length },
-                    { label: "Planned", value: planned.length },
-                  ].map((stat, i) => (
-                    <div
-                      key={stat.label}
-                      className={`py-6 px-4 ${
-                        i > 0 ? "border-l border-border" : ""
-                      }`}
-                    >
-                      <dt className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-                        {stat.label}
-                      </dt>
-                      <dd className="font-display text-3xl md:text-4xl font-semibold mt-2">
-                        {String(stat.value).padStart(2, "0")}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-              )}
-
-              <div className="space-y-12 md:space-y-16">
-                {groups.map((group) => (
-                  <div key={group.key}>
-                    <div className="flex items-baseline justify-between gap-4 mb-6">
-                      <h3 className="font-display text-xl md:text-2xl font-semibold tracking-tight">
-                        {group.label}
-                      </h3>
-                      <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-                        {String(group.items.length).padStart(2, "0")}
-                      </span>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {group.items.map((cert) => (
-                        <CertificateCard key={cert.id} cert={cert} />
-                      ))}
-                    </div>
+        {certificates.length === 0 ? (
+          <EmptyState
+            label={copy.education.empty}
+            title={copy.education.emptyTitle}
+          >
+            {copy.education.emptyBody}
+          </EmptyState>
+        ) : (
+          <>
+            {completed.length + inProgress.length > 0 && (
+              // Counters as cast tiles, matching the hero metrics on /.
+              // flex-col-reverse keeps dt before dd in the DOM while the
+              // number still reads first.
+              <dl className="grid gap-4 sm:grid-cols-3">
+                {[
+                  { label: copy.education.statusCompleted, value: completed.length },
+                  { label: copy.education.statusInProgress, value: inProgress.length },
+                  { label: copy.education.statusPlanned, value: planned.length },
+                ].map((stat) => (
+                  <div
+                    key={stat.label}
+                    className="cast rim flex flex-col-reverse gap-1 p-5"
+                  >
+                    <dt className="annotate">{stat.label}</dt>
+                    <dd className="font-display text-3xl font-bold tracking-tight tabular md:text-4xl">
+                      {String(stat.value).padStart(2, "0")}
+                    </dd>
                   </div>
                 ))}
-              </div>
-            </>
-          )}
-        </div>
-      </Section>
+              </dl>
+            )}
 
-      {/* Roadmap timeline */}
+            <div className="flex flex-col gap-12 md:gap-16">
+              {groups.map((group) => (
+                <div key={group.key} className="flex flex-col gap-5">
+                  <div className="flex items-baseline justify-between gap-4">
+                    <h3 className="font-display text-xl font-semibold tracking-tight md:text-2xl">
+                      {group.label}
+                    </h3>
+                    <span className="annotate">
+                      {String(group.items.length).padStart(2, "0")}
+                    </span>
+                  </div>
+                  <div className="grid gap-5 md:grid-cols-2">
+                    {group.items.map((cert) => (
+                      <CertificateCard key={cert.id} cert={cert} />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </section>
+
+      {/* ─── Roadmap timeline ─── */}
       {hasRoadmap && (
-        <Section className="py-16 md:py-24 border-t border-border">
-          <div className="max-w-[1200px] mx-auto px-6">
-            <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight mb-10">
-              What&apos;s next on the bench.
+        <Section className="sheet flex flex-col gap-8 pb-20 md:pb-28">
+          <div className="flex flex-col gap-2">
+            <span className="annotate">{copy.education.roadmapEyebrow}</span>
+            <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
+              {copy.education.roadmapTitle}
             </h2>
-            <CertificatesRoadmap certs={certificates} />
           </div>
+          <CertificatesRoadmap certs={certificates} />
         </Section>
       )}
 
-      <Section className="py-16 md:py-24 border-t border-border">
-        <div className="max-w-[1200px] mx-auto px-6">
-          <Link
-            href="/about"
-            className="link-underline text-primary text-sm font-medium"
-          >
-            More about me &rarr;
-          </Link>
-        </div>
-      </Section>
+      <section className="sheet pb-24 md:pb-32">
+        <Link
+          href="/about"
+          className="control inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium"
+        >
+          {copy.common.moreAboutMe}
+          <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+        </Link>
+      </section>
     </PageLayout>
   )
 }

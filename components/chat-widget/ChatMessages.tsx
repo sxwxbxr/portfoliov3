@@ -3,11 +3,11 @@
 import { useEffect, useRef } from "react"
 import { Markdown } from "@/components/ai/Markdown"
 import { cn } from "@/lib/utils"
+import { copy } from "@/lib/copy"
 
 export type Message = { role: "user" | "assistant"; content: string }
 
-export const GREETING =
-  "Hi! I'm Seya's AI assistant. Ask me anything about his work, projects, or availability."
+export const GREETING = copy.chat.greeting
 
 interface ChatMessagesProps {
   messages: Message[]
@@ -17,18 +17,23 @@ interface ChatMessagesProps {
 
 function TypingDots() {
   return (
-    <span className="flex items-center gap-1 py-1" aria-label="Assistant is typing">
+    <span className="flex items-center gap-1 py-1" aria-label={copy.chat.typing}>
       {[0, 1, 2].map((i) => (
         <span
           key={i}
-          className="size-1.5 animate-bounce rounded-full bg-muted-foreground/60"
+          className="size-1.5 animate-bounce rounded-full bg-fg-subtle motion-reduce:animate-none"
           style={{ animationDelay: `${i * 0.15}s` }}
+          aria-hidden="true"
         />
       ))}
     </span>
   )
 }
 
+/**
+ * Two polarities do the work an alignment shift used to do alone: what you
+ * said is raised out of the plate, what the assistant said is sunk into it.
+ */
 function Bubble({
   role,
   children,
@@ -40,10 +45,8 @@ function Bubble({
     <div className={cn("flex", role === "user" ? "justify-end" : "justify-start")}>
       <div
         className={cn(
-          "max-w-[85%] rounded-2xl px-3.5 py-2 text-sm",
-          role === "user"
-            ? "bg-primary text-primary-foreground"
-            : "bg-muted text-foreground"
+          "max-w-[85%] px-3.5 py-2 text-sm",
+          role === "user" ? "cast-sm" : "well-sm"
         )}
       >
         {children}
@@ -60,7 +63,7 @@ export function ChatMessages({ messages, streaming, error }: ChatMessagesProps) 
   }, [messages, streaming])
 
   return (
-    <div className="flex-1 space-y-3 overflow-y-auto p-4" data-lenis-prevent>
+    <div className="flex flex-1 flex-col gap-3 overflow-y-auto p-4" data-lenis-prevent>
       <Bubble role="assistant">{GREETING}</Bubble>
 
       {messages.map((message, i) => {
@@ -85,9 +88,7 @@ export function ChatMessages({ messages, streaming, error }: ChatMessagesProps) 
         )
       })}
 
-      {error && (
-        <p className="px-1 text-xs text-destructive">{error}</p>
-      )}
+      {error && <p className="px-1 text-xs text-destructive">{error}</p>}
 
       <div ref={bottomRef} />
     </div>

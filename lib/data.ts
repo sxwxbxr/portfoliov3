@@ -56,7 +56,21 @@ const DEFAULT_SETTINGS: SiteSettings = {
   privacyContent: "",
 }
 
+/**
+ * True when a connection string is configured at all.
+ *
+ * Without this guard every route 500s on a checkout that has no `.env.local`,
+ * including the root layout — which makes it impossible to work on markup or
+ * styling locally. Note this deliberately only covers the *absent* case: when
+ * DATABASE_URL is set and the query still fails, the error propagates, because
+ * a broken database in production must not be silently papered over with
+ * placeholder content.
+ */
+const hasDb = () => Boolean(process.env.DATABASE_URL)
+
 export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
+  if (!hasDb()) return DEFAULT_SETTINGS
+
   const rows = await db.select().from(siteSettings).limit(1)
   const row = rows[0]
   if (!row) return DEFAULT_SETTINGS
@@ -80,6 +94,7 @@ export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
 })
 
 export const getProjects = cache(async () => {
+  if (!hasDb()) return []
   return db.select().from(projects).orderBy(asc(projects.sortOrder))
 })
 
@@ -89,10 +104,12 @@ export const getProjectBySlug = cache(async (slug: string) => {
 })
 
 export const getExperience = cache(async () => {
+  if (!hasDb()) return []
   return db.select().from(experienceEntries).orderBy(asc(experienceEntries.sortOrder))
 })
 
 export const getBlogPosts = cache(async () => {
+  if (!hasDb()) return []
   return db.select().from(blogPosts)
 })
 
@@ -102,6 +119,7 @@ export const getBlogPostBySlug = cache(async (slug: string) => {
 })
 
 export const getCaseStudies = cache(async () => {
+  if (!hasDb()) return []
   return db.select().from(caseStudies)
 })
 
@@ -111,10 +129,12 @@ export const getCaseStudyBySlug = cache(async (slug: string) => {
 })
 
 export const getCertificates = cache(async () => {
+  if (!hasDb()) return []
   return db.select().from(certificates).orderBy(asc(certificates.sortOrder))
 })
 
 export const getEducationEntries = cache(async () => {
+  if (!hasDb()) return []
   return db
     .select()
     .from(educationEntries)
@@ -122,6 +142,7 @@ export const getEducationEntries = cache(async () => {
 })
 
 export const getSkills = cache(async () => {
+  if (!hasDb()) return []
   return db.select().from(skills).orderBy(asc(skills.sortOrder))
 })
 

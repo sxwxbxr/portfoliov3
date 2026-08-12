@@ -1,32 +1,63 @@
 "use client"
 
 import * as React from "react"
-import { Moon, Sun } from "lucide-react"
+import { Monitor, Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
-import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+import { copy } from "@/lib/copy"
 
-export function ThemeToggle() {
+const OPTIONS = [
+  { value: "system", label: copy.nav.themeSystem, Icon: Monitor },
+  { value: "light", label: copy.nav.themeLight, Icon: Sun },
+  { value: "dark", label: copy.nav.themeDark, Icon: Moon },
+] as const
+
+/**
+ * Three-state theme control: System / Light / Dark.
+ *
+ * The previous version was a two-state button that never offered System, so a
+ * visitor whose OS is set to dark could only get there by clicking — and it
+ * returned null until mounted, which shifted the layout on hydration. Here the
+ * track is always rendered at full size and only the *selection* waits for
+ * mount, so nothing moves.
+ */
+export function ThemeToggle({ className }: { className?: string }) {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = React.useState(false)
 
-  React.useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted) {
-    return null
-  }
+  React.useEffect(() => setMounted(true), [])
 
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-      className="relative overflow-hidden transition-all duration-300 hover:scale-110 hover:bg-primary/10"
+    <div
+      role="radiogroup"
+      aria-label={copy.nav.colorScheme}
+      className={cn("well-sm inline-flex items-center gap-0.5 p-1", className)}
     >
-      <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-      <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-      <span className="sr-only">Toggle theme</span>
-    </Button>
+      {OPTIONS.map(({ value, label, Icon }) => {
+        const active = mounted && theme === value
+        return (
+          <button
+            key={value}
+            type="button"
+            role="radio"
+            aria-checked={active}
+            aria-label={label}
+            title={label}
+            onClick={() => setTheme(value)}
+            className={cn(
+              "inline-flex h-8 w-8 items-center justify-center rounded-md",
+              "transition-[background-color,box-shadow,color] duration-150",
+              active
+                ? "cast-sm text-signal"
+                : "text-fg-subtle hover:text-fg"
+            )}
+          >
+            <Icon className="h-4 w-4" aria-hidden="true" />
+          </button>
+        )
+      })}
+    </div>
   )
 }
+
+export default ThemeToggle

@@ -2,6 +2,7 @@
 
 import { useState, type KeyboardEvent } from "react"
 import { ArrowUp } from "lucide-react"
+import { copy } from "@/lib/copy"
 
 interface ChatInputProps {
   onSend: (text: string) => void
@@ -28,24 +29,30 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
   }
 
   return (
-    <div className="flex items-end gap-2 border-t border-border p-3">
+    // Opposite polarities, side by side: you type into the sunken thing and
+    // press the raised one.
+    <div className="flex items-end gap-2 border-t border-edge-soft p-3">
+      <label htmlFor="chat-input" className="sr-only">
+        {copy.chat.inputLabel}
+      </label>
       <textarea
+        id="chat-input"
         value={value}
         onChange={(e) => setValue(e.target.value.slice(0, MAX_LENGTH))}
         onKeyDown={handleKeyDown}
         rows={1}
         maxLength={MAX_LENGTH}
-        placeholder="Type your message…"
-        className="max-h-32 flex-1 resize-none bg-transparent px-2 py-2 text-sm outline-none placeholder:text-muted-foreground/60"
+        placeholder={copy.chat.inputPlaceholder}
+        className="field max-h-32 min-h-9 flex-1 resize-none px-3 py-2 text-sm"
       />
       <button
         type="button"
         onClick={submit}
         disabled={disabled || !value.trim()}
-        aria-label="Send message"
-        className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-40"
+        aria-label={copy.chat.send}
+        className="control control-primary inline-flex h-9 w-9 shrink-0 items-center justify-center"
       >
-        <ArrowUp className="size-4" />
+        <ArrowUp className="h-4 w-4" aria-hidden="true" />
       </button>
     </div>
   )

@@ -1,10 +1,12 @@
 import Navigation from "../../../components/Navigation"
 import { JsonLd } from "../../../components/JsonLd"
+import { ProseMarkdown } from "../../../components/ProseMarkdown"
 import { getBlogPosts, getBlogPostBySlug } from "@/lib/data"
 import Link from "next/link"
-import ReactMarkdown from "react-markdown"
+import { ArrowLeft, ArrowRight } from "lucide-react"
 import { notFound } from "next/navigation"
 import { BLOG_ENABLED } from "@/lib/features"
+import { copy } from "@/lib/copy"
 
 export const revalidate = 86400
 
@@ -60,100 +62,116 @@ export default async function BlogPost({ params }: BlogPostPageProps) {
   const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null
   const prevPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null
 
+  const tags = post.tags as string[]
+
   return (
-    <div className="min-h-screen bg-background grain-overlay">
+    <div className="min-h-screen bg-ground">
       <JsonLd data={blogPostStructuredData} />
       <Navigation />
 
-      <div className="pt-32">
-        {/* Header */}
-        <section className="max-w-[1200px] mx-auto px-6 pb-16 md:pb-20">
+      <div className="flex flex-col gap-14 pt-32 md:gap-20">
+        {/* ─── Hero ─── */}
+        <section className="sheet flex flex-col gap-6">
           <Link
             href="/blog"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
+            className="annotate inline-flex items-center gap-1.5 self-start transition-colors duration-150 hover:text-signal"
           >
-            &larr; All articles
+            <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
+            {copy.blog.allArticles}
           </Link>
 
-          <h1 className="text-4xl md:text-5xl font-display font-bold tracking-tight leading-[1.1]">
+          <h1 className="font-display text-4xl font-bold leading-[1.05] tracking-tight text-balance md:text-5xl">
             {post.title}
           </h1>
 
-          <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-            <span className="font-mono">
-              {new Date(post.publishedAt).toLocaleDateString("en-US", {
-                month: "long",
-                day: "numeric",
-                year: "numeric",
-              })}
+          {post.excerpt && (
+            <p className="measure text-lg leading-relaxed text-fg-muted">
+              {post.excerpt}
+            </p>
+          )}
+
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="well-sm annotate px-3 py-1.5">
+              {new Date(post.publishedAt).toLocaleDateString(
+                copy.common.dateLocale,
+                { month: "long", day: "numeric", year: "numeric" }
+              )}
             </span>
-            <span className="text-border">&middot;</span>
-            <span>{post.readTime}</span>
-            <span className="text-border">&middot;</span>
-            <span>{post.author}</span>
+            <span className="well-sm annotate px-3 py-1.5">{post.readTime}</span>
+            <span className="well-sm annotate px-3 py-1.5">{post.author}</span>
           </div>
         </section>
 
-        <div className="border-t border-border" />
+        {/* ─── Article body, one continuous plate ─── */}
+        <section className="sheet">
+          <article className="cast rim mx-auto flex max-w-[860px] flex-col gap-10 p-7 md:p-12">
+            <ProseMarkdown>{post.content}</ProseMarkdown>
 
-        {/* Article body */}
-        <div className="py-24 md:py-32">
-          <article className="max-w-[720px] mx-auto px-6">
-            <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:font-display prose-headings:tracking-tight prose-p:leading-[1.75] prose-a:text-primary prose-a:no-underline hover:prose-a:underline">
-              <ReactMarkdown>{post.content}</ReactMarkdown>
-            </div>
-
-            {/* Tags */}
-            <div className="mt-16 pt-8 border-t border-border">
-              <p className="font-mono text-xs text-muted-foreground mb-3">Tagged</p>
-              <div className="flex flex-wrap gap-2">
-                {(post.tags as string[]).map((tag) => (
-                  <span
-                    key={tag}
-                    className="text-sm text-muted-foreground"
-                  >
-                    {tag}{(post.tags as string[]).indexOf(tag) < (post.tags as string[]).length - 1 ? "," : ""}
-                  </span>
-                ))}
+            {tags.length > 0 && (
+              <div className="flex flex-col gap-3">
+                <span className="annotate">{copy.blog.taggedEyebrow(tags.length)}</span>
+                <div className="flex flex-wrap gap-2">
+                  {tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="well-sm px-2.5 py-1 font-mono text-xs text-fg-muted"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
-            {/* Author */}
-            <div className="mt-12 pt-8 border-t border-border">
-              <p className="font-mono text-xs text-muted-foreground">Written by</p>
-              <p className="font-semibold mt-1">{post.author}</p>
+            <div className="flex flex-col gap-1">
+              <span className="annotate">{copy.blog.writtenBy}</span>
+              <p className="font-display font-semibold">{post.author}</p>
             </div>
           </article>
-        </div>
+        </section>
 
-        {/* Post navigation */}
-        <div className="border-t border-border">
-          <div className="max-w-[1200px] mx-auto px-6 py-16 md:py-20 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        {/* ─── Pager ─── */}
+        <section className="sheet pb-8">
+          <div className="flex flex-col items-stretch gap-4 md:flex-row md:items-center md:justify-between">
             {prevPost ? (
-              <Link href={`/blog/${prevPost.slug}`} className="group">
-                <span className="text-sm text-muted-foreground">&larr; Previous</span>
-                <p className="font-semibold group-hover:text-primary transition-colors">
+              <Link
+                href={`/blog/${prevPost.slug}`}
+                className="cast rim group flex flex-col gap-1 p-5 transition-transform duration-150 ease-out hover:-translate-y-0.5 motion-reduce:transform-none md:min-w-[20rem]"
+              >
+                <span className="annotate inline-flex items-center gap-1.5">
+                  <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
+                  {copy.blog.previousArticle}
+                </span>
+                <span className="font-display text-lg font-semibold transition-colors duration-150 group-hover:text-signal">
                   {prevPost.title}
-                </p>
+                </span>
               </Link>
             ) : (
               <Link
                 href="/blog"
-                className="link-underline text-sm text-muted-foreground hover:text-foreground transition-colors"
+                className="control inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium md:self-start"
               >
-                &larr; All articles
+                <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+                {copy.blog.allArticles}
               </Link>
             )}
+
             {nextPost && (
-              <Link href={`/blog/${nextPost.slug}`} className="group text-right">
-                <span className="text-sm text-muted-foreground">Next &rarr;</span>
-                <p className="font-semibold group-hover:text-primary transition-colors">
+              <Link
+                href={`/blog/${nextPost.slug}`}
+                className="cast rim group flex flex-col gap-1 p-5 transition-transform duration-150 ease-out hover:-translate-y-0.5 motion-reduce:transform-none md:min-w-[20rem] md:text-right"
+              >
+                <span className="annotate inline-flex items-center gap-1.5 md:self-end">
+                  {copy.blog.nextArticle}
+                  <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                </span>
+                <span className="font-display text-lg font-semibold transition-colors duration-150 group-hover:text-signal">
                   {nextPost.title}
-                </p>
+                </span>
               </Link>
             )}
           </div>
-        </div>
+        </section>
       </div>
     </div>
   )

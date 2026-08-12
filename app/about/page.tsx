@@ -1,173 +1,193 @@
 import Link from "next/link"
 import Image from "next/image"
+import { ArrowUpRight, Download } from "lucide-react"
 import PageLayout, { Section } from "../../components/PageLayout"
-import { getEducationEntries } from "@/lib/data"
+import { SkillGroups, groupByCategory, type SkillRow } from "../../components/SkillGroups"
+import { getEducationEntries, getSkills } from "@/lib/data"
+import { resolveImage } from "@/lib/project-image"
+import { copy } from "@/lib/copy"
 
 export const revalidate = 86400
 
-const expertise = [
-  {
-    category: "Development",
-    skills: "C#, .NET, TypeScript, React, Next.js, SQL, REST APIs, Python",
-  },
-  {
-    category: "Project Management",
-    skills: "Agile / Scrum, Stakeholder Management, Requirements Engineering, Risk Management",
-  },
-  {
-    category: "Tools & Platforms",
-    skills: "Azure DevOps, Git, Docker, Vercel, Jira, Supabase",
-  },
+const expertise = copy.common.expertiseAreas
+
+const facts = [
+  { label: copy.about.factLocation, value: copy.about.factLocationValue },
+  { label: copy.about.factExperience, value: copy.about.factExperienceValue },
+  { label: copy.about.factFocus, value: copy.about.factFocusValue },
+  { label: copy.about.factLanguages, value: copy.about.factLanguagesValue },
 ]
 
 export default async function About() {
-  const education = await getEducationEntries()
+  const [education, skills] = await Promise.all([
+    getEducationEntries(),
+    getSkills(),
+  ])
+  const hasSkills = skills.length > 0
+  const skillGroupCount = groupByCategory(skills as SkillRow[]).length
+  const portrait = resolveImage("/260216_professionalMG.jpeg")
+  // The CV has been linked unconditionally while public/documents/ does not
+  // exist. A dead download on the one page that asks for trust is worse than
+  // no download at all.
+  const cv = resolveImage("/documents/CV_SeyaWeber.pdf")
 
   return (
     <PageLayout
-      title="About"
-      subtitle="Project manager, developer, and builder of lean digital solutions in St. Gallen, Switzerland."
+      label={copy.about.label}
+      title={copy.about.title}
+      subtitle={copy.about.subtitle}
     >
-      {/* Bio */}
-      <Section className="pb-24 md:pb-32">
-        <div className="max-w-[1200px] mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-[1fr_0.4fr] gap-16 md:gap-12">
-            {/* Left -- text */}
-            <div className="max-w-3xl space-y-6">
-              <p className="text-xl md:text-2xl leading-relaxed text-foreground/90">
-                I&apos;m a Software & Digitalization Project Manager at Telsonic, creating customer-specific automation
-                workflows in business-critical systems. I also run Weber Development, building custom software for various companies.
+      {/* ─── Bio ─── */}
+      <Section className="sheet pb-20 md:pb-28">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-[1.6fr_1fr]">
+          <div className="measure flex flex-col gap-5">
+            {copy.about.bio.map((paragraph, i) => (
+              <p
+                key={i}
+                className={
+                  i === 0
+                    ? "text-xl leading-relaxed md:text-2xl"
+                    : "leading-relaxed text-fg-muted"
+                }
+              >
+                {paragraph}
               </p>
-              <p className="text-lg leading-relaxed text-muted-foreground">
-                With a dual background in software engineering and electrical design, I turn complex operational
-                needs into clear requirements, lean processes, and maintainable solutions. My career path has taken me
-                through electrical planning, energy optimization for a Swiss banking portfolio, healthcare data migration, and
-                now into industrial automation and SaaS product development.
-              </p>
-              <p className="text-lg leading-relaxed text-muted-foreground">
-                I believe in creating solutions that not only solve immediate problems but also scale with business
-                growth. My experience spans from hands-on development to strategic project management, allowing me
-                to bridge the gap between technical implementation and business objectives.
-              </p>
-            </div>
+            ))}
+          </div>
 
-            {/* Right -- photo + facts */}
-            <div className="space-y-8">
-              <Image
-                src="/260216_professionalMG.jpeg"
-                alt="Seya Weber, Project Manager and Software Developer"
-                width={400}
-                height={533}
-                className="aspect-[3/4] w-full rounded-sm object-cover object-top"
-              />
-              <div className="glass rounded-xl p-6">
-                <div className="space-y-3">
-                  {[
-                    { label: "Location", value: "St. Gallen, CH" },
-                    { label: "Experience", value: "3+ Years" },
-                    { label: "Focus", value: "Automation & PM" },
-                    { label: "Languages", value: "DE, EN, FR" },
-                  ].map((fact) => (
-                    <div key={fact.label} className="flex justify-between text-sm border-b border-border pb-3 last:border-0">
-                      <span className="text-muted-foreground">{fact.label}</span>
-                      <span className="font-mono">{fact.value}</span>
-                    </div>
+          <div className="flex flex-col gap-5">
+            {portrait && (
+              <div className="well relative aspect-[3/4] w-full overflow-hidden">
+                <Image
+                  src={portrait}
+                  alt={copy.about.portraitAlt}
+                  fill
+                  sizes="(min-width: 768px) 420px, 100vw"
+                  className="object-cover object-top"
+                  priority
+                />
+              </div>
+            )}
+
+            <dl className="cast rim flex flex-col gap-3 p-6">
+              {facts.map((fact) => (
+                <div
+                  key={fact.label}
+                  className="flex items-baseline justify-between gap-4"
+                >
+                  <dt className="annotate">{fact.label}</dt>
+                  <dd className="font-mono text-sm">{fact.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+      </Section>
+
+      {/* ─── Expertise ───────────────────────────────────────────────────
+          One section, two sources. /skills used to be a separate route that
+          rendered the database rows; it was empty and advertised in the nav,
+          which is worse than not existing. It lives here now.
+
+          When the skills table has rows they ARE this section — grouped by
+          category, one tray each. When it is empty the hand-written summary
+          below stands in, so filling the admin upgrades the page instead of
+          producing a second section that says the same thing twice. */}
+      <Section id="skills" className="sheet flex flex-col gap-8 py-20 md:py-28">
+        <div className="flex flex-col gap-2">
+          <span className="annotate">
+            {hasSkills
+              ? copy.about.skillsEyebrow(skillGroupCount, skills.length)
+              : copy.about.expertiseEyebrow(expertise.length)}
+          </span>
+          <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
+            {copy.about.expertise}
+          </h2>
+        </div>
+
+        {hasSkills ? (
+          <SkillGroups skills={skills as SkillRow[]} />
+        ) : (
+          <div className="flex flex-col gap-4">
+            {expertise.map((area) => (
+              <div key={area.category} className="cast rim def-grid p-6">
+                <h3 className="font-display text-sm font-semibold md:text-base">
+                  {area.category}
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {area.skills.map((skill) => (
+                    <span
+                      key={skill}
+                      className="well-sm px-2.5 py-1 font-mono text-xs text-fg-muted"
+                    >
+                      {skill}
+                    </span>
                   ))}
                 </div>
               </div>
-            </div>
+            ))}
           </div>
-        </div>
+        )}
       </Section>
 
-      {/* Expertise */}
-      <Section className="py-24 md:py-32 border-t border-border">
-        <div className="max-w-[1200px] mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight mb-16">
-            Expertise
-          </h2>
+      {/* ─── Education ─── */}
+      {education.length > 0 && (
+        <Section className="sheet flex flex-col gap-8 py-20 md:py-28">
+          <div className="flex flex-col gap-2">
+            <span className="annotate">
+              {copy.about.educationEyebrow(education.length)}
+            </span>
+            <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
+              {copy.about.education}
+            </h2>
+          </div>
 
-          <div className="space-y-0">
-            {expertise.map((area, i) => (
+          <div className="well flex flex-col gap-2 p-3 md:p-4">
+            {education.map((edu) => (
               <div
-                key={area.category}
-                className={`grid grid-cols-1 md:grid-cols-[200px_1fr] gap-2 md:gap-12 py-6 ${
-                  i > 0 ? "border-t border-border" : ""
-                }`}
+                key={edu.id}
+                className="cast-sm flex flex-col gap-1 px-4 py-3.5 md:flex-row md:items-center"
               >
-                <h3 className="font-display font-semibold text-sm md:text-base">
-                  {area.category}
-                </h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  {area.skills}
-                </p>
+                <span className="font-semibold md:flex-1">{edu.title}</span>
+                {edu.institution && (
+                  <span className="text-sm text-fg-muted md:flex-1">
+                    {edu.institution}
+                  </span>
+                )}
+                <span className="annotate md:text-right">{edu.period}</span>
               </div>
             ))}
-            <div className="border-t border-border" />
-          </div>
-        </div>
-      </Section>
-
-      {/* Education */}
-      {education.length > 0 && (
-        <Section className="py-24 md:py-32">
-          <div className="max-w-[1200px] mx-auto px-6">
-            <h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight mb-12">
-              Education
-            </h2>
-
-            <div>
-              {education.map((edu, i) => (
-                <div
-                  key={edu.id}
-                  className={`flex flex-col md:flex-row md:items-center gap-1 md:gap-0 py-4 ${
-                    i > 0 ? "border-t border-border" : ""
-                  }`}
-                >
-                  <span className="font-semibold md:flex-1">{edu.title}</span>
-                  {edu.institution && (
-                    <span className="text-muted-foreground text-sm md:flex-1">
-                      {edu.institution}
-                    </span>
-                  )}
-                  <span className="font-mono text-sm text-muted-foreground md:text-right">
-                    {edu.period}
-                  </span>
-                </div>
-              ))}
-              <div className="border-t border-border" />
-            </div>
           </div>
         </Section>
       )}
 
-      {/* Connect */}
-      <Section className="py-24 md:py-32 border-t border-border">
-        <div className="max-w-[1200px] mx-auto px-6">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-display font-bold tracking-tight">
-                Want to work together?
-              </h2>
-              <p className="mt-2 text-muted-foreground">
-                I&apos;m available for new projects and collaborations.
-              </p>
-            </div>
-            <div className="flex items-center gap-6">
-              <Link
-                href="/contact"
-                className="link-underline text-primary font-medium"
-              >
-                Get in touch &rarr;
-              </Link>
+      {/* ─── Connect ─── */}
+      <Section className="sheet pb-24 md:pb-32">
+        <div className="cast rim flex flex-col items-start justify-between gap-6 p-8 md:flex-row md:items-center md:p-10">
+          <div className="flex flex-col gap-2">
+            <h2 className="font-display text-2xl font-bold tracking-tight md:text-3xl">
+              {copy.about.ctaTitle}
+            </h2>
+            <p className="text-sm text-fg-muted">{copy.about.ctaBody}</p>
+          </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <Link
+              href="/contact"
+              className="control control-primary inline-flex items-center gap-2 px-5 py-3 text-sm font-medium"
+            >
+              {copy.about.getInTouch}
+              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+            {cv && (
               <a
-                href="/documents/CV_SeyaWeber.pdf"
-                className="link-underline text-sm text-muted-foreground hover:text-foreground transition-colors"
+                href={cv}
                 download
+                className="control inline-flex items-center gap-2 px-5 py-3 text-sm font-medium"
               >
-                Download CV
+                <Download className="h-4 w-4" aria-hidden="true" />
+                {copy.about.downloadCv}
               </a>
-            </div>
+            )}
           </div>
         </div>
       </Section>

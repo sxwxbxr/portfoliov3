@@ -14,7 +14,11 @@ function Checkbox({
     <CheckboxPrimitive.Root
       data-slot="checkbox"
       className={cn(
-        "peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50",
+        // CAST: unchecked is a small recess in whatever seat it sits on;
+        // checked fills with the accent. `shadow-xs`, `dark:bg-input/30` and
+        // the `outline-none` + ring pair are gone — the first two are
+        // off-material and the third replaced the one global focus ring.
+        "peer size-4 shrink-0 rounded-[4px] border border-edge bg-well transition-colors duration-150 data-[state=checked]:border-signal data-[state=checked]:bg-signal data-[state=checked]:text-signal-fg aria-invalid:border-destructive disabled:cursor-not-allowed disabled:opacity-50",
         className
       )}
       {...props}

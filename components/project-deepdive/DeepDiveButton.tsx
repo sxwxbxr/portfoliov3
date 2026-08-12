@@ -1,9 +1,10 @@
 "use client"
 
-import { useState } from "react"
+import { useId, useState } from "react"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { Terminal, ChevronDown } from "lucide-react"
 import { DeepDiveContent } from "./DeepDiveContent"
+import { copy } from "@/lib/copy"
 
 const EASE = [0.16, 1, 0.3, 1] as const
 
@@ -26,6 +27,7 @@ export function ProjectDeepDive({
   const [error, setError] = useState<string | null>(null)
   const [loaded, setLoaded] = useState(false)
   const prefersReducedMotion = useReducedMotion()
+  const panelId = useId()
 
   async function loadDeepDive() {
     if (loaded || loading) return
@@ -57,7 +59,7 @@ export function ProjectDeepDive({
       if (!acc.trim()) throw new Error("empty response")
       setLoaded(true)
     } catch {
-      setError("Could not load details.")
+      setError(copy.deepDive.error)
     } finally {
       setLoading(false)
     }
@@ -70,36 +72,50 @@ export function ProjectDeepDive({
   }
 
   return (
-    <div className="mt-12 border-t border-border pt-8">
+    // The surrounding section already spaces its children; the old rule-and-
+    // margin separator was doing the same job twice.
+    <div className="flex flex-col gap-4">
       <button
         type="button"
         onClick={toggle}
         aria-expanded={open}
-        className="inline-flex items-center gap-2 text-sm font-medium text-foreground transition-colors hover:text-primary"
+        aria-controls={panelId}
+        className="control inline-flex items-center gap-2.5 self-start px-4 py-2.5 text-sm font-medium"
       >
-        <Terminal className="size-4" />
-        Technical Deep Dive
+        <Terminal className="h-4 w-4 text-signal" aria-hidden="true" />
+        {copy.deepDive.toggle}
         <ChevronDown
-          className={`size-4 transition-transform ${open ? "rotate-180" : ""}`}
+          className={
+            "h-4 w-4 transition-transform duration-200 motion-reduce:transition-none " +
+            (open ? "rotate-180" : "")
+          }
+          aria-hidden="true"
         />
       </button>
 
       <AnimatePresence initial={false}>
         {open && (
           <motion.div
+            id={panelId}
             initial={prefersReducedMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
             animate={prefersReducedMotion ? { opacity: 1 } : { height: "auto", opacity: 1 }}
             exit={prefersReducedMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: EASE }}
-            className="overflow-hidden"
+            // The collapse needs overflow-hidden, which would otherwise crop
+            // the plate's cast shadow flat. The gutter gives the shadow room
+            // and the negative margin keeps the plate aligned with the column.
+            className="-mx-4 w-[calc(100%+2rem)] overflow-hidden"
           >
-            <div className="pt-6">
-              <DeepDiveContent
-                content={content}
-                loading={loading}
-                error={error}
-                onRetry={loadDeepDive}
-              />
+            <div className="px-4 pb-4">
+              <div className="cast rim flex flex-col gap-4 p-6 md:p-8">
+                <span className="annotate">{copy.deepDive.generated}</span>
+                <DeepDiveContent
+                  content={content}
+                  loading={loading}
+                  error={error}
+                  onRetry={loadDeepDive}
+                />
+              </div>
             </div>
           </motion.div>
         )}

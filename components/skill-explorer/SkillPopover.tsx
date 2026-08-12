@@ -3,25 +3,28 @@
 import { useState } from "react"
 import { ChevronDown, X } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Badge } from "@/components/ui/badge"
+import { copy } from "@/lib/copy"
 
 type SkillDetail = { description: string; relatedProjects: string[] }
 
 interface SkillPopoverProps {
   skill: { category: string; name: string; detail: string; level: string }
+  /**
+   * Retained for API compatibility with the call site. The seats now sit in a
+   * grid inside a sunken tray, so there is no leading divider to suppress.
+   */
   isFirst: boolean
 }
 
 const FALLBACK: SkillDetail = {
-  description: "Used in various projects — see the Projects page for details.",
+  description: copy.about.skillDetailFallback,
   relatedProjects: [],
 }
 
 // Session cache so re-opening a skill never re-hits the API.
 const cache = new Map<string, SkillDetail>()
 
-export function SkillPopover({ skill, isFirst }: SkillPopoverProps) {
+export function SkillPopover({ skill }: SkillPopoverProps) {
   const [open, setOpen] = useState(false)
   const [detail, setDetail] = useState<SkillDetail | null>(
     () => cache.get(skill.name) ?? null
@@ -62,75 +65,86 @@ export function SkillPopover({ skill, isFirst }: SkillPopoverProps) {
   }
 
   return (
-    <div
-      className={`flex flex-col md:flex-row md:items-baseline md:justify-between gap-1 md:gap-6 py-4 ${
-        !isFirst ? "border-t border-border" : ""
-      }`}
-    >
-      <div className="md:flex-1">
+    // Keep this seat in sync with the non-AI branch in app/skills/page.tsx.
+    <li className="cast-sm flex flex-col gap-1.5 px-4 py-3.5">
+      <div className="flex items-baseline justify-between gap-3">
         <Popover open={open} onOpenChange={handleOpenChange}>
           <PopoverTrigger asChild>
             <button
               type="button"
-              className="group inline-flex items-center gap-1.5 text-left font-semibold transition-colors hover:text-primary focus-visible:outline-none focus-visible:text-primary"
+              className="group inline-flex items-center gap-1.5 text-left font-semibold transition-colors duration-150 hover:text-signal"
             >
               {skill.name}
               <ChevronDown
-                className={`size-3.5 text-muted-foreground transition-transform ${
-                  open ? "rotate-180" : ""
-                }`}
+                className={
+                  "h-3.5 w-3.5 shrink-0 text-fg-subtle transition-transform duration-200 motion-reduce:transition-none " +
+                  (open ? "rotate-180" : "")
+                }
+                aria-hidden="true"
               />
             </button>
           </PopoverTrigger>
-          <PopoverContent align="start" className="w-80" data-lenis-prevent>
-            <div className="flex items-start justify-between gap-2">
-              <p className="text-sm font-semibold">{skill.name}</p>
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                aria-label="Close"
-                className="-mr-1 -mt-1 rounded p-1 text-muted-foreground transition-colors hover:text-foreground"
-              >
-                <X className="size-3.5" />
-              </button>
-            </div>
 
-            {loading && !detail ? (
-              <div className="mt-2 space-y-2">
-                <Skeleton className="h-3 w-full" />
-                <Skeleton className="h-3 w-4/5" />
-              </div>
-            ) : (
-              <>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  {detail?.description ?? FALLBACK.description}
+          {/* components/ui/popover.tsx now carries `.cast` itself, so the
+              content element IS the plate — no neutralising wrapper needed. */}
+          <PopoverContent
+            align="start"
+            className="rim flex w-80 flex-col gap-3 p-5"
+            data-lenis-prevent
+          >
+              <div className="flex items-start justify-between gap-3">
+                <p className="font-display text-sm font-semibold tracking-tight">
+                  {skill.name}
                 </p>
-                {detail?.relatedProjects && detail.relatedProjects.length > 0 && (
-                  <div className="mt-3 flex flex-wrap gap-1.5">
-                    {detail.relatedProjects.map((project) => (
-                      <Badge key={project} variant="secondary">
-                        {project}
-                      </Badge>
-                    ))}
-                  </div>
-                )}
-              </>
-            )}
+                <button
+                  type="button"
+                  onClick={() => setOpen(false)}
+                  aria-label={copy.common.close}
+                  className="-mr-1 -mt-1 rounded p-1 text-fg-subtle transition-colors duration-150 hover:text-fg"
+                >
+                  <X className="h-3.5 w-3.5" aria-hidden="true" />
+                </button>
+              </div>
+
+              {loading && !detail ? (
+                // Bars milled into the plate, matching DeepDiveContent and the
+                // contact-form analysis. ui/skeleton's `bg-accent animate-pulse`
+                // is a utility-layer fill that paints over the recess.
+                <div role="status" className="flex flex-col gap-2">
+                  <span className="sr-only">{copy.about.skillDetailLoading}</span>
+                  <div className="well-sm h-3 w-full" aria-hidden="true" />
+                  <div className="well-sm h-3 w-4/5" aria-hidden="true" />
+                </div>
+              ) : (
+                <>
+                  <p className="text-sm leading-relaxed text-fg-muted">
+                    {detail?.description ?? FALLBACK.description}
+                  </p>
+                  {detail?.relatedProjects && detail.relatedProjects.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5">
+                      {detail.relatedProjects.map((project) => (
+                        <span
+                          key={project}
+                          className="well-sm px-2.5 py-1 font-mono text-xs text-fg-muted"
+                        >
+                          {project}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
           </PopoverContent>
         </Popover>
 
-        {skill.detail && (
-          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-            {skill.detail}
-          </p>
+        {skill.level && (
+          <span className="annotate shrink-0">{skill.level}</span>
         )}
       </div>
 
-      {skill.level && (
-        <span className="shrink-0 font-mono text-xs text-muted-foreground md:text-right">
-          {skill.level}
-        </span>
+      {skill.detail && (
+        <p className="text-sm leading-relaxed text-fg-muted">{skill.detail}</p>
       )}
-    </div>
+    </li>
   )
 }

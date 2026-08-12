@@ -6,6 +6,20 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
+  async redirects() {
+    return [
+      {
+        // /skills was a separate route that rendered the skills table. It was
+        // empty while being advertised in the nav, so it now lives as a
+        // section of /about. Permanent, because the old URL was live and is
+        // potentially indexed and linked.
+        source: "/skills",
+        destination: "/about#skills",
+        permanent: true,
+      },
+    ]
+  },
+
   async headers() {
     return [
       {
