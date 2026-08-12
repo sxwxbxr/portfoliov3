@@ -52,6 +52,7 @@ export const copy = {
     projects: "Projects",
     caseStudies: "Case Studies",
     experience: "Experience",
+    career: "Career",
     education: "Education",
     skills: "Skills",
     blog: "Blog",
@@ -229,6 +230,7 @@ export const copy = {
     skillsEyebrow: (groups: number, total: number) =>
       `${groups} ${plural(groups, "category", "categories")} · ${total} ${plural(total, "skill", "skills")}`,
     skillsEmpty: "Skills are maintained in the admin and will appear here by category.",
+    career: "Career",
     education: "Education",
     educationEyebrow: (n: number) => `Education · ${n} ${plural(n, "station", "stations")}`,
     ctaTitle: "Want to work together?",
@@ -396,6 +398,39 @@ export const copy = {
         generic: "Something went wrong. Email me directly at info@sweber.dev.",
       },
     },
+  },
+
+  // /career merges what used to be /experience and /education. In the Swiss
+  // apprenticeship model the two run concurrently, so splitting them left the
+  // work page showing gaps where a full-time school year actually sat.
+  career: {
+    label: (work: number, education: number) => {
+      const parts: string[] = []
+      if (work > 0) parts.push(`${work} ${plural(work, "role", "roles")}`)
+      if (education > 0)
+        parts.push(
+          `${education} ${plural(education, "qualification", "qualifications")}`
+        )
+      return parts.length > 0 ? parts.join(" · ") : "Career"
+    },
+    title: "Career",
+    subtitle:
+      "Work and education side by side. Through both apprenticeships they ran at the same time, which is why they belong on one axis rather than on two pages.",
+    timelineEyebrow: (from: number, to: number) => `Timeline · ${from}–${to}`,
+    timelineTitle: "The whole path",
+    timelineHint:
+      "Hover or focus a bar to highlight its entry, and select one to jump to it.",
+    timelineLabel: (from: number, to: number) =>
+      `Career timeline from ${from} to ${to}, in two lanes: work and education`,
+    barLabel: (title: string, subtitle: string, period: string) =>
+      subtitle ? `${title} — ${subtitle}, ${period}` : `${title}, ${period}`,
+    laneWork: "Work",
+    laneEducation: "Education",
+    planned: "Planned",
+    empty: "Nothing here yet.",
+    emptyTitle: "The career timeline is still being filled in.",
+    emptyBody:
+      "Roles and qualifications are maintained in the admin and will appear here on one axis.",
   },
 
   education: {

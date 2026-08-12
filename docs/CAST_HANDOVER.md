@@ -147,6 +147,25 @@ The vendored files are the **latin subsets of the same variable fonts** Google s
 
 Total cost: ~108 KB across three files, which is what `next/font/google` was downloading and emitting anyway.
 
+## 4c. /experience and /education are one page
+
+They merged into `/career`. Both old URLs 308 there.
+
+The reason is factual rather than cosmetic. In the Swiss apprenticeship model work and school run **concurrently** — an EFZ is a job and a school at the same time. Split across two pages, the work page showed an unexplained 11-month gap in 2024/25 where the Berufsmaturität actually sat, and a 6-month one between an EFZ finishing and the next role starting. Neither page was wrong; both were partial.
+
+That also dictates the shape of the chart: **two lanes, not one line.** Collapsing work and education onto a single axis would misrepresent the biography, because the overlap during the apprenticeships is the thing worth seeing.
+
+- `lib/career.ts` builds the model. Positions come from the `startDate` / `endDate` `"YYYY-MM"` columns, which are the source of truth; the stored `period` string is derived and must never be parsed back.
+- `components/career/CareerTimeline.tsx` draws the chart. Bars are revealed with `clip-path`, **never `scaleX`** — they carry a text label, and scaling a bar horizontally squashes its own contents for the length of the animation. The bars are `<button>` elements that move focus to their entry, so the chart is a way to navigate the page rather than a picture of it.
+- `components/career/CareerExplorer.tsx` owns the shared selection: hovering a bar highlights its entry and vice versa.
+- `now` is injected into `buildCareerTimeline` so a statically rendered page cannot bake in a stale "today" and so the model is testable.
+
+### A dating bug fixed along the way
+
+`isCurrentRange` only looked at the end date, so anything ending in the future was labelled "Present" — including the ZHAW degree that starts in September 2026, which rendered as `Sep 2026 -- Present` in August 2026. It now requires the range to have **started** as well, and `isFutureRange` was added alongside it.
+
+Because `period` is persisted on save, existing rows keep the old string until someone re-saves them in the admin. `lib/career.ts` therefore recomputes the display range itself rather than trusting the stored value — see `displayPeriod()`.
+
 ## 5. Traps discovered the hard way
 
 **The `@layer components` cascade trap.** `.cast`, `.well`, `.field` live in `@layer components`, which Tailwind emits **before** utilities. The shadcn primitives bake `border p-4 shadow-md` in as utilities, so they win. A caller writing `className="cast"` on a Radix popover silently got a flat 2020 card, with no error from `tsc` or lint. `components/ui/select.tsx` and `components/ui/popover.tsx` now carry the material themselves — the portalled element **is** the plate. If you add `.cast` to another shadcn primitive, strip its baked `border`/`shadow-*`/`p-*` at the same time.

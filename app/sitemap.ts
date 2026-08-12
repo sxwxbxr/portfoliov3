@@ -33,7 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/experience`,
+      url: `${baseUrl}/career`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.8,
@@ -72,12 +72,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     // /skills was folded into /about#skills. A 301 in next.config.mjs keeps
     // any indexed URL working; it must not stay listed here as a canonical.
-    {
-      url: `${baseUrl}/education`,
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.6,
-    },
+      // /education merged into /career together with /experience; a 308 in
+      // next.config.mjs keeps indexed URLs working, so neither may stay here
+      // as a canonical.
     {
       url: `${baseUrl}/contact`,
       lastModified: new Date(),

@@ -20,8 +20,7 @@ const footerNav = [
     heading: copy.nav.about,
     links: [
       { name: copy.nav.about, href: "/about" },
-      { name: copy.nav.experience, href: "/experience" },
-      { name: copy.nav.education, href: "/education" },
+      { name: copy.nav.career, href: "/career" },
       { name: copy.nav.skills, href: "/about#skills" },
       ...(BLOG_ENABLED ? [{ name: copy.nav.blog, href: "/blog" }] : []),
     ],

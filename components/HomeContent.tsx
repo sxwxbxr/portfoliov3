@@ -406,7 +406,7 @@ export default function HomeContent({
                 </h2>
               </div>
               <Link
-                href="/experience"
+                href="/career"
                 className="control inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium"
               >
                 {copy.home.fullCareer}

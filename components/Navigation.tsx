@@ -27,8 +27,7 @@ const navLinks = [
   { name: copy.nav.work, href: "/projects" },
   { name: copy.nav.about, href: "/about" },
   { name: copy.nav.services, href: "/services" },
-  { name: copy.nav.experience, href: "/experience" },
-  { name: copy.nav.education, href: "/education" },
+  { name: copy.nav.career, href: "/career" },
   ...(CASE_STUDIES_ENABLED
     ? [{ name: copy.nav.caseStudies, href: "/case-studies" }]
     : []),

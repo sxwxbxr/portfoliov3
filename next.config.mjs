@@ -17,6 +17,20 @@ const nextConfig = {
         destination: "/about#skills",
         permanent: true,
       },
+      // /experience and /education merged into /career. In the Swiss
+      // apprenticeship model work and school run concurrently, so the split
+      // left the work page showing unexplained gaps where a full-time school
+      // year actually sat. Both URLs were live and are potentially indexed.
+      {
+        source: "/experience",
+        destination: "/career",
+        permanent: true,
+      },
+      {
+        source: "/education",
+        destination: "/career",
+        permanent: true,
+      },
     ]
   },
 

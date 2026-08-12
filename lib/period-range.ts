@@ -26,17 +26,36 @@ function currentYearMonth(): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`
 }
 
-export function isCurrentRange(endDate: string): boolean {
+/**
+ * A range is current when it has started AND has not finished.
+ *
+ * `startDate` used to be ignored here, so anything ending in the future was
+ * labelled "Present" — including a degree that has not begun. A row reading
+ * "Sep 2026 -- Present" in August 2026 is simply wrong, and it is the kind of
+ * wrong a reader notices on a CV.
+ *
+ * `startDate` is optional so existing callers keep compiling; omitting it
+ * restores the old end-only behaviour.
+ */
+export function isCurrentRange(endDate: string, startDate?: string): boolean {
+  const now = currentYearMonth()
+  if (startDate && MONTH_RE.test(startDate) && startDate > now) return false
   if (!endDate) return true
   if (!MONTH_RE.test(endDate)) return false
-  return endDate >= currentYearMonth()
+  return endDate >= now
+}
+
+/** True when the range has not started yet. */
+export function isFutureRange(startDate: string): boolean {
+  if (!startDate || !MONTH_RE.test(startDate)) return false
+  return startDate > currentYearMonth()
 }
 
 export function derivePeriodRange(
   startDate: string,
   endDate: string,
 ): { period: string; current: boolean } {
-  const current = isCurrentRange(endDate)
+  const current = isCurrentRange(endDate, startDate)
   if (!startDate || !MONTH_RE.test(startDate)) {
     return { period: "", current }
   }

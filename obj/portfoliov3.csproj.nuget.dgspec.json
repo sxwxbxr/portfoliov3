@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Projects\\portfoliov3\\portfoliov3.csproj": {}
+    "d:\\Projects\\portfoliov3\\portfoliov3.csproj": {}
   },
   "projects": {
-    "D:\\Projects\\portfoliov3\\portfoliov3.csproj": {
+    "d:\\Projects\\portfoliov3\\portfoliov3.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Projects\\portfoliov3\\portfoliov3.csproj",
+        "projectUniqueName": "d:\\Projects\\portfoliov3\\portfoliov3.csproj",
         "projectName": "portfoliov3",
-        "projectPath": "D:\\Projects\\portfoliov3\\portfoliov3.csproj",
+        "projectPath": "d:\\Projects\\portfoliov3\\portfoliov3.csproj",
         "packagesPath": "C:\\Users\\s.weber\\.nuget\\packages\\",
-        "outputPath": "D:\\Projects\\portfoliov3\\obj\\",
+        "outputPath": "d:\\Projects\\portfoliov3\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\s.weber\\AppData\\Roaming\\NuGet\\NuGet.Config"

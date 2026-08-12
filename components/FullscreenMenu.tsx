@@ -20,10 +20,9 @@ const menuLinks = [
 const subLinks = [
   CASE_STUDIES_ENABLED && { name: copy.nav.caseStudies, href: "/case-studies" },
   { name: copy.nav.services, href: "/services" },
-  { name: copy.nav.experience, href: "/experience" },
+  { name: copy.nav.career, href: "/career" },
   BLOG_ENABLED && { name: copy.nav.blog, href: "/blog" },
   { name: copy.nav.skills, href: "/about#skills" },
-  { name: copy.nav.education, href: "/education" },
   {
     name: copy.nav.nxrthstack,
     href: "https://nxrthstack.sweber.dev",
