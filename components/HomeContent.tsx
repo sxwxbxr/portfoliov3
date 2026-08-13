@@ -2,9 +2,10 @@
 
 import Link from "next/link"
 import { useRef } from "react"
-import { ArrowDown, ArrowUpRight } from "lucide-react"
+import { ArrowUpRight } from "lucide-react"
 import { motion, useInView, useReducedMotion, type Variants } from "framer-motion"
 import Navigation from "./Navigation"
+import HeroStage from "./hero/HeroStage"
 import { ProjectListItem } from "./ProjectListItem"
 import { EmptyState } from "./EmptyState"
 import type { SiteSettings } from "@/lib/data"
@@ -151,7 +152,6 @@ export default function HomeContent({
   caseStudies,
   settings,
 }: HomeContentProps) {
-  const reduce = useReducedMotion()
   const selectedProjects = projects.slice(0, 6)
 
   const featuredPosts = blogPosts.filter((p) => p.featured)
@@ -220,85 +220,7 @@ export default function HomeContent({
       <Navigation />
 
       {/* ─── Hero ─── */}
-      <section className="relative flex min-h-[88vh] flex-col justify-center overflow-hidden pt-24">
-        <div className="sheet flex w-full flex-col gap-10">
-          <motion.div
-            className="flex flex-col gap-5"
-            initial={reduce ? false : { opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: EASE, delay: 0.05 }}
-          >
-            {settings.heroAvailable && (
-              <span className="tab self-start">
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full rounded-full bg-signal-bright opacity-40 motion-safe:animate-ping" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-signal-bright" />
-                </span>
-                <span className="annotate">
-                  {settings.heroAvailabilityLabel || copy.home.availabilityFallback}
-                </span>
-              </span>
-            )}
-
-            <h1
-              className="font-display font-bold leading-[0.94] tracking-tight text-balance"
-              style={{ fontSize: "clamp(3rem, 7.5vw, 6.5rem)" }}
-            >
-              Seya Weber
-            </h1>
-
-            <p className="text-xl text-fg md:text-2xl">
-              {settings.currentRole || copy.home.roleFallback}
-              {settings.currentEmployer && (
-                <span className="text-fg-muted"> · {settings.currentEmployer}</span>
-              )}
-            </p>
-
-            <p className="measure text-base leading-relaxed text-fg-muted">
-              {copy.home.locationLead(
-                settings.contactLocation || copy.common.locationFallback
-              )}
-            </p>
-          </motion.div>
-
-          {/* Metrics as cast tiles: the first real objects on the page. */}
-          {heroMetrics.length > 0 && (
-            <motion.div
-              className="flex flex-wrap gap-4"
-              initial={reduce ? false : { opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: EASE, delay: 0.14 }}
-            >
-              {heroMetrics.map((metric) => (
-                <div
-                  key={metric.label}
-                  className="cast rim flex min-w-[9.5rem] flex-1 flex-col gap-1 p-5"
-                >
-                  <span className="font-display text-3xl font-bold tracking-tight tabular md:text-4xl">
-                    {metric.value}
-                  </span>
-                  <span className="annotate">{metric.label}</span>
-                </div>
-              ))}
-            </motion.div>
-          )}
-        </div>
-
-        <motion.div
-          className="sheet mt-14 flex items-center gap-2 text-fg-subtle"
-          initial={reduce ? false : { opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-        >
-          <span className="annotate">{copy.common.scroll}</span>
-          <motion.span
-            animate={reduce ? {} : { y: [0, 4, 0] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <ArrowDown className="h-3.5 w-3.5" aria-hidden="true" />
-          </motion.span>
-        </motion.div>
-      </section>
+      <HeroStage settings={settings} metrics={heroMetrics} />
 
       {/* ─── Introduction ─── */}
       <Reveal className="py-20 md:py-28">

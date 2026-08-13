@@ -397,6 +397,238 @@
       var(--cast-x-sm) var(--cast-x-sm) var(--cast-blur-sm) var(--cast-lo);
   }
 
+  /* ── HERO STAGE ───────────────────────────────────────────────────
+     Three layers in one box: a CSS poster made of the real material, a
+     WebGL canvas that continues it in three dimensions, and the type.
+
+     Poster and canvas fill the same absolutely positioned box, so the
+     upgrade is a cross-fade in place. It cannot move the layout, it
+     cannot delay the heading, and if the canvas never arrives the poster
+     is a finished design rather than an empty frame. */
+  .hero-stage {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 88vh;
+    padding-top: 6rem;
+    overflow: hidden;
+  }
+
+  .hero-object {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    /* The block deliberately bleeds off the right edge. Without this it
+       would widen the document and produce a horizontal scrollbar. */
+    contain: paint;
+  }
+
+  .hero-poster,
+  .hero-canvas-wrap {
+    position: absolute;
+    inset: 0;
+    transition: opacity 620ms var(--ease-out);
+  }
+
+  .hero-poster { display: grid; place-items: center; opacity: 1; }
+  .hero-canvas-wrap { opacity: 0; }
+
+  .hero-object[data-live="true"] .hero-poster { opacity: 0; }
+  .hero-object[data-live="true"] .hero-canvas-wrap { opacity: 1; }
+
+  .hero-canvas { display: block; width: 100%; height: 100%; }
+
+  /* The poster IS CAST — a .cast plate holding a .well pocket, tilted into
+     perspective. That is why the swap reads as the same object gaining
+     depth instead of one picture being replaced by a different one. */
+  .hero-poster-plate {
+    width: min(44rem, 76vw);
+    aspect-ratio: 1.72;
+    display: grid;
+    place-items: center;
+    transform: perspective(1400px) rotateX(58deg) rotateZ(-22deg);
+  }
+
+  .hero-poster-pocket { width: 70%; height: 56%; }
+
+  /* Narrow stages stack the type OVER the object, so there the type needs a
+     ground-coloured wash to keep every character on near-ground luminance —
+     the surface the palette was actually solved against. */
+  .hero-scrim {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(178deg,
+      var(--ground) 0%,
+      color-mix(in oklab, var(--ground) 76%, transparent) 46%,
+      color-mix(in oklab, var(--ground) 34%, transparent) 72%,
+      transparent 100%);
+  }
+
+  @media (max-width: 899px) {
+    /* Narrow: the type stacks over the object, so the object steps back. */
+    .hero-object { opacity: 0.55; }
+  }
+
+  @media (min-width: 900px) {
+    .hero-poster { place-items: center end; transform: translateX(16%); }
+
+    /* Wide: the type gets its own column and the object gets the rest.
+       Nothing overlaps, which is the point.
+
+       The first version let the copy span the full sheet and relied on a
+       gradient to stay legible on top of the object. It read as exactly what
+       it was — cards floating on background noise — because an object that
+       passes BEHIND content is texture, not an object. Constraining the copy
+       instead lets the block keep its whole silhouette, and the scrim is then
+       not needed at all here: no character sits over it.
+
+       50% is chosen against the object's own geometry rather than by eye. The
+       shader anchors the block's right face just past the right edge, which
+       puts its left face at ~52.5% of the stage at typical desktop aspects
+       (see the framing derivation in MilledBlock.tsx), so this leaves a
+       gutter instead of an overlap. */
+    .hero-copy { max-width: 50%; }
+
+    /* Not display:none — a safety net that costs nothing.
+       Over the copy column this is opaque --ground painted onto --ground, so
+       it is invisible; it fades out exactly where the object begins. If a
+       stage shape ever does push the object under the type (a 900px-wide but
+       very tall window can), the type stays legible instead of failing. */
+    .hero-scrim {
+      background: linear-gradient(90deg,
+        var(--ground) 0%,
+        var(--ground) 46%,
+        transparent 58%);
+    }
+  }
+
+  /* ── COLD START ───────────────────────────────────────────────────
+     The entry beat, and it exists for a concrete reason rather than for
+     drama. The hero's renderer is a lazy chunk that arrives after
+     hydration, so for the first second the page showed a CSS poster and
+     then swapped it for the real object — and that swap was visible.
+     This holds the frame until the fonts, the page load and the renderer
+     have all settled, so the swap happens behind it.
+
+     It plays once per DOCUMENT LOAD, not once per session — see
+     components/hero/ColdStart.tsx. On a reload the hero re-fetches and
+     re-renders, so the swap is visible again, and a session flag would
+     leave the splash covering only the first load of a session.
+
+     The accent appears here, on the progress fill. That is exactly what
+     the accent is rationed FOR: state. */
+  .cold-start {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    display: grid;
+    place-items: center;
+    background: var(--ground);
+    /* Wipes upward out of the frame rather than fading, so the page is
+       revealed rather than cross-dissolved into. */
+    clip-path: inset(0 0 0 0);
+    transition:
+      clip-path 620ms var(--ease-in-out),
+      opacity 620ms var(--ease-out);
+  }
+
+  .cold-start[data-phase="leaving"] {
+    clip-path: inset(0 0 100% 0);
+    opacity: 0.85;
+  }
+
+  .cold-start[data-phase="gone"] { display: none; }
+
+  .cold-start-frame {
+    position: relative;
+    width: min(44rem, 82vw);
+    padding: 2.75rem 0;
+  }
+
+  /* Datum lines, drawn on rather than faded in. */
+  .cold-start-rule {
+    position: absolute;
+    background: var(--edge-soft);
+  }
+
+  .cold-start-rule-top,
+  .cold-start-rule-bottom {
+    left: 0;
+    right: 0;
+    height: 1px;
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: cs-draw-x 540ms var(--ease-out) forwards;
+  }
+  .cold-start-rule-top { top: 0; }
+  .cold-start-rule-bottom { bottom: 0; animation-delay: 90ms; }
+
+  .cold-start-rule-left {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 1px;
+    transform: scaleY(0);
+    transform-origin: top;
+    animation: cs-draw-y 540ms var(--ease-out) 190ms forwards;
+  }
+
+  @keyframes cs-draw-x { to { transform: scaleX(1); } }
+  @keyframes cs-draw-y { to { transform: scaleY(1); } }
+
+  .cold-start-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding-inline: 1.75rem;
+    opacity: 0;
+    animation: cs-rise 520ms var(--ease-out) 220ms forwards;
+    transition: transform 620ms var(--ease-out);
+  }
+  .cold-start[data-phase="leaving"] .cold-start-body {
+    transform: translateY(-14px);
+  }
+
+  @keyframes cs-rise {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .cold-start-name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2rem, 5.5vw, 3.5rem);
+    letter-spacing: -0.01em;
+    line-height: 1;
+    color: var(--fg);
+  }
+
+  .cold-start-meter {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+  }
+
+  .cold-start-track {
+    position: relative;
+    flex: 1;
+    height: 2px;
+    overflow: hidden;
+    background: color-mix(in oklab, var(--edge-soft) 50%, transparent);
+  }
+
+  /* No transition: the loop writes this every frame and easing it here as
+     well would smooth the value twice. */
+  .cold-start-fill {
+    position: absolute;
+    inset: 0;
+    background: var(--signal);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
   /* ── Compatibility shims ──────────────────────────────────────────
      The old system's utilities are still referenced in ~50 places, most
      of them under /admin which is not part of this redesign. Aliasing
@@ -461,6 +693,11 @@
     border: 1px solid ButtonBorder;
   }
   .control-primary { border-color: Highlight; }
+
+  /* A forced palette has no way to express a shaded object, and the scrim
+     would paint over the system's own background. Both are decorative, so
+     both go — the hero still states everything it needs to in text. */
+  .hero-object, .hero-scrim { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -471,11 +708,18 @@
     scroll-behavior: auto !important;
   }
   .control:active { transform: none; }
+
+  /* Removed outright rather than shortened. A splash carries no information —
+     it only covers work in progress — so with motion switched off the honest
+     answer is to show the finished page immediately. */
+  .cold-start { display: none !important; }
 }
 
 @media print {
-  nav, .no-print { display: none !important; }
+  nav, .no-print, .hero-object, .hero-scrim { display: none !important; }
   body { background: #fff !important; color: #000 !important; }
+  /* 88vh of stage is a wasted sheet of paper once the object is gone. */
+  .hero-stage { min-height: 0 !important; padding-top: 0 !important; }
   .cast, .cast-sm, .well, .well-sm, .control, .field {
     box-shadow: none !important;
     border: 1px solid #999 !important;

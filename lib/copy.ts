@@ -121,6 +121,16 @@ export const copy = {
     ],
   },
 
+  /**
+   * The entry splash. It holds the frame until the fonts, the page load and the
+   * hero renderer have settled, so `label` describes real work rather than a
+   * decorative wait.
+   */
+  coldStart: {
+    label: "Calibrating",
+    ready: "Ready",
+  },
+
   home: {
     availabilityFallback: "Available for projects",
     roleFallback: "Project Manager & Software Developer",
