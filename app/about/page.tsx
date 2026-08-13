@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowUpRight, Download } from "lucide-react"
+import { ArrowUpRight } from "lucide-react"
 import PageLayout, { Section } from "../../components/PageLayout"
 import { SkillGroups, groupByCategory, type SkillRow } from "../../components/SkillGroups"
 import { getEducationEntries, getSkills } from "@/lib/data"
@@ -26,10 +26,9 @@ export default async function About() {
   const hasSkills = skills.length > 0
   const skillGroupCount = groupByCategory(skills as SkillRow[]).length
   const portrait = resolveImage("/260216_professionalMG.jpeg")
-  // The CV has been linked unconditionally while public/documents/ does not
-  // exist. A dead download on the one page that asks for trust is worse than
-  // no download at all.
-  const cv = resolveImage("/documents/CV_SeyaWeber.pdf")
+  // There is deliberately no CV download here. It is replaced by an opt-in
+  // "send me the CV" checkbox on the contact form — see docs/CV_DELIVERY.md.
+  // The point is that a CV should be requested, not lying on a public URL.
 
   return (
     <PageLayout
@@ -178,16 +177,6 @@ export default async function About() {
               {copy.about.getInTouch}
               <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
             </Link>
-            {cv && (
-              <a
-                href={cv}
-                download
-                className="control inline-flex items-center gap-2 px-5 py-3 text-sm font-medium"
-              >
-                <Download className="h-4 w-4" aria-hidden="true" />
-                {copy.about.downloadCv}
-              </a>
-            )}
           </div>
         </div>
       </Section>

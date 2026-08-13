@@ -33,3 +33,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+
+# Personal application documents. Never tracked: this repository is public,
+# and a CV belongs behind a request rather than on a raw.githubusercontent URL.
+# See docs/CV_DELIVERY.md.
+applicationDocuments/

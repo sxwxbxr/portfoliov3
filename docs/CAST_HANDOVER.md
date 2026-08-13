@@ -248,7 +248,7 @@ The shim is marked in `globals.css` and should be deleted once `/admin` is conve
 2. **The skills table is empty**, so `/about` shows the hand-written fallback. `scripts/seed-data.ts` has 16 entries across 4 categories as a template.
 3. **Three project descriptions and one education title are German** while their titles are English. The Berufsmaturität title should stay German — it is a Swiss qualification name.
 4. **Four of nine project images are missing** from `public/`. The fallback is deliberate and looks intentional, but real screenshots would be better.
-5. **`public/documents/` does not exist**, so the CV download on `/about` is hidden. Add the file to make the button appear.
+5. ~~**`public/documents/` does not exist**, so the CV download on `/about` is hidden.~~ **Resolved by removing the download.** A CV on a public URL is scraped and indexed and carries more personal data than a portfolio page needs. The replacement is an opt-in checkbox on the contact form — specified in `docs/CV_DELIVERY.md`, deliberately not built. Note the blocker recorded there: the contact route sends **no** confirmation email today, so this needs a new outbound message rather than an extra attachment.
 6. **`privacyContent` in `site_settings`** — while empty, `/privacy` 404s and the contact form omits the link. Fill it or leave it; both paths are handled.
 
 ### Code — pending work
@@ -287,7 +287,9 @@ The shim is marked in `globals.css` and should be deleted once `/admin` is conve
 
 ### Security item carried over from the original audit
 
-**`applicationDocuments/` is tracked in git** — five scanned personal PDFs (Arbeitszeugnis, Resume, two Fähigkeitsausweise, Lehrzeugnis), and `.gitignore` does not exclude them. Whether this is urgent depends on whether `sxwxbxr/portfoliov3` is public. Check the repository visibility; if public, remove them from history with `git filter-repo` and add the directory to `.gitignore`.
+~~**`applicationDocuments/` is tracked in git**~~ — **the visibility question is answered: the repository is PUBLIC**, and the five PDFs were confirmed anonymously downloadable over `raw.githubusercontent.com` (HTTP 200, no auth) on 2026-08-13.
+
+They are now untracked and gitignored, and the files remain on disk locally. **The history has not been rewritten**, so the blobs are still reachable by their old commit SHA. Closing that needs either `git filter-repo` plus a force-push — which cannot recall forks or caches — or making the repository private, which cuts anonymous access to the history immediately without rewriting anything. See `docs/CV_DELIVERY.md`.
 
 ---
 

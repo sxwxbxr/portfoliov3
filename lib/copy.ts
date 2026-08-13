@@ -246,7 +246,10 @@ export const copy = {
     ctaTitle: "Want to work together?",
     ctaBody: "I'm open to new projects and collaborations.",
     getInTouch: "Get in touch",
-    downloadCv: "Download CV",
+    // `downloadCv` used to live here. The download was removed on purpose — a CV
+    // should be requested rather than left on a public URL. The replacement is
+    // an opt-in checkbox on the contact form, specified in docs/CV_DELIVERY.md
+    // and not yet built; its strings belong under `contact.form` when it is.
     portraitAlt: "Seya Weber, project manager and software developer",
     factLocationValue: "St. Gallen, CH",
     factExperienceValue: "3+ years",
