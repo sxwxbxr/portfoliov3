@@ -1,0 +1,142 @@
+{
+  "slug": "permito",
+  "name": "Permito",
+  "tagline": "Self-hosted cookie banner, preference center and consent gates for React and Next.js. No network calls, no tracking, no dark patterns.",
+  "seoTitle": "Permito – self-hosted cookie consent for React & Next.js",
+  "description": "Permito is a consent toolkit you ship inside your own app instead of loading from a third-party server. Optional categories are opt-in, \"Reject all\" carries the same weight as \"Accept all\", and nothing that needs consent loads before it is given.\n\nIt is built for agencies in Switzerland, Germany and Austria: German, Swiss German, English, French and Italian are included, Google Consent Mode v2 is wired in, and the Next.js helpers read consent on the server so gated content never flashes.",
+  "status": "beta",
+  "tags": ["React", "Next.js", "Vite", "TypeScript", "GDPR", "revDSG"],
+  "license": "MIT + Pro",
+  "order": 10,
+  "install": "pnpm add @permitojs/core @permitojs/react",
+  "npm": ["@permitojs/core", "@permitojs/react"],
+  "code": {
+    "title": "app/providers.tsx",
+    "language": "tsx",
+    "snippet": "\"use client\"\n\nimport {\n  ConsentBanner,\n  PermitoProvider,\n  PreferenceCenter,\n  PreferencesButton,\n} from \"@permitojs/react\"\nimport \"@permitojs/react/styles.css\"\n\nexport function Providers({ children }: { children: React.ReactNode }) {\n  return (\n    <PermitoProvider\n      config={{\n        consentVersion: \"2026-10\",\n        language: \"de-CH\",\n        categories: [\n          { id: \"necessary\", required: true },\n          { id: \"statistics\" },\n          { id: \"marketing\" },\n        ],\n      }}\n      privacyPolicyUrl=\"/datenschutz\"\n      googleConsentMode\n    >\n      {children}\n      <ConsentBanner />\n      <PreferenceCenter />\n      <PreferencesButton />\n    </PermitoProvider>\n  )\n}"
+  },
+  "links": {
+    "docs": "https://permito.sweber.dev",
+    "github": "https://github.com/sxwxbxr/permito",
+    "npm": "https://www.npmjs.com/package/@permitojs/react"
+  },
+  "features": {
+    "free": [
+      "Opt-in by default, with \"Reject all\" exactly as prominent as \"Accept all\"",
+      "No network calls and no tracking: consent is stored in your own cookie",
+      "Gate scripts, iframes and components with ConsentScript, ConsentIframe and ConsentGate",
+      "Server-safe Next.js helpers, so gated content never flashes on load",
+      "Google Consent Mode v2 with a configurable category mapping",
+      "German, Swiss German, English, French and Italian built in; keyboard and screen-reader accessible"
+    ],
+    "pro": [
+      "Service catalog with ready-made entries for common providers",
+      "Cookie table component for your privacy policy",
+      "Consent log for documenting given consent",
+      "Scanner that lists the cookies and scripts a site sets"
+    ]
+  },
+  "comparison": [
+    { "feature": "Cookie banner and preference center", "free": true, "pro": true },
+    { "feature": "Consent gates for scripts, iframes and components", "free": true, "pro": true },
+    { "feature": "Google Consent Mode v2", "free": true, "pro": true },
+    { "feature": "DE, DE-CH, EN, FR, IT translations", "free": true, "pro": true },
+    { "feature": "Service catalog", "free": false, "pro": true },
+    { "feature": "Cookie table for the privacy policy", "free": false, "pro": true },
+    { "feature": "Consent log", "free": false, "pro": true },
+    { "feature": "Cookie and script scanner", "free": false, "pro": true },
+    { "feature": "Licence", "free": "MIT", "pro": "Per person" },
+    { "feature": "Support", "free": "GitHub issues", "pro": "Agency and Lifetime" }
+  ],
+  "pro": {
+    "name": "Permito Pro",
+    "availability": "coming-soon",
+    "packages": [
+      { "name": "@sxwxbxr/permito-catalog", "description": "Ready-made service definitions for common providers." },
+      { "name": "@sxwxbxr/permito-cookie-table", "description": "Renders the cookie table for your privacy policy from the same config." },
+      { "name": "@sxwxbxr/permito-log", "description": "Records consent decisions so you can document them." },
+      { "name": "@sxwxbxr/permito-scanner", "description": "Lists the cookies and scripts a site actually sets." }
+    ],
+    "waitlistUrl": "mailto:info@sweber.dev?subject=Permito%20Pro%20waitlist"
+  },
+  "pricing": {
+    "currency": "CHF",
+    "merchant": "Polar",
+    "tiers": [
+      {
+        "id": "freelancer",
+        "name": "Freelancer",
+        "description": "For one person working on client projects.",
+        "monthly": 19,
+        "yearly": 190,
+        "seats": 1,
+        "support": false,
+        "checkout": {}
+      },
+      {
+        "id": "agency",
+        "name": "Agency",
+        "description": "For teams shipping consent on many client sites.",
+        "monthly": 59,
+        "yearly": 590,
+        "seats": 10,
+        "support": true,
+        "highlighted": true,
+        "checkout": {}
+      },
+      {
+        "id": "lifetime",
+        "name": "Lifetime",
+        "description": "Pay once, keep updates and repository access.",
+        "oneTime": 1990,
+        "seats": 10,
+        "support": true,
+        "checkout": {}
+      }
+    ],
+    "notes": [
+      "After cancelling, every version you already received keeps working. Only updates and repository access end.",
+      "No licence key, no phone-home. The packages never contact a server to check your licence.",
+      "Licensed per person on your team. Your clients and their websites need no licence of their own.",
+      "Checkout, invoices and VAT are handled by Polar as merchant of record."
+    ],
+    "custom": { "label": "11 people or more", "email": "info@sweber.dev" }
+  },
+  "faq": [
+    {
+      "q": "Who needs a licence?",
+      "a": "Every person on your team who works with the Pro packages. Freelancer covers one person, Agency and Lifetime cover up to ten. For eleven or more, get in touch."
+    },
+    {
+      "q": "What happens when I cancel?",
+      "a": "Every version you already received keeps working, in every project you used it in. Only new updates and access to the private repository end."
+    },
+    {
+      "q": "Do my clients need their own licence?",
+      "a": "No. The licence covers the people building the sites. The websites you deliver and the clients who own them need nothing."
+    },
+    {
+      "q": "Is there a licence key or usage tracking?",
+      "a": "No. The packages are installed from a private GitHub Packages registry and never contact a licence server."
+    },
+    {
+      "q": "Who issues the invoice, and is VAT included?",
+      "a": "Polar sells Permito Pro as merchant of record. It handles checkout, invoices and VAT for your country."
+    },
+    {
+      "q": "Can I use the open-source part on its own?",
+      "a": "Yes. @permitojs/core and @permitojs/react are MIT-licensed and complete without Pro."
+    }
+  ],
+  "videos": [],
+  "articles": [],
+  "releases": [
+    {
+      "version": "0.1.0",
+      "date": "2026-10-04",
+      "title": "Permito 0.1.0: first public release",
+      "url": "https://www.npmjs.com/package/@permitojs/react/v/0.1.0"
+    }
+  ],
+  "publishedAt": "2026-10-04"
+}

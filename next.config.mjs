@@ -6,6 +6,14 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
+  // Package, blog and legal content is read with fs at runtime; without this
+  // the files are not bundled into the serverless functions on Vercel.
+  outputFileTracingIncludes: {
+    "/packages/**": ["./content/**/*"],
+    "/api/revalidate": ["./content/**/*"],
+    "/imprint": ["./content/**/*"],
+    "/privacy": ["./content/**/*"],
+  },
   images: {
     remotePatterns: [
       {
@@ -70,6 +78,7 @@ const nextConfig = {
               "img-src 'self' data: https:",
               "connect-src 'self' https://api.github.com https://va.vercel-scripts.com https://vitals.vercel-insights.com",
               "font-src 'self' https://fonts.gstatic.com",
+              "frame-src https://www.youtube-nocookie.com",
               "frame-ancestors 'none'",
             ].join("; "),
           },

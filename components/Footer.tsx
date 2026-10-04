@@ -1,9 +1,10 @@
 import Link from "next/link"
-import { ArrowUpRight, Github, Linkedin, Mail } from "lucide-react"
+import { Github, Linkedin } from "lucide-react"
 import { TimeDisplay } from "./TimeDisplay"
 import type { SiteSettings } from "@/lib/data"
 import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
 import { copy } from "@/lib/copy"
+import { PACKAGES_ENTRY } from "@/lib/packages/urls"
 
 const footerNav = [
   {
@@ -14,6 +15,7 @@ const footerNav = [
         ? [{ name: copy.nav.caseStudies, href: "/case-studies" }]
         : []),
       { name: copy.nav.services, href: "/services" },
+      { name: copy.nav.packages, href: PACKAGES_ENTRY, sameTab: true },
     ],
   },
   {
@@ -47,51 +49,34 @@ export function Footer({ settings }: { settings: SiteSettings }) {
         href: "https://nxrthstack.sweber.dev",
         external: true,
       },
-      ...(settings.privacyContent.trim()
-        ? [{ name: copy.nav.privacy, href: "/privacy", external: false }]
-        : []),
+      { name: copy.nav.privacy, href: "/privacy", external: false },
+      { name: copy.nav.imprint, href: "/imprint", external: false },
     ],
   }
 
-  return (
-    <footer className="mt-24 md:mt-32">
-      <div className="sheet flex flex-col gap-10 pb-10">
-        {/* The conversion surface gets the most material attention on the
-            site: one large raised plate, with the address as a real button. */}
-        <div className="cast rim p-8 md:p-12 flex flex-col gap-7">
-          <p
-            className="font-display font-bold tracking-tight text-balance leading-[1.08]"
-            style={{ fontSize: "clamp(1.9rem, 4.6vw, 3.4rem)" }}
-          >
-            {copy.common.footerCtaTitle}
-          </p>
+  const linkCls = "text-sm text-fg-muted hover:text-fg transition-colors duration-150"
 
-          <div className="flex flex-wrap items-center gap-4">
-            <a
-              href={`mailto:${email}`}
-              className="control control-primary inline-flex items-center gap-2.5 px-5 py-3 text-sm font-medium"
-            >
-              <Mail className="h-4 w-4" aria-hidden="true" />
+  return (
+    <footer className="mt-24 md:mt-32 border-t border-edge-soft">
+      <div className="sheet flex flex-col gap-14 py-14">
+        <div className="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+          {/* Brand, the address and the social links. */}
+          <div className="flex flex-col items-start gap-5">
+            <Link href="/" className="text-lg tracking-tight">
+              {copy.nav.brand}
+            </Link>
+            <a href={`mailto:${email}`} className={linkCls}>
               {email}
             </a>
-
-            <Link
-              href="/contact"
-              className="control inline-flex items-center gap-2 px-5 py-3 text-sm font-medium"
-            >
-              {copy.common.footerCtaAction}
-              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
-
             {hasSocial && (
-              <div className="flex items-center gap-2.5 md:ml-2">
+              <div className="flex items-center gap-2">
                 {settings.githubUrl && (
                   <a
                     href={settings.githubUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={copy.nav.github}
-                    className="control inline-flex h-11 w-11 items-center justify-center"
+                    className="control inline-flex h-9 w-9 items-center justify-center"
                   >
                     <Github className="h-4 w-4" aria-hidden="true" />
                   </a>
@@ -102,7 +87,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={copy.nav.linkedin}
-                    className="control inline-flex h-11 w-11 items-center justify-center"
+                    className="control inline-flex h-9 w-9 items-center justify-center"
                   >
                     <Linkedin className="h-4 w-4" aria-hidden="true" />
                   </a>
@@ -110,48 +95,50 @@ export function Footer({ settings }: { settings: SiteSettings }) {
               </div>
             )}
           </div>
+
+          <nav
+            aria-label={copy.nav.footerLabel}
+            className="grid grid-cols-2 gap-10 md:col-span-3 md:grid-cols-3"
+          >
+            {[...footerNav, connectGroup].map((group) => (
+              <div key={group.heading} className="flex flex-col gap-4">
+                <p className="text-sm text-fg">{group.heading}</p>
+                <ul className="flex flex-col gap-2.5">
+                  {group.links.map((link) => {
+                    const isExternal =
+                      "external" in link ? link.external : link.href.startsWith("http")
+                    // The packages subdomain is absolute but ours: same tab.
+                    const sameTab = "sameTab" in link && link.sameTab
+                    return (
+                      <li key={link.name}>
+                        {sameTab && link.href.startsWith("http") ? (
+                          <a href={link.href} className={linkCls}>
+                            {link.name}
+                          </a>
+                        ) : isExternal && !sameTab ? (
+                          <a
+                            href={link.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={linkCls}
+                          >
+                            {link.name}
+                          </a>
+                        ) : (
+                          <Link href={link.href} className={linkCls}>
+                            {link.name}
+                          </Link>
+                        )}
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
+            ))}
+          </nav>
         </div>
 
-        {/* Link grid sits on the ground — it is navigation, not an object. */}
-        <nav
-          aria-label={copy.nav.footerLabel}
-          className="grid grid-cols-2 md:grid-cols-3 gap-8 px-1 pt-2"
-        >
-          {[...footerNav, connectGroup].map((group) => (
-            <div key={group.heading} className="flex flex-col gap-3.5">
-              <p className="annotate">{group.heading}</p>
-              <ul className="flex flex-col gap-2.5">
-                {group.links.map((link) => {
-                  const isExternal =
-                    "external" in link ? link.external : link.href.startsWith("http")
-                  const cls =
-                    "text-sm text-fg-muted hover:text-signal transition-colors duration-150"
-                  return (
-                    <li key={link.name}>
-                      {isExternal ? (
-                        <a
-                          href={link.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={cls}
-                        >
-                          {link.name}
-                        </a>
-                      ) : (
-                        <Link href={link.href} className={cls}>
-                          {link.name}
-                        </Link>
-                      )}
-                    </li>
-                  )
-                })}
-              </ul>
-            </div>
-          ))}
-        </nav>
-
-        {/* Sunken base rail: the page rests on it. */}
-        <div className="well-sm flex flex-col md:flex-row items-center justify-between gap-3 px-5 py-3.5">
+        <div className="flex flex-col items-start justify-between gap-3 border-t border-edge-soft pt-6 md:flex-row md:items-center">
           <p className="annotate">{copy.common.copyright(year)}</p>
           <p className="annotate">
             {settings.contactLocation || copy.common.locationFallback}
@@ -159,7 +146,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
           <div className="flex items-center gap-4">
             <Link
               href="/login"
-              className="annotate hover:text-signal transition-colors duration-150"
+              className="annotate hover:text-fg transition-colors duration-150"
             >
               {copy.nav.login}
             </Link>

@@ -5,9 +5,10 @@ import { usePathname } from "next/navigation"
 import { useEffect, useRef } from "react"
 import { X, ExternalLink, Github, Linkedin } from "lucide-react"
 import { motion, AnimatePresence, useReducedMotion, type MotionProps } from "framer-motion"
-import { ThemeToggle } from "./ThemeToggle"
 import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
 import { copy } from "@/lib/copy"
+import { PACKAGES_ENTRY } from "@/lib/packages/urls"
+import { useOnPackagesHost } from "@/lib/packages/useOnPackagesHost"
 
 const EASE = [0.23, 1, 0.32, 1] as const
 
@@ -20,6 +21,12 @@ const menuLinks = [
 const subLinks = [
   CASE_STUDIES_ENABLED && { name: copy.nav.caseStudies, href: "/case-studies" },
   { name: copy.nav.services, href: "/services" },
+  {
+    name: copy.nav.packages,
+    href: PACKAGES_ENTRY,
+    // Absolute in production (packages.sweber.dev): a plain same-tab link, not next/link.
+    absolute: PACKAGES_ENTRY.startsWith("http"),
+  },
   { name: copy.nav.career, href: "/career" },
   BLOG_ENABLED && { name: copy.nav.blog, href: "/blog" },
   { name: copy.nav.skills, href: "/about#skills" },
@@ -28,7 +35,12 @@ const subLinks = [
     href: "https://nxrthstack.sweber.dev",
     external: true,
   },
-].filter(Boolean) as { name: string; href: string; external?: boolean }[]
+].filter(Boolean) as {
+  name: string
+  href: string
+  external?: boolean
+  absolute?: boolean
+}[]
 
 const socialLinks = [
   { icon: Github, label: copy.nav.github, href: "https://github.com/sxwxbxr" },
@@ -49,6 +61,7 @@ export function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null)
   const closeButtonRef = useRef<HTMLButtonElement>(null)
   const reduce = useReducedMotion()
+  const onPackagesHost = useOnPackagesHost()
 
   // The whole overlay used to animate roughly 700ms of staggered entrances with
   // no reduced-motion path at all. Now every stagger collapses to a plain mount.
@@ -142,8 +155,7 @@ export function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps) {
               aria-label={copy.nav.mainNavigation}
               className="flex flex-1 flex-col justify-center gap-8"
             >
-              {/* Primary routes. The current one is seated into the ground —
-                  position answers "where am I", colour only confirms it. */}
+              {/* Primary routes. The current one is white, the rest grey. */}
               <div className="flex flex-col items-start gap-2">
                 {menuLinks.map((link, i) => {
                   const active = pathname === link.href
@@ -154,8 +166,8 @@ export function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps) {
                         onClick={onClose}
                         aria-current={active ? "page" : undefined}
                         className={
-                          "inline-flex px-4 py-2.5 font-display text-4xl font-semibold tracking-tight transition-colors duration-150 sm:text-5xl " +
-                          (active ? "well-sm text-signal" : "text-fg hover:text-signal")
+                          "inline-flex py-2 text-4xl tracking-tight transition-colors duration-150 sm:text-5xl " +
+                          (active ? "text-fg" : "text-fg-muted hover:text-fg")
                         }
                       >
                         {link.name}
@@ -165,18 +177,19 @@ export function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps) {
                 })}
               </div>
 
-              {/* Secondary routes: chips seated in a channel. */}
+              {/* Secondary routes: outlined pills. */}
               <motion.div
                 {...step(menuLinks.length)}
-                className="well flex flex-wrap gap-2 p-3"
+                className="flex flex-wrap gap-2"
               >
                 {subLinks.map((link) => {
-                  const active = !link.external && pathname === link.href
+                  const active =
+                    link.href === PACKAGES_ENTRY
+                      ? onPackagesHost || pathname.startsWith("/packages")
+                      : !link.external && !onPackagesHost && pathname === link.href
                   const cls =
-                    "inline-flex items-center gap-1.5 px-3.5 py-2 text-sm transition-colors duration-150 " +
-                    (active
-                      ? "well-sm font-medium text-signal"
-                      : "cast-sm text-fg-muted hover:text-signal")
+                    "tab inline-flex items-center gap-1.5 px-3.5 py-2 text-sm transition-colors duration-150 " +
+                    (active ? "text-fg" : "text-fg-muted hover:text-fg")
                   return link.external ? (
                     <a
                       key={link.href}
@@ -188,6 +201,16 @@ export function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps) {
                     >
                       {link.name}
                       <ExternalLink className="h-3 w-3" aria-hidden="true" />
+                    </a>
+                  ) : link.absolute ? (
+                    <a
+                      key={link.href}
+                      href={link.href}
+                      onClick={onClose}
+                      aria-current={active ? "page" : undefined}
+                      className={cls}
+                    >
+                      {link.name}
                     </a>
                   ) : (
                     <Link
@@ -204,10 +227,10 @@ export function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps) {
               </motion.div>
             </nav>
 
-            {/* Base rail: socials + theme */}
+            {/* Socials */}
             <motion.div
               {...step(menuLinks.length + 1)}
-              className="well-sm flex items-center justify-between gap-4 p-2.5"
+              className="flex items-center gap-4 border-t border-edge-soft pt-5"
             >
               <div className="flex items-center gap-2.5">
                 {socialLinks.map((link) => {
@@ -226,7 +249,6 @@ export function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps) {
                   )
                 })}
               </div>
-              <ThemeToggle />
             </motion.div>
           </div>
         </motion.div>
