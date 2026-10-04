@@ -52,7 +52,7 @@
   ],
   "pro": {
     "name": "Permito Pro",
-    "availability": "coming-soon",
+    "availability": "available",
     "packages": [
       { "name": "@weber-development/permito-catalog", "description": "Ready-made, sourced service definitions for common providers." },
       { "name": "@weber-development/permito-cookie-table", "description": "Renders the cookie table for your privacy policy from the same config." },
@@ -82,10 +82,11 @@
       {
         "id": "agency",
         "name": "Agency",
-        "description": "For teams shipping consent on many client sites.",
+        "description": "For teams: one licence per named person, up to ten.",
         "monthly": 59,
         "yearly": 590,
         "seats": 10,
+        "perSeat": true,
         "support": true,
         "highlighted": true,
         "checkout": {
@@ -96,9 +97,10 @@
       {
         "id": "lifetime",
         "name": "Lifetime",
-        "description": "Pay once, keep updates and repository access.",
+        "description": "Pay once per person and keep updates and repository access.",
         "oneTime": 1990,
         "seats": 10,
+        "perSeat": true,
         "support": true,
         "checkout": {
           "oneTime": "https://buy.polar.sh/polar_cl_YtYhygdw14TFXT7odJCPPWc7og8Ub9OyRcDJj1lV267"
@@ -108,7 +110,7 @@
     "notes": [
       "After cancelling, every version you already received keeps working. Only updates and repository access end.",
       "No licence key, no phone-home. The packages never contact a server to check your licence.",
-      "Licensed per person on your team. Your clients and their websites need no licence of their own.",
+      "Agency and Lifetime are priced per person: you choose the number of seats at checkout and assign them to named people in Polar. Your clients and their websites need no licence of their own.",
       "Checkout, invoices and VAT are handled by Polar as merchant of record."
     ],
     "custom": { "label": "11 people or more", "email": "info@sweber.dev" }
@@ -116,7 +118,7 @@
   "faq": [
     {
       "q": "Who needs a licence?",
-      "a": "Every person on your team who works with the Pro packages. Freelancer covers one person, Agency and Lifetime cover up to ten. For eleven or more, get in touch."
+      "a": "Every person on your team who works with the Pro packages. Freelancer covers one person. Agency and Lifetime are priced per person for up to ten named people: you pick the number of seats at checkout, assign them in Polar, and each person connects their own GitHub account. For eleven or more, get in touch."
     },
     {
       "q": "What happens when I cancel?",
