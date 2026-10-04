@@ -1,4 +1,5 @@
 import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
 
 /**
  * Long-form markdown, styled explicitly against the LINE tokens.
@@ -29,6 +30,9 @@ export const PROSE = [
   "[&_pre]:overflow-x-auto [&_pre]:rounded-md [&_pre]:border [&_pre]:border-edge-soft [&_pre]:bg-well [&_pre]:p-4 [&_pre]:font-mono [&_pre]:text-sm",
   "[&_code]:rounded [&_code]:bg-well [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-[0.85em] [&_code]:text-fg",
   "[&_pre_code]:bg-transparent [&_pre_code]:p-0",
+  "[&_table]:w-full [&_table]:border-collapse [&_table]:text-sm",
+  "[&_th]:border-b [&_th]:border-edge-soft [&_th]:px-3 [&_th]:py-2 [&_th]:text-left [&_th]:font-normal [&_th]:text-fg",
+  "[&_td]:border-b [&_td]:border-edge-soft [&_td]:px-3 [&_td]:py-2 [&_td]:align-top",
 ].join(" ")
 
 export function ProseMarkdown({
@@ -40,7 +44,20 @@ export function ProseMarkdown({
 }) {
   return (
     <div className={`${PROSE} ${className}`}>
-      <ReactMarkdown>{children}</ReactMarkdown>
+      {/* GFM for the tables in legal texts. A table scrolls inside its own
+          box so a narrow screen never scrolls the whole page sideways. */}
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        components={{
+          table: (props) => (
+            <div className="overflow-x-auto">
+              <table {...props} />
+            </div>
+          ),
+        }}
+      >
+        {children}
+      </ReactMarkdown>
     </div>
   )
 }
