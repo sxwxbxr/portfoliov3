@@ -46,7 +46,7 @@ export function Ruler({
 
   return (
     <div className={"ruler " + className} aria-hidden="true">
-      <div className="mx-auto flex w-full max-w-[72rem] justify-center px-5">
+      <div className="flex w-full justify-center px-[var(--gutter)]">
         {labels.map((label, i) => {
           const active = i === index
           return (

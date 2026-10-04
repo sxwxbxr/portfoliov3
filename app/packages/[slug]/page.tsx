@@ -185,14 +185,23 @@ export default async function PackagePage({ params }: Props) {
       </section>
 
       {pkg.code && (
-        <Block label={s.code.label} title={s.code.title} sub={s.code.sub}>
-          {pkg.code.title && <p className="annotate mb-4">{pkg.code.title}</p>}
-          <div className="well overflow-hidden p-1.5">
-            <pre className="overflow-x-auto rounded-md p-4 font-mono text-[13px] leading-relaxed text-fg">
-              <code>{pkg.code.snippet}</code>
-            </pre>
-          </div>
-        </Block>
+        // The snippet sits in the right column under the heading: code does
+        // not need the full page width the way card grids do.
+        <Block
+          label={s.code.label}
+          title={s.code.title}
+          sub={s.code.sub}
+          aside={
+            <div className="mt-4 flex min-w-0 flex-col gap-3">
+              {pkg.code.title && <p className="annotate">{pkg.code.title}</p>}
+              <div className="well overflow-hidden p-1.5">
+                <pre className="overflow-x-auto rounded-md p-4 font-mono text-[13px] leading-relaxed text-fg">
+                  <code>{pkg.code.snippet}</code>
+                </pre>
+              </div>
+            </div>
+          }
+        />
       )}
 
       <Block label={s.features.label} title={s.features.title} sub={s.features.sub}>

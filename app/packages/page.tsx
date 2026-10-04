@@ -42,7 +42,7 @@ export default function PackagesOverview() {
       </header>
 
       <section id="packages" className="sheet pb-24 md:pb-32" style={{ scrollMarginTop: "6rem" }}>
-        <Section className="grid gap-3 sm:grid-cols-2">
+        <Section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {packages.map((pkg) => (
             <article key={pkg.slug} className="cast card-link relative flex flex-col gap-5 p-6 md:p-7">
               <PackageBadges pkg={pkg} />

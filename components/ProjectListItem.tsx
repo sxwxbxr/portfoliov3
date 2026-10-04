@@ -44,7 +44,7 @@ export function ProjectListItem({
             src={imageSrc}
             alt={project.title}
             fill
-            sizes="(min-width: 1024px) 45vw, 100vw"
+            sizes="(min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
             priority={priority}
             className="object-cover opacity-90 transition-[opacity,transform] duration-300 ease-out group-hover:scale-[1.02] group-hover:opacity-100 motion-reduce:transform-none"
           />

@@ -12,7 +12,7 @@ import ReactMarkdown from "react-markdown"
  * inside chat bubbles and needs a tighter scale.
  */
 export const PROSE = [
-  "flex flex-col gap-5 text-[1.0625rem] leading-relaxed text-fg-muted",
+  "flex max-w-[68ch] flex-col gap-5 text-[1.0625rem] leading-relaxed text-fg-muted",
   "[&_h1]:text-2xl [&_h1]:tracking-tight [&_h1]:text-fg",
   "[&_h2]:mt-6 [&_h2]:text-lg [&_h2]:tracking-tight [&_h2]:text-fg",
   "[&_h3]:mt-2 [&_h3]:text-base [&_h3]:tracking-tight [&_h3]:text-fg",
