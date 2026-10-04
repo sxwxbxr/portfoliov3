@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { AlertCircle, Send, Loader2, Sparkles } from "lucide-react"
+import { AlertCircle, ChevronRight, Loader2, Sparkles } from "lucide-react"
 import { CheckmarkAnimation } from "@/components/CheckmarkAnimation"
 import { copy } from "@/lib/copy"
 
@@ -359,14 +359,12 @@ export function ContactForm({
           {(analysisLoading || analysis) && (
             <div className="well-sm mt-1 flex flex-col gap-2 p-4">
               <span className="annotate inline-flex items-center gap-1.5">
-                <Sparkles className="h-3.5 w-3.5 text-signal" aria-hidden="true" />
+                <Sparkles className="h-3.5 w-3.5 text-fg" aria-hidden="true" />
                 {form.analysisTitle}
               </span>
               {analysisLoading ? (
-                // Seats rising out of the tray. ui/skeleton's `bg-accent
-                // animate-pulse` is a utility-layer fill with no polarity, and
-                // a sunken bar inside a sunken tray is invisible — both wells
-                // share one background token.
+                // Plain card-coloured bars: ui/skeleton's `bg-accent` would
+                // be invisible against the well.
                 <div className="flex flex-col gap-2" role="status" aria-live="polite">
                   <span className="sr-only">{form.analysisLoading}</span>
                   <div className="cast-sm h-3 w-full" aria-hidden="true" />
@@ -398,7 +396,7 @@ export function ContactForm({
             <>
               {" "}
               {form.privacyTail}{" "}
-              <a href="/privacy" className="link-underline text-signal">
+              <a href="/privacy" className="link-underline text-fg">
                 {form.privacyLink}
               </a>
               .
@@ -409,7 +407,7 @@ export function ContactForm({
         <button
           type="submit"
           disabled={isSubmitting}
-          className="control control-primary inline-flex items-center justify-center gap-2 self-start px-5 py-3 text-sm font-medium"
+          className="control control-primary inline-flex items-center justify-center gap-2 self-start py-2.5 pr-4 pl-5 text-sm"
         >
           {isSubmitting ? (
             <>
@@ -418,7 +416,7 @@ export function ContactForm({
             </>
           ) : (
             <>
-              <Send className="h-4 w-4" aria-hidden="true" />
+              <ChevronRight className="order-last h-3.5 w-3.5" aria-hidden="true" />
               {form.submit}
             </>
           )}
@@ -434,12 +432,12 @@ export function ContactForm({
             role="alertdialog"
             aria-modal="true"
             aria-labelledby="success-heading"
-            className="cast rim flex w-full max-w-md flex-col items-center gap-6 p-8 text-center"
+            className="cast flex w-full max-w-md flex-col items-center gap-6 p-8 text-center"
             onClick={(event) => event.stopPropagation()}
           >
             <CheckmarkAnimation />
             <div className="flex flex-col gap-2">
-              <h3 id="success-heading" className="font-display text-2xl font-bold">
+              <h3 id="success-heading" className="text-2xl tracking-tight">
                 {form.successTitle}
               </h3>
               <p className="text-sm text-fg-muted">{form.successBody}</p>
@@ -447,7 +445,7 @@ export function ContactForm({
             <button
               ref={closeButtonRef}
               onClick={closeSuccessModal}
-              className="control w-full px-5 py-3 text-sm font-medium"
+              className="control w-full px-5 py-2.5 text-sm"
             >
               {copy.common.close}
             </button>

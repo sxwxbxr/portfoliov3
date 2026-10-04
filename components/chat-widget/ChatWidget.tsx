@@ -79,13 +79,11 @@ export function ChatWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 16, scale: 0.98 }}
             transition={{ duration: 0.25, ease: EASE }}
-            // One large plate, rimmed. The transcript inside carries the two
-            // polarities; the panel itself stays a single object.
-            className="cast rim no-print fixed inset-3 z-50 flex flex-col overflow-hidden sm:inset-auto sm:bottom-6 sm:right-6 sm:h-[520px] sm:w-[380px]"
+            className="cast no-print fixed inset-3 z-50 flex flex-col overflow-hidden sm:inset-auto sm:bottom-6 sm:right-6 sm:h-[520px] sm:w-[380px]"
           >
             <header className="flex items-center justify-between gap-3 border-b border-edge-soft px-4 py-3">
               <div className="flex flex-col gap-0.5">
-                <p className="font-display text-sm font-semibold tracking-tight">
+                <p className="text-sm tracking-tight">
                   {copy.chat.title}
                 </p>
                 <p className="annotate">{copy.chat.subtitle}</p>

@@ -29,8 +29,6 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
   }
 
   return (
-    // Opposite polarities, side by side: you type into the sunken thing and
-    // press the raised one.
     <div className="flex items-end gap-2 border-t border-edge-soft p-3">
       <label htmlFor="chat-input" className="sr-only">
         {copy.chat.inputLabel}

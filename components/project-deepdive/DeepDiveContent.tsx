@@ -24,7 +24,7 @@ export function DeepDiveContent({
         <button
           type="button"
           onClick={onRetry}
-          className="control px-4 py-2.5 text-sm font-medium"
+          className="control py-2.5 px-5 text-sm"
         >
           {copy.deepDive.retry}
         </button>
@@ -32,8 +32,8 @@ export function DeepDiveContent({
     )
   }
 
-  // Loading with nothing streamed yet — three paragraph placeholders, milled
-  // into the plate rather than pulsing on top of it.
+  // Loading with nothing streamed yet — three paragraph placeholders, sunken
+  // into the card rather than pulsing on top of it.
   if (loading && !content) {
     return (
       <div role="status" className="flex flex-col gap-5">

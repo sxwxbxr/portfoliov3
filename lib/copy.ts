@@ -58,6 +58,8 @@ export const copy = {
     blog: "Blog",
     connect: "Connect",
     privacy: "Privacy",
+    imprint: "Imprint",
+    packages: "Packages",
     login: "Login",
     nxrthstack: "Nxrthstack",
     github: "GitHub",
@@ -163,6 +165,34 @@ export const copy = {
     selectedWorkEyebrowCount: (n: number) =>
       `Selected work · ${n} ${plural(n, "project", "projects")}`,
     writingEyebrow: (n: number) => `Writing · ${n}`,
+    /** Two-tone lines between the hero rulers. */
+    heroTaglineLead: "Requirements in,",
+    heroTaglineSub: "software out",
+    introLabel: "In short",
+    introTitle: "Both sides of the table",
+    introSub: "the requirement and the system",
+    workLabel: "Work",
+    workTitle: "Selected projects",
+    workSub: "across healthcare, energy and SaaS",
+    expertiseLabel: "Expertise",
+    expertiseTitle: "What I work with",
+    expertiseSub: "from the plan to the pull request",
+    careerLabel: "Career",
+    careerTitle: "Stations so far",
+    careerSub: (since?: number) => (since ? `in the field since ${since}` : "and counting"),
+    referenceLabel: "Reference",
+    referenceSub: "in their own words",
+    writingLabel: "Writing",
+    writingTitle: "Notes from the work",
+    writingSub: "on delivery and engineering",
+    ctaEyebrow: "From idea to delivery",
+    ctaTitle: "Have a project in mind?",
+    ctaButton: "Get in touch",
+  },
+
+  /** Strip above the navigation. */
+  announcement: {
+    text: "Introducing packages.sweber.dev",
   },
 
   projects: {
@@ -181,6 +211,8 @@ export const copy = {
     resultsEyebrow: (n: number) => `Results · ${n}`,
     results: "Results",
     technologies: "Technologies",
+    builtWith: "Built with",
+    builtWithSub: "the stack behind it",
     nextProject: "Next project",
     allProjects: "All projects",
     /** Tile meta line: the index, plus the first tag when the project has one. */
@@ -213,6 +245,8 @@ export const copy = {
     nextCaseStudy: "Next case study",
     /** Wider than the projects page's "Technologies" — this list includes tools. */
     technologies: "Technologies & Tools",
+    builtWith: "Built with",
+    builtWithSub: "the stack behind it",
   },
 
   experience: {
@@ -235,6 +269,8 @@ export const copy = {
     factFocus: "Focus",
     factLanguages: "Languages",
     expertise: "Expertise",
+    expertiseSub: "What I work with, grouped by area.",
+    educationSub: "Formal training and the stations along the way.",
     expertiseEyebrow: (n: number) => `Expertise · ${n} ${plural(n, "area", "areas")}`,
     skills: "Skills",
     skillsEyebrow: (groups: number, total: number) =>
@@ -274,7 +310,8 @@ export const copy = {
     packageEyebrow: (n: number) => `Package ${String(n).padStart(2, "0")}`,
     enquire: "Enquire",
     modelsEyebrow: (n: number) => `Engagement · ${n} ${plural(n, "model", "models")}`,
-    models: "Engagement Models",
+    models: "Engagement models",
+    modelsSub: "Three ways to work together.",
     ctaTitle: "Does one of these fit?",
     ctaBody: "Tell me briefly what it's about — I'll reply within 24 hours.",
     startConversation: "Start a conversation",
@@ -431,6 +468,7 @@ export const copy = {
       "Work and education side by side. Through both apprenticeships they ran at the same time, which is why they belong on one axis rather than on two pages.",
     timelineEyebrow: (from: number, to: number) => `Timeline · ${from}–${to}`,
     timelineTitle: "The whole path",
+    timelineSub: "Work and education on one axis.",
     timelineHint:
       "Hover or focus a bar to highlight its entry, and select one to jump to it.",
     timelineLabel: (from: number, to: number) =>
@@ -451,6 +489,7 @@ export const copy = {
     subtitle: "My academic route — and the certificates that mark the way forward.",
     academicBackground: "Academic background",
     credentials: "Credentials & roadmap",
+    credentialsSub: "What is done, what is running and what is next.",
     empty: "Nothing here yet.",
     label: (stations: number, certificates: number) => {
       const parts: string[] = []
@@ -498,12 +537,132 @@ export const copy = {
       `${status}${start ? ` · ${start}` : ""}${end ? ` – ${end}` : ""}`,
   },
 
+  /** Package-site blog: /packages/blog and /packages/blog/[slug]. */
+  pkgBlog: {
+    label: "Blog",
+    title: "News and tutorials",
+    subtitle: "Releases, tutorials and notes on the libraries.",
+    empty: "No posts match this filter yet.",
+    filterPackage: "Package",
+    filterType: "Type",
+    all: "All",
+    types: { news: "News", tutorial: "Tutorial", release: "Release" },
+    rss: "RSS feed",
+    backToBlog: "All posts",
+    onThisPage: "On this page",
+    usedPackage: "Package in this post",
+    viewPackage: "View package",
+    related: "Related posts",
+    videos: "Video",
+    readingTime: (n: number) => `${n} min read`,
+    postedBy: (author: string) => `By ${author}`,
+    previous: "Newer posts",
+    next: "Older posts",
+    pageOf: (page: number, total: number) => `Page ${page} of ${total}`,
+    originallyPublished: "Originally published elsewhere",
+  },
+
   notFound: {
     title: "Page not found",
     body: "This page does not exist, or it moved.",
     home: "Back to the homepage",
     /** The status code shown as the page's tab label. */
     code: "404",
+  },
+
+  /** Package shop: /packages, /packages/[slug], pricing, licence, consent. */
+  packages: {
+    label: "Packages",
+    overviewTitle: "Libraries for agencies",
+    overviewSubtitle:
+      "Small, focused libraries for agencies in Switzerland, Germany and Austria. The core is open source under MIT. Pro add-ons are sold as fair subscriptions, with no licence keys and no tracking.",
+    overviewDescription:
+      "Open-source libraries by Seya Weber for agencies in Switzerland, Germany and Austria, with optional Pro add-ons.",
+    count: (n: number) => `${n} ${plural(n, "package", "packages")}`,
+    allPackages: "All packages",
+    status: {
+      stable: "Stable",
+      beta: "Beta",
+      "coming-soon": "Coming soon",
+    },
+    license: {
+      MIT: "MIT",
+      "MIT + Pro": "MIT + Pro",
+      commercial: "Commercial",
+    },
+    docs: "Docs",
+    github: "GitHub",
+    npm: "npm",
+    changelog: "Changelog",
+    pricing: "Pricing",
+    viewPackage: (name: string) => `View ${name}`,
+    descriptionHeading: "About",
+    codeHeading: "Example",
+    featuresHeading: "What you get",
+    freeHeading: "Free, MIT",
+    proHeading: "Pro",
+    comparisonHeading: "Free and Pro",
+    comparisonFeature: "Feature",
+    comparisonFree: "Free",
+    comparisonPro: "Pro",
+    included: "Included",
+    notIncluded: "Not included",
+    proPackagesHeading: "Pro packages",
+    faqHeading: "Questions",
+    articlesHeading: "Articles",
+    readMore: "Read",
+    videosHeading: "Videos",
+    // Grey follow-up lines for the two-tone section headings
+    browse: "Browse packages",
+    blogLink: "Read the blog",
+    sections: {
+      code: { label: "Example", title: "A short example", sub: "Copy it into your project." },
+      features: { label: "Features", title: "What you get", sub: "Free under MIT, with Pro on top." },
+      comparison: { label: "Compare", title: "Free and Pro", sub: "Side by side." },
+      proPackages: { label: "Pro", title: "Pro packages", sub: "Add-ons on top of the core." },
+      pricing: { label: "Pricing", title: "Pricing", sub: "Prices are in CHF." },
+      faq: { label: "FAQ", title: "Questions", sub: "Short answers." },
+      articles: { label: "Articles", title: "Articles", sub: "Guides and release notes." },
+      videos: { label: "Videos", title: "Videos", sub: "Walkthroughs." },
+    },
+    // Pricing
+    pricingHeading: "Pricing",
+    proComingSoon: (name: string) => `${name}: coming soon`,
+    proComingSoonBody:
+      "The Pro packages are not on sale yet. Join the waitlist and you get a note when they are.",
+    billingLabel: "Billing period",
+    monthly: "Monthly",
+    yearly: "Yearly",
+    perMonth: "per month",
+    perYear: "per year",
+    oneTime: "one-time",
+    saving: (months: number) => `${months} ${plural(months, "month", "months")} free`,
+    seats: (n: number) => (n === 1 ? "1 person" : `Up to ${n} people`),
+    supportIncluded: "Support included",
+    supportExcluded: "No support entitlement",
+    recommended: "Recommended",
+    subscribe: "Subscribe",
+    buyLifetime: "Buy lifetime licence",
+    joinWaitlist: "Join waitlist",
+    customLine: (label: string) => `${label}: get in touch`,
+    licenseLink: "Read the licence terms",
+    // Install / links
+    backToOverview: "All packages",
+    // Licence page
+    licenseLabel: "Licence",
+    licenseTitle: "Licence terms",
+    licenseSubtitle: "How the open-source and commercial packages are licensed.",
+    // Consent
+    consentTitle: "Video from YouTube",
+    consentBody:
+      "This video is hosted by YouTube. It loads only after you agree, because YouTube then receives your IP address and sets cookies.",
+    consentAccept: "Load video and allow YouTube",
+    consentSettings: "Cookie settings",
+    consentProvider: "Privacy-enhanced mode (youtube-nocookie.com), Google Ireland Ltd.",
+    // Legal pages
+    imprintLabel: "Legal",
+    imprintTitle: "Imprint",
+    imprintSubtitle: "Who is responsible for this website.",
   },
 
   privacy: {

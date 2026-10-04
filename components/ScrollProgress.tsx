@@ -32,16 +32,14 @@ export function ScrollProgress() {
     // and this component never set; `.no-print` is what the current sheet
     // actually keys on. Both are here so neither drifts again.
     <div
-      className="scroll-progress no-print pointer-events-none fixed inset-x-0 top-0 z-[60] h-1"
+      className="scroll-progress no-print pointer-events-none fixed inset-x-0 top-0 z-[60] h-px"
       aria-hidden="true"
     >
-      <div className="well-sm h-full w-full rounded-none">
-        {/* scaleX, not width: a width transition relayouts every frame. */}
-        <div
-          className="h-full w-full origin-left bg-signal transition-transform duration-150 ease-out"
-          style={{ transform: `scaleX(${Math.min(scrollProgress, 100) / 100})` }}
-        />
-      </div>
+      {/* scaleX, not width: a width transition relayouts every frame. */}
+      <div
+        className="h-full w-full origin-left bg-white transition-transform duration-150 ease-out"
+        style={{ transform: `scaleX(${Math.min(scrollProgress, 100) / 100})` }}
+      />
     </div>
   )
 }

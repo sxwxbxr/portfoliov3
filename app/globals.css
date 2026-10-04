@@ -4,68 +4,62 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ══════════════════════════════════════════════════════════════════════
-   CAST — a tactile material system.
+   LINE — a quiet, dark, typographic system.
 
-   Objects are cast OUT OF the ground rather than laid on top of it: one
-   light source at the top-left, a raised polarity and a sunken polarity,
-   and nothing floating. Two rules keep it out of 2020:
+   Near-black ground, one step-up surface for cards, hairline rules between
+   sections, and white as the only accent. Hierarchy comes from size and
+   from a two-tone heading (a white lead line over a grey follow-up), not
+   from weight: the whole site sets type at 400.
 
-   1. Geometry is halved. Canonical soft-UI uses 8-9px offsets and 16-18px
-      blur, which is what reads as "pillow". CAST uses 6px/14px with tight
-      radii, which reads as milled.
-   2. Every control carries a REAL border. The shadow is the material; the
-      border is the affordance. That separation is what lets the surface
-      stay soft while the edge still clears 3:1 — the degree of freedom
-      classic neumorphism gives up by deleting the border.
+   The site is dark-only. ThemeProvider forces the `dark` class so any
+   `dark:` variants in components/ui and /admin still resolve, and :root
+   carries the same values so nothing depends on that class being present.
 
-   Every colour below was solved, not picked: each text and edge token is
-   the value closest to its ground that still clears its contrast target
-   against the WORST surface it can land on (the sunken well in light mode,
-   the raised plate in dark mode), clamped to the sRGB gamut.
+   Contrast is measured against the WORST surface text can land on, which
+   here is the card (--plate), not the ground.
    ══════════════════════════════════════════════════════════════════════ */
 
-:root {
-  /* ── Ground and its two poles ─────────────────────────────────── */
-  --ground:      oklch(0.920 0.006 250);
-  --cast-hi:     oklch(0.982 0.006 250);   /* light source, top-left      */
-  --cast-lo:     oklch(0.808 0.010 250);   /* cast shadow, bottom-right   */
+:root,
+.dark {
+  color-scheme: dark;
 
-  /* ── Surfaces text can land on ────────────────────────────────── */
-  --plate:       oklch(0.938 0.006 250);   /* raised                      */
-  --well:        oklch(0.898 0.008 250);   /* sunken — worst case (light) */
+  /* ── Surfaces ─────────────────────────────────────────────────── */
+  --ground:      #0a0a0a;
+  --plate:       #141414;   /* cards                                      */
+  --plate-hi:    #1c1c1c;   /* card hover, raised controls                */
+  --well:        #0f0f0f;   /* inputs, tracks, code                       */
 
   /* ── Type ─────────────────────────────────────────────────────── */
-  --fg:          oklch(0.301 0.018 258);   /* 10.02:1 on well             */
-  --fg-muted:    oklch(0.490 0.014 258);   /*  4.62:1 on well             */
-  --fg-subtle:   oklch(0.584 0.012 258);   /*  3.11:1 on well             */
+  --fg:          #ededed;   /* 15.6:1 on plate                            */
+  --fg-muted:    #8f8f8f;   /*  5.6:1 on plate                            */
+  --fg-subtle:   #6e6e6e;   /*  3.4:1 on plate — meta, never body copy    */
 
-  /* ── Edges: the affordance layer, never decorative ────────────── */
-  --edge:        oklch(0.584 0.014 258);   /*  3.11:1 on well             */
-  --edge-soft:   oklch(0.700 0.010 258);   /* dividers only, non-semantic */
+  /* ── Lines ────────────────────────────────────────────────────── */
+  --edge:        #6e6e6e;   /* input boundaries, 3.4:1 on plate           */
+  --edge-soft:   #222222;   /* section rules and card dividers            */
+  --edge-mid:    #333333;   /* control outlines                           */
 
-  /* ── Accent. Rationed: state, focus, and the current thing. ───── */
-  --signal:      oklch(0.478 0.100 165);   /*  4.62:1 on well — text-safe */
-  --signal-bright: oklch(0.569 0.119 165); /*  3.11:1 — graphics only     */
-  --signal-fg:   oklch(0.985 0.004 250);
+  /* ── Accent. White is the accent. ─────────────────────────────── */
+  --signal:      #ffffff;
+  --signal-bright: #ffffff;
+  --signal-fg:   #0a0a0a;
 
-  --danger:      oklch(0.470 0.170 25);
-  --danger-fg:   oklch(0.985 0.004 250);
+  --danger:      #ff6b5e;
+  --danger-fg:   #0a0a0a;
 
-  /* ── Material geometry. Halved on purpose. ────────────────────── */
-  --cast-x:      6px;
-  --cast-blur:   14px;
-  --cast-x-sm:   3px;
-  --cast-blur-sm: 7px;
+  --radius:      0.375rem;
+  --radius-ctl:  9999px;
 
-  --radius:      0.625rem;
-  --radius-ctl:  0.5rem;
-
-  /* ── Motion. Weight comes from settle, not from shadow depth. ─── */
+  /* ── Motion ───────────────────────────────────────────────────── */
   --ease-out:    cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --dur-press:   120ms;
   --dur-hover:   160ms;
   --dur-panel:   220ms;
+
+  /* ── Legacy names still read by older components ──────────────── */
+  --cast-hi:     transparent;
+  --cast-lo:     transparent;
 
   /* ── shadcn/ui aliases. Keeps components/ui and /admin working. ─ */
   --background: var(--ground);
@@ -76,48 +70,25 @@
   --popover-foreground: var(--fg);
   --primary: var(--signal);
   --primary-foreground: var(--signal-fg);
-  --secondary: var(--well);
+  --secondary: var(--plate-hi);
   --secondary-foreground: var(--fg);
-  --muted: var(--well);
+  --muted: var(--plate);
   --muted-foreground: var(--fg-muted);
-  --accent: var(--well);
+  --accent: var(--plate-hi);
   --accent-foreground: var(--fg);
   --destructive: var(--danger);
   --destructive-foreground: var(--danger-fg);
   --border: var(--edge-soft);
-  --input: var(--edge);
+  --input: var(--edge-mid);
   --ring: var(--signal);
   --sidebar: var(--plate);
   --sidebar-foreground: var(--fg);
   --sidebar-primary: var(--signal);
   --sidebar-primary-foreground: var(--signal-fg);
-  --sidebar-accent: var(--well);
+  --sidebar-accent: var(--plate-hi);
   --sidebar-accent-foreground: var(--fg);
   --sidebar-border: var(--edge-soft);
   --sidebar-ring: var(--signal);
-}
-
-.dark {
-  --ground:      oklch(0.300 0.012 262);
-  --cast-hi:     oklch(0.362 0.012 262);
-  --cast-lo:     oklch(0.212 0.020 262);
-
-  --plate:       oklch(0.328 0.012 262);   /* raised — worst case (dark)  */
-  --well:        oklch(0.268 0.012 262);
-
-  --fg:          oklch(0.930 0.018 254);   /* 10.03:1 on plate            */
-  --fg-muted:    oklch(0.700 0.014 254);   /*  4.61:1 on plate            */
-  --fg-subtle:   oklch(0.599 0.012 254);   /*  3.11:1 on plate            */
-
-  --edge:        oklch(0.599 0.014 254);   /*  3.11:1 on plate            */
-  --edge-soft:   oklch(0.460 0.012 254);
-
-  --signal:      oklch(0.682 0.143 165);   /*  4.61:1 on plate — text-safe*/
-  --signal-bright: oklch(0.780 0.140 165);
-  --signal-fg:   oklch(0.180 0.010 262);
-
-  --danger:      oklch(0.700 0.160 25);
-  --danger-fg:   oklch(0.180 0.010 262);
 }
 
 @theme inline {
@@ -149,32 +120,30 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  /* CAST-native colour utilities */
   --color-ground: var(--ground);
   --color-plate: var(--plate);
+  --color-plate-hi: var(--plate-hi);
   --color-well: var(--well);
   --color-fg: var(--fg);
   --color-fg-muted: var(--fg-muted);
   --color-fg-subtle: var(--fg-subtle);
   --color-edge: var(--edge);
   --color-edge-soft: var(--edge-soft);
+  --color-edge-mid: var(--edge-mid);
   --color-signal: var(--signal);
   --color-signal-bright: var(--signal-bright);
   --color-signal-fg: var(--signal-fg);
 
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --radius-xl: calc(var(--radius) + 6px);
   --radius-2xl: calc(var(--radius) + 10px);
 
-  /* BUGFIX: these previously named the font FAMILIES literally ("Inter",
-     "Space Grotesk", "JetBrains Mono") while app/layout.tsx declares the
-     variables below. next/font self-hosts under hashed family names that
-     are ONLY reachable through these variables, so every visitor without
-     those fonts installed locally was served ui-sans-serif. */
+  /* One family. --font-display is kept as an alias so existing
+     `font-display` utilities resolve to the same face. */
   --font-sans:    var(--font-inter),          ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-space-grotesk),  ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-inter),          ui-sans-serif, system-ui, sans-serif;
   --font-mono:    var(--font-jetbrains-mono), ui-monospace, monospace;
 }
 
@@ -183,21 +152,29 @@
     border-color: var(--border);
   }
 
+  html {
+    background: var(--ground);
+  }
+
   body {
     background: var(--ground);
     color: var(--fg);
     font-family: var(--font-sans);
+    font-weight: 400;
+    letter-spacing: -0.006em;
     -webkit-font-smoothing: antialiased;
   }
 
+  h1, h2, h3, h4 {
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+
   ::selection {
-    background: color-mix(in oklab, var(--signal) 26%, transparent);
+    background: color-mix(in oklab, var(--signal) 22%, transparent);
     color: var(--fg);
   }
 
-  /* One visible focus style, everywhere, with no baked-in alpha.
-     The previous system halved an already-transparent ring twice and
-     ended up at roughly 15% opacity. */
   :where(a, button, [role="button"], input, textarea, select, summary, [tabindex]):focus-visible {
     outline: 2px solid var(--signal);
     outline-offset: 2px;
@@ -208,91 +185,53 @@
 }
 
 @layer components {
-  /* ── RAISED. The default object polarity. ─────────────────────── */
-  .cast {
-    background: var(--plate);
-    border-radius: var(--radius);
-    box-shadow:
-      calc(var(--cast-x) * -1) calc(var(--cast-x) * -1) var(--cast-blur) var(--cast-hi),
-      var(--cast-x) var(--cast-x) var(--cast-blur) var(--cast-lo);
-  }
-
+  /* ── Surfaces. Flat: a card is a step lighter than the ground and
+        nothing more. The class names are kept from the previous system so
+        every component picks up the new look without a rename. ──────── */
+  .cast,
   .cast-sm {
     background: var(--plate);
-    border-radius: var(--radius-ctl);
-    box-shadow:
-      calc(var(--cast-x-sm) * -1) calc(var(--cast-x-sm) * -1) var(--cast-blur-sm) var(--cast-hi),
-      var(--cast-x-sm) var(--cast-x-sm) var(--cast-blur-sm) var(--cast-lo);
-  }
-
-  /* ── SUNKEN. Inputs, tracks, containers that hold things. ─────── */
-  .well {
-    background: var(--well);
     border-radius: var(--radius);
-    box-shadow:
-      inset calc(var(--cast-x) * -1) calc(var(--cast-x) * -1) var(--cast-blur) var(--cast-hi),
-      inset var(--cast-x) var(--cast-x) var(--cast-blur) var(--cast-lo);
   }
 
+  .well,
   .well-sm {
     background: var(--well);
-    border-radius: var(--radius-ctl);
-    box-shadow:
-      inset calc(var(--cast-x-sm) * -1) calc(var(--cast-x-sm) * -1) var(--cast-blur-sm) var(--cast-hi),
-      inset var(--cast-x-sm) var(--cast-x-sm) var(--cast-blur-sm) var(--cast-lo);
+    border: 1px solid var(--edge-soft);
+    border-radius: var(--radius);
   }
 
-  /* ── A hairline rim. Catches the light along the top edge and
-        stops large plates from looking like blurry blobs. ───────── */
-  .rim {
-    position: relative;
+  /* Chips use .well-sm, so the small sunken surface is a pill. */
+  .well-sm { border-radius: var(--radius-ctl); }
+
+  .rim { position: relative; }
+
+  /* A card that responds to the pointer. */
+  .card-link {
+    transition: background-color var(--dur-hover) var(--ease-out);
   }
-  .rim::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1px;
-    /* Highlight only. There used to be a --cast-lo stop closing the gradient
-       on the bottom-right, which traced a near-black hairline around half of
-       every large plate (--cast-lo is #141922 in dark mode). A milled edge
-       catches light along its lit side and falls into its own drop shadow on
-       the other — it does not get an outline. The shadow already does that
-       work, so the rim now fades to nothing. */
-    background: linear-gradient(155deg,
-      color-mix(in oklab, var(--cast-hi) 85%, transparent) 0%,
-      color-mix(in oklab, var(--cast-hi) 30%, transparent) 28%,
-      transparent 55%);
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-            mask-composite: exclude;
-    pointer-events: none;
+  @media (hover: hover) and (pointer: fine) {
+    .card-link:hover { background: var(--plate-hi); }
   }
 
-  /* ── CONTROLS. Raised material + a real border.
-        Three independent state cues: polarity, fill, and rim. Strip
-        every shadow (forced-colors does exactly that) and the control
-        is still identifiable and still clears 3:1. ───────────────── */
+  /* ── Controls. Pills. Secondary is a dark pill with a hairline,
+        primary is solid white with black text. ───────────────────── */
   .control {
     background: var(--plate);
     color: var(--fg);
-    border: 1px solid var(--edge);
+    border: 1px solid var(--edge-mid);
     border-radius: var(--radius-ctl);
-    box-shadow:
-      calc(var(--cast-x-sm) * -1) calc(var(--cast-x-sm) * -1) var(--cast-blur-sm) var(--cast-hi),
-      var(--cast-x-sm) var(--cast-x-sm) var(--cast-blur-sm) var(--cast-lo);
     transition:
       background-color var(--dur-hover) var(--ease-out),
-      box-shadow var(--dur-press) var(--ease-out),
-      transform var(--dur-press) var(--ease-out),
-      border-color var(--dur-hover) var(--ease-out);
+      border-color var(--dur-hover) var(--ease-out),
+      color var(--dur-hover) var(--ease-out),
+      transform var(--dur-press) var(--ease-out);
   }
 
   @media (hover: hover) and (pointer: fine) {
     .control:hover {
-      background: color-mix(in oklab, var(--plate) 92%, var(--cast-hi));
-      border-color: var(--signal);
+      background: var(--plate-hi);
+      border-color: var(--edge);
     }
   }
 
@@ -300,21 +239,16 @@
   .control[data-pressed="true"],
   .control[aria-pressed="true"] {
     transform: translateY(1px);
-    background: color-mix(in oklab, var(--well) 88%, var(--cast-lo));
-    box-shadow:
-      inset calc(var(--cast-x-sm) * -1) calc(var(--cast-x-sm) * -1) var(--cast-blur-sm) var(--cast-hi),
-      inset var(--cast-x-sm) var(--cast-x-sm) var(--cast-blur-sm) var(--cast-lo);
+    background: var(--plate-hi);
   }
 
   .control:disabled,
   .control[aria-disabled="true"] {
-    opacity: 0.55;
-    box-shadow: none;
+    opacity: 0.5;
     transform: none;
     cursor: not-allowed;
   }
 
-  /* Primary action. The one place the accent fills a surface. */
   .control-primary {
     background: var(--signal);
     color: var(--signal-fg);
@@ -322,58 +256,62 @@
   }
   @media (hover: hover) and (pointer: fine) {
     .control-primary:hover {
-      background: color-mix(in oklab, var(--signal) 88%, var(--cast-hi));
-      border-color: var(--signal);
+      background: #d9d9d9;
+      border-color: #d9d9d9;
     }
   }
-  .control-primary:active {
-    background: color-mix(in oklab, var(--signal) 86%, var(--cast-lo));
+  .control-primary:active { background: #cccccc; }
+
+  /* A control without a fill or outline: nav items, "Sign in"-style. */
+  .control-ghost {
+    background: transparent;
+    border-color: transparent;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .control-ghost:hover { background: var(--plate); border-color: transparent; }
   }
 
-  /* ── Sunken text inputs. Opposite polarity to buttons, so you can
-        see at a glance what you type into and what you press. ───── */
+  /* ── Text inputs ──────────────────────────────────────────────── */
   .field {
     background: var(--well);
     color: var(--fg);
     border: 1px solid var(--edge);
-    border-radius: var(--radius-ctl);
-    box-shadow:
-      inset 2px 2px 5px var(--cast-lo),
-      inset -2px -2px 5px var(--cast-hi);
-    transition: border-color var(--dur-hover) var(--ease-out),
-                box-shadow var(--dur-hover) var(--ease-out);
+    border-radius: var(--radius);
+    transition: border-color var(--dur-hover) var(--ease-out);
   }
   .field::placeholder { color: var(--fg-subtle); }
   .field:focus,
   .field:focus-visible {
     border-color: var(--signal);
-    outline: 2px solid var(--signal);
-    outline-offset: 2px;
+    outline: 1px solid var(--signal);
+    outline-offset: 0;
   }
 
-  /* ── Mono annotation, tabular by default. ─────────────────────── */
+  /* ── Meta text. Sentence case, small, grey, tabular. ──────────── */
   .annotate {
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    letter-spacing: 0.13em;
-    text-transform: uppercase;
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    letter-spacing: 0;
     font-variant-numeric: tabular-nums lining-nums;
     color: var(--fg-subtle);
   }
   .tabular { font-variant-numeric: tabular-nums lining-nums; }
 
-  /* ── Layout primitives ────────────────────────────────────────────
-     The old design open-coded the same container and the same two-column
-     definition list at three different label widths (200/220/250px), which
-     read as drift rather than as a system. One class each, one width. */
+  /* ── Layout ───────────────────────────────────────────────────── */
   .sheet {
     width: 100%;
-    max-width: 1200px;
+    max-width: 52rem;
     margin-inline: auto;
-    padding-inline: 1.5rem;
+    padding-inline: 1.25rem;
+  }
+  .sheet-wide {
+    width: 100%;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
   }
 
-  .measure { max-width: 68ch; }
+  .measure { max-width: 62ch; }
 
   .def-grid {
     display: grid;
@@ -381,323 +319,126 @@
     gap: 0.5rem 3rem;
   }
   @media (min-width: 768px) {
-    .def-grid { grid-template-columns: 220px 1fr; }
+    .def-grid { grid-template-columns: 1fr 1fr; }
   }
 
-  /* An index tab: a small raised marker that names the sheet you are on. */
+  /* A section: hairline on top, generous air, label column on the left,
+     content column on the right. See components/site/Block.tsx. */
+  /* The rule is drawn at content width, not edge to edge. */
+  .block { padding-bottom: 4.5rem; }
+  .block::before {
+    content: "";
+    display: block;
+    width: calc(100% - 2.5rem);
+    max-width: calc(52rem - 2.5rem);
+    margin: 0 auto 4.5rem;
+    border-top: 1px solid var(--edge-soft);
+  }
+  @media (min-width: 768px) {
+    .block { padding-bottom: 6rem; }
+    .block::before { margin-bottom: 6rem; }
+  }
+  .block-head {
+    display: grid;
+    gap: 1rem;
+  }
+  @media (min-width: 768px) {
+    .block-head { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  }
+
+  .block-label {
+    font-size: 1.25rem;
+    line-height: 1.3;
+    color: var(--fg);
+  }
+
+  /* The two-tone heading: white lead, grey follow-up, same size. */
+  .headline {
+    font-size: 1.625rem;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+    text-wrap: balance;
+  }
+  @media (min-width: 768px) {
+    .headline { font-size: 1.875rem; }
+  }
+  .headline-sub { display: block; color: var(--fg-muted); }
+
+  .display {
+    font-size: clamp(2rem, 4vw, 2.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    color: var(--fg);
+  }
+
+  .lede {
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--fg-muted);
+  }
+
+  /* A small pill: tags and status. */
   .tab {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.3rem 0.7rem;
+    padding: 0.25rem 0.75rem;
+    border: 1px solid var(--edge-mid);
     border-radius: var(--radius-ctl);
-    background: var(--plate);
-    box-shadow:
-      calc(var(--cast-x-sm) * -1) calc(var(--cast-x-sm) * -1) var(--cast-blur-sm) var(--cast-hi),
-      var(--cast-x-sm) var(--cast-x-sm) var(--cast-blur-sm) var(--cast-lo);
+    background: transparent;
   }
 
-  /* ── HERO STAGE ───────────────────────────────────────────────────
-     Three layers in one box: a CSS poster made of the real material, a
-     WebGL canvas that continues it in three dimensions, and the type.
-
-     Poster and canvas fill the same absolutely positioned box, so the
-     upgrade is a cross-fade in place. It cannot move the layout, it
-     cannot delay the heading, and if the canvas never arrives the poster
-     is a finished design rather than an empty frame. */
-  .hero-stage {
+  /* ── Ruler. A row of ticks, see components/site/Ruler.tsx. ────── */
+  .ruler {
     position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-height: 88vh;
-    padding-top: 6rem;
     overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
   }
-
-  .hero-object {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    /* The block deliberately bleeds off the right edge. Without this it
-       would widen the document and produce a horizontal scrollbar. */
-    contain: paint;
-  }
-
-  .hero-poster,
-  .hero-canvas-wrap {
-    position: absolute;
-    inset: 0;
-    transition: opacity 620ms var(--ease-out);
-  }
-
-  .hero-poster { display: grid; place-items: center; opacity: 1; }
-  .hero-canvas-wrap { opacity: 0; }
-
-  .hero-object[data-live="true"] .hero-poster { opacity: 0; }
-  .hero-object[data-live="true"] .hero-canvas-wrap { opacity: 1; }
-
-  .hero-canvas { display: block; width: 100%; height: 100%; }
-
-  /* The poster IS CAST — a .cast plate holding a .well pocket, tilted into
-     perspective. That is why the swap reads as the same object gaining
-     depth instead of one picture being replaced by a different one. */
-  .hero-poster-plate {
-    width: min(44rem, 76vw);
-    aspect-ratio: 1.72;
-    display: grid;
-    place-items: center;
-    transform: perspective(1400px) rotateX(58deg) rotateZ(-22deg);
-  }
-
-  .hero-poster-pocket { width: 70%; height: 56%; }
-
-  /* Narrow stages stack the type OVER the object, so there the type needs a
-     ground-coloured wash to keep every character on near-ground luminance —
-     the surface the palette was actually solved against. */
-  .hero-scrim {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: linear-gradient(178deg,
-      var(--ground) 0%,
-      color-mix(in oklab, var(--ground) 76%, transparent) 46%,
-      color-mix(in oklab, var(--ground) 34%, transparent) 72%,
-      transparent 100%);
-  }
-
-  @media (max-width: 899px) {
-    /* Narrow: the type stacks over the object, so the object steps back. */
-    .hero-object { opacity: 0.55; }
-  }
-
-  @media (min-width: 900px) {
-    .hero-poster { place-items: center end; transform: translateX(16%); }
-
-    /* Wide: the type gets its own column and the object gets the rest.
-       Nothing overlaps, which is the point.
-
-       The first version let the copy span the full sheet and relied on a
-       gradient to stay legible on top of the object. It read as exactly what
-       it was — cards floating on background noise — because an object that
-       passes BEHIND content is texture, not an object. Constraining the copy
-       instead lets the block keep its whole silhouette, and the scrim is then
-       not needed at all here: no character sits over it.
-
-       50% is chosen against the object's own geometry rather than by eye. The
-       shader anchors the block's right face just past the right edge, which
-       puts its left face at ~52.5% of the stage at typical desktop aspects
-       (see the framing derivation in MilledBlock.tsx), so this leaves a
-       gutter instead of an overlap. */
-    .hero-copy { max-width: 50%; }
-
-    /* Not display:none — a safety net that costs nothing.
-       Over the copy column this is opaque --ground painted onto --ground, so
-       it is invisible; it fades out exactly where the object begins. If a
-       stage shape ever does push the object under the type (a 900px-wide but
-       very tall window can), the type stays legible instead of failing. */
-    .hero-scrim {
-      background: linear-gradient(90deg,
-        var(--ground) 0%,
-        var(--ground) 46%,
-        transparent 58%);
-    }
-  }
-
-  /* ── COLD START ───────────────────────────────────────────────────
-     The entry beat, and it exists for a concrete reason rather than for
-     drama. The hero's renderer is a lazy chunk that arrives after
-     hydration, so for the first second the page showed a CSS poster and
-     then swapped it for the real object — and that swap was visible.
-     This holds the frame until the fonts, the page load and the renderer
-     have all settled, so the swap happens behind it.
-
-     It plays once per DOCUMENT LOAD, not once per session — see
-     components/hero/ColdStart.tsx. On a reload the hero re-fetches and
-     re-renders, so the swap is visible again, and a session flag would
-     leave the splash covering only the first load of a session.
-
-     The accent appears here, on the progress fill. That is exactly what
-     the accent is rationed FOR: state. */
-  .cold-start {
-    position: fixed;
-    inset: 0;
-    z-index: 90;
-    display: grid;
-    place-items: center;
-    background: var(--ground);
-    /* Wipes upward out of the frame rather than fading, so the page is
-       revealed rather than cross-dissolved into. */
-    clip-path: inset(0 0 0 0);
-    transition:
-      clip-path 620ms var(--ease-in-out),
-      opacity 620ms var(--ease-out);
-  }
-
-  .cold-start[data-phase="leaving"] {
-    clip-path: inset(0 0 100% 0);
-    opacity: 0.85;
-  }
-
-  .cold-start[data-phase="gone"] { display: none; }
-
-  .cold-start-frame {
-    position: relative;
-    width: min(44rem, 82vw);
-    padding: 2.75rem 0;
-  }
-
-  /* Datum lines, drawn on rather than faded in. */
-  .cold-start-rule {
-    position: absolute;
-    background: var(--edge-soft);
-  }
-
-  .cold-start-rule-top,
-  .cold-start-rule-bottom {
-    left: 0;
-    right: 0;
-    height: 1px;
-    transform: scaleX(0);
-    transform-origin: left;
-    animation: cs-draw-x 540ms var(--ease-out) forwards;
-  }
-  .cold-start-rule-top { top: 0; }
-  .cold-start-rule-bottom { bottom: 0; animation-delay: 90ms; }
-
-  .cold-start-rule-left {
-    top: 0;
-    bottom: 0;
-    left: 0;
+  .ruler-tick {
     width: 1px;
-    transform: scaleY(0);
-    transform-origin: top;
-    animation: cs-draw-y 540ms var(--ease-out) 190ms forwards;
+    background: var(--edge-mid);
   }
+  .ruler-tick-major { background: var(--fg-subtle); }
 
-  @keyframes cs-draw-x { to { transform: scaleX(1); } }
-  @keyframes cs-draw-y { to { transform: scaleY(1); } }
-
-  .cold-start-body {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    padding-inline: 1.75rem;
-    opacity: 0;
-    animation: cs-rise 520ms var(--ease-out) 220ms forwards;
-    transition: transform 620ms var(--ease-out);
-  }
-  .cold-start[data-phase="leaving"] .cold-start-body {
-    transform: translateY(-14px);
-  }
-
-  @keyframes cs-rise {
-    from { opacity: 0; transform: translateY(6px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .cold-start-name {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: clamp(2rem, 5.5vw, 3.5rem);
-    letter-spacing: -0.01em;
-    line-height: 1;
-    color: var(--fg);
-  }
-
-  .cold-start-meter {
-    display: flex;
-    align-items: center;
-    gap: 0.875rem;
-  }
-
-  .cold-start-track {
-    position: relative;
-    flex: 1;
-    height: 2px;
-    overflow: hidden;
-    background: color-mix(in oklab, var(--edge-soft) 50%, transparent);
-  }
-
-  /* No transition: the loop writes this every frame and easing it here as
-     well would smooth the value twice. */
-  .cold-start-fill {
-    position: absolute;
-    inset: 0;
-    background: var(--signal);
-    transform: scaleX(0);
-    transform-origin: left;
-  }
-
-  /* ── Compatibility shims ──────────────────────────────────────────
-     The old system's utilities are still referenced in ~50 places, most
-     of them under /admin which is not part of this redesign. Aliasing
-     them to CAST keeps those surfaces coherent instead of unstyled while
-     the public pages are converted properly. Delete once /admin is done. */
-  .glass {
-    background: var(--plate);
-    box-shadow:
-      calc(var(--cast-x) * -1) calc(var(--cast-x) * -1) var(--cast-blur) var(--cast-hi),
-      var(--cast-x) var(--cast-x) var(--cast-blur) var(--cast-lo);
-    backdrop-filter: none;
-  }
-  .grain-overlay { /* retired: the material carries the texture now */ }
-  .link-slide { position: relative; }
-  .link-slide::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -1px;
-    width: 0;
-    height: 1px;
-    background: var(--signal);
-    transition: width var(--dur-hover) var(--ease-out);
-  }
-  .link-slide:hover::after { width: 100%; }
-
-  /* ── Link underline that grows from the left. ─────────────────── */
+  /* ── Links ────────────────────────────────────────────────────── */
+  .link-slide,
   .link-underline { position: relative; }
+  .link-slide::after,
   .link-underline::after {
     content: "";
     position: absolute;
     left: 0;
     bottom: -2px;
     width: 0;
-    height: 1.5px;
-    background: var(--signal);
+    height: 1px;
+    background: currentColor;
     transition: width var(--dur-hover) var(--ease-out);
   }
+  .link-slide:hover::after,
   .link-underline:hover::after { width: 100%; }
+
+  /* ── Compatibility shims for /admin ───────────────────────────── */
+  .glass { background: var(--plate); backdrop-filter: none; }
+  .grain-overlay { }
 }
 
-/* ══ Accessibility signals read from the OS, not from a widget. ══════
-   Under 1% of sites implement prefers-contrast. When the user has asked
-   for firmer edges, the soft material steps back and real borders take
-   over — no toggle to discover, no state to persist. ═══════════════ */
 @media (prefers-contrast: more) {
-  :root {
+  :root, .dark {
     --edge-soft: var(--edge);
-    --cast-hi: oklch(1 0 0);
-    --cast-lo: oklch(0.700 0.014 250);
+    --edge-mid: var(--edge);
+    --fg-muted: #b0b0b0;
   }
-  .dark {
-    --edge-soft: var(--edge);
-    --cast-lo: oklch(0.140 0.014 262);
-  }
-  .cast, .cast-sm, .well, .well-sm { border: 1px solid var(--edge); }
+  .cast, .cast-sm { border: 1px solid var(--edge); }
 }
 
 @media (forced-colors: active) {
   .cast, .cast-sm, .well, .well-sm, .control, .field {
-    box-shadow: none;
     border: 1px solid ButtonBorder;
   }
   .control-primary { border-color: Highlight; }
-
-  /* A forced palette has no way to express a shaded object, and the scrim
-     would paint over the system's own background. Both are decorative, so
-     both go — the hero still states everything it needs to in text. */
-  .hero-object, .hero-scrim { display: none; }
+  .ruler { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -708,20 +449,12 @@
     scroll-behavior: auto !important;
   }
   .control:active { transform: none; }
-
-  /* Removed outright rather than shortened. A splash carries no information —
-     it only covers work in progress — so with motion switched off the honest
-     answer is to show the finished page immediately. */
-  .cold-start { display: none !important; }
 }
 
 @media print {
-  nav, .no-print, .hero-object, .hero-scrim { display: none !important; }
-  body { background: #fff !important; color: #000 !important; }
-  /* 88vh of stage is a wasted sheet of paper once the object is gone. */
-  .hero-stage { min-height: 0 !important; padding-top: 0 !important; }
+  nav, .no-print, .ruler { display: none !important; }
+  body, html { background: #fff !important; color: #000 !important; }
   .cast, .cast-sm, .well, .well-sm, .control, .field {
-    box-shadow: none !important;
     border: 1px solid #999 !important;
   }
 }

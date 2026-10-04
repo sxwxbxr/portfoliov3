@@ -21,37 +21,33 @@ export default async function CaseStudies() {
     >
       <section className="sheet flex flex-col gap-10 pb-24 md:pb-32">
         {caseStudies.length > 0 ? (
-          // A collection, so: tiles. The row list this replaced gave every
-          // study the same hairline and no object shape of its own.
-          <div className="grid gap-5 md:grid-cols-2">
+          <div className="grid gap-3 md:grid-cols-2">
             {caseStudies.map((study, i) => (
               <Section key={study.slug} delay={i * 0.04} className="h-full">
                 <Link
                   href={`/case-studies/${study.slug}`}
-                  className="cast rim group flex h-full flex-col gap-4 p-6 transition-transform duration-150 ease-out hover:-translate-y-0.5 motion-reduce:transform-none md:p-7"
+                  className="cast card-link group flex h-full flex-col gap-4 p-6 md:p-7"
                 >
                   <div className="flex items-baseline justify-between gap-4">
                     <span className="annotate" aria-hidden="true">
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <ArrowUpRight
-                      className="h-4 w-4 shrink-0 text-fg-subtle transition-colors duration-150 group-hover:text-signal"
+                      className="h-4 w-4 shrink-0 text-fg-subtle transition-colors duration-150 group-hover:text-fg"
                       aria-hidden="true"
                     />
                   </div>
 
-                  <h2 className="font-display text-xl font-semibold tracking-tight transition-colors duration-150 group-hover:text-signal md:text-2xl">
-                    {study.title}
-                  </h2>
+                  <h2 className="text-lg tracking-tight">{study.title}</h2>
 
-                  <p className="measure text-sm leading-relaxed text-fg-muted">
+                  <p className="text-sm leading-relaxed text-fg-muted">
                     {study.challenge}
                   </p>
 
                   <div className="mt-auto flex flex-wrap items-center gap-2 pt-1">
-                    <span className="well-sm annotate px-2.5 py-1">{study.client}</span>
-                    <span className="well-sm annotate px-2.5 py-1">{study.industry}</span>
-                    <span className="well-sm annotate px-2.5 py-1">{study.duration}</span>
+                    <span className="tab text-xs text-fg-muted">{study.client}</span>
+                    <span className="tab text-xs text-fg-muted">{study.industry}</span>
+                    <span className="tab text-xs text-fg-muted">{study.duration}</span>
                   </div>
                 </Link>
               </Section>

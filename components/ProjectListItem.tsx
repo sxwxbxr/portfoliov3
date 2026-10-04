@@ -20,12 +20,9 @@ interface ProjectListItemProps {
 }
 
 /**
- * A project as a cast tile.
- *
- * The screen is recessed into the plate rather than sitting on it, which is
- * the one place the material metaphor is literally true — and it means the
- * tile still reads as a deliberate object when no image exists, because the
- * recess is then filled by an engraved index instead of a broken frame.
+ * A project as a flat card: artwork on top, title and a grey line of
+ * description underneath. Without an image the frame shows the index in
+ * thin type, so the card still reads as deliberate.
  */
 export function ProjectListItem({
   project,
@@ -39,9 +36,9 @@ export function ProjectListItem({
   return (
     <Link
       href={`/projects/${project.slug}`}
-      className="cast rim group flex flex-col gap-4 p-4 transition-transform duration-150 ease-out hover:-translate-y-0.5 active:translate-y-0 motion-reduce:transform-none"
+      className="cast card-link group flex flex-col gap-6 p-5 md:p-6"
     >
-      <div className="well relative aspect-[16/10] overflow-hidden">
+      <div className="relative aspect-[16/10] overflow-hidden rounded-sm bg-well">
         {imageSrc ? (
           <Image
             src={imageSrc}
@@ -49,28 +46,28 @@ export function ProjectListItem({
             fill
             sizes="(min-width: 1024px) 45vw, 100vw"
             priority={priority}
-            className="object-cover transition-transform duration-300 ease-out group-hover:scale-[1.02] motion-reduce:transform-none"
+            className="object-cover opacity-90 transition-[opacity,transform] duration-300 ease-out group-hover:scale-[1.02] group-hover:opacity-100 motion-reduce:transform-none"
           />
         ) : (
           <span
             aria-hidden="true"
-            className="absolute inset-0 flex items-center justify-center font-display text-6xl font-bold tabular text-fg-subtle/45 select-none"
+            className="absolute inset-0 flex items-center justify-center text-7xl font-extralight tabular text-fg-subtle/60 select-none"
           >
             {indexLabel}
           </span>
         )}
       </div>
 
-      <div className="flex flex-col gap-2 px-1 pb-1">
+      <div className="flex flex-col gap-1.5">
         <div className="flex items-center justify-between gap-3">
           <span className="annotate">{copy.projects.itemMeta(indexLabel, category)}</span>
           <ArrowUpRight
-            className="h-4 w-4 shrink-0 text-fg-subtle transition-[transform,color] duration-150 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-signal motion-reduce:transform-none"
+            className="h-4 w-4 shrink-0 text-fg-subtle transition-[transform,color] duration-150 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-fg motion-reduce:transform-none"
             aria-hidden="true"
           />
         </div>
 
-        <h3 className="font-display text-lg md:text-xl font-semibold tracking-tight transition-colors duration-150 group-hover:text-signal">
+        <h3 className="text-lg tracking-tight">
           {project.title}
         </h3>
 

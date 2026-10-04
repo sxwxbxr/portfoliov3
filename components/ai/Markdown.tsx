@@ -7,19 +7,18 @@ import ReactMarkdown, { type Components } from "react-markdown"
 // styles — so we style each element explicitly to render AI markdown
 // consistently (headings, lists, bold, links, code).
 //
-// Every rule here has to survive on three different surfaces: a raised
-// `.cast` panel, a sunken `.well-sm` chat bubble and a raised `.cast-sm` one.
-// That is why code uses a hairline edge instead of a fill — a fill would read
-// as a third polarity on one of them and as nothing at all on another.
+// Every rule here has to survive on a `.cast` panel and on the chat bubbles
+// (`.cast-sm` and outlined). That is why inline code uses a hairline edge
+// instead of a fill: a fill would vanish on one surface and clash on another.
 const components: Components = {
   h1: ({ children }) => (
-    <h3 className="font-display text-base font-semibold text-fg mt-4 mb-2 first:mt-0">{children}</h3>
+    <h3 className="text-base text-fg mt-4 mb-2 first:mt-0">{children}</h3>
   ),
   h2: ({ children }) => (
-    <h3 className="font-display text-base font-semibold text-fg mt-4 mb-2 first:mt-0">{children}</h3>
+    <h3 className="text-base text-fg mt-4 mb-2 first:mt-0">{children}</h3>
   ),
   h3: ({ children }) => (
-    <h3 className="font-display text-base font-semibold text-fg mt-4 mb-2 first:mt-0">{children}</h3>
+    <h3 className="text-base text-fg mt-4 mb-2 first:mt-0">{children}</h3>
   ),
   p: ({ children }) => (
     <p className="my-2 leading-relaxed first:mt-0 last:mb-0">{children}</p>
@@ -32,12 +31,12 @@ const components: Components = {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="text-signal underline underline-offset-2"
+      className="text-fg underline underline-offset-2"
     >
       {children}
     </a>
   ),
-  strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+  strong: ({ children }) => <strong className="text-fg">{children}</strong>,
   em: ({ children }) => <em className="italic">{children}</em>,
   code: ({ children }) => (
     <code className="rounded border border-edge-soft px-1 py-0.5 font-mono text-[0.85em]">

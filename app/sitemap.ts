@@ -81,16 +81,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",
       priority: 0.8,
     },
-    ...(settings.privacyContent.trim()
-      ? [
-          {
-            url: `${baseUrl}/privacy`,
-            lastModified: new Date(),
-            changeFrequency: "yearly" as const,
-            priority: 0.3,
-          },
-        ]
-      : []),
+    {
+      url: `${baseUrl}/privacy`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/imprint`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.2,
+    },
   ]
 
   const projectPages: MetadataRoute.Sitemap = projects.map((project) => ({

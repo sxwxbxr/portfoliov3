@@ -1,4 +1,5 @@
-import { notFound } from "next/navigation"
+import fs from "fs"
+import path from "path"
 import PageLayout, { Section } from "../../components/PageLayout"
 import { ProseMarkdown } from "../../components/ProseMarkdown"
 import { getSiteSettings } from "@/lib/data"
@@ -15,9 +16,14 @@ export const metadata = {
 export default async function Privacy() {
   const settings = await getSiteSettings()
 
-  if (!settings.privacyContent.trim()) {
-    notFound()
-  }
+  // Until the full notice is written in /admin, show a short placeholder
+  // instead of a 404: the footer and the consent banner both link here.
+  const content =
+    settings.privacyContent.trim() ||
+    fs.readFileSync(
+      path.join(process.cwd(), "content", "legal", "privacy-placeholder.md"),
+      "utf8"
+    )
 
   return (
     <PageLayout
@@ -27,10 +33,9 @@ export default async function Privacy() {
     >
       <section className="sheet pb-24 md:pb-32">
         <Section>
-          {/* Long-form legal text reads best as one continuous surface, so it
-              gets a single plate rather than a stack of cards. */}
-          <article className="cast rim mx-auto max-w-[860px] p-7 md:p-12">
-            <ProseMarkdown>{settings.privacyContent}</ProseMarkdown>
+          {/* Long-form legal text: one plain column under a hairline. */}
+          <article className="border-t border-edge-soft pt-10">
+            <ProseMarkdown>{content}</ProseMarkdown>
           </article>
         </Section>
       </section>

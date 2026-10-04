@@ -1,223 +1,199 @@
-import ThemeToggle from "@/components/ThemeToggle"
+import { ChevronRight } from "lucide-react"
+import { Block } from "@/components/site/Block"
+import { Ruler } from "@/components/site/Ruler"
 
-// Living style guide for the CAST material system.
+// Living style guide for the LINE design system.
 // Deliberately fetches nothing, so it renders without DATABASE_URL.
-// Remove once the redesign has landed and the system is settled.
 
 export const metadata = {
-  title: "CAST — Material System",
+  title: "LINE: Design system",
   robots: { index: false, follow: false },
 }
 
-function Row({
-  label,
-  note,
-  children,
-}: {
-  label: string
-  note?: string
-  children: React.ReactNode
-}) {
-  return (
-    <section className="flex flex-col gap-4">
-      <div className="flex items-baseline gap-3 flex-wrap">
-        <h2 className="font-display text-lg font-semibold tracking-tight">{label}</h2>
-        {note && <span className="annotate">{note}</span>}
-      </div>
-      {children}
-    </section>
-  )
-}
-
-const MEASURED: Array<[string, string, string]> = [
-  ["Body text on the worst surface", "10.02:1", "10.03:1"],
-  ["Muted text on the worst surface", "4.62:1", "4.61:1"],
-  ["Annotation on the worst surface", "3.11:1", "3.11:1"],
-  ["Control edge on the worst surface", "3.11:1", "3.11:1"],
-  ["Accent as text", "4.62:1", "4.61:1"],
+const TOKENS: { name: string; cls: string; value: string; note: string }[] = [
+  { name: "ground", cls: "bg-ground", value: "#0a0a0a", note: "Page background" },
+  { name: "plate", cls: "bg-plate", value: "#141414", note: "Cards" },
+  { name: "plate-hi", cls: "bg-plate-hi", value: "#1c1c1c", note: "Card hover, raised controls" },
+  { name: "well", cls: "bg-well", value: "#0f0f0f", note: "Inputs, tracks, code" },
+  { name: "fg", cls: "bg-fg", value: "#ededed", note: "Text" },
+  { name: "fg-muted", cls: "bg-fg-muted", value: "#8f8f8f", note: "Body copy, secondary text" },
+  { name: "fg-subtle", cls: "bg-fg-subtle", value: "#6e6e6e", note: "Meta, never body copy" },
+  { name: "edge", cls: "bg-edge", value: "#6e6e6e", note: "Input boundaries" },
+  { name: "edge-soft", cls: "bg-edge-soft", value: "#222222", note: "Section rules, row dividers" },
+  { name: "edge-mid", cls: "bg-edge-mid", value: "#333333", note: "Control outlines" },
+  { name: "signal", cls: "bg-signal", value: "#ffffff", note: "The only accent" },
 ]
+
+const RULER_LABELS = ["Plan", "Build", "Ship", "Run", "Improve"] as const
 
 export default function DesignSystem() {
   return (
     <div className="min-h-screen bg-ground text-fg">
-      <div className="mx-auto max-w-[1100px] px-6 py-16 flex flex-col gap-16">
-        <header className="flex flex-col gap-5">
-          <div className="flex items-start justify-between gap-6 flex-wrap">
-            <div className="flex flex-col gap-2">
-              <span className="annotate">Material system · Branch newDesignV3</span>
-              <h1 className="font-display text-4xl md:text-5xl font-bold tracking-tight">
-                CAST
-              </h1>
-            </div>
-            <ThemeToggle />
-          </div>
-          <p className="max-w-[62ch] text-fg-muted leading-relaxed">
-            Objects are <em>cast</em> out of the ground, not laid on top of it. One light
-            source at the top left, two polarities — raised and sunken — and nothing that
-            floats. The geometry is halved against classic soft UI (6&nbsp;px offset
-            instead of 8–9, 14&nbsp;px blur instead of 16–18); that is the difference
-            between <em>milled</em> and <em>cushion</em>.
+      <header className="sheet pt-24 pb-16 md:pt-32 md:pb-24">
+        <div className="flex flex-col gap-3">
+          <span className="annotate mb-3">Design system</span>
+          <h1 className="display text-balance">LINE</h1>
+          <p className="measure text-xl leading-snug text-fg-muted md:text-2xl">
+            Dark ground, flat cards, hairline rules. White is the only accent and
+            every weight is 400.
           </p>
-        </header>
+        </div>
+      </header>
 
-        <Row label="Surfaces" note="Ground · plate raised · well sunken">
-          <div className="grid gap-5 sm:grid-cols-3">
-            <div className="cast rim p-6 flex flex-col gap-1">
-              <span className="annotate">.cast</span>
-              <span className="text-sm text-fg-muted">Raised. Cards, tiles, panels.</span>
-            </div>
-            <div className="well p-6 flex flex-col gap-1">
-              <span className="annotate">.well</span>
-              <span className="text-sm text-fg-muted">Sunken. Containers, tracks, inputs.</span>
-            </div>
-            <div className="p-6 flex flex-col gap-1 border border-edge-soft rounded-lg">
-              <span className="annotate">Ground</span>
-              <span className="text-sm text-fg-muted">The surface everything emerges from.</span>
-            </div>
-          </div>
-        </Row>
-
-        <Row label="Controls" note="material carries the look · the border carries the affordance">
-          <div className="flex flex-wrap items-center gap-4">
-            <button type="button" className="control px-4 py-2.5 text-sm font-medium">
-              Secondary
-            </button>
-            <button type="button" className="control control-primary px-5 py-3 text-sm font-medium">
-              Send message
-            </button>
-            <button type="button" className="control px-4 py-2.5 text-sm font-medium" data-pressed="true">
-              Pressed
-            </button>
-            <button type="button" className="control px-4 py-2.5 text-sm font-medium" disabled>
-              Disabled
-            </button>
-          </div>
-          <p className="max-w-[62ch] text-sm text-fg-muted leading-relaxed">
-            Three independent state cues: <strong>polarity</strong> (raised becomes
-            sunken), <strong>fill</strong> and <strong>rim</strong>. Delete every shadow
-            from the stylesheet — which is exactly what <code className="font-mono text-xs">forced-colors</code> does —
-            and the control stays identifiable and still holds 3:1. That is the freedom
-            classic neumorphism gives up when it deletes the edge.
+      <Block
+        flush
+        label="Tokens"
+        title="Eleven values"
+        sub="Surfaces, text, lines and one accent."
+        lede={
+          <p>
+            Defined in <code className="font-mono text-sm">app/globals.css</code> and
+            exposed to Tailwind, so <code className="font-mono text-sm">bg-plate</code>,{" "}
+            <code className="font-mono text-sm">text-fg-muted</code> and{" "}
+            <code className="font-mono text-sm">border-edge-soft</code> all resolve.
           </p>
-        </Row>
+        }
+      >
+        <ul className="border-t border-edge-soft">
+          {TOKENS.map((t) => (
+            <li
+              key={t.name}
+              className="flex items-center gap-4 border-b border-edge-soft py-3"
+            >
+              <span
+                className={`h-8 w-8 shrink-0 rounded-sm border border-edge-mid ${t.cls}`}
+                aria-hidden="true"
+              />
+              <span className="w-24 shrink-0 text-sm">{t.name}</span>
+              <span className="annotate w-20 shrink-0">{t.value}</span>
+              <span className="annotate hidden sm:block">{t.note}</span>
+            </li>
+          ))}
+        </ul>
+      </Block>
 
-        <Row label="Control sizes" note="three steps — globals.css defines none, so this table is the rule">
-          <div className="well flex flex-wrap items-end gap-3 p-3 md:p-4">
-            <button type="button" className="control px-3.5 py-2 text-xs font-medium">
-              sm · px-3.5 py-2 text-xs
+      <Block
+        label="Type"
+        title="One family"
+        sub="Hierarchy from size and colour, not weight."
+      >
+        <div className="border-t border-edge-soft">
+          <div className="flex flex-col gap-2 border-b border-edge-soft py-6">
+            <span className="annotate">.display</span>
+            <p className="display">Project manager and developer</p>
+          </div>
+          <div className="flex flex-col gap-2 border-b border-edge-soft py-6">
+            <span className="annotate">.headline + .headline-sub</span>
+            <h2 className="headline">
+              Lead line in white
+              <span className="headline-sub">follow-up line in grey</span>
+            </h2>
+          </div>
+          <div className="flex flex-col gap-2 border-b border-edge-soft py-6">
+            <span className="annotate">.lede</span>
+            <p className="lede measure">
+              Body copy in grey at 17px with a relaxed line height. It is meant to
+              be read in short paragraphs.
+            </p>
+          </div>
+          <div className="flex flex-col gap-2 border-b border-edge-soft py-6">
+            <span className="annotate">.annotate</span>
+            <p className="annotate">Small grey sentence-case meta, 12 Mar 2026 · 4 min read</p>
+          </div>
+        </div>
+      </Block>
+
+      <Block label="Controls" title="Pills" sub="Buttons, tabs and fields.">
+        <div className="flex flex-col gap-10">
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              className="control inline-flex items-center gap-1 py-2 pr-3 pl-4 text-sm"
+            >
+              control
+              <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
             </button>
-            <button type="button" className="control px-4 py-2.5 text-sm font-medium">
-              md · px-4 py-2.5 text-sm
+            <button
+              type="button"
+              className="control control-primary inline-flex items-center gap-1 py-2.5 pr-4 pl-5 text-sm"
+            >
+              control-primary
+              <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
             </button>
-            <button type="button" className="control px-5 py-3 text-sm font-medium">
-              lg · px-5 py-3 text-sm
+            <button
+              type="button"
+              className="control control-ghost inline-flex items-center gap-1 py-2 pr-3 pl-4 text-sm"
+            >
+              control-ghost
+              <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
+            </button>
+            <button type="button" className="control px-4 py-2 text-sm" disabled>
+              disabled
             </button>
           </div>
-          <p className="max-w-[62ch] text-sm text-fg-muted leading-relaxed">
-            <strong>sm</strong> for chips and icon rows inside cards, <strong>md</strong> as
-            the default for every inline action, <strong>lg</strong> for a page&apos;s one
-            closing CTA and for full width in forms. There were five combinations for the
-            same semantic weight at one point — <code className="font-mono text-xs">px-6&nbsp;py-3</code> and{" "}
-            <code className="font-mono text-xs">px-5&nbsp;py-2.5</code> have been folded back in.
-          </p>
-        </Row>
 
-        <Row label="Dropdown" note="the trigger is a field, the panel a plate">
-          <p className="max-w-[62ch] text-sm text-fg-muted leading-relaxed">
-            <strong>Cascade trap:</strong> shadcn primitives bake{" "}
-            <code className="font-mono text-xs">border shadow-md</code> into the utilities
-            layer. Tailwind orders utilities AFTER{" "}
-            <code className="font-mono text-xs">@layer components</code>, where{" "}
-            <code className="font-mono text-xs">.cast</code> and{" "}
-            <code className="font-mono text-xs">.well</code> live — a{" "}
-            <code className="font-mono text-xs">className=&quot;cast&quot;</code> on such an
-            element has no effect, and no error.{" "}
-            <code className="font-mono text-xs">components/ui/select.tsx</code> and{" "}
-            <code className="font-mono text-xs">checkbox.tsx</code> now carry the material
-            themselves; <code className="font-mono text-xs">popover.tsx</code> is neutralised
-            at the call site instead (panel as an inner plate).
-          </p>
-        </Row>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="tab text-xs text-fg-muted">tab</span>
+            <span className="tab text-xs text-fg-muted">Next.js</span>
+            <span className="tab text-xs text-fg-muted">TypeScript</span>
+          </div>
 
-        <Row label="Inputs" note="opposite polarity to the button">
-          <div className="grid gap-4 sm:grid-cols-2 max-w-2xl">
+          <div className="grid max-w-2xl gap-4 sm:grid-cols-2">
             <label className="flex flex-col gap-2">
               <span className="annotate">Name</span>
-              <input className="field px-4 py-2.5 text-sm" placeholder="What's your name?" />
+              <input className="field px-4 py-2.5 text-sm" placeholder="What is your name?" />
             </label>
             <label className="flex flex-col gap-2">
               <span className="annotate">Budget</span>
               <input className="field px-4 py-2.5 text-sm" placeholder="CHF 5’000 – 15’000" />
             </label>
           </div>
-          <p className="max-w-[62ch] text-sm text-fg-muted leading-relaxed">
-            You can see at a glance what you type into and what you press — inputs are
-            sunken, buttons raised. The focus ring sits on the element itself, not in the
-            shadow.
+
+          <pre className="well overflow-x-auto p-4 font-mono text-sm text-fg-muted">
+            npm run dev
+          </pre>
+        </div>
+      </Block>
+
+      <Block label="Surfaces" title="Flat cards" sub="One step lighter than the ground.">
+        <div className="grid gap-3 sm:grid-cols-3">
+          <div className="cast flex flex-col gap-2 p-6">
+            <h3 className="text-lg tracking-tight">.cast</h3>
+            <p className="text-sm text-fg-muted">Card on the ground. No shadow.</p>
+          </div>
+          <div className="cast card-link flex flex-col gap-2 p-6">
+            <h3 className="text-lg tracking-tight">.card-link</h3>
+            <p className="text-sm text-fg-muted">Lightens on hover.</p>
+          </div>
+          <div className="well flex flex-col gap-2 p-6">
+            <h3 className="text-lg tracking-tight">.well</h3>
+            <p className="text-sm text-fg-muted">Inputs, tracks and code.</p>
+          </div>
+        </div>
+      </Block>
+
+      <Block
+        label="Ruler"
+        title="A measuring strip"
+        sub="Decorative, hidden from assistive tech."
+        lede={
+          <p>
+            A white marker steps along the labelled ticks and rests on the first
+            entry when motion is reduced.
           </p>
-        </Row>
+        }
+      >
+        <div className="-mx-5">
+          <Ruler labels={RULER_LABELS} />
+        </div>
+      </Block>
 
-        <Row label="Typography" note="Space Grotesk · Inter · JetBrains Mono">
-          <div className="cast rim p-7 flex flex-col gap-4">
-            <h3 className="font-display text-3xl font-bold tracking-tight">
-              Project Manager &amp; Software Developer
-            </h3>
-            <p className="max-w-[62ch] leading-relaxed">
-              Body text in Inter. These three faces were loaded but never applied —{" "}
-              <code className="font-mono text-xs">globals.css</code> named the families
-              literally while <code className="font-mono text-xs">layout.tsx</code> declares
-              them as variables. If you see Space Grotesk and JetBrains Mono here, the bug
-              is fixed.
-            </p>
-            <div className="flex flex-wrap gap-x-8 gap-y-2">
-              <span className="annotate">Annotation · Tabular 0123456789</span>
-              <span className="font-mono text-sm tabular">CHF 12’480.00</span>
-            </div>
-          </div>
-        </Row>
-
-        <Row label="Accent" note="rationed to state, focus and the current thing">
-          <div className="flex flex-wrap items-center gap-6">
-            <span className="inline-flex items-center gap-2.5">
-              <span className="h-2.5 w-2.5 rounded-full bg-signal-bright" />
-              <span className="text-sm">Available for projects</span>
-            </span>
-            <a href="#top" className="link-underline text-signal text-sm font-medium">
-              As a link
-            </a>
-            <span className="well-sm px-3 py-1.5 text-xs font-mono text-signal">Current</span>
-          </div>
-        </Row>
-
-        <Row label="Measured" note="derived, not estimated — against the worst surface in each mode">
-          <div className="well p-1 overflow-x-auto">
-            <table className="w-full text-sm min-w-[420px]">
-              <thead>
-                <tr className="text-left">
-                  <th className="annotate p-3 font-normal">Pair</th>
-                  <th className="annotate p-3 font-normal text-right">Light</th>
-                  <th className="annotate p-3 font-normal text-right">Dark</th>
-                </tr>
-              </thead>
-              <tbody>
-                {MEASURED.map(([label, light, dark]) => (
-                  <tr key={label} className="border-t border-edge-soft">
-                    <td className="p-3">{label}</td>
-                    <td className="p-3 text-right font-mono tabular text-signal">{light}</td>
-                    <td className="p-3 text-right font-mono tabular text-signal">{dark}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p className="max-w-[62ch] text-sm text-fg-muted leading-relaxed">
-            The worst surface differs per mode: in light mode it is the sunken well (dark
-            text on a darker surface), in dark mode the raised plate. Every token above is
-            the value closest to its ground that still hits its target — inside the sRGB
-            gamut, not clipped.
-          </p>
-        </Row>
-      </div>
+      <section className="sheet pb-24 md:pb-32">
+        <p className="annotate">
+          A section is a <code className="font-mono">Block</code>: label on the left,
+          two-tone heading on the right, content below. This page is made of them.
+        </p>
+      </section>
     </div>
   )
 }

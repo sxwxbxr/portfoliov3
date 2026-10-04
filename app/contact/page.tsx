@@ -22,17 +22,17 @@ export default async function Contact() {
     >
       <section className="sheet pb-24 md:pb-32">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_1.6fr]">
-          {/* Left — the facts, seated in a channel */}
+          {/* Left: the facts, as hairline rows */}
           <Section>
-            <div className="well flex flex-col gap-2 p-3 md:p-4">
+            <div className="flex flex-col border-t border-edge-soft">
               <a
                 href={`mailto:${email}`}
-                className="cast-sm group flex items-center gap-3.5 px-4 py-3.5"
+                className="group flex items-center gap-3.5 border-b border-edge-soft py-5"
               >
-                <Mail className="h-4 w-4 shrink-0 text-signal" aria-hidden="true" />
+                <Mail className="h-4 w-4 shrink-0 text-fg-muted" aria-hidden="true" />
                 <span className="flex flex-col gap-0.5">
                   <span className="annotate">{copy.contact.email}</span>
-                  <span className="text-sm font-medium transition-colors duration-150 group-hover:text-signal">
+                  <span className="text-sm text-fg-muted transition-colors duration-150 group-hover:text-fg">
                     {email}
                   </span>
                 </span>
@@ -41,42 +41,42 @@ export default async function Contact() {
               {phone && (
                 <a
                   href={phoneHref}
-                  className="cast-sm group flex items-center gap-3.5 px-4 py-3.5"
+                  className="group flex items-center gap-3.5 border-b border-edge-soft py-5"
                 >
-                  <Phone className="h-4 w-4 shrink-0 text-fg-subtle" aria-hidden="true" />
+                  <Phone className="h-4 w-4 shrink-0 text-fg-muted" aria-hidden="true" />
                   <span className="flex flex-col gap-0.5">
                     <span className="annotate">{copy.contact.phone}</span>
-                    <span className="text-sm font-medium transition-colors duration-150 group-hover:text-signal">
+                    <span className="text-sm text-fg-muted transition-colors duration-150 group-hover:text-fg">
                       {phone}
                     </span>
                   </span>
                 </a>
               )}
 
-              <div className="flex items-center gap-3.5 px-4 py-3.5">
-                <MapPin className="h-4 w-4 shrink-0 text-fg-subtle" aria-hidden="true" />
+              <div className="flex items-center gap-3.5 border-b border-edge-soft py-5">
+                <MapPin className="h-4 w-4 shrink-0 text-fg-muted" aria-hidden="true" />
                 <span className="flex flex-col gap-0.5">
                   <span className="annotate">{copy.contact.location}</span>
-                  <span className="text-sm">{location}</span>
+                  <span className="text-sm text-fg-muted">{location}</span>
                 </span>
               </div>
 
-              <div className="flex items-center gap-3.5 px-4 py-3.5">
-                <Clock className="h-4 w-4 shrink-0 text-fg-subtle" aria-hidden="true" />
+              <div className="flex items-center gap-3.5 border-b border-edge-soft py-5">
+                <Clock className="h-4 w-4 shrink-0 text-fg-muted" aria-hidden="true" />
                 <span className="flex flex-col gap-0.5">
                   <span className="annotate">{copy.contact.responseTime}</span>
-                  <span className="text-sm">{copy.contact.responseValue}</span>
+                  <span className="text-sm text-fg-muted">{copy.contact.responseValue}</span>
                 </span>
               </div>
 
               {(settings.githubUrl || settings.linkedinUrl) && (
-                <div className="flex flex-wrap gap-2 px-4 pb-1 pt-2">
+                <div className="flex flex-wrap gap-2 pt-5">
                   {settings.githubUrl && (
                     <a
                       href={settings.githubUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="control inline-flex items-center gap-2 px-3.5 py-2 text-xs font-medium"
+                      className="control inline-flex items-center gap-2 px-3.5 py-2 text-xs"
                     >
                       <Github className="h-3.5 w-3.5" aria-hidden="true" />
                       {copy.nav.github}
@@ -87,7 +87,7 @@ export default async function Contact() {
                       href={settings.linkedinUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="control inline-flex items-center gap-2 px-3.5 py-2 text-xs font-medium"
+                      className="control inline-flex items-center gap-2 px-3.5 py-2 text-xs"
                     >
                       <Linkedin className="h-3.5 w-3.5" aria-hidden="true" />
                       {copy.nav.linkedin}
@@ -98,9 +98,9 @@ export default async function Contact() {
             </div>
           </Section>
 
-          {/* Right — the form */}
+          {/* Right: the form */}
           <Section delay={0.06}>
-            <div className="cast rim p-6 md:p-8">
+            <div className="cast p-6 md:p-8">
               <ContactForm privacyAvailable={privacyAvailable} />
             </div>
           </Section>

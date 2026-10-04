@@ -61,7 +61,7 @@ export function CursorSpotlight() {
         opacity: 0,
         transition: "opacity 0.4s ease",
         background:
-          "radial-gradient(250px circle at var(--spotlight-x, 50%) var(--spotlight-y, 50%), var(--primary) 0%, transparent 100%)",
+          "radial-gradient(250px circle at var(--spotlight-x, 50%) var(--spotlight-y, 50%), #ffffff 0%, transparent 100%)",
         mixBlendMode: "normal",
       }}
       aria-hidden="true"

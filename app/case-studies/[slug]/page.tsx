@@ -1,8 +1,8 @@
 import Navigation from "../../../components/Navigation"
-import { Section } from "../../../components/PageLayout"
+import { Block } from "@/components/site/Block"
 import { getCaseStudies, getCaseStudyBySlug } from "@/lib/data"
 import Link from "next/link"
-import { ArrowLeft, ArrowRight } from "lucide-react"
+import { ArrowLeft, ChevronRight } from "lucide-react"
 import { notFound } from "next/navigation"
 import { CASE_STUDIES_ENABLED } from "@/lib/features"
 import { copy } from "@/lib/copy"
@@ -47,144 +47,117 @@ export default async function CaseStudy({ params }: CaseStudyPageProps) {
         <section className="sheet flex flex-col gap-6">
           <Link
             href="/case-studies"
-            className="annotate inline-flex items-center gap-1.5 self-start transition-colors duration-150 hover:text-signal"
+            className="annotate inline-flex items-center gap-1.5 self-start transition-colors duration-150 hover:text-fg"
           >
             <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
             {copy.caseStudies.allCaseStudies}
           </Link>
 
-          <h1 className="font-display text-4xl font-bold leading-[1.05] tracking-tight text-balance md:text-5xl lg:text-6xl">
-            {study.title}
-          </h1>
+          <h1 className="display text-balance">{study.title}</h1>
 
-          <p className="text-lg font-medium text-signal">{study.client}</p>
+          <p className="text-xl leading-snug text-fg-muted md:text-2xl">{study.client}</p>
 
-          {/* Facts as seated chips rather than a pipe-separated string —
-              the same treatment /projects/[slug] gives its hero facts. */}
           <div className="flex flex-wrap items-center gap-2">
-            <span className="well-sm annotate px-3 py-1.5">{study.industry}</span>
-            <span className="well-sm annotate px-3 py-1.5">{study.duration}</span>
-            <span className="well-sm annotate px-3 py-1.5">{study.team}</span>
+            <span className="tab text-xs text-fg-muted">{study.industry}</span>
+            <span className="tab text-xs text-fg-muted">{study.duration}</span>
+            <span className="tab text-xs text-fg-muted">{study.team}</span>
           </div>
         </section>
 
         {/* ─── Content ─── */}
-        <section className="sheet flex flex-col gap-6">
+        <div>
           {study.challenge && (
-            <Section>
-              <div className="cast rim flex flex-col gap-3 p-7 md:p-8">
-                <span className="annotate">{copy.projects.challengeEyebrow}</span>
-                <h2 className="font-display text-2xl font-bold tracking-tight">
-                  {copy.projects.challenge}
-                </h2>
-                <p className="measure leading-relaxed text-fg-muted">
-                  {study.challenge}
-                </p>
-              </div>
-            </Section>
+            <Block
+              label={copy.projects.challengeEyebrow}
+              title={copy.projects.challenge}
+              lede={<p>{study.challenge}</p>}
+            />
           )}
 
           {study.solution && (
-            <Section delay={0.1}>
-              <div className="cast rim flex flex-col gap-3 p-7 md:p-8">
-                <span className="annotate">{copy.projects.solutionEyebrow}</span>
-                <h2 className="font-display text-2xl font-bold tracking-tight">
-                  {copy.projects.solution}
-                </h2>
-                <p className="measure leading-relaxed text-fg-muted">
-                  {study.solution}
-                </p>
-              </div>
-            </Section>
+            <Block
+              label={copy.projects.solutionEyebrow}
+              title={copy.projects.solution}
+              lede={<p>{study.solution}</p>}
+            />
           )}
 
           {results.length > 0 && (
-            <Section delay={0.2}>
-              <div className="flex flex-col gap-5">
-                <div className="flex flex-col gap-2">
-                  <span className="annotate">
-                    {copy.projects.resultsEyebrow(results.length)}
-                  </span>
-                  <h2 className="font-display text-2xl font-bold tracking-tight">
-                    {copy.projects.results}
-                  </h2>
-                </div>
-                <ol className="well flex flex-col gap-2 p-3 md:p-4">
-                  {results.map((result, index) => (
-                    <li
-                      key={index}
-                      className="cast-sm flex items-start gap-4 px-4 py-3.5"
-                    >
-                      <span className="annotate mt-0.5 shrink-0">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                      <span className="text-sm leading-relaxed">{result}</span>
-                    </li>
-                  ))}
-                </ol>
-              </div>
-            </Section>
+            <Block
+              label={copy.projects.resultsEyebrow(results.length)}
+              title={copy.projects.results}
+            >
+              <ol className="border-t border-edge-soft">
+                {results.map((result, index) => (
+                  <li
+                    key={index}
+                    className="flex items-start gap-4 border-b border-edge-soft py-5"
+                  >
+                    <span className="annotate mt-0.5 shrink-0">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span className="leading-relaxed text-fg-muted">{result}</span>
+                  </li>
+                ))}
+              </ol>
+            </Block>
           )}
 
           {/* Testimonial — only show if author and company are filled in. */}
           {study.testimonialQuote &&
             study.testimonialAuthor.trim() &&
             study.testimonialCompany.trim() && (
-              <Section delay={0.3}>
-                <div className="cast rim flex flex-col gap-6 p-7 md:p-8">
-                  <blockquote className="font-display text-xl leading-relaxed md:text-2xl">
+              <section className="sheet pb-18 md:pb-24">
+                <div className="cast flex flex-col gap-6 p-6 md:p-7">
+                  <blockquote className="text-xl leading-relaxed md:text-2xl">
                     &ldquo;{study.testimonialQuote}&rdquo;
                   </blockquote>
                   <div className="flex flex-col gap-0.5">
-                    <p className="font-semibold">{study.testimonialAuthor}</p>
+                    <p>{study.testimonialAuthor}</p>
                     <p className="annotate">{study.testimonialCompany}</p>
                   </div>
                 </div>
-              </Section>
+              </section>
             )}
 
           {technologies.length > 0 && (
-            <Section delay={0.4}>
-              <div className="flex flex-col gap-3">
-                <span className="annotate">{copy.caseStudies.technologies}</span>
-                <div className="flex flex-wrap gap-2">
-                  {technologies.map((tech) => (
-                    <span
-                      key={tech}
-                      className="well-sm px-2.5 py-1 font-mono text-xs text-fg-muted"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
+            <Block
+              label={copy.caseStudies.technologies}
+              title={copy.caseStudies.builtWith}
+              sub={copy.caseStudies.builtWithSub}
+            >
+              <div className="flex flex-wrap gap-2">
+                {technologies.map((tech) => (
+                  <span key={tech} className="tab text-xs text-fg-muted">
+                    {tech}
+                  </span>
+                ))}
               </div>
-            </Section>
+            </Block>
           )}
-        </section>
+        </div>
 
         {/* ─── Pager ─── */}
-        <section className="sheet pb-8">
+        <section className="sheet pb-24">
           <div className="flex flex-col items-stretch gap-4 md:flex-row md:items-center md:justify-between">
             <Link
               href="/case-studies"
-              className="control inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium md:self-start"
+              className="control inline-flex items-center gap-2 py-2.5 pr-5 pl-4 text-sm md:self-start"
             >
-              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+              <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
               {copy.caseStudies.allCaseStudies}
             </Link>
 
             {nextStudy && nextStudy.slug !== study.slug && (
               <Link
                 href={`/case-studies/${nextStudy.slug}`}
-                className="cast rim group flex flex-col gap-1 p-5 transition-transform duration-150 ease-out hover:-translate-y-0.5 motion-reduce:transform-none md:min-w-[20rem] md:text-right"
+                className="control inline-flex items-center justify-between gap-1.5 py-2.5 pr-3 pl-5 text-sm"
               >
-                <span className="annotate inline-flex items-center gap-1.5 md:self-end">
-                  {copy.caseStudies.nextCaseStudy}
-                  <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                </span>
-                <span className="font-display text-lg font-semibold transition-colors duration-150 group-hover:text-signal">
+                <span>
+                  <span className="text-fg-muted">{copy.caseStudies.nextCaseStudy}: </span>
                   {nextStudy.title}
                 </span>
+                <ChevronRight className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
               </Link>
             )}
           </div>

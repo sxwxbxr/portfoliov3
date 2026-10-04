@@ -1,7 +1,8 @@
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowUpRight } from "lucide-react"
+import { ChevronRight } from "lucide-react"
 import PageLayout, { Section } from "../../components/PageLayout"
+import { Block } from "../../components/site/Block"
 import { SkillGroups, groupByCategory, type SkillRow } from "../../components/SkillGroups"
 import { getEducationEntries, getSkills } from "@/lib/data"
 import { resolveImage } from "@/lib/project-image"
@@ -37,7 +38,7 @@ export default async function About() {
       subtitle={copy.about.subtitle}
     >
       {/* ─── Bio ─── */}
-      <Section className="sheet pb-20 md:pb-28">
+      <Section className="sheet pb-18 md:pb-24">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-[1.6fr_1fr]">
           <div className="measure flex flex-col gap-5">
             {copy.about.bio.map((paragraph, i) => (
@@ -68,14 +69,14 @@ export default async function About() {
               </div>
             )}
 
-            <dl className="cast rim flex flex-col gap-3 p-6">
+            <dl className="cast flex flex-col gap-3 p-6">
               {facts.map((fact) => (
                 <div
                   key={fact.label}
                   className="flex items-baseline justify-between gap-4"
                 >
                   <dt className="annotate">{fact.label}</dt>
-                  <dd className="font-mono text-sm">{fact.value}</dd>
+                  <dd className="text-sm">{fact.value}</dd>
                 </div>
               ))}
             </dl>
@@ -88,37 +89,33 @@ export default async function About() {
           rendered the database rows; it was empty and advertised in the nav,
           which is worse than not existing. It lives here now.
 
-          When the skills table has rows they ARE this section — grouped by
-          category, one tray each. When it is empty the hand-written summary
-          below stands in, so filling the admin upgrades the page instead of
-          producing a second section that says the same thing twice. */}
-      <Section id="skills" className="sheet flex flex-col gap-8 py-20 md:py-28">
-        <div className="flex flex-col gap-2">
-          <span className="annotate">
-            {hasSkills
-              ? copy.about.skillsEyebrow(skillGroupCount, skills.length)
-              : copy.about.expertiseEyebrow(expertise.length)}
-          </span>
-          <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
-            {copy.about.expertise}
-          </h2>
-        </div>
-
+          When the skills table has rows they ARE this section, grouped by
+          category. When it is empty the hand-written summary below stands in,
+          so filling the admin upgrades the page instead of producing a second
+          section that says the same thing twice. */}
+      <Block
+        id="skills"
+        label={
+          hasSkills
+            ? copy.about.skillsEyebrow(skillGroupCount, skills.length)
+            : copy.about.expertiseEyebrow(expertise.length)
+        }
+        title={copy.about.expertise}
+        sub={copy.about.expertiseSub}
+      >
         {hasSkills ? (
           <SkillGroups skills={skills as SkillRow[]} />
         ) : (
-          <div className="flex flex-col gap-4">
+          <div className="border-t border-edge-soft">
             {expertise.map((area) => (
-              <div key={area.category} className="cast rim def-grid p-6">
-                <h3 className="font-display text-sm font-semibold md:text-base">
-                  {area.category}
-                </h3>
+              <div
+                key={area.category}
+                className="def-grid border-b border-edge-soft py-5"
+              >
+                <h3 className="text-lg tracking-tight">{area.category}</h3>
                 <div className="flex flex-wrap gap-2">
                   {area.skills.map((skill) => (
-                    <span
-                      key={skill}
-                      className="well-sm px-2.5 py-1 font-mono text-xs text-fg-muted"
-                    >
+                    <span key={skill} className="tab text-xs text-fg-muted">
                       {skill}
                     </span>
                   ))}
@@ -127,27 +124,22 @@ export default async function About() {
             ))}
           </div>
         )}
-      </Section>
+      </Block>
 
       {/* ─── Education ─── */}
       {education.length > 0 && (
-        <Section className="sheet flex flex-col gap-8 py-20 md:py-28">
-          <div className="flex flex-col gap-2">
-            <span className="annotate">
-              {copy.about.educationEyebrow(education.length)}
-            </span>
-            <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
-              {copy.about.education}
-            </h2>
-          </div>
-
-          <div className="well flex flex-col gap-2 p-3 md:p-4">
+        <Block
+          label={copy.about.educationEyebrow(education.length)}
+          title={copy.about.education}
+          sub={copy.about.educationSub}
+        >
+          <div className="border-t border-edge-soft">
             {education.map((edu) => (
               <div
                 key={edu.id}
-                className="cast-sm flex flex-col gap-1 px-4 py-3.5 md:flex-row md:items-center"
+                className="flex flex-col gap-1 border-b border-edge-soft py-5 md:flex-row md:items-baseline md:gap-6"
               >
-                <span className="font-semibold md:flex-1">{edu.title}</span>
+                <span className="md:flex-1">{edu.title}</span>
                 {edu.institution && (
                   <span className="text-sm text-fg-muted md:flex-1">
                     {edu.institution}
@@ -157,29 +149,24 @@ export default async function About() {
               </div>
             ))}
           </div>
-        </Section>
+        </Block>
       )}
 
       {/* ─── Connect ─── */}
-      <Section className="sheet pb-24 md:pb-32">
-        <div className="cast rim flex flex-col items-start justify-between gap-6 p-8 md:flex-row md:items-center md:p-10">
-          <div className="flex flex-col gap-2">
-            <h2 className="font-display text-2xl font-bold tracking-tight md:text-3xl">
-              {copy.about.ctaTitle}
-            </h2>
-            <p className="text-sm text-fg-muted">{copy.about.ctaBody}</p>
-          </div>
-          <div className="flex flex-wrap items-center gap-3">
-            <Link
-              href="/contact"
-              className="control control-primary inline-flex items-center gap-2 px-5 py-3 text-sm font-medium"
-            >
-              {copy.about.getInTouch}
-              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
-          </div>
-        </div>
-      </Section>
+      <Block
+        label={copy.about.getInTouch}
+        title={copy.about.ctaTitle}
+        sub={copy.about.ctaBody}
+        aside={
+          <Link
+            href="/contact"
+            className="control control-primary inline-flex items-center gap-1 self-start py-2.5 pr-4 pl-5 text-sm"
+          >
+            {copy.about.getInTouch}
+            <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
+          </Link>
+        }
+      />
     </PageLayout>
   )
 }

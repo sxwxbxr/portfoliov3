@@ -10,8 +10,8 @@ type SkillDetail = { description: string; relatedProjects: string[] }
 interface SkillPopoverProps {
   skill: { category: string; name: string; detail: string; level: string }
   /**
-   * Retained for API compatibility with the call site. The seats now sit in a
-   * grid inside a sunken tray, so there is no leading divider to suppress.
+   * Retained for API compatibility with the call site. Rows are separated by
+   * bottom hairlines, so there is no leading divider to suppress.
    */
   isFirst: boolean
 }
@@ -66,13 +66,13 @@ export function SkillPopover({ skill }: SkillPopoverProps) {
 
   return (
     // Keep this seat in sync with the non-AI branch in app/skills/page.tsx.
-    <li className="cast-sm flex flex-col gap-1.5 px-4 py-3.5">
+    <li className="flex flex-col gap-1.5 border-b border-edge-soft py-4">
       <div className="flex items-baseline justify-between gap-3">
         <Popover open={open} onOpenChange={handleOpenChange}>
           <PopoverTrigger asChild>
             <button
               type="button"
-              className="group inline-flex items-center gap-1.5 text-left font-semibold transition-colors duration-150 hover:text-signal"
+              className="group inline-flex items-center gap-1.5 text-left transition-colors duration-150 hover:text-fg-muted"
             >
               {skill.name}
               <ChevronDown
@@ -85,15 +85,15 @@ export function SkillPopover({ skill }: SkillPopoverProps) {
             </button>
           </PopoverTrigger>
 
-          {/* components/ui/popover.tsx now carries `.cast` itself, so the
-              content element IS the plate — no neutralising wrapper needed. */}
+          {/* components/ui/popover.tsx carries `.cast` itself, so the
+              content element IS the card, no wrapper needed. */}
           <PopoverContent
             align="start"
-            className="rim flex w-80 flex-col gap-3 p-5"
+            className="flex w-80 flex-col gap-3 p-5"
             data-lenis-prevent
           >
               <div className="flex items-start justify-between gap-3">
-                <p className="font-display text-sm font-semibold tracking-tight">
+                <p className="text-sm tracking-tight">
                   {skill.name}
                 </p>
                 <button
@@ -107,9 +107,9 @@ export function SkillPopover({ skill }: SkillPopoverProps) {
               </div>
 
               {loading && !detail ? (
-                // Bars milled into the plate, matching DeepDiveContent and the
-                // contact-form analysis. ui/skeleton's `bg-accent animate-pulse`
-                // is a utility-layer fill that paints over the recess.
+                // Placeholder bars, matching DeepDiveContent and the contact-form
+                // analysis. ui/skeleton's `bg-accent animate-pulse` is a
+                // utility-layer fill that would paint over the well.
                 <div role="status" className="flex flex-col gap-2">
                   <span className="sr-only">{copy.about.skillDetailLoading}</span>
                   <div className="well-sm h-3 w-full" aria-hidden="true" />
@@ -125,7 +125,7 @@ export function SkillPopover({ skill }: SkillPopoverProps) {
                       {detail.relatedProjects.map((project) => (
                         <span
                           key={project}
-                          className="well-sm px-2.5 py-1 font-mono text-xs text-fg-muted"
+                          className="tab text-xs text-fg-muted"
                         >
                           {project}
                         </span>

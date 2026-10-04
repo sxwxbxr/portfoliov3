@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { ArrowLeft } from "lucide-react"
+import { ChevronRight } from "lucide-react"
 import Navigation from "@/components/Navigation"
 import { copy } from "@/lib/copy"
 
@@ -9,23 +9,21 @@ export default function NotFound() {
       <Navigation />
 
       <div className="sheet pt-32 pb-24">
-        {/* One object on an otherwise empty ground: the page that is missing
-            is replaced by a plate that plainly is not. */}
-        <div className="cast rim flex max-w-2xl flex-col items-start gap-5 p-8 md:p-12">
+        <div className="flex max-w-2xl flex-col items-start gap-6">
           <span className="tab annotate">{copy.notFound.code}</span>
 
-          <h1 className="font-display text-4xl md:text-5xl font-bold tracking-tight text-balance">
+          <h1 className="display text-balance">
             {copy.notFound.title}
           </h1>
 
-          <p className="measure leading-relaxed text-fg-muted">{copy.notFound.body}</p>
+          <p className="lede measure">{copy.notFound.body}</p>
 
           <Link
             href="/"
-            className="control inline-flex items-center gap-2 px-5 py-3 text-sm font-medium"
+            className="control control-primary inline-flex items-center gap-2 py-2.5 pr-4 pl-5 text-sm"
           >
-            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             {copy.notFound.home}
+            <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
         </div>
       </div>
