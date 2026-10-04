@@ -112,11 +112,17 @@ export function PricingBlock({ pkg }: { pkg: Package }) {
                       {money(amount)}
                     </p>
                     <p className="annotate mt-1">
-                      {isOneTime
-                        ? copy.packages.oneTime
-                        : period === "monthly"
-                          ? copy.packages.perMonth
-                          : copy.packages.perYear}
+                      {tier.perSeat
+                        ? isOneTime
+                          ? copy.packages.perSeatOneTime
+                          : period === "monthly"
+                            ? copy.packages.perSeatMonth
+                            : copy.packages.perSeatYear
+                        : isOneTime
+                          ? copy.packages.oneTime
+                          : period === "monthly"
+                            ? copy.packages.perMonth
+                            : copy.packages.perYear}
                     </p>
                     {saved > 0 && (
                       <p className="mt-2 text-sm text-fg-muted">
@@ -132,7 +138,9 @@ export function PricingBlock({ pkg }: { pkg: Package }) {
               <ul className="flex flex-col gap-2.5 text-sm text-fg-muted">
                 <li className="flex items-center gap-2">
                   <Check className="h-3.5 w-3.5 shrink-0 text-fg-muted" aria-hidden="true" />
-                  {copy.packages.seats(tier.seats)}
+                  {tier.perSeat
+                    ? copy.packages.seatRange(tier.seats)
+                    : copy.packages.seats(tier.seats)}
                 </li>
                 <li className="flex items-center gap-2">
                   {tier.support ? (

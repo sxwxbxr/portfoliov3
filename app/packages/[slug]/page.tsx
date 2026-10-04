@@ -50,13 +50,14 @@ function structuredData(pkg: Package) {
           ? "https://schema.org/InStock"
           : "https://schema.org/PreOrder",
     }
+    const per = tier.perSeat ? ", per person" : ""
     const out: Record<string, unknown>[] = []
     if (tier.monthly !== undefined)
-      out.push({ ...base, name: `${tier.name} (monthly)`, price: tier.monthly })
+      out.push({ ...base, name: `${tier.name} (monthly${per})`, price: tier.monthly })
     if (tier.yearly !== undefined)
-      out.push({ ...base, name: `${tier.name} (yearly)`, price: tier.yearly })
+      out.push({ ...base, name: `${tier.name} (yearly${per})`, price: tier.yearly })
     if (tier.oneTime !== undefined)
-      out.push({ ...base, name: `${tier.name} (one-time)`, price: tier.oneTime })
+      out.push({ ...base, name: `${tier.name} (one-time${per})`, price: tier.oneTime })
     return out
   })
 
