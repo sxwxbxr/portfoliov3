@@ -22,7 +22,7 @@ export default async function Projects() {
     >
       <section className="sheet flex flex-col gap-10 pb-24 md:pb-32">
         {withImages.length > 0 ? (
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {withImages.map((project, i) => (
               <ProjectListItem
                 key={project.slug}

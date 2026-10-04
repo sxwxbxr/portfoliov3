@@ -21,7 +21,7 @@ export default async function CaseStudies() {
     >
       <section className="sheet flex flex-col gap-10 pb-24 md:pb-32">
         {caseStudies.length > 0 ? (
-          <div className="grid gap-3 md:grid-cols-2">
+          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
             {caseStudies.map((study, i) => (
               <Section key={study.slug} delay={i * 0.04} className="h-full">
                 <Link

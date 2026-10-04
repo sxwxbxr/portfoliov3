@@ -236,7 +236,7 @@ export default function HomeContent({
           }
         >
           {selectedProjects.length > 0 ? (
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
               {selectedProjects.map((project, i) => (
                 <ProjectListItem
                   key={project.slug}
@@ -258,7 +258,7 @@ export default function HomeContent({
           title={copy.home.expertiseTitle}
           sub={copy.home.expertiseSub}
         >
-          <Stagger className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <Stagger className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
             {expertise.map((area) => (
               <motion.div
                 key={area.category}
