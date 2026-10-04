@@ -23,6 +23,11 @@ const priceTier = z.object({
   oneTime: z.number().nonnegative().optional(),
   /** Maximum number of people covered by one licence. */
   seats: z.number().int().positive(),
+  /**
+   * Prices are per person (Polar seat pricing): the buyer picks 1..`seats`
+   * seats at checkout and pays the price once per seat.
+   */
+  perSeat: z.boolean().default(false),
   support: z.boolean(),
   highlighted: z.boolean().default(false),
   /**
