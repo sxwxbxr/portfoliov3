@@ -26,9 +26,11 @@ const LANES: { key: "work" | "education"; label: string }[] = [
  * here — an EFZ is a job and a school at once. Flattening them would hide the
  * only thing this chart exists to show.
  *
- * Bars are revealed with clip-path, never scaleX: they carry a text label, and
- * scaling a bar horizontally squashes and stretches its own contents for the
- * length of the animation.
+ * Each entry is a hairline rule with its title underneath, laid out along the
+ * time axis. The rule brightens on hover, and a white dot marks the current
+ * entry. Rules are revealed with clip-path, never scaleX: they carry a text
+ * label, and scaling horizontally squashes the label for the length of the
+ * animation.
  *
  * The bars are buttons, not decoration. Each one moves focus to its entry
  * below, so the chart is a way to navigate the page rather than a picture of
@@ -51,7 +53,7 @@ export function CareerTimeline({ timeline, activeId, onActivate, onSelect }: Pro
       <div className="overflow-x-auto pb-1">
         <div className="min-w-[44rem]">
           <div
-            className="well relative flex flex-col gap-3 p-4 md:p-5"
+            className="relative flex flex-col gap-4 border-y border-edge-soft px-4 py-5 md:px-5"
             role="group"
             aria-label={copy.career.timelineLabel(timeline.firstYear, timeline.lastYear)}
           >
@@ -67,7 +69,7 @@ export function CareerTimeline({ timeline, activeId, onActivate, onSelect }: Pro
               ))}
             </div>
 
-            {/* Today. The one place the accent appears on the axis itself. */}
+            {/* Today: a single white line across both lanes. */}
             {todayAt !== null && (
               <motion.div
                 className="pointer-events-none absolute inset-y-0 z-10 w-px bg-signal"
@@ -87,7 +89,7 @@ export function CareerTimeline({ timeline, activeId, onActivate, onSelect }: Pro
               return (
                 <div key={lane.key} className="relative flex flex-col gap-1.5">
                   <span className="annotate">{lane.label}</span>
-                  <div className="relative h-9">
+                  <div className="relative h-10">
                     {rows.map((entry, i) => (
                       <Bar
                         key={entry.id}
@@ -107,7 +109,7 @@ export function CareerTimeline({ timeline, activeId, onActivate, onSelect }: Pro
             })}
           </div>
 
-          {/* Axis labels sit outside the well so the channel stays clean. */}
+          {/* Axis labels sit under the rules, outside the lanes. */}
           <div className="relative mt-2 h-4 px-4 md:px-5" aria-hidden="true">
             {years.map((year, i) => (
               <span
@@ -157,10 +159,10 @@ function Bar({
       onClick={() => onSelect(entry.id)}
       aria-label={copy.career.barLabel(entry.title, entry.subtitle, entry.period)}
       className={[
-        "absolute inset-y-0 flex items-center overflow-hidden rounded-md px-2.5 text-left",
-        "transition-[opacity,background-color] duration-150",
-        entry.future ? "well-sm border border-dashed border-edge" : "cast-sm",
-        active ? "ring-2 ring-signal" : "",
+        "absolute inset-y-0 flex items-start overflow-hidden border-t pt-2 pr-2 text-left",
+        "transition-[opacity,border-color] duration-150",
+        entry.future ? "border-dashed" : "",
+        active || entry.current ? "border-fg" : "border-edge",
         dimmed ? "opacity-45" : "opacity-100",
       ].join(" ")}
       style={{ left, width }}
@@ -174,11 +176,17 @@ function Bar({
     >
       <span
         className={[
-          "truncate text-xs font-medium",
-          entry.current ? "text-signal" : entry.future ? "text-fg-subtle" : "text-fg-muted",
+          "flex min-w-0 items-center gap-1.5 text-xs",
+          active || entry.current ? "text-fg" : entry.future ? "text-fg-subtle" : "text-fg-muted",
         ].join(" ")}
       >
-        {entry.title}
+        {entry.current && (
+          <span
+            className="h-1.5 w-1.5 shrink-0 rounded-full bg-signal"
+            aria-hidden="true"
+          />
+        )}
+        <span className="truncate">{entry.title}</span>
       </span>
     </motion.button>
   )

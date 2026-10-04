@@ -25,24 +25,24 @@ export function groupByCategory(skills: SkillRow[]) {
 }
 
 /**
- * Skills grouped by category: one sunken tray per category with each skill
- * seated in it.
+ * Skills grouped by category: a heading per category and one hairline-separated
+ * row per skill.
  *
  * Deliberately no proficiency bars, meters or stars. A self-assessed meter
  * invents a precision the underlying data does not have, and to a technical
  * reader it is the clearest junior signal on a portfolio. The level stays a
- * mono word.
+ * plain word.
  */
 export function SkillGroups({ skills }: { skills: SkillRow[] }) {
   const groups = groupByCategory(skills)
   if (groups.length === 0) return null
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-12">
       {groups.map((group) => (
-        <div key={group.category} className="flex flex-col gap-3">
-          <div className="flex items-baseline justify-between gap-4 px-1">
-            <h3 className="font-display text-lg font-semibold tracking-tight md:text-xl">
+        <div key={group.category} className="flex flex-col gap-2">
+          <div className="flex items-baseline justify-between gap-4 pb-2">
+            <h3 className="text-lg tracking-tight">
               {group.category}
             </h3>
             <span className="annotate">
@@ -50,7 +50,7 @@ export function SkillGroups({ skills }: { skills: SkillRow[] }) {
             </span>
           </div>
 
-          <ul className="well grid gap-2 p-3 sm:grid-cols-2 md:p-4">
+          <ul className="border-t border-edge-soft">
             {group.items.map((skill, i) =>
               AI_FEATURES_ENABLED ? (
                 <SkillPopover
@@ -63,10 +63,10 @@ export function SkillGroups({ skills }: { skills: SkillRow[] }) {
                 // components/skill-explorer/SkillPopover.tsx.
                 <li
                   key={`${skill.category}-${skill.name}-${i}`}
-                  className="cast-sm flex flex-col gap-1.5 px-4 py-3.5"
+                  className="flex flex-col gap-1.5 border-b border-edge-soft py-4"
                 >
                   <div className="flex items-baseline justify-between gap-3">
-                    <p className="font-semibold">{skill.name}</p>
+                    <p>{skill.name}</p>
                     {skill.level && (
                       <span className="annotate shrink-0">{skill.level}</span>
                     )}

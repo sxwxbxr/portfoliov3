@@ -45,12 +45,10 @@ export default function LoginPage() {
       <Navigation />
 
       <div className="flex min-h-screen items-center justify-center px-6 pb-16 pt-24">
-        {/* A single seated card on an empty ground — the only object on the
-            page, so it carries the rim. */}
-        <div className="cast rim flex w-full max-w-[420px] flex-col gap-7 p-7 md:p-8">
+        <div className="cast flex w-full max-w-[420px] flex-col gap-7 p-7 md:p-8">
           <div className="flex flex-col gap-2">
             <span className="tab annotate self-start">{copy.auth.label}</span>
-            <h1 className="font-display text-2xl font-semibold tracking-tight">
+            <h1 className="text-2xl tracking-tight">
               {copy.auth.signInTitle}
             </h1>
             <p className="text-sm text-fg-muted">{copy.auth.signInSubtitle}</p>
@@ -90,7 +88,7 @@ export default function LoginPage() {
             </div>
 
             {error && (
-              <p role="alert" className="well-sm p-3 text-sm text-destructive">
+              <p role="alert" className="text-sm text-destructive">
                 {error}
               </p>
             )}
@@ -98,17 +96,16 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="control control-primary w-full px-5 py-3 text-sm font-medium"
+              className="control control-primary w-full justify-center py-2.5 text-sm"
             >
               {loading ? copy.auth.signingIn : copy.auth.signIn}
             </button>
           </form>
 
-          {/* Sunken base rail closes the card. */}
-          <div className="well-sm px-4 py-3 text-center">
+          <div className="border-t border-edge-soft pt-5 text-center">
             <p className="text-sm text-fg-muted">
               {copy.auth.noAccount}{" "}
-              <Link href="/signup" className="link-underline text-signal">
+              <Link href="/signup" className="link-underline text-fg">
                 {copy.auth.signUp}
               </Link>
             </p>

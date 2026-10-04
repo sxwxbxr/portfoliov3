@@ -1,9 +1,10 @@
 import Link from "next/link"
 import Image from "next/image"
 import { notFound } from "next/navigation"
-import { ArrowLeft, ArrowUpRight, Github } from "lucide-react"
+import { ArrowLeft, ChevronRight, Github } from "lucide-react"
 import { getProjectBySlug, getProjects, getCaseStudyBySlug } from "@/lib/data"
 import Navigation from "../../../components/Navigation"
+import { Block } from "@/components/site/Block"
 import { ProjectDeepDive } from "@/components/project-deepdive/DeepDiveButton"
 import { AI_FEATURES_ENABLED } from "@/lib/features"
 import { resolveImage } from "@/lib/project-image"
@@ -60,6 +61,7 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
     currentIndex >= 0 ? allProjects[(currentIndex + 1) % allProjects.length] : null
 
   const tags = project.tags as string[]
+  const technologies = (study?.technologies as string[] | undefined) ?? []
 
   return (
     <div className="min-h-screen bg-ground">
@@ -70,28 +72,25 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
         <section className="sheet flex flex-col gap-6">
           <Link
             href="/projects"
-            className="annotate inline-flex items-center gap-1.5 self-start hover:text-signal transition-colors duration-150"
+            className="annotate inline-flex items-center gap-1.5 self-start transition-colors duration-150 hover:text-fg"
           >
             <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
             {copy.projects.backToProjects}
           </Link>
 
-          <h1 className="font-display text-4xl font-bold leading-[1.05] tracking-tight text-balance md:text-5xl lg:text-6xl">
-            {project.title}
-          </h1>
+          <h1 className="display text-balance">{project.title}</h1>
 
           {project.shortDescription && (
-            <p className="measure text-lg leading-relaxed text-fg-muted">
+            <p className="measure text-xl leading-snug text-fg-muted md:text-2xl">
               {project.shortDescription}
             </p>
           )}
 
-          {/* Facts as seated chips rather than a pipe-separated string. */}
           <div className="flex flex-wrap items-center gap-2">
-            {client && <span className="well-sm px-3 py-1.5 annotate">{client}</span>}
-            {duration && <span className="well-sm px-3 py-1.5 annotate">{duration}</span>}
+            {client && <span className="tab text-xs text-fg-muted">{client}</span>}
+            {duration && <span className="tab text-xs text-fg-muted">{duration}</span>}
             {tags.map((tag) => (
-              <span key={tag} className="well-sm px-3 py-1.5 font-mono text-xs text-fg-muted">
+              <span key={tag} className="tab text-xs text-fg-muted">
                 {tag}
               </span>
             ))}
@@ -106,10 +105,10 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
                   href={project.demo}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="control control-primary inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium"
+                  className="control control-primary inline-flex items-center gap-1.5 py-2.5 pr-4 pl-5 text-sm"
                 >
                   {copy.projects.viewLive}
-                  <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                  <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
                 </a>
               )}
               {hasRepoLink && (
@@ -117,7 +116,7 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
                   href={project.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="control inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium"
+                  className="control inline-flex items-center gap-2 py-2.5 pr-5 pl-4 text-sm"
                 >
                   <Github className="h-4 w-4" aria-hidden="true" />
                   {copy.projects.sourceCode}
@@ -127,38 +126,40 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
           )}
         </section>
 
-        {/* ─── The screen, recessed into the sheet ─── */}
+        {/* ─── Artwork in a flat card ─── */}
         <section className="sheet">
-          <div className="well relative aspect-[16/9] w-full overflow-hidden">
-            {heroImage ? (
-              <Image
-                src={heroImage}
-                alt={project.title}
-                fill
-                sizes="(min-width: 1200px) 1200px, 100vw"
-                className="object-cover"
-                priority
-              />
-            ) : (
-              <span
-                aria-hidden="true"
-                className="absolute inset-0 flex select-none items-center justify-center font-display font-bold text-fg-subtle/25"
-                style={{ fontSize: "clamp(6rem, 15vw, 14rem)" }}
-              >
-                {project.title.charAt(0)}
-              </span>
-            )}
+          <div className="cast p-3 md:p-4">
+            <div className="relative aspect-[16/9] w-full overflow-hidden rounded-sm bg-well">
+              {heroImage ? (
+                <Image
+                  src={heroImage}
+                  alt={project.title}
+                  fill
+                  sizes="(min-width: 1200px) 1200px, 100vw"
+                  className="object-cover"
+                  priority
+                />
+              ) : (
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-0 flex select-none items-center justify-center text-fg-subtle/25"
+                  style={{ fontSize: "clamp(6rem, 15vw, 14rem)" }}
+                >
+                  {project.title.charAt(0)}
+                </span>
+              )}
+            </div>
           </div>
         </section>
 
-        {/* ─── Content ─── */}
-        <section className="sheet flex flex-col gap-16">
+        {/* ─── Description ─── */}
+        <section className="sheet flex flex-col gap-10">
           <div className="measure flex flex-col gap-4">
             {(descriptionParagraphs.length
               ? descriptionParagraphs
               : [project.description]
             ).map((paragraph, index) => (
-              <p key={index} className="text-lg leading-relaxed">
+              <p key={index} className="lede">
                 {paragraph}
               </p>
             ))}
@@ -172,108 +173,103 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
               techStack={tags}
             />
           )}
+        </section>
 
-          {hasCaseStudyContent && (
-            <div className="flex flex-col gap-6">
-              {challenge && (
-                <div className="cast rim flex flex-col gap-3 p-7 md:p-8">
-                  <span className="annotate">{copy.projects.challengeEyebrow}</span>
-                  <h2 className="font-display text-2xl font-bold tracking-tight">
-                    {copy.projects.challenge}
-                  </h2>
-                  <p className="measure leading-relaxed text-fg-muted">{challenge}</p>
-                </div>
-              )}
+        {/* ─── Case-study blocks ─── */}
+        {hasCaseStudyContent && (
+          <div>
+            {challenge && (
+              <Block
+                label={copy.projects.challengeEyebrow}
+                title={copy.projects.challenge}
+                lede={<p>{challenge}</p>}
+              />
+            )}
 
-              {solution && (
-                <div className="cast rim flex flex-col gap-3 p-7 md:p-8">
-                  <span className="annotate">{copy.projects.solutionEyebrow}</span>
-                  <h2 className="font-display text-2xl font-bold tracking-tight">
-                    {copy.projects.solution}
-                  </h2>
-                  <p className="measure leading-relaxed text-fg-muted">{solution}</p>
-                </div>
-              )}
+            {solution && (
+              <Block
+                label={copy.projects.solutionEyebrow}
+                title={copy.projects.solution}
+                lede={<p>{solution}</p>}
+              />
+            )}
 
-              {results.length > 0 && (
-                <div className="flex flex-col gap-5">
-                  <div className="flex flex-col gap-2">
-                    <span className="annotate">
-                      {copy.projects.resultsEyebrow(results.length)}
-                    </span>
-                    <h2 className="font-display text-2xl font-bold tracking-tight">
-                      {copy.projects.results}
-                    </h2>
-                  </div>
-                  <ol className="well flex flex-col gap-2 p-3 md:p-4">
-                    {results.map((result, index) => (
-                      <li
-                        key={index}
-                        className="cast-sm flex items-start gap-4 px-4 py-3.5"
-                      >
-                        <span className="annotate mt-0.5 shrink-0">
-                          {String(index + 1).padStart(2, "0")}
-                        </span>
-                        <span className="text-sm leading-relaxed">{result}</span>
-                      </li>
-                    ))}
-                  </ol>
-                </div>
-              )}
+            {results.length > 0 && (
+              <Block
+                label={copy.projects.resultsEyebrow(results.length)}
+                title={copy.projects.results}
+              >
+                <ol className="border-t border-edge-soft">
+                  {results.map((result, index) => (
+                    <li
+                      key={index}
+                      className="flex items-start gap-4 border-b border-edge-soft py-5"
+                    >
+                      <span className="annotate mt-0.5 shrink-0">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <span className="leading-relaxed text-fg-muted">{result}</span>
+                    </li>
+                  ))}
+                </ol>
+              </Block>
+            )}
 
-              {study?.testimonialQuote &&
-                study.testimonialAuthor.trim() &&
-                study.testimonialCompany.trim() && (
-                  <div className="cast rim flex flex-col gap-6 p-7 md:p-8">
-                    <blockquote className="font-display text-xl leading-relaxed md:text-2xl">
+            {study?.testimonialQuote &&
+              study.testimonialAuthor.trim() &&
+              study.testimonialCompany.trim() && (
+                <section className="sheet pb-18 md:pb-24">
+                  <div className="cast flex flex-col gap-6 p-6 md:p-7">
+                    <blockquote className="text-xl leading-relaxed md:text-2xl">
                       &ldquo;{study.testimonialQuote}&rdquo;
                     </blockquote>
                     <div className="flex flex-col gap-0.5">
-                      <p className="font-semibold">{study.testimonialAuthor}</p>
+                      <p>{study.testimonialAuthor}</p>
                       <p className="annotate">{study.testimonialCompany}</p>
                     </div>
                   </div>
-                )}
-
-              {study?.technologies && (study.technologies as string[]).length > 0 && (
-                <div className="flex flex-col gap-3">
-                  <span className="annotate">{copy.projects.technologies}</span>
-                  <div className="flex flex-wrap gap-2">
-                    {(study.technologies as string[]).map((tech) => (
-                      <span
-                        key={tech}
-                        className="well-sm px-2.5 py-1 font-mono text-xs text-fg-muted"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+                </section>
               )}
-            </div>
-          )}
-        </section>
+
+            {technologies.length > 0 && (
+              <Block
+                label={copy.projects.technologies}
+                title={copy.projects.builtWith}
+                sub={copy.projects.builtWithSub}
+              >
+                <div className="flex flex-wrap gap-2">
+                  {technologies.map((tech) => (
+                    <span key={tech} className="tab text-xs text-fg-muted">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </Block>
+            )}
+          </div>
+        )}
 
         {/* ─── Pager ─── */}
-        <section className="sheet pb-8">
+        <section className="sheet pb-24">
           <div className="flex flex-col items-stretch gap-4 md:flex-row md:items-center md:justify-between">
             <Link
               href="/projects"
-              className="control inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium md:self-start"
+              className="control inline-flex items-center gap-2 py-2.5 pr-5 pl-4 text-sm md:self-start"
             >
-              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+              <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
               {copy.projects.allProjects}
             </Link>
 
             {nextProject && (
               <Link
                 href={`/projects/${nextProject.slug}`}
-                className="cast rim group flex flex-col gap-1 p-5 transition-transform duration-150 ease-out hover:-translate-y-0.5 motion-reduce:transform-none md:min-w-[20rem] md:text-right"
+                className="control inline-flex items-center justify-between gap-1.5 py-2.5 pr-3 pl-5 text-sm"
               >
-                <span className="annotate">{copy.projects.nextProject}</span>
-                <span className="font-display text-lg font-semibold transition-colors duration-150 group-hover:text-signal">
+                <span>
+                  <span className="text-fg-muted">{copy.projects.nextProject}: </span>
                   {nextProject.title}
                 </span>
+                <ChevronRight className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
               </Link>
             )}
           </div>

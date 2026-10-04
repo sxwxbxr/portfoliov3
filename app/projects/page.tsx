@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { ArrowUpRight } from "lucide-react"
+import { ChevronRight } from "lucide-react"
 import PageLayout from "../../components/PageLayout"
 import { EmptyState } from "../../components/EmptyState"
 import { ProjectListItem } from "../../components/ProjectListItem"
@@ -22,7 +22,7 @@ export default async function Projects() {
     >
       <section className="sheet flex flex-col gap-10 pb-24 md:pb-32">
         {withImages.length > 0 ? (
-          <div className="grid gap-5 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2">
             {withImages.map((project, i) => (
               <ProjectListItem
                 key={project.slug}
@@ -40,10 +40,10 @@ export default async function Projects() {
         {CASE_STUDIES_ENABLED && (
           <Link
             href="/case-studies"
-            className="control inline-flex items-center gap-2 self-start px-4 py-2.5 text-sm font-medium"
+            className="control inline-flex items-center gap-1.5 self-start py-2.5 pr-4 pl-5 text-sm"
           >
             {copy.projects.viewCaseStudies}
-            <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+            <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
         )}
       </section>

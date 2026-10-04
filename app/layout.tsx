@@ -27,7 +27,7 @@ import { copy } from "@/lib/copy"
  * reachable at build time is not a trade worth keeping, especially right
  * after fixing the bug that stopped these faces rendering at all.
  *
- * These are the latin subsets of the same files Google serves, all three
+ * These are the latin subsets of the same files Google serves, all
  * SIL OFL licensed (see app/fonts/OFL.md). They are VARIABLE fonts, so the
  * declared weight ranges cover every step the design uses — which also fixes
  * synthesised weights: the previous config loaded Inter 400 and 500 only,
@@ -40,16 +40,6 @@ const inter = localFont({
   style: "normal",
   display: "swap",
   variable: "--font-inter",
-  preload: true,
-  fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
-})
-
-const spaceGrotesk = localFont({
-  src: "./fonts/SpaceGrotesk-Variable-latin.woff2",
-  weight: "300 700",
-  style: "normal",
-  display: "swap",
-  variable: "--font-space-grotesk",
   preload: true,
   fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
 })
@@ -169,7 +159,7 @@ export default async function RootLayout({
   const structuredData = buildStructuredData(settings)
 
   return (
-    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} antialiased`} suppressHydrationWarning>
+    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} dark antialiased`} suppressHydrationWarning>
       <head>
         <JsonLd data={structuredData} />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
@@ -177,9 +167,8 @@ export default async function RootLayout({
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="icon" href="/favicon.ico" />
         <link rel="manifest" href="/site.webmanifest" />
-        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#1a8a6a" />
-        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0d0d14" />
-        <meta name="color-scheme" content="light dark" />
+        <meta name="theme-color" content="#0a0a0a" />
+        <meta name="color-scheme" content="dark" />
       </head>
       <body className="font-sans">
         {/* Skip to main content — keyboard / screen reader accessibility */}
@@ -190,7 +179,7 @@ export default async function RootLayout({
           {copy.common.skipToContent}
         </a>
         <Suspense fallback={null}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <ThemeProvider attribute="class" forcedTheme="dark" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
             <ScrollProgress />
             <SmoothScroll>
               <div className="flex min-h-screen flex-col">

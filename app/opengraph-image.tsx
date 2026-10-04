@@ -16,8 +16,8 @@ export default async function OpenGraphImage() {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "80px",
-          background: "linear-gradient(135deg, #0d0d14 0%, #1a1a24 100%)",
-          color: "#f5f5f7",
+          background: "#0a0a0a",
+          color: "#ededed",
           fontFamily: "system-ui, sans-serif",
         }}
       >
@@ -27,10 +27,10 @@ export default async function OpenGraphImage() {
               width: 10,
               height: 10,
               borderRadius: "50%",
-              background: "#1a8a6a",
+              background: "#ededed",
             }}
           />
-          <span style={{ fontSize: 22, color: "#a1a1aa", letterSpacing: 1 }}>
+          <span style={{ fontSize: 22, color: "#8f8f8f", letterSpacing: 1 }}>
             sweber.dev
           </span>
         </div>
@@ -39,7 +39,7 @@ export default async function OpenGraphImage() {
           <h1
             style={{
               fontSize: 96,
-              fontWeight: 700,
+              fontWeight: 400,
               letterSpacing: -2,
               lineHeight: 1,
               margin: 0,
@@ -50,7 +50,7 @@ export default async function OpenGraphImage() {
           <p
             style={{
               fontSize: 36,
-              color: "#a1a1aa",
+              color: "#8f8f8f",
               lineHeight: 1.3,
               margin: 0,
               maxWidth: 900,
@@ -67,8 +67,8 @@ export default async function OpenGraphImage() {
             justifyContent: "space-between",
             alignItems: "center",
             fontSize: 22,
-            color: "#71717a",
-            borderTop: "1px solid #27272a",
+            color: "#8f8f8f",
+            borderTop: "1px solid #222222",
             paddingTop: 24,
           }}
         >

@@ -1,5 +1,5 @@
 import type { Certificate } from "./CertificateCard"
-import { formatMonth, getReadableTextColor } from "@/lib/utils"
+import { formatMonth } from "@/lib/utils"
 import { copy } from "@/lib/copy"
 
 const STATUS_LABEL: Record<string, string> = {
@@ -93,10 +93,11 @@ function currentMonthKey() {
 }
 
 /**
- * The roadmap as a milled gantt.
+ * The roadmap as a gantt.
  *
- * Every row is the same object twice over: a sunken channel for the month
- * range, and a raised bar seated in it for the phase. The scale, the "Today"
+ * Every row is the same object twice over: a track for the month range and a
+ * bar placed in it for the phase. White is the in-progress bar; planned bars
+ * are a step lighter than the track. The scale, the "Today"
  * marker and every track share one grid column and one horizontal padding, so
  * a percentage means the same distance in all three — none of the underlying
  * geometry changed, only what the percentages are measured against.
@@ -121,9 +122,9 @@ export default function CertificatesRoadmap({
   const chartMinWidth = 200 + totalMonths * 44
 
   return (
-    <div className="cast rim flex flex-col gap-6 p-6 md:p-8">
+    <div className="cast flex flex-col gap-6 p-6 md:p-8">
       <header className="flex flex-col gap-2 md:flex-row md:items-baseline md:justify-between">
-        <h3 className="font-display text-lg font-semibold tracking-tight md:text-xl">
+        <h3 className="text-lg tracking-tight">
           {copy.education.roadmapHeading(entries.length)}
         </h3>
         <p className="annotate">
@@ -139,7 +140,7 @@ export default function CertificatesRoadmap({
           className="flex flex-col gap-4"
           style={{ minWidth: `${chartMinWidth}px` }}
         >
-          {/* Month scale — a sunken track, current month raised out of it. */}
+          {/* Month scale: hairline cells, the current month lifted a step. */}
           <div className="grid grid-cols-1 items-center gap-2 md:grid-cols-[180px_1fr] md:gap-5">
             <p className="annotate hidden md:block md:text-right">
               {copy.education.roadmapAxis}
@@ -160,14 +161,14 @@ export default function CertificatesRoadmap({
                     className={
                       "flex flex-col gap-0.5 px-1 py-2 " +
                       (isNow
-                        ? "cast-sm"
+                        ? "rounded-sm bg-plate-hi"
                         : "border-r border-edge-soft last:border-r-0")
                     }
                   >
                     <span
                       className={
-                        "font-display text-xs font-semibold tabular " +
-                        (isNow ? "text-signal" : "text-fg")
+                        "text-xs tabular " +
+                        (isNow ? "text-fg" : "text-fg-muted")
                       }
                     >
                       {copy.education.roadmapMonthIndex(i + 1)}
@@ -194,10 +195,10 @@ export default function CertificatesRoadmap({
                   >
                     <span className="tab whitespace-nowrap">
                       <span
-                        className="h-1.5 w-1.5 shrink-0 rounded-full bg-signal-bright"
+                        className="h-1.5 w-1.5 shrink-0 rounded-full bg-signal"
                         aria-hidden="true"
                       />
-                      <span className="annotate text-signal">
+                      <span className="annotate text-fg">
                         {copy.education.roadmapToday}
                       </span>
                     </span>
@@ -212,17 +213,7 @@ export default function CertificatesRoadmap({
             {entries.map(({ cert, startOffset, span, startLabel, endLabel }) => {
               const left = (startOffset / totalMonths) * 100
               const width = (span / totalMonths) * 100
-              const hasAccent = Boolean(cert.accentColor)
               const isCurrent = cert.status === "in-progress"
-              // No fill means the bar keeps the plate of .cast-sm: planned work
-              // is a raised seat, the accent stays with the current thing.
-              const fill =
-                cert.accentColor || (isCurrent ? "var(--signal)" : undefined)
-              const textColor = hasAccent
-                ? getReadableTextColor(cert.accentColor)
-                : isCurrent
-                  ? "var(--signal-fg)"
-                  : undefined
 
               return (
                 <div
@@ -232,8 +223,8 @@ export default function CertificatesRoadmap({
                   <div className="flex flex-col gap-1 md:text-right">
                     <span
                       className={
-                        "font-display text-sm font-semibold tracking-tight " +
-                        (isCurrent ? "text-signal" : "")
+                        "text-sm tracking-tight " +
+                        (isCurrent ? "text-fg" : "text-fg-muted")
                       }
                     >
                       {cert.name}
@@ -251,14 +242,14 @@ export default function CertificatesRoadmap({
                     <div className="relative h-8">
                       <div
                         className={
-                          "cast-sm annotate absolute inset-y-0 flex items-center overflow-hidden px-3 " +
-                          (fill ? "" : "text-fg-muted")
+                          "annotate absolute inset-y-0 flex items-center overflow-hidden rounded-sm px-3 " +
+                          (isCurrent
+                            ? "bg-signal text-signal-fg"
+                            : "bg-plate-hi text-fg-muted")
                         }
                         style={{
                           left: `${left}%`,
                           width: `${width}%`,
-                          background: fill,
-                          color: textColor,
                         }}
                       >
                         <span className="min-w-0 truncate">

@@ -64,23 +64,19 @@ export default function PageLayout({
     <div className="min-h-screen bg-ground">
       <Navigation />
 
-      <div className="pt-32">
+      <div className="pt-36">
         {title && (
-          <header className="sheet pb-14 md:pb-20">
+          <header className="sheet pt-10 pb-16 md:pt-16 md:pb-24">
             <motion.div
-              className="flex flex-col gap-5"
+              className="flex flex-col gap-3"
               initial={reduce ? false : { opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.42, ease: [0.23, 1, 0.32, 1], delay: 0.05 }}
             >
-              {label && (
-                <span className="tab annotate self-start">{label}</span>
-              )}
-              <h1 className="font-display text-4xl md:text-5xl font-bold tracking-tight text-balance">
-                {title}
-              </h1>
+              {label && <span className="annotate mb-3">{label}</span>}
+              <h1 className="display text-balance">{title}</h1>
               {subtitle && (
-                <p className="measure text-lg text-fg-muted leading-relaxed">
+                <p className="measure text-xl leading-snug text-fg-muted md:text-2xl">
                   {subtitle}
                 </p>
               )}

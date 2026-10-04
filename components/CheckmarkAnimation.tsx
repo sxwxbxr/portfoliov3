@@ -20,7 +20,7 @@ interface CheckmarkAnimationProps {
   className?: string
 }
 
-/** The recess the mark is cast into. Same frame for every state. */
+/** The round well the mark sits in. Same frame for every state. */
 function Frame({
   className,
   children,
@@ -123,12 +123,11 @@ export function CheckmarkAnimation({ className }: CheckmarkAnimationProps) {
     }
   }, [hasError, isReady, prefersReducedMotion])
 
-  // Reduced motion, or the player never arrived: the same struck mark, cast
-  // into the recess. No spinner, no dependency, no dev-facing string.
+  // Reduced motion, or the player never arrived: the same same mark in the same frame. No spinner, no dependency, no dev-facing string.
   if (prefersReducedMotion || hasError) {
     return (
       <Frame className={className}>
-        <Check className="h-10 w-10 text-signal" strokeWidth={2.5} />
+        <Check className="h-10 w-10 text-fg" strokeWidth={2.5} />
       </Frame>
     )
   }

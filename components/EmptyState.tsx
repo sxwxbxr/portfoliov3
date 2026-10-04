@@ -33,7 +33,7 @@ export function EmptyState({
     >
       {label && <span className="annotate">{label}</span>}
       {title && (
-        <p className="font-display text-xl font-semibold tracking-tight md:text-2xl">
+        <p className="text-xl tracking-tight md:text-2xl">
           {title}
         </p>
       )}

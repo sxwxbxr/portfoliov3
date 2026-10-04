@@ -80,13 +80,13 @@ export function ProjectDeepDive({
         onClick={toggle}
         aria-expanded={open}
         aria-controls={panelId}
-        className="control inline-flex items-center gap-2.5 self-start px-4 py-2.5 text-sm font-medium"
+        className="control inline-flex items-center gap-2 self-start py-2.5 pr-3 pl-4 text-sm"
       >
-        <Terminal className="h-4 w-4 text-signal" aria-hidden="true" />
+        <Terminal className="h-4 w-4 text-fg-muted" aria-hidden="true" />
         {copy.deepDive.toggle}
         <ChevronDown
           className={
-            "h-4 w-4 transition-transform duration-200 motion-reduce:transition-none " +
+            "h-3.5 w-3.5 transition-transform duration-200 motion-reduce:transition-none " +
             (open ? "rotate-180" : "")
           }
           aria-hidden="true"
@@ -101,13 +101,11 @@ export function ProjectDeepDive({
             animate={prefersReducedMotion ? { opacity: 1 } : { height: "auto", opacity: 1 }}
             exit={prefersReducedMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: EASE }}
-            // The collapse needs overflow-hidden, which would otherwise crop
-            // the plate's cast shadow flat. The gutter gives the shadow room
-            // and the negative margin keeps the plate aligned with the column.
-            className="-mx-4 w-[calc(100%+2rem)] overflow-hidden"
+            // The collapse needs overflow-hidden.
+            className="overflow-hidden"
           >
-            <div className="px-4 pb-4">
-              <div className="cast rim flex flex-col gap-4 p-6 md:p-8">
+            <div>
+              <div className="cast flex flex-col gap-4 p-6 md:p-7">
                 <span className="annotate">{copy.deepDive.generated}</span>
                 <DeepDiveContent
                   content={content}

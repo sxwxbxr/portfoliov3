@@ -1,4 +1,4 @@
-import { ArrowUpRight } from "lucide-react"
+import { ChevronRight } from "lucide-react"
 import { certificates } from "@/lib/schema"
 import { formatMonth } from "@/lib/utils"
 import { copy } from "@/lib/copy"
@@ -7,12 +7,11 @@ import type { InferSelectModel } from "drizzle-orm"
 export type Certificate = InferSelectModel<typeof certificates>
 
 /**
- * A certificate as a cast tile.
+ * A certificate as a flat card.
  *
- * Status is a seated chip rather than a coloured pill: the accent is rationed
- * to the one certificate that is actually in motion, so a page full of planned
- * credentials does not read as a page full of alerts. The inlay along the top
- * edge carries the per-certificate colour from the database when one is set.
+ * Status is a small outlined tag with a dot. White marks the one certificate
+ * that is actually in motion, so a page full of planned credentials does not
+ * read as a page full of alerts.
  */
 const STATUS_META: Record<
   string,
@@ -25,8 +24,8 @@ const STATUS_META: Record<
   },
   "in-progress": {
     label: copy.education.statusInProgress,
-    dot: "bg-signal-bright",
-    text: "text-signal",
+    dot: "bg-signal",
+    text: "text-fg",
   },
   planned: {
     label: copy.education.statusPlanned,
@@ -40,12 +39,6 @@ export default function CertificateCard({ cert }: { cert: Certificate }) {
   const isLifetime =
     cert.status === "completed" && Boolean(cert.issueDate) && !cert.expiryDate
 
-  // The inlay is the only place a certificate's own colour appears. Without
-  // one, in-progress gets the accent and everything else gets a hairline.
-  const inlay =
-    cert.accentColor ||
-    (cert.status === "in-progress" ? "var(--signal)" : "var(--edge-soft)")
-
   const hasStats =
     cert.estimatedHours > 0 ||
     Boolean(cert.estimatedCost) ||
@@ -55,15 +48,9 @@ export default function CertificateCard({ cert }: { cert: Certificate }) {
   const hasFooter = Boolean(cert.credentialUrl || cert.issueDate)
 
   return (
-    <article className="cast rim relative flex h-full flex-col gap-5 overflow-hidden p-6 md:p-7">
-      <span
-        className="absolute inset-x-0 top-0 h-[3px]"
-        style={{ background: inlay }}
-        aria-hidden="true"
-      />
-
+    <article className="cast flex h-full flex-col gap-5 p-6 md:p-7">
       <header className="flex flex-wrap items-center gap-2">
-        <span className="well-sm inline-flex items-center gap-2 px-2.5 py-1">
+        <span className="tab">
           <span
             className={`h-1.5 w-1.5 shrink-0 rounded-full ${status.dot}`}
             aria-hidden="true"
@@ -71,8 +58,8 @@ export default function CertificateCard({ cert }: { cert: Certificate }) {
           <span className={`annotate ${status.text}`}>{status.label}</span>
         </span>
         {isLifetime && (
-          <span className="well-sm inline-flex items-center px-2.5 py-1">
-            <span className="annotate text-signal">
+          <span className="tab">
+            <span className="annotate text-fg">
               &#8734; {copy.education.lifetime}
             </span>
           </span>
@@ -80,7 +67,7 @@ export default function CertificateCard({ cert }: { cert: Certificate }) {
       </header>
 
       <div className="flex flex-col gap-1.5">
-        <h3 className="font-display text-xl font-semibold tracking-tight md:text-2xl">
+        <h3 className="text-lg tracking-tight">
           {cert.name}
         </h3>
         {cert.fullTitle && (
@@ -93,13 +80,13 @@ export default function CertificateCard({ cert }: { cert: Certificate }) {
         )}
       </div>
 
-      {/* Four facts, seated in a recess instead of ruled off by borders. */}
+      {/* Four facts in a hairline-divided row. */}
       {hasStats && (
-        <dl className="well grid grid-cols-2 gap-2 p-2 sm:grid-cols-4">
+        <dl className="grid grid-cols-2 gap-x-4 gap-y-3 border-y border-edge-soft py-4 sm:grid-cols-4">
           {cert.plannedStart && (
-            <div className="cast-sm flex flex-col gap-1 px-3 py-2.5">
+            <div className="flex flex-col gap-1">
               <dt className="annotate">{copy.education.certWindow}</dt>
-              <dd className="font-display text-sm font-semibold tabular">
+              <dd className="text-sm tabular">
                 {copy.education.certWindowValue(
                   formatMonth(cert.plannedStart),
                   cert.plannedEnd ? formatMonth(cert.plannedEnd) : ""
@@ -108,29 +95,29 @@ export default function CertificateCard({ cert }: { cert: Certificate }) {
             </div>
           )}
           {cert.estimatedHours > 0 && (
-            <div className="cast-sm flex flex-col gap-1 px-3 py-2.5">
+            <div className="flex flex-col gap-1">
               <dt className="annotate">{copy.education.certHours}</dt>
-              <dd className="font-display text-sm font-semibold tabular">
+              <dd className="text-sm tabular">
                 ~{cert.estimatedHours}h
               </dd>
             </div>
           )}
           {cert.estimatedCost && (
-            <div className="cast-sm flex flex-col gap-1 px-3 py-2.5">
+            <div className="flex flex-col gap-1">
               <dt className="annotate">{copy.education.certCost}</dt>
-              <dd className="font-display text-sm font-semibold tabular">
+              <dd className="text-sm tabular">
                 {cert.estimatedCost}
               </dd>
             </div>
           )}
           {cert.difficulty > 0 && (
-            <div className="cast-sm flex flex-col gap-1 px-3 py-2.5">
+            <div className="flex flex-col gap-1">
               <dt className="annotate">{copy.education.certDifficulty}</dt>
               <dd
-                className="font-display text-sm font-semibold"
+                className="text-sm"
                 aria-label={copy.education.certDifficultyAria(cert.difficulty)}
               >
-                <span className="text-signal">
+                <span className="text-fg">
                   {"★".repeat(cert.difficulty)}
                 </span>
                 <span className="text-fg-subtle/40">
@@ -151,7 +138,7 @@ export default function CertificateCard({ cert }: { cert: Certificate }) {
       {cert.skills.length > 0 && (
         <ul className="flex flex-wrap gap-2">
           {cert.skills.map((skill) => (
-            <li key={skill} className="well-sm annotate px-2.5 py-1 text-fg-muted">
+            <li key={skill} className="tab text-xs text-fg-muted">
               {skill}
             </li>
           ))}
@@ -165,7 +152,7 @@ export default function CertificateCard({ cert }: { cert: Certificate }) {
             {cert.whyPoints.map((point) => (
               <li key={point} className="flex items-start gap-3 text-sm">
                 <span
-                  className="mt-2 h-px w-3 shrink-0 bg-edge"
+                  className="mt-2.5 h-px w-3 shrink-0 bg-edge"
                   aria-hidden="true"
                 />
                 <span className="leading-relaxed text-fg-muted">{point}</span>
@@ -182,10 +169,10 @@ export default function CertificateCard({ cert }: { cert: Certificate }) {
               href={cert.credentialUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="control inline-flex items-center gap-2 px-3.5 py-2 text-xs font-medium"
+              className="control inline-flex items-center gap-1 py-2 pr-3 pl-4 text-xs"
             >
               {copy.education.certViewCredential}
-              <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+              <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
             </a>
           ) : (
             <p className="annotate">

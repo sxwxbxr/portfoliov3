@@ -1,8 +1,9 @@
 export const revalidate = 86400
 
 import Link from "next/link"
-import { ArrowUpRight } from "lucide-react"
-import PageLayout, { Section } from "../../components/PageLayout"
+import { ChevronRight } from "lucide-react"
+import PageLayout from "../../components/PageLayout"
+import { Block } from "../../components/site/Block"
 import { EmptyState } from "../../components/EmptyState"
 import { CareerExplorer } from "@/components/career/CareerExplorer"
 import CertificateCard from "@/components/certificates/CertificateCard"
@@ -48,71 +49,58 @@ export default async function Career() {
       {/* ─── Timeline + entries ────────────────────────────────────────
           One component, because the chart and the entries share a selection:
           the chart is an index into the page rather than a picture of it. */}
-      <section className="sheet flex flex-col gap-8 pb-20 md:pb-28">
-        {timeline.entries.length === 0 ? (
+      {timeline.entries.length === 0 ? (
+        <section className="sheet pb-18 md:pb-24">
           <EmptyState label={copy.career.empty} title={copy.career.emptyTitle}>
             {copy.career.emptyBody}
           </EmptyState>
-        ) : (
-          <>
-            <Section className="flex flex-col gap-2">
-              <span className="annotate">
-                {copy.career.timelineEyebrow(timeline.firstYear, timeline.lastYear)}
-              </span>
-              <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
-                {copy.career.timelineTitle}
-              </h2>
-              <p className="measure text-sm text-fg-muted">
-                {copy.career.timelineHint}
-              </p>
-            </Section>
-
-            <CareerExplorer timeline={timeline} />
-          </>
-        )}
-      </section>
+        </section>
+      ) : (
+        <Block
+          flush
+          label={copy.career.timelineEyebrow(timeline.firstYear, timeline.lastYear)}
+          title={copy.career.timelineTitle}
+          sub={copy.career.timelineSub}
+          lede={<p>{copy.career.timelineHint}</p>}
+        >
+          <CareerExplorer timeline={timeline} />
+        </Block>
+      )}
 
       {/* ─── Certificates ─── */}
       {certificates.length > 0 && (
-        <section className="sheet flex flex-col gap-8 pb-20 md:pb-28">
-          <Section className="flex flex-col gap-2">
-            <span className="annotate">
-              {copy.education.credentialsEyebrow(certificates.length)}
-            </span>
-            <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
-              {copy.education.credentials}
-            </h2>
-          </Section>
-
-          {completed.length + inProgress.length > 0 && (
-            <dl className="grid gap-4 sm:grid-cols-3">
-              {[
-                { label: copy.education.statusCompleted, value: completed.length },
-                { label: copy.education.statusInProgress, value: inProgress.length },
-                { label: copy.education.statusPlanned, value: planned.length },
-              ].map((stat) => (
-                <div key={stat.label} className="cast rim flex flex-col-reverse gap-1 p-5">
-                  <dt className="annotate">{stat.label}</dt>
-                  <dd className="font-display text-3xl font-bold tracking-tight tabular md:text-4xl">
-                    {String(stat.value).padStart(2, "0")}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          )}
-
+        <Block
+          label={copy.education.credentialsEyebrow(certificates.length)}
+          title={copy.education.credentials}
+          sub={copy.education.credentialsSub}
+        >
           <div className="flex flex-col gap-12 md:gap-16">
+            {completed.length + inProgress.length > 0 && (
+              <dl className="grid gap-3 sm:grid-cols-3">
+                {[
+                  { label: copy.education.statusCompleted, value: completed.length },
+                  { label: copy.education.statusInProgress, value: inProgress.length },
+                  { label: copy.education.statusPlanned, value: planned.length },
+                ].map((stat) => (
+                  <div key={stat.label} className="cast flex flex-col-reverse gap-1 p-5">
+                    <dt className="annotate">{stat.label}</dt>
+                    <dd className="text-3xl tracking-tight tabular md:text-4xl">
+                      {String(stat.value).padStart(2, "0")}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            )}
+
             {groups.map((group) => (
               <div key={group.key} className="flex flex-col gap-5">
-                <div className="flex items-baseline justify-between gap-4">
-                  <h3 className="font-display text-xl font-semibold tracking-tight md:text-2xl">
-                    {group.label}
-                  </h3>
+                <div className="flex items-baseline justify-between gap-4 border-b border-edge-soft pb-3">
+                  <h3 className="text-lg tracking-tight">{group.label}</h3>
                   <span className="annotate">
                     {String(group.items.length).padStart(2, "0")}
                   </span>
                 </div>
-                <div className="grid gap-5 md:grid-cols-2">
+                <div className="grid gap-3 md:grid-cols-2">
                   {group.items.map((cert) => (
                     <CertificateCard key={cert.id} cert={cert} />
                   ))}
@@ -120,29 +108,26 @@ export default async function Career() {
               </div>
             ))}
           </div>
-        </section>
+        </Block>
       )}
 
       {/* ─── Roadmap ─── */}
       {hasRoadmap && (
-        <Section className="sheet flex flex-col gap-8 pb-20 md:pb-28">
-          <div className="flex flex-col gap-2">
-            <span className="annotate">{copy.education.roadmapEyebrow}</span>
-            <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
-              {copy.education.roadmapTitle}
-            </h2>
-          </div>
+        <Block
+          label={copy.education.roadmapEyebrow}
+          title={copy.education.roadmapTitle}
+        >
           <CertificatesRoadmap certs={certificates} />
-        </Section>
+        </Block>
       )}
 
       <section className="sheet pb-24 md:pb-32">
         <Link
           href="/about"
-          className="control inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium"
+          className="control inline-flex items-center gap-1 py-2 pr-3 pl-4 text-sm"
         >
           {copy.common.moreAboutMe}
-          <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+          <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
         </Link>
       </section>
     </PageLayout>

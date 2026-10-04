@@ -1,8 +1,9 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowUpRight, Check } from "lucide-react"
+import { ChevronRight } from "lucide-react"
 import PageLayout, { Section } from "../../components/PageLayout"
+import { Block } from "../../components/site/Block"
 import { copy } from "@/lib/copy"
 
 const servicePackages = copy.services.packages
@@ -15,43 +16,40 @@ export default function Services() {
       title={copy.services.title}
       subtitle={copy.services.subtitle}
     >
-      {/* ─── Packages: the most raised objects on the site ─── */}
-      <section className="sheet pb-20 md:pb-28">
-        <div className="grid gap-5 lg:grid-cols-3">
+      {/* ─── Packages: a three-up of flat cards ─── */}
+      <section className="sheet-wide pb-18 md:pb-24">
+        <div className="grid gap-3 lg:grid-cols-3">
           {servicePackages.map((service, i) => (
             <Section key={service.title} delay={i * 0.05} className="h-full">
-              <article className="cast rim flex h-full flex-col gap-5 p-7 md:p-8">
+              <article className="cast flex h-full flex-col gap-5 p-6 md:p-7">
                 <div className="flex flex-col gap-2">
                   <span className="annotate">
                     {copy.services.packageEyebrow(i + 1)}
                   </span>
-                  <h3 className="font-display text-lg font-semibold tracking-tight">
-                    {service.title}
-                  </h3>
+                  <h3 className="text-lg tracking-tight">{service.title}</h3>
                 </div>
 
                 <p className="text-sm leading-relaxed text-fg-muted">
                   {service.description}
                 </p>
 
-                <ul className="flex flex-1 flex-col gap-2.5">
+                <ul className="flex flex-1 flex-col border-t border-edge-soft">
                   {service.outcomes.map((outcome) => (
-                    <li key={outcome} className="flex items-start gap-2.5 text-sm">
-                      <Check
-                        className="mt-0.5 h-4 w-4 shrink-0 text-signal"
-                        aria-hidden="true"
-                      />
-                      <span className="leading-relaxed text-fg-muted">{outcome}</span>
+                    <li
+                      key={outcome}
+                      className="border-b border-edge-soft py-3 text-sm leading-relaxed text-fg-muted"
+                    >
+                      {outcome}
                     </li>
                   ))}
                 </ul>
 
                 <Link
                   href="/contact"
-                  className="control inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium"
+                  className="control inline-flex items-center gap-1 self-start py-2 pr-3 pl-4 text-sm"
                 >
                   {copy.services.enquire}
-                  <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                  <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
                 </Link>
               </article>
             </Section>
@@ -60,23 +58,18 @@ export default function Services() {
       </section>
 
       {/* ─── Engagement models ─── */}
-      <section className="sheet flex flex-col gap-8 pb-24 md:pb-32">
-        <Section className="flex flex-col gap-2">
-          <span className="annotate">
-            {copy.services.modelsEyebrow(engagementModels.length)}
-          </span>
-          <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
-            {copy.services.models}
-          </h2>
-        </Section>
-
-        <div className="well flex flex-col gap-2 p-3 md:p-4">
+      <Block
+        label={copy.services.modelsEyebrow(engagementModels.length)}
+        title={copy.services.models}
+        sub={copy.services.modelsSub}
+      >
+        <div className="border-t border-edge-soft">
           {engagementModels.map((model) => (
-            <div key={model.title} className="cast-sm def-grid px-5 py-4">
-              <h3 className="flex items-center gap-2.5 font-display text-sm font-semibold md:text-base">
+            <div key={model.title} className="def-grid border-b border-edge-soft py-5">
+              <h3 className="flex items-center gap-2.5 text-lg tracking-tight">
                 {model.title}
                 {model.recommended && (
-                  <span className="well-sm annotate px-2.5 py-1 text-signal">
+                  <span className="tab text-xs text-fg-muted">
                     {copy.common.recommended}
                   </span>
                 )}
@@ -87,25 +80,22 @@ export default function Services() {
             </div>
           ))}
         </div>
+      </Block>
 
-        <Section>
-          <div className="cast rim flex flex-col items-start justify-between gap-5 p-8 md:flex-row md:items-center md:p-10">
-            <div className="flex flex-col gap-2">
-              <h2 className="font-display text-2xl font-bold tracking-tight">
-                {copy.services.ctaTitle}
-              </h2>
-              <p className="text-sm text-fg-muted">{copy.services.ctaBody}</p>
-            </div>
-            <Link
-              href="/contact"
-              className="control control-primary inline-flex items-center gap-2 px-5 py-3 text-sm font-medium"
-            >
-              {copy.services.startConversation}
-              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
-          </div>
-        </Section>
-      </section>
+      <Block
+        label={copy.services.startConversation}
+        title={copy.services.ctaTitle}
+        sub={copy.services.ctaBody}
+        aside={
+          <Link
+            href="/contact"
+            className="control control-primary inline-flex items-center gap-1 self-start py-2.5 pr-4 pl-5 text-sm"
+          >
+            {copy.services.startConversation}
+            <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
+          </Link>
+        }
+      />
     </PageLayout>
   )
 }

@@ -3,7 +3,7 @@ import { JsonLd } from "../../../components/JsonLd"
 import { ProseMarkdown } from "../../../components/ProseMarkdown"
 import { getBlogPosts, getBlogPostBySlug } from "@/lib/data"
 import Link from "next/link"
-import { ArrowLeft, ArrowRight } from "lucide-react"
+import { ArrowLeft, ChevronRight } from "lucide-react"
 import { notFound } from "next/navigation"
 import { BLOG_ENABLED } from "@/lib/features"
 import { copy } from "@/lib/copy"
@@ -74,37 +74,37 @@ export default async function BlogPost({ params }: BlogPostPageProps) {
         <section className="sheet flex flex-col gap-6">
           <Link
             href="/blog"
-            className="annotate inline-flex items-center gap-1.5 self-start transition-colors duration-150 hover:text-signal"
+            className="annotate inline-flex items-center gap-1.5 self-start transition-colors duration-150 hover:text-fg"
           >
             <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
             {copy.blog.allArticles}
           </Link>
 
-          <h1 className="font-display text-4xl font-bold leading-[1.05] tracking-tight text-balance md:text-5xl">
+          <h1 className="display text-balance">
             {post.title}
           </h1>
 
           {post.excerpt && (
-            <p className="measure text-lg leading-relaxed text-fg-muted">
+            <p className="measure text-xl leading-snug text-fg-muted md:text-2xl">
               {post.excerpt}
             </p>
           )}
 
           <div className="flex flex-wrap items-center gap-2">
-            <span className="well-sm annotate px-3 py-1.5">
+            <span className="tab annotate">
               {new Date(post.publishedAt).toLocaleDateString(
                 copy.common.dateLocale,
                 { month: "long", day: "numeric", year: "numeric" }
               )}
             </span>
-            <span className="well-sm annotate px-3 py-1.5">{post.readTime}</span>
-            <span className="well-sm annotate px-3 py-1.5">{post.author}</span>
+            <span className="tab annotate">{post.readTime}</span>
+            <span className="tab annotate">{post.author}</span>
           </div>
         </section>
 
-        {/* ─── Article body, one continuous plate ─── */}
+        {/* ─── Article body ─── */}
         <section className="sheet">
-          <article className="cast rim mx-auto flex max-w-[860px] flex-col gap-10 p-7 md:p-12">
+          <article className="flex flex-col gap-10 border-t border-edge-soft pt-10">
             <ProseMarkdown>{post.content}</ProseMarkdown>
 
             {tags.length > 0 && (
@@ -114,7 +114,7 @@ export default async function BlogPost({ params }: BlogPostPageProps) {
                   {tags.map((tag) => (
                     <span
                       key={tag}
-                      className="well-sm px-2.5 py-1 font-mono text-xs text-fg-muted"
+                      className="tab text-xs text-fg-muted"
                     >
                       {tag}
                     </span>
@@ -125,33 +125,33 @@ export default async function BlogPost({ params }: BlogPostPageProps) {
 
             <div className="flex flex-col gap-1">
               <span className="annotate">{copy.blog.writtenBy}</span>
-              <p className="font-display font-semibold">{post.author}</p>
+              <p>{post.author}</p>
             </div>
           </article>
         </section>
 
         {/* ─── Pager ─── */}
-        <section className="sheet pb-8">
+        <section className="sheet pb-24">
           <div className="flex flex-col items-stretch gap-4 md:flex-row md:items-center md:justify-between">
             {prevPost ? (
               <Link
                 href={`/blog/${prevPost.slug}`}
-                className="cast rim group flex flex-col gap-1 p-5 transition-transform duration-150 ease-out hover:-translate-y-0.5 motion-reduce:transform-none md:min-w-[20rem]"
+                className="control group flex flex-col gap-0.5 rounded-xl px-5 py-3.5 md:min-w-[20rem]"
               >
                 <span className="annotate inline-flex items-center gap-1.5">
                   <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
                   {copy.blog.previousArticle}
                 </span>
-                <span className="font-display text-lg font-semibold transition-colors duration-150 group-hover:text-signal">
+                <span className="text-sm">
                   {prevPost.title}
                 </span>
               </Link>
             ) : (
               <Link
                 href="/blog"
-                className="control inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium md:self-start"
+                className="control inline-flex items-center gap-2 py-2.5 pr-5 pl-4 text-sm md:self-start"
               >
-                <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+                <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
                 {copy.blog.allArticles}
               </Link>
             )}
@@ -159,13 +159,13 @@ export default async function BlogPost({ params }: BlogPostPageProps) {
             {nextPost && (
               <Link
                 href={`/blog/${nextPost.slug}`}
-                className="cast rim group flex flex-col gap-1 p-5 transition-transform duration-150 ease-out hover:-translate-y-0.5 motion-reduce:transform-none md:min-w-[20rem] md:text-right"
+                className="control group flex flex-col gap-0.5 rounded-xl px-5 py-3.5 md:min-w-[20rem] md:text-right"
               >
                 <span className="annotate inline-flex items-center gap-1.5 md:self-end">
                   {copy.blog.nextArticle}
-                  <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                  <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
                 </span>
-                <span className="font-display text-lg font-semibold transition-colors duration-150 group-hover:text-signal">
+                <span className="text-sm">
                   {nextPost.title}
                 </span>
               </Link>

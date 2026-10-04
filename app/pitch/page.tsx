@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { ArrowLeft, Check, Copy, Loader2, RotateCcw } from "lucide-react"
+import { ChevronLeft, ChevronRight, Check, Copy, Loader2, RotateCcw } from "lucide-react"
 import {
   Select,
   SelectContent,
@@ -96,9 +96,9 @@ export default function PitchPage() {
         <div className="mx-auto flex max-w-2xl flex-col gap-9">
           <Link
             href="/"
-            className="control inline-flex items-center gap-2 self-start px-4 py-2.5 text-sm font-medium"
+            className="control inline-flex items-center gap-1 self-start py-2 pr-4 pl-3 text-sm"
           >
-            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+            <ChevronLeft className="h-3.5 w-3.5" aria-hidden="true" />
             {copy.pitch.back}
           </Link>
 
@@ -106,15 +106,15 @@ export default function PitchPage() {
             <span className="tab annotate self-start">
               {step === "form" ? copy.pitch.stepForm : copy.pitch.stepResult}
             </span>
-            <h1 className="font-display text-3xl md:text-4xl font-bold tracking-tight text-balance">
+            <h1 className="display text-balance">
               {copy.pitch.title}
             </h1>
-            <p className="measure leading-relaxed text-fg-muted">{copy.pitch.intro}</p>
+            <p className="measure lede">{copy.pitch.intro}</p>
           </div>
 
           {step === "form" ? (
-            /* ─── The form is one plate; every input is a recess in it. ─── */
-            <div className="cast rim flex flex-col gap-7 p-6 md:p-8">
+            /* ─── The form is one card; inputs are fields inside it. ─── */
+            <div className="cast flex flex-col gap-7 p-6 md:p-8">
               <div className="flex flex-col gap-2">
                 <label htmlFor="pitch-role" className="annotate">
                   {copy.pitch.roleLabel}
@@ -143,18 +143,19 @@ export default function PitchPage() {
                 <span id="needs-label" className="annotate">
                   {copy.pitch.needsLabel}
                 </span>
-                {/* Sunken tray, options seated in it. A chosen option is
-                    pressed into the tray, so selection survives without
-                    colour and without hover. */}
-                <div className="well grid gap-2 p-3 sm:grid-cols-2 md:p-4">
+                {/* A chosen option gets a lighter fill and a white edge, so
+                    selection survives without colour and without hover. */}
+                <div className="grid gap-2 sm:grid-cols-2">
                   {NEED_OPTIONS.map((option) => {
                     const checked = needs.includes(option)
                     return (
                       <label
                         key={option}
                         className={
-                          "flex cursor-pointer items-center gap-3 px-4 py-3 text-sm transition-colors duration-150 " +
-                          (checked ? "well-sm" : "cast-sm")
+                          "flex cursor-pointer items-center gap-3 rounded-md border px-4 py-3 text-sm transition-colors duration-150 " +
+                          (checked
+                            ? "border-edge bg-plate-hi"
+                            : "border-edge-soft hover:bg-plate-hi")
                         }
                       >
                         <Checkbox
@@ -192,18 +193,18 @@ export default function PitchPage() {
                 type="button"
                 onClick={generate}
                 disabled={!role}
-                className="control control-primary inline-flex items-center justify-center gap-2 self-start px-5 py-3 text-sm font-medium"
+                className="control control-primary inline-flex items-center justify-center gap-1 self-start py-2.5 pr-4 pl-5 text-sm"
               >
                 {copy.pitch.generate}
-                <span aria-hidden="true">&rarr;</span>
+                <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
               </button>
             </div>
           ) : (
             <div className="flex flex-col gap-5">
-              <div className="cast rim flex flex-col gap-5 p-6 md:p-8">
+              <div className="cast flex flex-col gap-5 p-6 md:p-8">
                 <span className="annotate">{copy.pitch.resultLabel}</span>
 
-                {/* The generated text sits in a recess: it is material the
+                {/* The generated text sits in a well: it is material the
                     page produced, not a control you act on. */}
                 <div
                   className="well min-h-[12rem] p-5 md:p-6"
@@ -230,7 +231,7 @@ export default function PitchPage() {
                     type="button"
                     onClick={copyToClipboard}
                     disabled={!content || generating}
-                    className="control inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium"
+                    className="control inline-flex items-center gap-2 px-4 py-2 text-sm"
                   >
                     {copied ? (
                       <>
@@ -248,7 +249,7 @@ export default function PitchPage() {
                   <button
                     type="button"
                     onClick={startOver}
-                    className="control inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium"
+                    className="control inline-flex items-center gap-2 px-4 py-2 text-sm"
                   >
                     <RotateCcw className="h-4 w-4" aria-hidden="true" />
                     {copy.pitch.startOver}
@@ -260,7 +261,7 @@ export default function PitchPage() {
                 {copy.pitch.disclaimer}{" "}
                 <a
                   href="mailto:info@sweber.dev"
-                  className="link-underline text-signal"
+                  className="link-underline text-fg"
                 >
                   info@sweber.dev
                 </a>

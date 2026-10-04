@@ -30,10 +30,7 @@ function TypingDots() {
   )
 }
 
-/**
- * Two polarities do the work an alignment shift used to do alone: what you
- * said is raised out of the plate, what the assistant said is sunk into it.
- */
+/** Your messages sit right in a lighter box; the assistant's sit left in an outlined one. */
 function Bubble({
   role,
   children,
@@ -46,7 +43,7 @@ function Bubble({
       <div
         className={cn(
           "max-w-[85%] px-3.5 py-2 text-sm",
-          role === "user" ? "cast-sm" : "well-sm"
+          role === "user" ? "cast-sm" : "rounded-[var(--radius)] border border-edge-soft"
         )}
       >
         {children}
