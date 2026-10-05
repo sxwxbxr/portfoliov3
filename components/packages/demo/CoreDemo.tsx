@@ -25,10 +25,6 @@ const t = copy.packages.demo.core
 const CONFIG = {
   consentVersion: "demo",
   language: "en",
-  // Asks again after a year; the expiry date is shown in the result box.
-  maxAgeDays: 365,
-  // Memory storage does not sync by default. Here it shows the tab sync between two open demo tabs.
-  syncTabs: true,
   categories: [{ id: "necessary", required: true }, { id: "statistics" }, { id: "marketing" }],
   services: [
     {
@@ -65,7 +61,7 @@ function MockSite() {
 }
 
 function Result() {
-  const { ready, decision, expiresAt } = useConsent()
+  const { ready, decision } = useConsent()
   return (
     <div className="well flex flex-col gap-3 px-5 py-4" aria-live="polite">
       <h3 className="text-base tracking-tight">{t.resultHeading}</h3>
@@ -81,12 +77,6 @@ function Result() {
               <dd className="font-mono text-[13px] text-fg">{granted ? t.granted : t.declined}</dd>
             </div>
           ))}
-          {expiresAt && (
-            <div className="flex gap-2">
-              <dt className="font-mono text-[13px] text-fg-muted">{t.expiresLabel}</dt>
-              <dd className="font-mono text-[13px] text-fg">{expiresAt.slice(0, 10)}</dd>
-            </div>
-          )}
         </dl>
       )}
     </div>
@@ -135,7 +125,6 @@ function Panel({
           )}
         </div>
         <figcaption className="annotate">{t.previewLabel}</figcaption>
-        <p className="text-sm text-fg-muted">{t.syncNote}</p>
       </figure>
 
       <div className="grid min-w-0 gap-8 lg:grid-cols-2">

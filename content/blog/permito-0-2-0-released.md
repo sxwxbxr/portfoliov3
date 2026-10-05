@@ -38,7 +38,7 @@ A choice made in one tab now applies immediately in every other open tab of the 
 pnpm add @permitojs/core@^0.2.0 @permitojs/react@^0.2.0
 ```
 
-The new guide [Lifetime, GPC and tabs](/permito/docs/guides/lifetime-gpc-tabs) covers all three options, and the [live demo](/permito/demo) now syncs between two open tabs and shows when a decision expires.
+The new guide [Lifetime, GPC and tabs](/permito/docs/guides/lifetime-gpc-tabs) covers all three options.
 
 ## What comes next
 

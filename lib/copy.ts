@@ -720,8 +720,6 @@ export const copy = {
         iframeLabel: "ConsentIframe, YouTube via youtube-nocookie.com",
         videoTitle: "Demo video",
         previewLabel: "Preview of a customer website. The banner and the dialog are the real components.",
-        syncNote: "Open this page in a second tab and decide there: the decision appears here at once. That is the tab sync of Permito 0.2.0.",
-        expiresLabel: "expires",
         resultHeading: "Decision in the preview",
         resultPending: "No decision yet. Choose in the banner.",
         resultLoading: "Reading stored decision",
