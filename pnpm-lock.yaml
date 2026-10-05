@@ -117,14 +117,14 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(next@15.2.6(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(react@19.1.2)
       '@weber-development/permito-catalog':
-        specifier: ^0.1.1
-        version: 0.1.1(@permitojs/core@0.1.0)
+        specifier: ^0.1.2
+        version: 0.1.2(@permitojs/core@0.1.0)
       '@weber-development/permito-cookie-table':
-        specifier: ^0.1.1
-        version: 0.1.1(@permitojs/core@0.1.0)(@permitojs/react@0.1.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(@weber-development/permito-catalog@0.1.1(@permitojs/core@0.1.0))(react@19.1.2)
+        specifier: ^0.1.2
+        version: 0.1.2(@permitojs/core@0.1.0)(@permitojs/react@0.1.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(@weber-development/permito-catalog@0.1.2(@permitojs/core@0.1.0))(react@19.1.2)
       '@weber-development/permito-themes':
-        specifier: ^0.1.1
-        version: 0.1.1(@permitojs/core@0.1.0)(@permitojs/react@0.1.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(react@19.1.2)
+        specifier: ^0.1.2
+        version: 0.1.2(@permitojs/core@0.1.0)(@permitojs/react@0.1.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(react@19.1.2)
       autoprefixer:
         specifier: ^10.4.20
         version: 10.4.20(postcss@8.5.0)
@@ -2389,29 +2389,22 @@ packages:
       vue-router:
         optional: true
 
-  '@weber-development/permito-catalog@0.1.1':
-    resolution: {integrity: sha512-lU/Q7ZmlvZ4PnRNLUgP3fMYfyXoW67YBc96/8IXmkbKEkdMPgDmBgDwqQ7GiR9KYuZZ07TPFUmXkH8gwPu/JNw==, tarball: https://npm.pkg.github.com/download/@weber-development/permito-catalog/0.1.1/af5f20fd3eaa2c8440b7ac81c028a51c79c0294e}
+  '@weber-development/permito-catalog@0.1.2':
+    resolution: {integrity: sha512-3ZF+1QdubWWd7F4h6lzshOrbj6mTGt3p7CW+CqEzpdRTriYSZqyWt61AI64OeU2ZaX7QBZxo1bPdu8Ne82+1nw==, tarball: https://npm.pkg.github.com/download/@weber-development/permito-catalog/0.1.2/7f82698eb1daf842219d4ee2f34bd229095d27dc}
     peerDependencies:
       '@permitojs/core': ^0.1.0
 
-  '@weber-development/permito-cookie-table@0.1.1':
-    resolution: {integrity: sha512-adSV1hWel/QoASJ9Bv77Rq8TAhyMZZwaAZCQxAM5/pf3GA/DZwwwReP0hTKqqvr+zb84yoao+P6wR9PVOnpMDA==, tarball: https://npm.pkg.github.com/download/@weber-development/permito-cookie-table/0.1.1/69422e92519c3494e311acd73ddb97062bd43883}
+  '@weber-development/permito-cookie-table@0.1.2':
+    resolution: {integrity: sha512-t6D120N6jNTyroe5kqKjJDLlbmARzheizV5gCxmV8oSZ8NtVHpIAcwmMWDm+GDo3CP3QWyR8Y8fKtrdG+os0jg==, tarball: https://npm.pkg.github.com/download/@weber-development/permito-cookie-table/0.1.2/9e5174ac4b5548f2db4099300aa2c91e01528711}
     hasBin: true
     peerDependencies:
       '@permitojs/core': ^0.1.0
       '@permitojs/react': ^0.1.0
       '@weber-development/permito-catalog': <1
       react: '>=18.2.0'
-    peerDependenciesMeta:
-      '@permitojs/react':
-        optional: true
-      '@weber-development/permito-catalog':
-        optional: true
-      react:
-        optional: true
 
-  '@weber-development/permito-themes@0.1.1':
-    resolution: {integrity: sha512-pXQw3TbgK0DXw+LYyx+NzDAkvjj9uR/+V4h9BX1Hf8rIaNzOay175U2HmeU7ZNwrlbJSLjZKrLLkXnvfrMgHbg==, tarball: https://npm.pkg.github.com/download/@weber-development/permito-themes/0.1.1/c157cf3b409ef0deb03fa232b73493a5f935974a}
+  '@weber-development/permito-themes@0.1.2':
+    resolution: {integrity: sha512-KE4qRR3cQvpL56eDwB0q/qO9IlDZr4DuF83t7RNOFfJ5saU9HJRSW9NxTRsPDNGnIqCTa4zjWUVM4NMl9tyHhw==, tarball: https://npm.pkg.github.com/download/@weber-development/permito-themes/0.1.2/1d06819668d02d82db12bea27671ad066537dda1}
     peerDependencies:
       '@permitojs/core': ^0.1.0
       '@permitojs/react': ^0.1.0
@@ -6331,20 +6324,19 @@ snapshots:
       next: 15.2.6(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
       react: 19.1.2
 
-  '@weber-development/permito-catalog@0.1.1(@permitojs/core@0.1.0)':
+  '@weber-development/permito-catalog@0.1.2(@permitojs/core@0.1.0)':
     dependencies:
       '@permitojs/core': 0.1.0
 
-  '@weber-development/permito-cookie-table@0.1.1(@permitojs/core@0.1.0)(@permitojs/react@0.1.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(@weber-development/permito-catalog@0.1.1(@permitojs/core@0.1.0))(react@19.1.2)':
+  '@weber-development/permito-cookie-table@0.1.2(@permitojs/core@0.1.0)(@permitojs/react@0.1.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(@weber-development/permito-catalog@0.1.2(@permitojs/core@0.1.0))(react@19.1.2)':
     dependencies:
       '@permitojs/core': 0.1.0
-      jiti: 2.7.0
-    optionalDependencies:
       '@permitojs/react': 0.1.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
-      '@weber-development/permito-catalog': 0.1.1(@permitojs/core@0.1.0)
+      '@weber-development/permito-catalog': 0.1.2(@permitojs/core@0.1.0)
+      jiti: 2.7.0
       react: 19.1.2
 
-  '@weber-development/permito-themes@0.1.1(@permitojs/core@0.1.0)(@permitojs/react@0.1.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(react@19.1.2)':
+  '@weber-development/permito-themes@0.1.2(@permitojs/core@0.1.0)(@permitojs/react@0.1.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(react@19.1.2)':
     dependencies:
       '@permitojs/core': 0.1.0
       '@permitojs/react': 0.1.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
