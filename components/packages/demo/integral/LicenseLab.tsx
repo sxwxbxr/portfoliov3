@@ -12,10 +12,15 @@ import {
   generateKeyPair,
   type KeyPair,
   type LicensePayload,
+  type LicenseStatus,
   type LicenseVerification,
+  licenseStatus,
+  machineId,
   planFor,
   signLicense,
+  signRevocationList,
   verifyLicense,
+  verifyRevocationList,
 } from "@/lib/demo/integral"
 import { integralDemo } from "@/lib/demo/integral-copy"
 
@@ -319,6 +324,13 @@ export function LicenseLab() {
   const [release, setRelease] = useState(() => isoDay(new Date()))
   const [result, setResult] = useState<LicenseVerification | null>(null)
   const [used, setUsed] = useState(1)
+  const [trial, setTrial] = useState(false)
+  const [bind, setBind] = useState(false)
+  const [devices, setDevices] = useState<{ own: string; other: string } | null>(null)
+  const [device, setDevice] = useState<"own" | "other">("own")
+  const [revokedIds, setRevokedIds] = useState<string[]>([])
+  const [revocationList, setRevocationList] = useState("")
+  const [status, setStatus] = useState<LicenseStatus | null>(null)
   const ids = {
     plan: useId(),
     email: useId(),
@@ -329,6 +341,9 @@ export function LicenseLab() {
     input: useId(),
     today: useId(),
     release: useId(),
+    trial: useId(),
+    bind: useId(),
+    device: useId(),
   }
 
   const newKeys = useCallback(async () => {
@@ -342,7 +357,17 @@ export function LicenseLab() {
 
   useEffect(() => {
     void newKeys()
+    // Two simulated devices. In an app you would hash a stable id such as the OS machine id.
+    Promise.all([machineId("demo", "laptop-a"), machineId("demo", "laptop-b")])
+      .then(([own, other]) => setDevices({ own, other }))
+      .catch(() => setDevices(null))
   }, [newKeys])
+
+  // A new key pair invalidates the old revocation list.
+  useEffect(() => {
+    setRevokedIds([])
+    setRevocationList("")
+  }, [keys])
 
   const sign = useCallback(async () => {
     if (!keys) return
@@ -356,12 +381,14 @@ export function LicenseLab() {
         limits: limit !== undefined && Number.isFinite(limit) ? { projects: limit } : undefined,
         updatesUntil: updatesUntil || undefined,
         exp: expires || undefined,
+        machine: bind && devices ? devices.own : undefined,
+        trial: trial || undefined,
       },
       keys.privateKey
     )
     setIssued(license)
     setInput(license)
-  }, [keys, plan, email, beta, projects, updatesUntil, expires])
+  }, [keys, plan, email, beta, projects, updatesUntil, expires, bind, devices, trial])
 
   // Issue a first license as soon as the keys exist.
   useEffect(() => {
@@ -375,18 +402,42 @@ export function LicenseLab() {
       setResult(null)
       return
     }
-    const now = new Date(`${today}T12:00:00Z`)
-    verifyLicense(input, { publicKey: keys.publicKey, product: PRODUCT, now: Number.isNaN(now.getTime()) ? new Date() : now })
+    const parsed = new Date(`${today}T12:00:00Z`)
+    const now = Number.isNaN(parsed.getTime()) ? new Date() : parsed
+    const check = async () => {
+      const revocations = revocationList
+        ? await verifyRevocationList(revocationList, { publicKey: keys.publicKey, product: PRODUCT })
+        : null
+      return verifyLicense(input, {
+        publicKey: keys.publicKey,
+        product: PRODUCT,
+        now,
+        revocations,
+        machine: devices ? devices[device] : undefined,
+      })
+    }
+    check()
       .then((r) => {
-        if (!cancelled) setResult(r)
+        if (cancelled) return
+        setResult(r)
+        setStatus(r.valid ? licenseStatus(r.license, { now }) : null)
       })
       .catch(() => {
-        if (!cancelled) setResult({ valid: false, reason: "malformed" })
+        if (cancelled) return
+        setResult({ valid: false, reason: "malformed" })
+        setStatus(null)
       })
     return () => {
       cancelled = true
     }
-  }, [input, keys, today])
+  }, [input, keys, today, revocationList, devices, device])
+
+  async function toggleRevoked(id: string) {
+    if (!keys) return
+    const next = revokedIds.includes(id) ? revokedIds.filter((x) => x !== id) : [...revokedIds, id]
+    setRevokedIds(next)
+    setRevocationList(next.length ? await signRevocationList({ ids: next, product: PRODUCT }, keys.privateKey) : "")
+  }
 
   async function signWithStranger() {
     const stranger = await generateKeyPair()
@@ -474,6 +525,20 @@ export function LicenseLab() {
               <input id={ids.beta} type="checkbox" checked={beta} onChange={(e) => setBeta(e.target.checked)} />
               {t.issue.beta}
             </label>
+            <label htmlFor={ids.trial} className="inline-flex items-center gap-2 self-end pb-3 text-sm text-fg-muted">
+              <input id={ids.trial} type="checkbox" checked={trial} onChange={(e) => setTrial(e.target.checked)} />
+              {t.issue.trial}
+            </label>
+            <label htmlFor={ids.bind} className="inline-flex items-center gap-2 self-end pb-3 text-sm text-fg-muted">
+              <input
+                id={ids.bind}
+                type="checkbox"
+                checked={bind}
+                disabled={!devices}
+                onChange={(e) => setBind(e.target.checked)}
+              />
+              {t.issue.bind}
+            </label>
           </div>
           <button type="submit" className={btn + " control-primary self-start"} disabled={!keys}>
             {t.issue.sign}
@@ -511,13 +576,27 @@ export function LicenseLab() {
             <button type="button" className={btn} onClick={() => setInput(issued)} disabled={!issued || input === issued}>
               {t.verify.reset}
             </button>
+            <button type="button" className={btn} onClick={() => decoded && void toggleRevoked(decoded.id)} disabled={!decoded}>
+              {decoded && revokedIds.includes(decoded.id) ? t.verify.unrevoke : t.verify.revoke}
+            </button>
           </div>
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-6 md:grid-cols-3">
             <Field label={t.verify.today} id={ids.today}>
               <input id={ids.today} type="date" value={today} onChange={(e) => setToday(e.target.value)} className={field} />
             </Field>
             <Field label={t.verify.release} id={ids.release}>
               <input id={ids.release} type="date" value={release} onChange={(e) => setRelease(e.target.value)} className={field} />
+            </Field>
+            <Field label={t.verify.device} id={ids.device}>
+              <select
+                id={ids.device}
+                value={device}
+                onChange={(e) => setDevice(e.target.value === "other" ? "other" : "own")}
+                className={field}
+              >
+                <option value="own">{t.verify.devices.own}</option>
+                <option value="other">{t.verify.devices.other}</option>
+              </select>
             </Field>
           </div>
           <div className="well flex flex-col gap-2 px-5 py-4" role="status" aria-live="polite">
@@ -527,7 +606,13 @@ export function LicenseLab() {
               </p>
             )}
             {result?.valid && <p className="text-sm text-fg-muted">{covered ? t.verify.covered : t.verify.notCovered}</p>}
+            {status && <p className="text-sm text-fg-muted">{t.verify.status(status)}</p>}
           </div>
+          {revocationList && (
+            <div className="break-all">
+              <CodeBlock title={t.verify.revocationList(revokedIds.length)} code={revocationList} />
+            </div>
+          )}
           {decoded && <CodeBlock title={t.verify.payload} code={JSON.stringify(decoded, null, 2)} />}
         </div>
       </Block>
