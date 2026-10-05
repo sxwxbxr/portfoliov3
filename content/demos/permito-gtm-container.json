@@ -1,0 +1,378 @@
+{
+  "exportFormatVersion": 2,
+  "exportTime": "2026-10-01 09:12:44",
+  "containerVersion": {
+    "path": "accounts/6012345678/containers/98765432/versions/42",
+    "accountId": "6012345678",
+    "containerId": "98765432",
+    "containerVersionId": "42",
+    "name": "Marketing campaign autumn",
+    "container": {
+      "accountId": "6012345678",
+      "containerId": "98765432",
+      "name": "example.ch",
+      "publicId": "GTM-ABC1234",
+      "usageContext": ["WEB"]
+    },
+    "tag": [
+      {
+        "accountId": "6012345678",
+        "containerId": "98765432",
+        "tagId": "1",
+        "name": "GA4 - Config",
+        "type": "gaawc",
+        "parameter": [
+          {
+            "type": "template",
+            "key": "measurementId",
+            "value": "G-ABC123XYZ"
+          }
+        ],
+        "fingerprint": "1759000000001",
+        "firingTriggerId": [12],
+        "tagFiringOption": "oncePerEvent",
+        "monitoringMetadata": {
+          "type": "map"
+        },
+        "consentSettings": {
+          "consentStatus": "notSet"
+        }
+      },
+      {
+        "accountId": "6012345678",
+        "containerId": "98765432",
+        "tagId": "2",
+        "name": "GA4 - purchase",
+        "type": "gaawe",
+        "parameter": [
+          {
+            "type": "template",
+            "key": "eventName",
+            "value": "purchase"
+          },
+          {
+            "type": "tagReference",
+            "key": "measurementId",
+            "value": "1"
+          }
+        ],
+        "fingerprint": "1759000000002",
+        "firingTriggerId": [11],
+        "tagFiringOption": "oncePerEvent",
+        "monitoringMetadata": {
+          "type": "map"
+        },
+        "consentSettings": {
+          "consentStatus": "notSet"
+        }
+      },
+      {
+        "accountId": "6012345678",
+        "containerId": "98765432",
+        "tagId": "3",
+        "name": "Ads - Purchase conversion",
+        "type": "awct",
+        "parameter": [
+          {
+            "type": "template",
+            "key": "conversionId",
+            "value": "123456789"
+          },
+          {
+            "type": "template",
+            "key": "conversionLabel",
+            "value": "AbC-D_efG-h12345678"
+          },
+          {
+            "type": "template",
+            "key": "conversionValue",
+            "value": "{{DLV - value}}"
+          }
+        ],
+        "fingerprint": "1759000000003",
+        "firingTriggerId": [11],
+        "tagFiringOption": "oncePerEvent",
+        "monitoringMetadata": {
+          "type": "map"
+        },
+        "consentSettings": {
+          "consentStatus": "notSet"
+        }
+      },
+      {
+        "accountId": "6012345678",
+        "containerId": "98765432",
+        "tagId": "4",
+        "name": "Conversion Linker",
+        "type": "gclidw",
+        "parameter": [
+          {
+            "type": "boolean",
+            "key": "enableCrossDomain",
+            "value": "false"
+          }
+        ],
+        "fingerprint": "1759000000004",
+        "firingTriggerId": [10],
+        "tagFiringOption": "oncePerEvent",
+        "monitoringMetadata": {
+          "type": "map"
+        },
+        "consentSettings": {
+          "consentStatus": "notSet"
+        }
+      },
+      {
+        "accountId": "6012345678",
+        "containerId": "98765432",
+        "tagId": "5",
+        "name": "HTML - Meta Pixel",
+        "type": "html",
+        "parameter": [
+          {
+            "type": "template",
+            "key": "html",
+            "value": "<!-- Meta Pixel Code -->\n<script>\n!function(f,b,e,v,n,t,s)\n{if(f.fbq)return;n=f.fbq=function(){n.callMethod?\nn.callMethod.apply(n,arguments):n.queue.push(arguments)};\nif(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';\nn.queue=[];t=b.createElement(e);t.async=!0;\nt.src=v;s=b.getElementsByTagName(e)[0];\ns.parentNode.insertBefore(t,s)}(window, document,'script',\n'https://connect.facebook.net/en_US/fbevents.js');\nfbq('init', '1234567890123456');\nfbq('track', 'PageView');\n</script>\n<noscript><img height=\"1\" width=\"1\" style=\"display:none\"\nsrc=\"https://www.facebook.com/tr?id=1234567890123456&ev=PageView&noscript=1\"\n/></noscript>\n<!-- End Meta Pixel Code -->"
+          },
+          {
+            "type": "boolean",
+            "key": "supportDocumentWrite",
+            "value": "false"
+          }
+        ],
+        "fingerprint": "1759000000005",
+        "firingTriggerId": [10],
+        "tagFiringOption": "oncePerEvent",
+        "monitoringMetadata": {
+          "type": "map"
+        },
+        "consentSettings": {
+          "consentStatus": "notSet"
+        }
+      },
+      {
+        "accountId": "6012345678",
+        "containerId": "98765432",
+        "tagId": "6",
+        "name": "HTML - Hotjar",
+        "type": "html",
+        "parameter": [
+          {
+            "type": "template",
+            "key": "html",
+            "value": "<script>\n    (function(h,o,t,j,a,r){\n        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};\n        h._hjSettings={hjid:1234567,hjsv:6};\n        a=o.getElementsByTagName('head')[0];\n        r=o.createElement('script');r.async=1;\n        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;\n        a.appendChild(r);\n    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');\n</script>"
+          },
+          {
+            "type": "boolean",
+            "key": "supportDocumentWrite",
+            "value": "false"
+          }
+        ],
+        "fingerprint": "1759000000006",
+        "firingTriggerId": [10],
+        "tagFiringOption": "oncePerEvent",
+        "monitoringMetadata": {
+          "type": "map"
+        },
+        "consentSettings": {
+          "consentStatus": "needed",
+          "consentType": {
+            "type": "list",
+            "list": [
+              {
+                "type": "template",
+                "value": "analytics_storage"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "accountId": "6012345678",
+        "containerId": "98765432",
+        "tagId": "7",
+        "name": "HTML - Chat widget",
+        "type": "html",
+        "parameter": [
+          {
+            "type": "template",
+            "key": "html",
+            "value": "<script>\n  (function () {\n    var s = document.createElement('script');\n    s.src = 'https://widget.chatbubble.example/v2/loader.js';\n    s.async = true;\n    document.head.appendChild(s);\n  })();\n</script>"
+          },
+          {
+            "type": "boolean",
+            "key": "supportDocumentWrite",
+            "value": "false"
+          }
+        ],
+        "fingerprint": "1759000000007",
+        "firingTriggerId": [10],
+        "tagFiringOption": "oncePerEvent",
+        "monitoringMetadata": {
+          "type": "map"
+        },
+        "consentSettings": {
+          "consentStatus": "notSet"
+        }
+      },
+      {
+        "accountId": "6012345678",
+        "containerId": "98765432",
+        "tagId": "8",
+        "name": "Pinterest Tag",
+        "type": "cvt_98765432_21",
+        "parameter": [
+          {
+            "type": "template",
+            "key": "tagId",
+            "value": "2612345678901"
+          }
+        ],
+        "fingerprint": "1759000000008",
+        "firingTriggerId": [10],
+        "tagFiringOption": "oncePerEvent",
+        "monitoringMetadata": {
+          "type": "map"
+        },
+        "consentSettings": {
+          "consentStatus": "notSet"
+        }
+      },
+      {
+        "accountId": "6012345678",
+        "containerId": "98765432",
+        "tagId": "9",
+        "name": "Pixel - Meta noscript fallback (old)",
+        "type": "img",
+        "parameter": [
+          {
+            "type": "template",
+            "key": "url",
+            "value": "https://www.facebook.com/tr?id=1234567890123456&ev=PageView&noscript=1"
+          },
+          {
+            "type": "boolean",
+            "key": "useCacheBuster",
+            "value": "false"
+          }
+        ],
+        "fingerprint": "1759000000009",
+        "firingTriggerId": [10],
+        "tagFiringOption": "oncePerEvent",
+        "monitoringMetadata": {
+          "type": "map"
+        },
+        "consentSettings": {
+          "consentStatus": "notSet"
+        },
+        "paused": true
+      },
+      {
+        "accountId": "6012345678",
+        "containerId": "98765432",
+        "tagId": "10",
+        "name": "Cookie banner (Foo)",
+        "type": "cvt_98765432_33",
+        "parameter": [
+          {
+            "type": "template",
+            "key": "siteId",
+            "value": "abc"
+          }
+        ],
+        "fingerprint": "1759000000010",
+        "firingTriggerId": [12],
+        "tagFiringOption": "oncePerEvent",
+        "monitoringMetadata": {
+          "type": "map"
+        },
+        "consentSettings": {
+          "consentStatus": "notSet"
+        }
+      }
+    ],
+    "trigger": [
+      {
+        "accountId": "6012345678",
+        "containerId": "98765432",
+        "triggerId": "10",
+        "name": "All Pages",
+        "type": "pageview",
+        "fingerprint": "175900000010"
+      },
+      {
+        "accountId": "6012345678",
+        "containerId": "98765432",
+        "triggerId": "11",
+        "name": "Event - purchase",
+        "type": "customEvent",
+        "fingerprint": "175900000011",
+        "customEventFilter": [
+          {
+            "type": "equals",
+            "parameter": [
+              {
+                "type": "template",
+                "key": "arg0",
+                "value": "{{_event}}"
+              },
+              {
+                "type": "template",
+                "key": "arg1",
+                "value": "purchase"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "6012345678",
+        "containerId": "98765432",
+        "triggerId": "12",
+        "name": "Consent Initialization - All Pages",
+        "type": "consentInit",
+        "fingerprint": "175900000012"
+      }
+    ],
+    "customTemplate": [
+      {
+        "accountId": "6012345678",
+        "containerId": "98765432",
+        "templateId": "21",
+        "name": "Pinterest Tag",
+        "fingerprint": "1759000000021",
+        "galleryReference": {
+          "host": "github.com",
+          "owner": "pinterest",
+          "repository": "gtm-pinterest-tag",
+          "version": "0123456789abcdef0123456789abcdef01234567",
+          "isModified": false,
+          "signature": "c0ffee"
+        },
+        "templateData": "___TERMS_OF_SERVICE___\n"
+      },
+      {
+        "accountId": "6012345678",
+        "containerId": "98765432",
+        "templateId": "33",
+        "name": "Cookie Banner Foo",
+        "fingerprint": "1759000000033",
+        "galleryReference": {
+          "host": "github.com",
+          "owner": "foo-vendor",
+          "repository": "gtm-cookie-banner",
+          "version": "fedcba9876543210fedcba9876543210fedcba98",
+          "isModified": false,
+          "signature": "decaf0"
+        },
+        "templateData": "___TERMS_OF_SERVICE___\n"
+      }
+    ],
+    "builtInVariable": [
+      {
+        "type": "pageUrl",
+        "name": "Page URL"
+      }
+    ]
+  }
+}

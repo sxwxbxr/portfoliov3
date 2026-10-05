@@ -1,0 +1,29 @@
+{
+  "generatedAt": "2026-10-05T09:33:04.999Z",
+  "sites": [
+    {
+      "name": "Bakery Muster",
+      "slug": "bakery-muster",
+      "url": "http://127.0.0.1:4318/",
+      "status": "clean",
+      "unconfigured": 0,
+      "beforeConsent": 0,
+      "matched": 0,
+      "accepted": 0,
+      "fingerprint": "e3b0c44298fc1c14",
+      "scannedAt": "2026-10-05T09:32:53.934Z"
+    },
+    {
+      "name": "Shop Beispiel",
+      "slug": "shop-beispiel",
+      "url": "http://127.0.0.1:4317/",
+      "status": "findings",
+      "unconfigured": 2,
+      "beforeConsent": 4,
+      "matched": 0,
+      "accepted": 1,
+      "fingerprint": "2e47035f757a5b8d",
+      "scannedAt": "2026-10-05T09:32:58.008Z"
+    }
+  ]
+}

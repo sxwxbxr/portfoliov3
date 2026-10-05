@@ -643,16 +643,16 @@ export const copy = {
       videos: { label: "Videos", title: "Videos", sub: "Walkthroughs." },
     },
     liveDemo: "Live demo",
-    liveDemoNote: "Try the themes, browse the catalog and read a real scanner report.",
+    liveDemoNote: "Try the themes, browse the catalog and read a real scanner report. The demo also shows the GTM container check, the monitoring of many client sites and the catalog changes per project.",
     // Live demo of the Pro packages (/permito/demo)
     demo: {
-      seoTitle: "Permito live demo: free core and Pro themes, catalog, cookie table, scanner",
+      seoTitle: "Permito live demo: core, Pro themes, catalog, cookie table, scanner, GTM check, monitoring",
       description:
-        "Try Permito in your browser. The free core gives you the banner, the settings dialog and gates. The Pro themes, service catalog, cookie table and scanner report are rendered from the real Pro packages.",
+        "Try Permito in your browser. The free core gives you the banner, the settings dialog and gates. The Pro themes, service catalog, cookie table and scanner report are rendered from the real Pro packages. Recorded runs show the GTM container check, the monitoring of many client sites and the catalog changes per project.",
       title: "Permito",
       titleSub: "Live demo, core and Pro.",
       intro:
-        "The first section runs the free core (MIT). Every section after it is produced by the Pro packages themselves. The themes and layouts run in your browser. The catalog, the cookie table and the scanner report are rendered on the server, so what reaches your browser is the finished HTML and not the packages.",
+        "The first section runs the free core (MIT). Every section after it is produced by the Pro packages themselves. The themes and layouts run in your browser. The catalog, the cookie table and the scanner report are rendered on the server, so what reaches your browser is the finished HTML and not the packages. The last three sections before the consent log (GTM container check, monitoring many client sites, catalog changes per project) show recorded output of the command-line tools.",
       isolation:
         "The banner preview uses its own in-memory storage. Nothing you click here changes the consent of this site.",
       overview: "Permito overview",
@@ -664,6 +664,9 @@ export const copy = {
         { href: "#catalog", label: "Catalog" },
         { href: "#cookie-table", label: "Cookie table" },
         { href: "#scanner", label: "Scanner" },
+        { href: "#gtm-check", label: "GTM check" },
+        { href: "#monitoring", label: "Monitoring" },
+        { href: "#catalog-changes", label: "Catalog changes" },
         { href: "#log", label: "Consent log" },
       ],
 
@@ -827,6 +830,102 @@ export const copy = {
         limits:
           "A clean run is a snapshot, not proof. The scanner does not click, scroll or log in, so it misses what loads only after an interaction.",
         error: "The recorded report could not be read.",
+      },
+
+      gtmCheck: {
+        label: "GTM check",
+        title: "GTM container check",
+        sub: "Before the container goes live.",
+        lede: "permito gtm-check reads a container export from Google Tag Manager and matches each tag to a catalog service. It uses Google's tag types, the hosts in Custom HTML and community templates. It reads the file only and makes no network request.",
+        demoNote: "Built from a demo container, not a client's.",
+        demoNoteMore: "The export and the config were made for this page.",
+        containerHeading: "The container export",
+        containerNote: (name: string, id: string, version: string) =>
+          `${name}, ${id}, version ${version}. Tags as listed in the export file.`,
+        colTag: "Tag",
+        colType: "Type",
+        colTrigger: "Trigger",
+        colConsent: "Consent check",
+        scrollHint: "The table scrolls sideways inside its frame.",
+        notInConfig: "Service not in your config",
+        notInConfigHint:
+          "The tag belongs to a catalog service that your Permito config does not list. Add the service or remove the tag.",
+        noConsentCheck: "Fires without an additional consent check",
+        noConsentCheckHint:
+          "The service is in the config, but the tag has no consent check of its own (consentSettings not set). Set one, or gate the tag with a Permito consent trigger.",
+        unknown: "Tag not assigned to a catalog service",
+        unknownHint:
+          "No catalog service matches. Check what the tag loads, then add a custom service to the config or confirm it needs none.",
+        notice: "Notice: Google tag with built-in consent check",
+        noticeHint:
+          "Google documents a built-in consent check for these tag types. They are listed for information and do not count toward the exit code.",
+        okLabel: "No finding",
+        empty: "Nothing in this group.",
+        via: "via",
+        service: "Service",
+        category: "Category",
+        hosts: "Hosts",
+        paused: "paused, not counted",
+        run: "Run it yourself",
+        exitHeading: "Exit code",
+        exitThis: (code: number) => `This run: ${code}`,
+        exits: [
+          { code: "0", text: "No finding that counts." },
+          { code: "1", text: "At least one tag is not in the config, has no consent check or cannot be assigned. Fits a CI step." },
+        ],
+        limits:
+          "The result is an observation about the export file. Whether a service needs consent is your decision, set in the category and requiresConsent of your config.",
+        error: "The recorded result could not be read.",
+      },
+
+      monitoring: {
+        label: "Monitoring",
+        title: "Monitoring many client sites",
+        sub: "One run, one issue per site.",
+        lede: "permito scan --sites checks every client site listed in a sites file in one run and writes a report per site. Findings the client has decided to keep go into accepted, per site.",
+        recorded:
+          "This is a recorded run against two local test sites, not a live check. Bakery Muster and Shop Beispiel are demo sites made for this page, not client sites.",
+        sitesHeading: "permito.sites.json",
+        summaryHeading: "Summary of the run",
+        colSite: "Site",
+        colStatus: "Status",
+        colNotConfigured: "Not in config",
+        colBefore: "Before consent",
+        colAccepted: "Accepted",
+        scrollHint: "The table scrolls sideways inside its frame.",
+        status: { clean: "Clean", findings: "Findings" } as Record<string, string>,
+        reportHeading: "Report for Shop Beispiel",
+        reportNote: "The Markdown file the run writes for this site. The accepted entry is listed apart from the findings.",
+        run: "Run it yourself",
+        actionHeading: "GitHub Action template",
+        actionBody:
+          "The scanner package ships a workflow template. It runs weekly and opens one issue per client site. It comments only when something new appears and closes the issue once the site is clean again.",
+        actionPoints: [
+          "Weekly, Mondays at 05:00 UTC, or started by hand.",
+          "One issue per site, in the repository you put the workflow in.",
+          "A comment only for new differences, not for ones already reported.",
+          "Runs on GitHub's runners in your agency's organisation. There is no hosted dashboard and nothing is sent to Seya.",
+        ],
+        actionNote: "Excerpt. The full template is in the scanner package.",
+        limits: "A clean run is a snapshot of the pages the scanner loads, not proof.",
+        error: "The recorded run could not be read.",
+      },
+
+      catalogChanges: {
+        label: "Catalog changes",
+        title: "Catalog changes per project",
+        sub: "Only the services you use.",
+        lede: "After you update the catalog package, permito-catalog changes lists what changed for the services in your own config, for example cookie durations, third countries or the legal entity. Every release also ships these changes as a changes.json, so they can be reviewed in the version pull request.",
+        simulated: "Example output from a simulated catalog update.",
+        simulatedBody:
+          "The changes.json behind it was produced by the real script from a simulated update. It does not describe a real change in the catalog.",
+        run: "Run it yourself",
+        outputHeading: "Output",
+        exitHeading: "Exit code",
+        exitThis: "This run: 1, because a change touches the cookie table.",
+        exitBody:
+          "A change that affects the cookie table ends the run with exit code 1 and the note to generate the table again. This fits Renovate or Dependabot pull requests, where the check fails until the table is regenerated.",
+        error: "The example output could not be read.",
       },
 
       log: {
