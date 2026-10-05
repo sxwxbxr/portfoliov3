@@ -95,7 +95,7 @@
   ],
   "pro": {
     "name": "Cosine Pro",
-    "availability": "coming-soon",
+    "availability": "available",
     "packages": [
       {
         "name": "@weber-development/cosine-vite",
