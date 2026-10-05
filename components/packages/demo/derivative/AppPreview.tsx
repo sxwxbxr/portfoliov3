@@ -22,8 +22,10 @@ export function AppPreview({ feed }: { feed: Feed }) {
   const [lang, setLang] = useState<string>("en")
   const [theme, setTheme] = useState<"light" | "dark">("light")
   const [accent, setAccent] = useState("#2f5bea")
+  const [types, setTypes] = useState<string | undefined>(undefined)
+  const [announce, setAnnounce] = useState(true)
   const [round, setRound] = useState(0)
-  const ids = { lang: useId(), theme: useId(), accent: useId() }
+  const ids = { lang: useId(), theme: useId(), accent: useId(), types: useId(), announce: useId() }
 
   useEffect(() => {
     if (resolvedTheme === "dark" || resolvedTheme === "light") setTheme(resolvedTheme)
@@ -32,6 +34,7 @@ export function AppPreview({ feed }: { feed: Feed }) {
   const reset = () => {
     try {
       localStorage.removeItem(STORAGE_KEY)
+      localStorage.removeItem(`${STORAGE_KEY}:announced`)
     } catch {
       // Storage blocked: the widget already treats every visit as the first.
     }
@@ -77,6 +80,34 @@ export function AppPreview({ feed }: { feed: Feed }) {
         </label>
       </div>
 
+      <div className="grid gap-4 sm:grid-cols-3">
+        <label htmlFor={ids.types} className="flex flex-col gap-1.5">
+          <span className="annotate">{t.types}</span>
+          <select
+            id={ids.types}
+            className={field}
+            value={types ?? ""}
+            onChange={(e) => setTypes(e.target.value || undefined)}
+          >
+            <option value="">{t.typesAll}</option>
+            <option value="feature,fix">{t.typesUser}</option>
+          </select>
+        </label>
+        <label htmlFor={ids.announce} className="flex items-start gap-2 sm:col-span-2 sm:pt-6">
+          <input
+            id={ids.announce}
+            type="checkbox"
+            className="mt-1"
+            checked={announce}
+            onChange={(e) => setAnnounce(e.target.checked)}
+          />
+          <span className="text-sm">
+            {t.announce}
+            <span className="annotate block">{t.announceNote}</span>
+          </span>
+        </label>
+      </div>
+
       <div className="well overflow-visible p-1.5">
         <div
           className="dv-demo-app rounded-md"
@@ -92,9 +123,17 @@ export function AppPreview({ feed }: { feed: Feed }) {
             <span className="font-semibold">Muster Ledger</span>
             {mod ? (
               <Widget
-                key={round}
+                key={`${round}-${announce}`}
                 feed={feed}
-                attrs={{ lang, theme, "storage-key": STORAGE_KEY, href: "#playground", label: undefined }}
+                attrs={{
+                  lang,
+                  theme,
+                  types,
+                  announce: announce ? "" : undefined,
+                  "storage-key": STORAGE_KEY,
+                  href: "#playground",
+                  label: undefined,
+                }}
                 className="contents"
               />
             ) : (
