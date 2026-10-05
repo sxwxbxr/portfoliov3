@@ -47,4 +47,4 @@ Try it in the [live demo](https://packages.sweber.dev/derivative/demo). The full
 
 ## Derivative Pro
 
-Derivative Pro is available from today. It adds three packages: read statistics without cookies or visitor IDs, audience segments that show entries only to certain plans or roles with scheduled releases, and announcements by e-mail digest and to Slack, Teams, Discord, Mattermost and Google Chat. Licences start at 9 CHF a month for one person; see the [package page](https://packages.sweber.dev/derivative) for all plans.
+Derivative Pro is available from today. It adds three packages: read statistics without cookies or visitor IDs, audience segments that show entries only to certain plans or roles with scheduled releases, and announcements by e-mail digest and to Slack, Teams, Discord, Mattermost and Google Chat. Licences start at 12 CHF a month for one person; see the [package page](https://packages.sweber.dev/derivative) for all plans.

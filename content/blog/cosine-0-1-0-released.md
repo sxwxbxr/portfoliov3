@@ -46,4 +46,4 @@ Try it in the [live demo](https://packages.sweber.dev/cosine/demo). The full ref
 
 ## Cosine Pro
 
-Cosine Pro is available from 9 CHF per month. It adds a Vite plugin that builds the index with every build in Vite, Astro, VitePress, SvelteKit and Nuxt and re-embeds only the sections that changed, plus search insights without tracking: queries without results and results nobody opened. Plans and checkout are on the [package page](https://packages.sweber.dev/cosine).
+Cosine Pro is available from 12 CHF per month. It adds a Vite plugin that builds the index with every build in Vite, Astro, VitePress, SvelteKit and Nuxt and re-embeds only the sections that changed, plus search insights without tracking: queries without results and results nobody opened. Plans and checkout are on the [package page](https://packages.sweber.dev/cosine).

@@ -117,8 +117,8 @@
         "id": "freelancer",
         "name": "Freelancer",
         "description": "For one person working on client projects.",
-        "monthly": 9,
-        "yearly": 90,
+        "monthly": 12,
+        "yearly": 120,
         "seats": 1,
         "support": false,
         "checkout": {
@@ -130,8 +130,8 @@
         "id": "agency",
         "name": "Agency",
         "description": "For teams of up to ten named people, one price.",
-        "monthly": 29,
-        "yearly": 290,
+        "monthly": 39,
+        "yearly": 390,
         "seats": 10,
         "support": true,
         "highlighted": true,
@@ -144,7 +144,7 @@
         "id": "lifetime",
         "name": "Lifetime",
         "description": "Pay once for up to ten people and keep updates and repository access.",
-        "oneTime": 990,
+        "oneTime": 1290,
         "seats": 10,
         "support": true,
         "checkout": {
@@ -153,6 +153,7 @@
       }
     ],
     "notes": [
+      "Pay yearly and get two months free: CHF 120 instead of CHF 144 for Freelancer, CHF 390 instead of CHF 468 for Agency.",
       "After cancelling, every version you already received keeps working. Only updates and repository access end.",
       "No licence key, no phone-home. The Pro packages never contact a server to check your licence.",
       "Agency and Lifetime cover up to ten named people for one price: you choose the number of seats at checkout and assign them in Polar. Your clients and their websites need no licence of their own.",
