@@ -4,7 +4,7 @@
   "tagline": "Accessibility checks for CI and tests, client-ready reports and accessibility statements in five languages. Built on axe-core, no overlay.",
   "seoTitle": "Surjection – accessibility testing and statements for agencies (BFSG, EAA)",
   "description": "Surjection helps agencies make accessibility part of every project instead of a one-off scan. It runs axe-core in Playwright and Vitest, maps every finding to WCAG 2.2 and EN 301 549, and fails the build only on new problems thanks to a baseline for existing sites.\n\nIt also generates the accessibility statement (Erklärung zur Barrierefreiheit) in German, Swiss German, French, Italian and English, and ships small accessible React building blocks. Surjection is deliberately not an overlay widget: it helps you fix the code, it does not hide problems. Automated tests find only part of all barriers, so Surjection does not promise legal conformity.",
-  "status": "coming-soon",
+  "status": "beta",
   "tags": [
     "Accessibility",
     "WCAG 2.2",
@@ -27,7 +27,9 @@
     "snippet": "import { test } from \"@playwright/test\"\nimport { expectAccessible } from \"@sweberdev/surjection/playwright\"\nimport baseline from \"./a11y-baseline.json\"\n\nfor (const path of [\"/\", \"/shop\", \"/checkout\"]) {\n  test(`${path} is accessible`, async ({ page }) => {\n    await page.goto(path)\n    await expectAccessible(page, { baseline, failOn: \"serious\", locale: \"de\" })\n  })\n}"
   },
   "links": {
-    "docs": "https://packages.sweber.dev/surjection/docs"
+    "docs": "https://packages.sweber.dev/surjection/docs",
+    "github": "https://github.com/Weber-Development/surjection",
+    "npm": "https://www.npmjs.com/package/@sweberdev/surjection"
   },
   "docs": {
     "repo": "Weber-Development/surjection",
@@ -103,7 +105,7 @@
   ],
   "pro": {
     "name": "Surjection Pro",
-    "availability": "coming-soon",
+    "availability": "available",
     "packages": [
       {
         "name": "@weber-development/surjection-report",
