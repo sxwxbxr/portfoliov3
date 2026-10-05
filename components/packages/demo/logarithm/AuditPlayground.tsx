@@ -4,6 +4,7 @@ import { useCallback, useEffect, useId, useState } from "react"
 import { CodeBlock } from "@/components/packages/demo/CodeBlock"
 import { type AuditActor, type AuditEvent, createAuditLog, memoryStore } from "@/lib/demo/logarithm"
 import { logarithmDemo } from "@/lib/demo/logarithm-copy"
+import { ActivityFeed } from "./ActivityFeed"
 import { AuditLog } from "./AuditLog"
 import "./audit-log.css"
 
@@ -374,6 +375,21 @@ export function AuditPlayground() {
               </button>
             ))}
           </div>
+        </div>
+
+        <div className="logarithm-demo flex min-w-0 flex-col gap-2 rounded-md border border-edge-soft p-4">
+          <p className="text-sm text-fg-muted">{t.feedHint}</p>
+          {log && (
+            <ActivityFeed
+              key={`feed-${seed}-${locale}`}
+              fetchPage={(q) => log.query(q)}
+              refreshKey={version}
+              locale={locale === "de" ? "de-CH" : "en-GB"}
+              nouns={NOUNS[locale]}
+              limit={3}
+              theme="dark"
+            />
+          )}
         </div>
 
         <div className="logarithm-demo min-w-0">
