@@ -92,7 +92,7 @@
   ],
   "pro": {
     "name": "Inverse Pro",
-    "availability": "coming-soon",
+    "availability": "available",
     "packages": [
       {
         "name": "@weber-development/inverse-ledger",
@@ -120,7 +120,11 @@
         "monthly": 19,
         "yearly": 190,
         "seats": 1,
-        "support": false
+        "support": false,
+        "checkout": {
+          "monthly": "https://buy.polar.sh/polar_cl_U0vEJWPeuMFMzLHeQ9l0YBa9znGSwQ0r1Kp8C2gU1Oy",
+          "yearly": "https://buy.polar.sh/polar_cl_UZZChybKB3baGDE0LRq9KCFkzGloKfuUcelTZ0DVRin"
+        }
       },
       {
         "id": "agency",
@@ -130,7 +134,11 @@
         "yearly": 590,
         "seats": 10,
         "support": true,
-        "highlighted": true
+        "highlighted": true,
+        "checkout": {
+          "monthly": "https://buy.polar.sh/polar_cl_XUjYhHd5dLE7r6yIaRmgR7VpquZCPjN0NrXV733qXZz",
+          "yearly": "https://buy.polar.sh/polar_cl_6wkNmNI2Q9A7dE8Y3EZRzk7S5g1dOIKwdCURZ2ZZAV5"
+        }
       },
       {
         "id": "lifetime",
@@ -138,10 +146,14 @@
         "description": "Pay once for up to ten people and keep updates and repository access.",
         "oneTime": 1990,
         "seats": 10,
-        "support": true
+        "support": true,
+        "checkout": {
+          "oneTime": "https://buy.polar.sh/polar_cl_vt6xCOOdKqAfi0cWxMtmYOZHaBmvy8RSfVUYK3yaKoT"
+        }
       }
     ],
     "notes": [
+      "Pay yearly and get two months free: CHF 190 instead of CHF 228 for Freelancer, CHF 590 instead of CHF 708 for Agency.",
       "After cancelling, every version you already received keeps working. Only updates and repository access end.",
       "No licence key, no phone-home. The packages never contact a server to check your licence.",
       "Agency and Lifetime cover up to ten named people for one price: you choose the number of seats at checkout and assign them in Polar. Your clients and their websites need no licence of their own.",
