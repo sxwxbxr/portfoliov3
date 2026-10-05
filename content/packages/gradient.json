@@ -1,0 +1,69 @@
+{
+  "slug": "gradient",
+  "name": "Gradient",
+  "tagline": "Accessible color scales from one brand color, where the step number tells you the contrast. Light and dark mode, OKLCH, export for Tailwind and CSS.",
+  "seoTitle": "Gradient – accessible OKLCH color scales with dark mode for Tailwind and CSS",
+  "description": "Gradient turns one brand color into eleven steps from 50 to 950, for light and dark mode, plus a grey tinted with your hue. Most palette generators space lightness evenly, so contrast depends on the hue: blue-600 passes on white, yellow-600 often does not. Gradient solves every step for a fixed contrast instead. Step 500 always reaches 3:1, step 600 4.5:1 and step 800 7:1 against the page, in dark mode against black, for every color you start from.\n\nColors are computed in OKLCH and brought into sRGB by lowering chroma only, so the contrast stays where it was solved. Every step comes with a readable text color for buttons and badges. Export the palette as a Tailwind CSS v4 theme, a Tailwind v3 config, CSS custom properties, W3C design tokens or JSON, from code or with one CLI command. No dependencies, MIT-licensed.",
+  "status": "beta",
+  "tags": [
+    "Color",
+    "OKLCH",
+    "Accessibility",
+    "WCAG 2.2",
+    "Dark mode",
+    "Tailwind CSS",
+    "Design tokens"
+  ],
+  "license": "MIT",
+  "order": 30,
+  "install": "npx @sweberdev/gradient \"#e30613\" --format tailwind --out app/gradient.css",
+  "npm": [
+    "@sweberdev/gradient"
+  ],
+  "code": {
+    "title": "scripts/colors.ts",
+    "language": "ts",
+    "snippet": "import { checkPalette, createPalette, toTailwind } from \"@sweberdev/gradient\"\nimport { writeFileSync } from \"node:fs\"\n\nconst palette = createPalette({ brand: \"#e30613\", accent: \"#0a84ff\" })\n\nwriteFileSync(\"app/gradient.css\", toTailwind(palette))\n// bg-brand-50, text-brand-700, bg-brand-600 text-brand-on-600 …\n\nconsole.log(checkPalette(palette).every((c) => c.pass)) // true"
+  },
+  "demoUrl": "/gradient/demo",
+  "links": {
+    "docs": "https://packages.sweber.dev/gradient/docs",
+    "github": "https://github.com/Weber-Development/gradient",
+    "npm": "https://www.npmjs.com/package/@sweberdev/gradient"
+  },
+  "docs": {
+    "repo": "Weber-Development/gradient",
+    "path": "docs",
+    "ref": "main"
+  },
+  "features": {
+    "free": [
+      "Eleven steps from one color, with fixed contrast per step: 500 ≥ 3:1, 600 ≥ 4.5:1, 800 ≥ 7:1 on the page",
+      "Dark mode with the same step numbers and the same promises, so one set of classes works in both modes",
+      "OKLCH throughout, with gamut mapping that never moves lightness",
+      "A neutral grey tinted with your brand hue, and a readable text color for every step",
+      "Export as Tailwind CSS v4 theme, Tailwind v3 config, CSS variables, W3C design tokens or JSON",
+      "Contrast checks for CI, also when you pin your exact brand color",
+      "CLI and a zero-dependency library that runs in Node.js and the browser"
+    ]
+  },
+  "faq": [
+    {
+      "q": "Does Gradient keep my exact brand color?",
+      "a": "By default the closest step gets your hue and chroma, with lightness adjusted to the contrast of that step. Pass --pin to keep the exact color; the contrast check then tells you if that breaks a promise."
+    },
+    {
+      "q": "Why are the colors in OKLCH?",
+      "a": "OKLCH is perceptually even: the same lightness looks equally bright in every hue, and chroma changes do not shift the hue. All browsers since 2023 support it. Use the hex export for older ones."
+    },
+    {
+      "q": "Does a passing contrast check make my site accessible?",
+      "a": "It covers the contrast criteria of WCAG 2.2 (1.4.3, 1.4.6 and 1.4.11). It cannot tell whether information depends on color alone or how the colors are used. For checks of the whole site, see Surjection."
+    },
+    {
+      "q": "Is there a paid version?",
+      "a": "No. Gradient is MIT-licensed and complete. It is also the color foundation of the upcoming UI library Lattice."
+    }
+  ],
+  "publishedAt": "2026-10-05"
+}

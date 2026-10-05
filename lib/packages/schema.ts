@@ -104,6 +104,11 @@ export const packageSchema = z.object({
       })
     )
     .optional(),
+  /**
+   * Path on the package site of a live demo, e.g. "/gradient/demo". For
+   * packages without Pro; a Pro demo goes in `pro.demoUrl`.
+   */
+  demoUrl: z.string().startsWith("/").optional(),
   pro: z
     .object({
       name: z.string(),
@@ -150,4 +155,9 @@ export const packageSchema = z.object({
 })
 
 export type Package = z.infer<typeof packageSchema>
+
+/** Live demo of a package, free or Pro. */
+export function demoUrlOf(pkg: Package): string | undefined {
+  return pkg.demoUrl ?? pkg.pro?.demoUrl
+}
 export type PriceTier = z.infer<typeof priceTier>

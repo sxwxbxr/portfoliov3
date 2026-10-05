@@ -160,6 +160,12 @@ export default async function PackagePage({ params }: Props) {
                 {chev}
               </TrackedLink>
             )}
+            {pkg.demoUrl && (
+              <Link href={pkgPath(pkg.demoUrl)} className={btn}>
+                {copy.packages.liveDemo}
+                {chev}
+              </Link>
+            )}
             {pkg.links.github && (
               <TrackedLink href={pkg.links.github} className={btn}>
                 {copy.packages.github}
