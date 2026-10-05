@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI transparency report – Muster Travel AG</title>
+<style>
+:root { color-scheme: light; --fg: #1a1a1a; --muted: #555b66; --line: #d7dbe3; --accent: #003399; }
+* { box-sizing: border-box; }
+body { margin: 0; font: 15px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--fg); background: #fff; }
+main { max-width: 860px; margin: 0 auto; padding: 40px 24px 64px; }
+h1 { font-size: 28px; margin: 0 0 4px; }
+h2 { font-size: 20px; margin: 40px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+h3 { font-size: 17px; margin: 28px 0 8px; }
+.muted { color: var(--muted); }
+.note { border-left: 4px solid var(--accent); padding: 8px 12px; background: #f4f6fb; margin: 16px 0; }
+table { width: 100%; border-collapse: collapse; margin: 8px 0 16px; font-size: 14px; }
+th, td { text-align: left; vertical-align: top; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+th { font-weight: 600; }
+dl { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; margin: 8px 0; }
+dt { color: var(--muted); }
+dd { margin: 0; }
+.badge { display: inline-block; padding: 0 6px; border-radius: 4px; background: var(--accent); color: #fff; font-size: 12px; font-weight: 700; }
+.error { color: #a61b1b; } .warning { color: #8a5a00; }
+@media print { main { padding: 0; } h2 { break-after: avoid; } section { break-inside: avoid; } }
+</style>
+</head>
+<body>
+<main>
+<h1>AI transparency report</h1>
+<p class="muted">Muster Travel AG · Generated on October 5, 2026</p>
+<p class="note">This report documents transparency measures under Article 50 of the EU AI Act (Regulation (EU) 2024/1689). It is not legal advice and does not confirm compliance.</p>
+<p>Contact: ai@muster-travel.example</p>
+<h2>Overview</h2>
+<table><thead><tr><th>System</th><th>Role</th><th>Use</th><th>Duties</th><th>Status</th></tr></thead><tbody>
+<tr><td>Support assistant</td><td>Provider</td><td>Chatbot or assistant, Generated text</td><td>Art. 50(1), Art. 50(2)</td><td>Notice found on 1 of 1 pages</td></tr>
+<tr><td>Image generator</td><td>Deployer</td><td>Generated images</td><td>No Article 50 duty identified</td><td>–</td></tr>
+<tr><td>Newsletter drafts</td><td>Deployer</td><td>Published text on matters of public interest</td><td>Art. 50(4)</td><td>–</td></tr>
+</tbody></table>
+<section><h3>Support assistant</h3>
+<dl>
+<dt>Purpose</dt><dd>Answers questions about bookings and travel documents.</dd>
+<dt>Model</dt><dd>Example AI · example-chat-2</dd>
+<dt>Role</dt><dd>Provider</dd>
+<dt>Used in</dt><dd>/support</dd>
+<dt>Live since</dt><dd>June 1, 2026</dd>
+<dt>Owner</dt><dd>Customer service</dd>
+<dt>Status</dt><dd>Notice found on 1 of 1 pages</dd>
+</dl>
+<table><thead><tr><th>Duties</th><th>Use</th><th>Implementation with Witness</th></tr></thead><tbody>
+<tr><td><span class="badge">Art. 50(1)</span><br>People must be told that they are interacting with an AI system, at the latest at the first interaction.</td><td>Chatbot or assistant</td><td>Chatbot notice before the first message (&lt;witness-notice&gt;, &lt;AiNotice&gt;), kept as a compact label.</td></tr>
+<tr><td><span class="badge">Art. 50(2)</span><br>Generated content must be marked in a machine-readable format so it can be detected as artificially generated or manipulated.</td><td>Generated text</td><td>Machine-readable marking: IPTC/XMP for images, text watermark, AI SDK middleware; C2PA where the generator provides it.</td></tr>
+</tbody></table>
+<p><strong>Measures</strong></p><ul><li>Notice above the chat with &lt;witness-notice&gt;</li><li>Answers carry the invisible text watermark</li></ul>
+</section>
+<section><h3>Image generator</h3>
+<dl>
+<dt>Purpose</dt><dd>Creates illustrations for the website and the blog.</dd>
+<dt>Model</dt><dd>Example AI · example-image-1</dd>
+<dt>Role</dt><dd>Deployer</dd>
+<dt>Used in</dt><dd>/, /blog</dd>
+<dt>Live since</dt><dd>March 15, 2026</dd>
+<dt>Owner</dt><dd>Marketing</dd>
+</dl>
+<p class="muted">No Article 50 duty identified</p>
+<p><strong>Measures</strong></p><ul><li>IPTC marking in every file</li><li>Visible label next to each image</li></ul>
+</section>
+<section><h3>Newsletter drafts</h3>
+<dl>
+<dt>Purpose</dt><dd>Drafts newsletter texts that an editor reviews and signs off.</dd>
+<dt>Model</dt><dd>Example AI</dd>
+<dt>Role</dt><dd>Deployer</dd>
+<dt>Live since</dt><dd>May 1, 2026</dd>
+<dt>Owner</dt><dd>Marketing</dd>
+</dl>
+<table><thead><tr><th>Duties</th><th>Use</th><th>Implementation with Witness</th></tr></thead><tbody>
+<tr><td><span class="badge">Art. 50(4)</span><br>Published text on matters of public interest must be disclosed as AI-generated, unless a person reviewed it and holds editorial responsibility. Exempt: reviewed by a person who holds editorial responsibility.</td><td>Published text on matters of public interest</td><td>Visible label on the content (&lt;witness-label&gt;, &lt;AiContent&gt;); for text, above the text.</td></tr>
+</tbody></table>
+</section>
+<h2>Automated check</h2>
+<p class="muted">Checked on October 5, 2026</p>
+<table><thead><tr><th>Pages</th><th>Notices</th><th>Labels</th><th>Marked elements</th><th>AI images</th><th>C2PA images</th><th>Watermarked texts</th></tr></thead><tbody><tr><td>3</td><td>1</td><td>1</td><td>1</td><td>2</td><td>0</td><td>0</td></tr></tbody></table>
+<h3>Findings</h3>
+<table><tbody>
+<tr><td class="error">Error</td><td><code>blog/lagoon.html</code></td><td>Shows the AI-generated image images/lagoon.png without a visible label next to it.</td></tr>
+</tbody></table>
+<h2>Evidence of notices</h2>
+<table><thead><tr><th>Notice</th><th>Version</th><th>Shown</th><th>Acknowledged</th><th>First</th><th>Last</th></tr></thead><tbody>
+<tr><td>support-chat</td><td>1</td><td>420</td><td>294</td><td>September 1, 2026</td><td>September 27, 2026</td></tr>
+</tbody></table>
+</main>
+</body>
+</html>
