@@ -13,6 +13,7 @@ import {
   getDocsPage,
   isValidDocsPath,
 } from "@/lib/packages/docs"
+import { demoUrlOf } from "@/lib/packages/schema"
 import { pkgPath, pkgUrl } from "@/lib/packages/urls"
 import { extractHeadings } from "@/lib/blog"
 import { copy } from "@/lib/copy"
@@ -88,7 +89,7 @@ export default async function DocsPage({ params }: Props) {
       <PageLayout>
         <div className="sheet pt-10 pb-24 md:pt-16">
           <div className="md:grid md:grid-cols-[14rem_minmax(0,1fr)] md:gap-12 lg:gap-16">
-            {nav && <DocsNav nav={nav} slug={slug} demoUrl={pkg.pro?.demoUrl} />}
+            {nav && <DocsNav nav={nav} slug={slug} demoUrl={demoUrlOf(pkg)} />}
             <div className="min-w-0">
               <nav aria-label={t.crumbs} className="annotate mb-6 flex flex-wrap gap-x-2">
                 <Link href={pkgPath(`/${slug}`)} className={crumbLink}>
@@ -101,9 +102,9 @@ export default async function DocsPage({ params }: Props) {
                 {t.overviewTitle(pkg.name)}
               </h1>
               <p className="measure mt-4 text-lg leading-relaxed text-fg-muted">{pkg.tagline}</p>
-              {pkg.pro?.demoUrl && (
+              {demoUrlOf(pkg) && (
                 <Link
-                  href={pkgPath(pkg.pro.demoUrl)}
+                  href={pkgPath(demoUrlOf(pkg)!)}
                   className="control control-primary mt-6 inline-flex items-center gap-1 py-2.5 pr-4 pl-5 text-sm"
                 >
                   {t.tryDemo}
@@ -171,7 +172,7 @@ export default async function DocsPage({ params }: Props) {
     <PageLayout>
       <div className="sheet pt-10 pb-24 md:pt-16">
         <div className="md:grid md:grid-cols-[14rem_minmax(0,1fr)] md:gap-12 lg:gap-16 xl:grid-cols-[14rem_minmax(0,1fr)_12rem]">
-          <DocsNav nav={nav} slug={slug} current={page} demoUrl={pkg.pro?.demoUrl} />
+          <DocsNav nav={nav} slug={slug} current={page} demoUrl={demoUrlOf(pkg)} />
           <div className="min-w-0">
             <nav aria-label={t.crumbs} className="annotate mb-6 flex flex-wrap gap-x-2">
               <Link href={pkgPath(`/${slug}`)} className={crumbLink}>
