@@ -1,4 +1,5 @@
 import { cache } from "react"
+import { unstable_cache } from "next/cache"
 import { desc } from "drizzle-orm"
 import { db } from "@/lib/db"
 import { packagePosts } from "@/lib/schema"
@@ -24,13 +25,16 @@ export function rowToPost(row: Row): Post {
   }
 }
 
+/** Cache tag on every read of package_posts; see revalidatePackagePosts. */
+export const POSTS_TAG = "package-posts"
+
 /**
  * Published posts from package_posts. Without DATABASE_URL (local markup
  * work) there are none. A missing table also yields none, with a warning:
  * the code can ship before `db:push` creates the table, and the package site
  * must not go down for that. Any other database error propagates.
  */
-const readPublished = cache(async (): Promise<Post[]> => {
+const queryPublished = async (): Promise<Post[]> => {
   if (!process.env.DATABASE_URL) return []
   const today = new Date().toISOString().slice(0, 10)
   try {
@@ -47,7 +51,13 @@ const readPublished = cache(async (): Promise<Post[]> => {
     }
     throw err
   }
-})
+}
+
+// Tagged so a write can invalidate every page, feed and sitemap built from
+// these rows at once; revalidatePath alone does not reach route handlers.
+const readPublished = cache(
+  unstable_cache(queryPublished, [POSTS_TAG], { tags: [POSTS_TAG], revalidate: 60 })
+)
 
 export function createDbSource(): BlogSource {
   return {

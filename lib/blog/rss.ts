@@ -51,10 +51,9 @@ ${items}
   </channel>
 </rss>
 `
+  // No Cache-Control here: Next derives it from the route's `revalidate`, and
+  // a custom header keeps revalidatePath() from refreshing the feed.
   return new Response(xml, {
-    headers: {
-      "Content-Type": "application/rss+xml; charset=utf-8",
-      "Cache-Control": "public, s-maxage=60, stale-while-revalidate=600",
-    },
+    headers: { "Content-Type": "application/rss+xml; charset=utf-8" },
   })
 }
