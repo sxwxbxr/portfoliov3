@@ -2,19 +2,16 @@
   "slug": "compliance",
   "name": "Compliance Bundle",
   "tagline": "Every Pro add-on an agency needs for the legal side of client websites and SaaS apps, under one licence.",
-  "seoTitle": "Compliance Bundle – cookie consent, accessibility and audit log Pro for agencies",
-  "description": "Client websites in Switzerland, Germany and Austria have to ask for cookie consent, meet accessibility rules and, for SaaS apps, show who changed what. The Compliance Bundle combines the Pro add-ons for all three in one subscription, for less than buying them one by one.\n\nNew compliance packages join the bundle when they are released, without a higher price for running subscriptions. Next up are a withdrawal and cancellation button kit for the German and Austrian button laws, and transparency labels for AI content under the EU AI Act.",
-  "includes": ["permito", "surjection", "logarithm"],
-  "upcoming": [
-    {
-      "name": "Withdrawal and cancellation button",
-      "description": "The withdrawal button (§ 356a BGB) and cancellation button (§ 312k BGB) for Next.js and React, with confirmation e-mail and records."
-    },
-    {
-      "name": "AI transparency",
-      "description": "Labels and machine-readable markers for AI-generated content and chatbots under Art. 50 of the EU AI Act."
-    }
+  "seoTitle": "Compliance Bundle – cookie consent, accessibility, audit log, withdrawal button and AI Act Pro for agencies",
+  "description": "Client websites in Switzerland, Germany and Austria have to ask for cookie consent and meet accessibility rules. Shops and SaaS apps need a withdrawal and a cancellation button, apps with AI features have to label them under the EU AI Act, and SaaS customers want to see who changed what. The Compliance Bundle combines the Pro add-ons for all five in one subscription, for less than buying them one by one.\n\nNew compliance packages join the bundle when they are released, without a higher price for running subscriptions.",
+  "includes": [
+    "permito",
+    "surjection",
+    "logarithm",
+    "inverse",
+    "witness"
   ],
+  "upcoming": [],
   "pro": {
     "name": "Compliance Bundle",
     "availability": "available",
@@ -65,7 +62,7 @@
       }
     ],
     "notes": [
-      "Bought one by one, the three Pro add-ons cost CHF 67 a month for Freelancer and CHF 207 for Agency.",
+      "Bought one by one, the five Pro add-ons cost CHF 105 a month for Freelancer, CHF 325 for Agency and CHF 10'950 for Lifetime.",
       "Packages that join the bundle later are included at no extra cost.",
       "After cancelling, every version you already received keeps working. Only updates and repository access end.",
       "Agency and Lifetime cover up to ten named people for one price: you choose the number of seats at checkout and assign them in Polar. Your clients and their websites need no licence of their own.",
