@@ -3,8 +3,8 @@
     "http://127.0.0.1:4317/"
   ],
   "summary": {
-    "unconfigured": 5,
-    "beforeConsent": 2,
+    "unconfigured": 3,
+    "beforeConsent": 4,
     "matched": 0
   },
   "unconfigured": [
@@ -15,7 +15,7 @@
       "suggestions": [
         {
           "id": "facebook-embed",
-          "name": "Facebook (Social Plugins, eingebettete Beiträge)"
+          "name": "Facebook (social plugins, embedded posts)"
         },
         {
           "id": "meta-pixel",
@@ -37,12 +37,6 @@
     {
       "status": "unconfigured",
       "type": "host",
-      "name": "region1.google-analytics.com",
-      "suggestions": []
-    },
-    {
-      "status": "unconfigured",
-      "type": "host",
       "name": "www.facebook.com",
       "suggestions": [
         {
@@ -50,12 +44,6 @@
           "name": "Meta Pixel"
         }
       ]
-    },
-    {
-      "status": "unconfigured",
-      "type": "host",
-      "name": "www.googletagmanager.com",
-      "suggestions": []
     }
   ],
   "beforeConsent": [
@@ -72,6 +60,20 @@
       "type": "cookie",
       "name": "_ga",
       "thirdParty": false,
+      "serviceId": "google-analytics-4",
+      "category": "statistics"
+    },
+    {
+      "status": "before-consent",
+      "type": "host",
+      "name": "region1.google-analytics.com",
+      "serviceId": "google-analytics-4",
+      "category": "statistics"
+    },
+    {
+      "status": "before-consent",
+      "type": "host",
+      "name": "www.googletagmanager.com",
       "serviceId": "google-analytics-4",
       "category": "statistics"
     }
