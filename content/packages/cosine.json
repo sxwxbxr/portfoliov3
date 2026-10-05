@@ -109,6 +109,60 @@
     "demoUrl": "/cosine/demo",
     "waitlistUrl": "mailto:info@sweber.dev?subject=Cosine%20Pro%20waitlist"
   },
+  "pricing": {
+    "currency": "CHF",
+    "merchant": "Polar",
+    "tiers": [
+      {
+        "id": "freelancer",
+        "name": "Freelancer",
+        "description": "For one person working on client projects.",
+        "monthly": 9,
+        "yearly": 90,
+        "seats": 1,
+        "support": false,
+        "checkout": {
+          "monthly": "https://buy.polar.sh/polar_cl_rGBQ4ydbr2enLyVKunrPyeipotPmUe3odjZDG0mDUnA",
+          "yearly": "https://buy.polar.sh/polar_cl_0CmmNLmWEkurigx87fi0zWyhQY91UwI3sCNb30l6yME"
+        }
+      },
+      {
+        "id": "agency",
+        "name": "Agency",
+        "description": "For teams of up to ten named people, one price.",
+        "monthly": 29,
+        "yearly": 290,
+        "seats": 10,
+        "support": true,
+        "highlighted": true,
+        "checkout": {
+          "monthly": "https://buy.polar.sh/polar_cl_YRkP5WPs1VXX6e0jtn3kUxSkBLHQTg0KisJqN23LyqE",
+          "yearly": "https://buy.polar.sh/polar_cl_spTJBFF9VzaEQ2mcBg236qE7IN8emHRXZGETQ2Y7Wx1"
+        }
+      },
+      {
+        "id": "lifetime",
+        "name": "Lifetime",
+        "description": "Pay once for up to ten people and keep updates and repository access.",
+        "oneTime": 990,
+        "seats": 10,
+        "support": true,
+        "checkout": {
+          "oneTime": "https://buy.polar.sh/polar_cl_CDKtaTAD4s2I0BCBFe5wgu1DpMkH4Ap9TqHIL1ukkpW"
+        }
+      }
+    ],
+    "notes": [
+      "After cancelling, every version you already received keeps working. Only updates and repository access end.",
+      "No licence key, no phone-home. The Pro packages never contact a server to check your licence.",
+      "Agency and Lifetime cover up to ten named people for one price: you choose the number of seats at checkout and assign them in Polar. Your clients and their websites need no licence of their own.",
+      "Checkout, invoices and VAT are handled by Polar as merchant of record."
+    ],
+    "custom": {
+      "label": "11 people or more",
+      "email": "info@sweber.dev"
+    }
+  },
   "faq": [
     {
       "q": "Does it need a server or an API key?",
