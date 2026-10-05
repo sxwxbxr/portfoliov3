@@ -45,6 +45,6 @@ Build the feed before your app and put the widget in your header:
 
 Try it in the [live demo](https://packages.sweber.dev/derivative/demo). The full reference is at [packages.sweber.dev/derivative/docs](https://packages.sweber.dev/derivative/docs).
 
-## Derivative Pro is coming
+## Derivative Pro
 
-A Pro edition is in preparation. It adds read statistics without cookies or visitor IDs, audience segments that show entries only to certain plans or roles with scheduled releases, and announcements by e-mail digest and to Slack, Teams, Discord, Mattermost and Google Chat. You can join the waitlist on the [package page](https://packages.sweber.dev/derivative).
+Derivative Pro is available from today. It adds three packages: read statistics without cookies or visitor IDs, audience segments that show entries only to certain plans or roles with scheduled releases, and announcements by e-mail digest and to Slack, Teams, Discord, Mattermost and Google Chat. Licences start at 9 CHF a month for one person; see the [package page](https://packages.sweber.dev/derivative) for all plans.
