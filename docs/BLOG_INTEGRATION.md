@@ -1,17 +1,49 @@
 # Blog-Anbindung packages.sweber.dev
 
-Für Marco Schulz (Schulz Media). So liefert ein externes Blog-System Beiträge an
-packages.sweber.dev/blog.
+Für Marco Schulz (Schulz Media). So kommen Beiträge auf packages.sweber.dev/blog.
 
-Es gibt zwei Wege, die sich kombinieren lassen:
+## Standardweg: Content-API von Schulz Media (Pull)
 
-1. **Push (empfohlen):** Euer System schickt jeden Beitrag per HTTP an die Ingest-API. Er ist sofort
-   online, ohne Deploy.
-2. **Revalidierung:** Liegt der Inhalt anderswo und wird von der Seite abgeholt, ruft ihr nach jeder
-   Änderung den Webhook `/api/revalidate` auf.
+Die Beiträge werden bei Schulz Media geschrieben und freigegeben. packages.sweber.dev holt sie
+serverseitig über die Content-API ab (`lib/blog/schulz-media.ts`) und rendert sie als eigene
+Seiten. Es gibt kein iframe, nichts wird im Browser nachgeladen, und der Schlüssel bleibt auf dem
+Server.
 
-Beiträge, die Seya selbst schreibt, entstehen unter sweber.dev/admin/news und landen in derselben
-Liste.
+**Einstellungen bei Schulz Media**
+
+| Feld | Wert |
+|---|---|
+| Adressmuster | `https://packages.sweber.dev/blog/{slug}` (**ohne** Schrägstrich am Ende, so wie die Seite ihre URLs schreibt) |
+| Build-Hook | `https://packages.sweber.dev/api/revalidate?token=<BLOG_REVALIDATE_TOKEN>` (POST) |
+
+**Was die Seite mit einem Beitrag macht**
+
+- `content_html` wird bereinigt gerendert: kein `<script>`, keine Event-Handler, keine iframes.
+  Überschriften ab `<h2>` erhalten Anker und ergeben das Inhaltsverzeichnis.
+- Die Seite setzt:
+  - `<title>`: `seo.title` oder `title`
+  - Meta-Beschreibung: `seo.meta_description` oder `excerpt`
+  - `canonical` und `og:url`: `url`
+  - `og:image`: das Beitragsbild, sonst eine generierte Grafik
+  - Strukturierte Daten `BlogPosting` mit `inLanguage: "de-CH"` und Weber Development als
+    `author` und `publisher`
+- Zeigt `url` auf packages.sweber.dev, nimmt die Seite ihre eigene Schreibweise als `canonical`.
+  Ein abweichender Schrägstrich führt also nicht zu einer Umleitung. Zeigt `url` auf eine andere
+  Domain, bleibt sie als `canonical` stehen, und der Beitrag kommt nicht in die Sitemap.
+- Nennt ein Beitrag im Titel oder Anriss ein Package, zum Beispiel „Permito“, erscheint er
+  zusätzlich auf dessen Seite.
+- Antworten der API werden 5 Minuten zwischengespeichert. Der Build-Hook leert den Cache sofort:
+  Blog, Feeds, Sitemap und Package-Seiten.
+- Ist die API nicht erreichbar, bleiben die zuletzt ausgelieferten Seiten stehen. Ein Build bricht
+  deswegen nicht ab.
+
+**Einrichtung (Seya, in Vercel → Production):** `SCHULZ_MEDIA_API_KEY` mit dem `sm_live_…`-Schlüssel und
+`BLOG_REVALIDATE_TOKEN` für den Build-Hook.
+
+## Alternative: Push über die Ingest-API
+
+Für Systeme, die Beiträge aktiv senden statt sie bereitzustellen. Für Schulz Media ist sie nicht
+nötig, bleibt aber verfügbar.
 
 ## Zugang
 
@@ -96,7 +128,7 @@ curl -X POST https://packages.sweber.dev/api/packages/posts \
   -d '{"externalId":"sm-1","slug":"hello-packages","title":"Hello","publishedAt":"2026-10-05","body":"First post."}'
 ```
 
-## Revalidierungs-Webhook (Pull-Variante)
+## Revalidierungs-Webhook (Build-Hook)
 
 ```
 POST /api/revalidate

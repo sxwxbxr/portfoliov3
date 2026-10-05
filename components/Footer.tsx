@@ -16,6 +16,8 @@ const footerNav = [
         : []),
       { name: copy.nav.services, href: "/services" },
       { name: copy.nav.packages, href: PACKAGES_ENTRY, sameTab: true },
+      // The blog lives on the package site; posts come from Schulz Media and /admin/news.
+      { name: copy.nav.blog, href: `${PACKAGES_ENTRY}/blog`, sameTab: true },
     ],
   },
   {

@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation"
+import { ImageResponse } from "next/og"
 import { blog } from "@/lib/blog"
 import { OG_SIZE, ogImage } from "@/lib/packages/og"
 import { formatDate } from "../PostCard"
@@ -21,6 +22,25 @@ export default async function OpenGraphImage({
   const { slug } = await params
   const post = await blog.getPost(slug)
   if (!post) notFound()
+
+  // A post that brings its own picture shares that picture.
+  if (post.coverImage) {
+    return new ImageResponse(
+      (
+        <div style={{ display: "flex", width: "100%", height: "100%" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={post.coverImage}
+            alt=""
+            width={OG_SIZE.width}
+            height={OG_SIZE.height}
+            style={{ objectFit: "cover", width: "100%", height: "100%" }}
+          />
+        </div>
+      ),
+      OG_SIZE
+    )
+  }
 
   return ogImage({
     eyebrow: `packages.sweber.dev · ${copy.pkgBlog.types[post.type]}`,
