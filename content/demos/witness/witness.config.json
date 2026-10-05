@@ -1,0 +1,80 @@
+{
+  "scan": {
+    "root": "dist",
+    "chat": [
+      {
+        "pages": [
+          "support/**/*.html"
+        ],
+        "selector": "#chat"
+      }
+    ],
+    "aiImages": [
+      "images/**"
+    ]
+  },
+  "register": {
+    "organisation": {
+      "name": "Muster Travel AG",
+      "url": "https://muster-travel.example",
+      "contact": "ai@muster-travel.example"
+    },
+    "systems": [
+      {
+        "id": "support-chat",
+        "name": "Support assistant",
+        "purpose": "Answers questions about bookings and travel documents.",
+        "vendor": "Example AI",
+        "model": "example-chat-2",
+        "role": "provider",
+        "uses": [
+          "chatbot",
+          "generated-text"
+        ],
+        "pages": [
+          "/support"
+        ],
+        "since": "2026-06-01",
+        "measures": [
+          "Notice above the chat with <witness-notice>",
+          "Answers carry the invisible text watermark"
+        ],
+        "owner": "Customer service"
+      },
+      {
+        "id": "images",
+        "name": "Image generator",
+        "purpose": "Creates illustrations for the website and the blog.",
+        "vendor": "Example AI",
+        "model": "example-image-1",
+        "role": "deployer",
+        "uses": [
+          "generated-image"
+        ],
+        "pages": [
+          "/",
+          "/blog"
+        ],
+        "since": "2026-03-15",
+        "measures": [
+          "IPTC marking in every file",
+          "Visible label next to each image"
+        ],
+        "owner": "Marketing"
+      },
+      {
+        "id": "newsletter",
+        "name": "Newsletter drafts",
+        "purpose": "Drafts newsletter texts that an editor reviews and signs off.",
+        "vendor": "Example AI",
+        "role": "deployer",
+        "uses": [
+          "public-interest-text"
+        ],
+        "humanReview": true,
+        "since": "2026-05-01",
+        "owner": "Marketing"
+      }
+    ]
+  }
+}

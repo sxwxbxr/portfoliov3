@@ -1,0 +1,3 @@
+Witness scan: 3 pages, 1 notices, 1 labels, 1 marked elements, 2 AI-marked images, 0 with C2PA, 0 watermarked texts
+ERROR   blog/lagoon.html img[src="/images/lagoon.png"]: Shows the AI-generated image images/lagoon.png without a visible label next to it. [ai-image-unlabelled]
+1 errors, 0 warnings

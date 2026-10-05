@@ -1,0 +1,179 @@
+{
+  "slug": "witness",
+  "name": "Witness",
+  "tagline": "AI notices, AI labels and machine-readable marking for Article 50 of the EU AI Act, for any web app and the Vercel AI SDK.",
+  "seoTitle": "Witness – AI Act Article 50 transparency kit: chatbot notice, AI labels, image and text marking",
+  "description": "Since 2 August 2026, Article 50 of the EU AI Act asks for transparency around AI: people must know when they are talking to a chatbot, generated content must be marked in a machine-readable way, and deepfakes and AI text on matters of public interest must be disclosed. Witness gives you the building blocks for that in one small package.\n\nA chatbot notice and an AI label as web components and React components, in English, German, French and Italian. IPTC/XMP marking written straight into PNG, JPEG and WebP files, an invisible watermark for generated text, schema.org and meta tags for pages, and middleware for the Vercel AI SDK that marks text and images as the model produces them. Witness is a tool, not legal advice: it helps you implement the duties, it does not confirm compliance.",
+  "status": "beta",
+  "tags": [
+    "EU AI Act",
+    "Article 50",
+    "AI transparency",
+    "Vercel AI SDK",
+    "Web component",
+    "React"
+  ],
+  "license": "MIT + Pro",
+  "order": 30,
+  "install": "pnpm add @sweberdev/witness",
+  "npm": [
+    "@sweberdev/witness",
+    "@sweberdev/witness-react"
+  ],
+  "code": {
+    "title": "app/chat/page.tsx",
+    "language": "tsx",
+    "snippet": "import { AiNotice, AiContent } from \"@sweberdev/witness-react\"\nimport \"@sweberdev/witness/styles.css\"\n\nexport default function Chat() {\n  return (\n    <>\n      <AiNotice kind=\"chatbot\" id=\"support-chat\" />\n      <AiContent labelPosition=\"overlay\" marking={{ kind: \"generated\", generator: \"gpt-image-2\" }}>\n        <img src=\"/hero.png\" alt=\"Beach at dusk\" />\n      </AiContent>\n    </>\n  )\n}"
+  },
+  "links": {
+    "docs": "https://packages.sweber.dev/witness/docs",
+    "github": "https://github.com/Weber-Development/witness",
+    "npm": "https://www.npmjs.com/package/@sweberdev/witness"
+  },
+  "docs": {
+    "repo": "Weber-Development/witness",
+    "path": "docs",
+    "ref": "main"
+  },
+  "demoUrl": "/witness/demo",
+  "features": {
+    "free": [
+      "<witness-notice>: chatbot notice before the first message, then a compact label that can be reopened, with shown and acknowledged events as evidence",
+      "<witness-label>: badge for AI-generated, AI-edited or deepfake content with a details popover, inline or as an image overlay",
+      "Image marking: IPTC digital source type in XMP for PNG, JPEG and WebP, in the browser or on the server; C2PA files are left untouched",
+      "Invisible text watermark that survives copy and paste and can be read back",
+      "Vercel AI SDK middleware for generateText, streamText and generateImage",
+      "schema.org JSON-LD, meta tags and Next.js metadata for AI content",
+      "witness CLI: mark images in a build step and inspect files",
+      "React components: <AiNotice>, <AiLabel>, <AiContent> and useAiDisclosure; wording in English, German, French and Italian"
+    ],
+    "pro": [
+      "Notice and label wording in all 24 official EU languages",
+      "CI scanner that fails the build when AI images or text lack a label or marking, or a chat lacks its notice",
+      "AI register with a transparency report for clients and a public \"How we use AI\" page"
+    ]
+  },
+  "comparison": [
+    {
+      "feature": "Chatbot notice and AI labels (web components and React)",
+      "free": true,
+      "pro": true
+    },
+    {
+      "feature": "Image marking, text watermark and AI SDK middleware",
+      "free": true,
+      "pro": true
+    },
+    {
+      "feature": "Languages",
+      "free": "EN, DE, FR, IT",
+      "pro": "All 24 EU languages"
+    },
+    {
+      "feature": "CI scanner for unlabelled AI content",
+      "free": false,
+      "pro": true
+    },
+    {
+      "feature": "AI register, client report and public AI page",
+      "free": false,
+      "pro": true
+    },
+    {
+      "feature": "Licence",
+      "free": "MIT",
+      "pro": "Per person"
+    },
+    {
+      "feature": "Support",
+      "free": "GitHub issues",
+      "pro": "Agency and Lifetime"
+    }
+  ],
+  "pro": {
+    "name": "Witness Pro",
+    "availability": "coming-soon",
+    "packages": [
+      {
+        "name": "@weber-development/witness-locales",
+        "description": "Adds the notice and label wording in the 20 further official EU languages, so all 24 are covered."
+      },
+      {
+        "name": "@weber-development/witness-scan",
+        "description": "Checks your build output in CI for AI images and text without a label or marking and for chats without a notice."
+      },
+      {
+        "name": "@weber-development/witness-report",
+        "description": "Turns an AI register into a transparency report for your client and a public \"How we use AI\" page, with scan results and notice evidence."
+      }
+    ],
+    "waitlistUrl": "mailto:info@sweber.dev?subject=Witness%20Pro%20waitlist"
+  },
+  "pricing": {
+    "currency": "CHF",
+    "merchant": "Polar",
+    "tiers": [
+      {
+        "id": "freelancer",
+        "name": "Freelancer",
+        "description": "For one person working on client projects.",
+        "monthly": 19,
+        "yearly": 190,
+        "seats": 1,
+        "support": false
+      },
+      {
+        "id": "agency",
+        "name": "Agency",
+        "description": "For teams of up to ten named people, one price.",
+        "monthly": 59,
+        "yearly": 590,
+        "seats": 10,
+        "support": true,
+        "highlighted": true
+      },
+      {
+        "id": "lifetime",
+        "name": "Lifetime",
+        "description": "Pay once for up to ten people and keep updates and repository access.",
+        "oneTime": 1990,
+        "seats": 10,
+        "support": true
+      }
+    ],
+    "notes": [
+      "Pay yearly and get two months free: CHF 190 instead of CHF 228 for Freelancer, CHF 590 instead of CHF 708 for Agency.",
+      "After cancelling, every version you already received keeps working. Only updates and repository access end.",
+      "No licence key, no phone-home. The Pro packages never contact a server to check your licence.",
+      "Agency and Lifetime cover up to ten named people for one price: you choose the number of seats at checkout and assign them in Polar. Your clients and their websites need no licence of their own.",
+      "Checkout, invoices and VAT are handled by Polar as merchant of record."
+    ],
+    "custom": {
+      "label": "11 people or more",
+      "email": "info@sweber.dev"
+    }
+  },
+  "faq": [
+    {
+      "q": "Does Witness make my site compliant with the AI Act?",
+      "a": "No tool can promise that. Witness implements the transparency measures Article 50 describes: the chatbot notice, visible labels and machine-readable marking. Whether they are enough for your case depends on your role, your system and the guidance that is still being finalised. The docs summarise the duties with sources; for a binding answer ask a lawyer."
+    },
+    {
+      "q": "Which duties does Witness cover?",
+      "a": "The chatbot notice of Article 50(1), machine-readable marking of generated images and text for 50(2), and visible labels for deepfakes and AI text on matters of public interest under 50(4). Emotion recognition and biometric categorisation (50(3)) get notice wording, but the duty itself lies in how you inform people. Audio and video watermarking are out of scope."
+    },
+    {
+      "q": "Does Witness sign images with C2PA?",
+      "a": "No. Witness writes IPTC/XMP metadata, which needs no certificate. Images that already carry a C2PA manifest from the generator are left unchanged so the signature stays valid."
+    },
+    {
+      "q": "Can the text watermark be removed?",
+      "a": "Yes, on purpose it can. It survives normal copy and paste but not someone who strips it. Treat it as one layer next to the visible label and the metadata, not as proof."
+    },
+    {
+      "q": "Does it work without React or the Vercel AI SDK?",
+      "a": "Yes. The notice and label are standard web components, and image and text marking are plain functions that also run in the browser. The React package and the AI SDK middleware are optional."
+    }
+  ],
+  "publishedAt": "2026-10-05"
+}
