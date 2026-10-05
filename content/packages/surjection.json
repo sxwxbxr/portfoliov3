@@ -132,7 +132,7 @@
         "yearly": 190,
         "seats": 1,
         "support": false,
-        "checkout": {}
+        "checkout": { "monthly": "https://buy.polar.sh/polar_cl_I0Rinrwht5mfbJGnPZYCnjY4b3n9pNa31F5Bg17QSFB", "yearly": "https://buy.polar.sh/polar_cl_IzwZJfzGA54aMgMOP09s0yAqi3WqieEpIFZbJ0vcfff" }
       },
       {
         "id": "agency",
@@ -143,7 +143,7 @@
         "seats": 10,
         "support": true,
         "highlighted": true,
-        "checkout": {}
+        "checkout": { "monthly": "https://buy.polar.sh/polar_cl_rJteeumqtS0HuY2Csz9ihRmN51N5dYrfEkUZy30LeeV", "yearly": "https://buy.polar.sh/polar_cl_KJ6WOA4lkki402hsCHGZVT9OkNrJW3am7S6cI32B9ca" }
       },
       {
         "id": "lifetime",
@@ -152,7 +152,7 @@
         "oneTime": 1990,
         "seats": 10,
         "support": true,
-        "checkout": {}
+        "checkout": { "oneTime": "https://buy.polar.sh/polar_cl_2a6f0c11vaxk8hVqLAS9nnIp7zOyyIgflq12X1oWJCJ" }
       }
     ],
     "notes": [
