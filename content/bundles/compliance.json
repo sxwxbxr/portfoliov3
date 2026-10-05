@@ -17,7 +17,7 @@
   ],
   "pro": {
     "name": "Compliance Bundle",
-    "availability": "coming-soon",
+    "availability": "available",
     "packages": [],
     "waitlistUrl": "mailto:info@sweber.dev?subject=Compliance%20Bundle"
   },
@@ -32,7 +32,11 @@
         "monthly": 49,
         "yearly": 490,
         "seats": 1,
-        "support": false
+        "support": false,
+        "checkout": {
+          "monthly": "https://buy.polar.sh/polar_cl_VmdIabPo0GFv1ZgzOT5K3kYi7Qh5ygVYuZZHF3tsGaa",
+          "yearly": "https://buy.polar.sh/polar_cl_36hgVGd1cN26M3HtQsVjjGDjCrzCTgySNYPs8174o3l"
+        }
       },
       {
         "id": "agency",
@@ -42,7 +46,11 @@
         "yearly": 1490,
         "seats": 10,
         "support": true,
-        "highlighted": true
+        "highlighted": true,
+        "checkout": {
+          "monthly": "https://buy.polar.sh/polar_cl_dfWeD81Y4wHGpg4FbyTEDFmJXm2HOPJxKg5z70o9P1l",
+          "yearly": "https://buy.polar.sh/polar_cl_tEGcIhCKh1d8C9q5WcWOj66RNHoImadeOmWjt2thKRp"
+        }
       },
       {
         "id": "lifetime",
@@ -50,7 +58,10 @@
         "description": "Pay once for up to ten people and keep updates and repository access for every package in the bundle.",
         "oneTime": 4990,
         "seats": 10,
-        "support": true
+        "support": true,
+        "checkout": {
+          "oneTime": "https://buy.polar.sh/polar_cl_6KShEAVHTHUcL6A0OpbpiEXjUu5C2cIEdEHdF3DGNUN"
+        }
       }
     ],
     "notes": [
