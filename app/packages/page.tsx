@@ -72,10 +72,16 @@ export default function PackagesOverview() {
               )}
 
               <div className="mt-auto flex flex-wrap gap-x-5 gap-y-2 pt-2">
-                {pkg.links.docs && (
-                  <a href={pkg.links.docs} target="_blank" rel="noopener noreferrer" className={link}>
+                {pkg.docs ? (
+                  <Link href={pkgPath(`/${pkg.slug}/docs`)} className={link}>
                     {copy.packages.docs}
-                  </a>
+                  </Link>
+                ) : (
+                  pkg.links.docs && (
+                    <a href={pkg.links.docs} target="_blank" rel="noopener noreferrer" className={link}>
+                      {copy.packages.docs}
+                    </a>
+                  )
                 )}
                 {pkg.links.github && (
                   <a href={pkg.links.github} target="_blank" rel="noopener noreferrer" className={link}>

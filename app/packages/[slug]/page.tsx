@@ -148,9 +148,10 @@ export default async function PackagePage({ params }: Props) {
           </div>
 
           <div className="flex flex-wrap gap-3">
-            {pkg.links.docs && (
+            {(pkg.docs || pkg.links.docs) && (
               <TrackedLink
-                href={pkg.links.docs}
+                // Own docs open on this site (and host); only external docs leave it.
+                href={pkg.docs ? pkgPath(`/${pkg.slug}/docs`) : pkg.links.docs!}
                 event="docs_click"
                 data={{ package: pkg.slug }}
                 className={btn + " control-primary"}

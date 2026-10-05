@@ -62,7 +62,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 }
 ```
 
-The full reference is at [permito.sweber.dev](https://permito.sweber.dev).
+The full reference is at [packages.sweber.dev/permito/docs](https://packages.sweber.dev/permito/docs).
 
 ## What comes next
 

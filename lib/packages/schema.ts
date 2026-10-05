@@ -75,6 +75,21 @@ export const packageSchema = z.object({
       changelog: url.optional(),
     })
     .default({}),
+  /**
+   * Documentation kept as Markdown in the package repository and rendered at
+   * /<slug>/docs. `path` is the folder holding nav.json and the pages.
+   */
+  docs: z
+    .object({
+      repo: z.string().regex(/^[\w.-]+\/[\w.-]+$/),
+      path: z.string().regex(/^[a-z0-9-]+(\/[a-z0-9-]+)*$/),
+      ref: z
+        .string()
+        .regex(/^[\w.-]+(\/[\w.-]+)*$/)
+        .refine((r) => !r.includes(".."))
+        .default("main"),
+    })
+    .optional(),
   features: z.object({
     free: z.array(z.string()).min(1),
     pro: z.array(z.string()).optional(),
