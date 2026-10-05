@@ -1,0 +1,51 @@
+{
+  "slug": "surjection",
+  "name": "Surjection",
+  "tagline": "Accessibility checks for CI and tests, client-ready reports and accessibility statements in five languages. Built on axe-core, no overlay.",
+  "seoTitle": "Surjection – accessibility testing and statements for agencies (BFSG, EAA)",
+  "description": "Surjection helps agencies make accessibility part of every project instead of a one-off scan. It runs axe-core in Playwright and Vitest, maps every finding to WCAG 2.2 and EN 301 549, and fails the build only on new problems thanks to a baseline for existing sites.\n\nIt also generates the accessibility statement (Erklärung zur Barrierefreiheit) in German, Swiss German, French, Italian and English, and ships small accessible React building blocks. Surjection is deliberately not an overlay widget: it helps you fix the code, it does not hide problems. Automated tests find only part of all barriers, so Surjection does not promise legal conformity.",
+  "status": "coming-soon",
+  "tags": ["Accessibility", "WCAG 2.2", "BFSG", "EAA", "Playwright", "Vitest", "React"],
+  "license": "MIT + Pro",
+  "order": 20,
+  "install": "pnpm add -D @sweber/surjection",
+  "npm": ["@sweber/surjection", "@sweber/surjection-react"],
+  "code": {
+    "title": "tests/a11y.spec.ts",
+    "language": "ts",
+    "snippet": "import { test } from \"@playwright/test\"\nimport { expectAccessible } from \"@sweber/surjection/playwright\"\nimport baseline from \"./a11y-baseline.json\"\n\nfor (const path of [\"/\", \"/shop\", \"/checkout\"]) {\n  test(`${path} is accessible`, async ({ page }) => {\n    await page.goto(path)\n    await expectAccessible(page, { baseline, failOn: \"serious\", locale: \"de\" })\n  })\n}"
+  },
+  "links": {},
+  "features": {
+    "free": [
+      "Playwright helper and Vitest matcher on top of axe-core, tested against WCAG 2.2 AA by default",
+      "Every finding mapped to its WCAG success criterion and EN 301 549 clause",
+      "Baseline for existing sites: CI fails only on new issues, not on the whole backlog",
+      "Markdown report for pull requests and job summaries, in German, Swiss German, French, Italian and English",
+      "Accessibility statement generator (DE, DE-CH, FR, IT, EN) as Markdown and HTML",
+      "Accessible React building blocks: skip link, visually hidden text, live announcements, reduced motion"
+    ],
+    "pro": [
+      "Client reports in your agency's branding, as HTML and PDF",
+      "History across all client projects, so you can show progress over time",
+      "Guided manual checklist for the criteria automated tests cannot cover"
+    ]
+  },
+  "pro": {
+    "name": "Surjection Pro",
+    "availability": "coming-soon",
+    "packages": [],
+    "waitlistUrl": "mailto:info@sweber.dev?subject=Surjection%20Pro%20waitlist"
+  },
+  "faq": [
+    {
+      "q": "Does Surjection make my website legally compliant?",
+      "a": "No tool can promise that. Automated tests detect only part of all barriers. Surjection makes testing and documentation part of your workflow, but a manual review is still needed."
+    },
+    {
+      "q": "Is this an accessibility overlay?",
+      "a": "No. Overlays add a widget on top of a site and leave the code unchanged. Surjection runs in development and CI and helps you fix the code itself."
+    }
+  ],
+  "publishedAt": "2026-10-05"
+}
