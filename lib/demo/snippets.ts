@@ -77,3 +77,16 @@ export const runtime = "nodejs"
 export const { POST } = createConsentLogRoute(log, {
   allowedOrigins: ["https://www.example.ch"],
 })`
+
+export const SURJECTION_CHECK_COMMAND = `npx surjection check https://baeckerei-muster.example/ \\
+  --project "Bäckerei Muster" --out-md a11y.md --out-json a11y.json
+
+✗ https://baeckerei-muster.example/ (6 issues)
+
+6 accessibility issue(s) on 1 page(s).`
+
+export const SURJECTION_PRO_COMMANDS = `npx surjection-history record --results a11y.json
+npx surjection-checklist apply --checklist checklist.json --results a11y.json
+npx surjection-report --results a11y.json --brand brand.json \\
+  --checklist checklist.json --history-dir .surjection-history \\
+  --locale de --out bericht.pdf`

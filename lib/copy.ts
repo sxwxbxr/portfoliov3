@@ -856,6 +856,103 @@ export const copy = {
         disclaimer: "Permito is technical consent infrastructure, not legal advice.",
       },
     },
+    // Live demo of Surjection (/surjection/demo)
+    surjectionDemo: {
+      seoTitle: "Surjection live demo: accessibility check, client report, history and checklist",
+      description:
+        "Fix a small client site and watch the accessibility check react in your browser. Then see the branded client report, the project history and the WCAG 2.2 checklist that Surjection Pro produces.",
+      title: "Surjection",
+      titleSub: "Live demo, free and Pro.",
+      intro:
+        "The first section runs axe-core, the engine of the free package, in your browser against a small demo site. Every section after it shows output of the Pro packages, produced with their command-line tools from the same site and shown here as finished HTML.",
+      isolation:
+        "The demo site, the report and the checklist run in sandboxed frames. Nothing you do here is sent anywhere.",
+      overview: "Surjection overview",
+      pricing: "See pricing",
+      jump: "On this page",
+      jumpLinks: [
+        { href: "#check", label: "Check" },
+        { href: "#statement", label: "Statement" },
+        { href: "#report", label: "Report" },
+        { href: "#history", label: "History" },
+        { href: "#checklist", label: "Checklist" },
+      ],
+
+      check: {
+        label: "Check",
+        title: "Check (free, MIT)",
+        sub: "Fix the site, watch the result.",
+        lede: "The bakery site below has six common barriers. Tick a fix and the page is checked again against WCAG 2.2 AA, with the same rules @sweberdev/surjection runs in Playwright, Vitest and the CLI.",
+        previewLabel: "Demo site, checked in your browser",
+        frameTitle: "Demo site Bäckerei Muster",
+        fixesLegend: "Fixes",
+        fixes: {
+          lang: { label: "Declare the page language", criterion: "3.1.1" },
+          contrast: { label: "Darken the opening hours", criterion: "1.4.3" },
+          alt: { label: "Describe the image", criterion: "1.1.1" },
+          label: { label: "Label the email field", criterion: "4.1.2" },
+          button: { label: "Name the cart button", criterion: "4.1.2" },
+          link: { label: "Give the Instagram link a text", criterion: "2.4.4" },
+        },
+        resultHeading: "Result",
+        loading: "Loading the check",
+        running: "Checking",
+        error: "The check could not run in this browser.",
+        summary: (rules: number, elements: number) =>
+          rules === 0
+            ? "No issues found by the automated check."
+            : `${rules} ${rules === 1 ? "issue" : "issues"} on ${elements} ${elements === 1 ? "element" : "elements"}.`,
+        impact: { critical: "Critical", serious: "Serious", moderate: "Moderate", minor: "Minor" },
+        elements: "Elements",
+        limits:
+          "A clean result here means the automated rules pass. Automated tests find only part of all barriers, so a manual check is still needed.",
+        cliHeading: "Same check on the command line",
+        markdownHeading: "Markdown report of the first run",
+      },
+
+      statement: {
+        label: "Statement",
+        title: "Accessibility statement (free)",
+        sub: "Five languages.",
+        lede: "The statement generator is part of the free package. This one is in Swiss German, with the status and the known issue taken from the Pro checklist below.",
+        fileLabel: "erklaerung.md",
+      },
+
+      report: {
+        label: "Report",
+        title: "Client report (Pro)",
+        sub: "In your branding.",
+        lede: "surjection-report turns the check, the history and the manual checklist into a report for the client, with the logo and colour of the agency, here the made-up Pixel & Co. It is available as HTML and PDF in German, Swiss German, French, Italian and English.",
+        tabsLabel: "Report language",
+        frameTitle: (lang: string) => `Example report, ${lang}`,
+        pdf: "Download the PDF (German)",
+      },
+
+      history: {
+        label: "History",
+        title: "History (Pro)",
+        sub: "Every client, every run.",
+        lede: "surjection-history records each run per project and renders one dashboard for all clients: the latest status, the change since the last run and a trend line. These three projects were checked three times each, from August to October.",
+        frameTitle: "Example dashboard",
+      },
+
+      checklist: {
+        label: "Checklist",
+        title: "Manual checklist (Pro)",
+        sub: "Try it below.",
+        lede: "surjection-checklist guides the part no tool can check. The full checklist has all 55 WCAG 2.2 A and AA criteria; this editor shows ten of them. The contrast criterion is already marked as failed by the automated check. Set the others and download the result as JSON.",
+        frameTitle: "Example checklist editor",
+      },
+
+      closing: {
+        label: "Next step",
+        title: "Use it in your own projects",
+        sub: "Pricing is per person.",
+        lede: "The check and the statement are free on npm. After checkout, Polar gives your GitHub account access to the Pro packages, which install from GitHub Packages with a read-only token.",
+        cta: "See pricing",
+        disclaimer: "Surjection does not make a site legally compliant. Automated tests find only part of all barriers.",
+      },
+    },
     // Pricing
     pricingHeading: "Pricing",
     proComingSoon: (name: string) => `${name}: coming soon`,
