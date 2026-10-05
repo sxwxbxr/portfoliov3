@@ -48,6 +48,8 @@ await audit.with({ tenantId: org.id, actor: { id: user.id, name: user.name } }).
 
 See the activity view in the [live demo](https://packages.sweber.dev/logarithm/demo). The full reference is at [packages.sweber.dev/logarithm/docs](https://packages.sweber.dev/logarithm/docs).
 
-## Logarithm Pro is coming
+## Logarithm Pro
 
-A Pro edition is in preparation for teams with stricter requirements. It adds tamper evidence with an HMAC hash chain per tenant and a verifier that names changed, removed or reordered events, retention periods per customer with archiving and erasure and access requests under the GDPR and the Swiss FADP, streamed CSV, NDJSON and JSON exports, and forwarding to signed webhooks, Splunk and Datadog. You can join the waitlist on the [package page](https://packages.sweber.dev/logarithm).
+Logarithm Pro is available for teams with stricter requirements. It adds tamper evidence with an HMAC hash chain per tenant and a verifier that names changed, removed or reordered events, retention periods per customer with archiving and erasure and access requests under the GDPR and the Swiss FADP, streamed CSV, NDJSON and JSON exports, and forwarding to signed webhooks, Splunk and Datadog.
+
+Plans start at CHF 29 per month, and every version you received keeps working after you cancel. Try the [Pro demo](https://packages.sweber.dev/logarithm/demo) and see all plans on the [package page](https://packages.sweber.dev/logarithm).
