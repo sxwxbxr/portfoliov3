@@ -94,7 +94,11 @@
         "monthly": 12,
         "yearly": 120,
         "seats": 1,
-        "support": false
+        "support": false,
+        "checkout": {
+          "monthly": "https://buy.polar.sh/polar_cl_L0CN2XmTPBVTeQ4jMV0ADQCGv5xfpIYPKnY3Q25ZQIE",
+          "yearly": "https://buy.polar.sh/polar_cl_6ilHytEvGOZSfqG5vCwrhomRAf4Q3C05jCJ8T3rfU2R"
+        }
       },
       {
         "id": "agency",
@@ -104,7 +108,11 @@
         "yearly": 390,
         "seats": 10,
         "support": true,
-        "highlighted": true
+        "highlighted": true,
+        "checkout": {
+          "monthly": "https://buy.polar.sh/polar_cl_j9DQygWdu0WtVydTdC2JI5JEuRhjclWfJPQXx066yfO",
+          "yearly": "https://buy.polar.sh/polar_cl_BnDJ3gBsPl4p0qPHWER1bNCu4vL8huI23NEfu1nDllj"
+        }
       },
       {
         "id": "lifetime",
@@ -112,7 +120,10 @@
         "description": "Pay once for up to ten people and keep updates and repository access.",
         "oneTime": 1290,
         "seats": 10,
-        "support": true
+        "support": true,
+        "checkout": {
+          "oneTime": "https://buy.polar.sh/polar_cl_ghyx8FAxJs4oJZRVegsrNwVIkU9O6SEgUW2XW3Kn46P"
+        }
       }
     ],
     "notes": [
