@@ -32,6 +32,8 @@ export const integralDemo = {
     plan: "Plan",
     email: "Customer email",
     beta: "Extra feature for this customer: beta",
+    trial: "Trial license",
+    bind: "Bind to laptop A",
     projects: "Project limit for this customer (empty: plan default)",
     updatesUntil: "Updates until",
     expires: "Hard expiry (optional)",
@@ -45,11 +47,15 @@ export const integralDemo = {
     title: "Check it offline",
     sub: "Change anything and the signature breaks.",
     lede:
-      "Edit the license, tamper with the plan or sign it with a stranger's key. Move the date to see expiry and update periods at work.",
+      "Edit the license, tamper with the plan or sign it with a stranger's key. Move the date to see expiry and update periods at work, revoke the license with a signed revocation list or check a device-bound license on another laptop.",
     input: "License key to check",
     tamper: "Change plan to team without signing",
     foreign: "Sign with a stranger's key",
     reset: "Back to the issued license",
+    revoke: "Revoke this license",
+    unrevoke: "Lift the revocation",
+    device: "Checked on",
+    devices: { own: "Laptop A", other: "Laptop B" },
     today: "Pretend today is",
     release: "Release date of the running app version",
     valid: "Valid license",
@@ -61,11 +67,28 @@ export const integralDemo = {
       wrong_product: "the license belongs to another product",
       not_yet_valid: "not valid yet",
       expired: "the license has expired",
+      revoked: "the license is on the signed revocation list",
+      wrong_machine: "the license is bound to another device",
     } as Record<string, string>,
     covered: "This app version is covered by the update period.",
     notCovered:
       "This app version was released after the update period. Earlier versions keep working; this one asks for a renewal.",
     payload: "Signed content",
+    status: (s: { state: string; trial: boolean; daysLeft: number | null; updatesDaysLeft: number | null; updatesEnded: boolean }) =>
+      [
+        s.trial ? "Trial" : "Full license",
+        s.daysLeft === null
+          ? "no expiry"
+          : s.state === "expiring"
+            ? `expires in ${s.daysLeft} ${s.daysLeft === 1 ? "day" : "days"}`
+            : `${s.daysLeft} days left`,
+        s.updatesEnded
+          ? "updates ended"
+          : s.updatesDaysLeft === null
+            ? "updates without end"
+            : `updates for ${s.updatesDaysLeft} more ${s.updatesDaysLeft === 1 ? "day" : "days"}`,
+      ].join(" · "),
+    revocationList: (n: number) => `Signed revocation list (${n} ${n === 1 ? "license" : "licenses"})`,
   },
   app: {
     label: "Entitlements",
