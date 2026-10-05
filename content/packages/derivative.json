@@ -91,7 +91,7 @@
   ],
   "pro": {
     "name": "Derivative Pro",
-    "availability": "coming-soon",
+    "availability": "available",
     "packages": [
       {
         "name": "@weber-development/derivative-insights",
