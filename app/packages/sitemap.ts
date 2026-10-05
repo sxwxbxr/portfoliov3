@@ -50,6 +50,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...docsEntries,
     { url: pkgUrl("/license"), changeFrequency: "yearly", priority: 0.4 },
     { url: pkgUrl("/blog"), changeFrequency: "weekly", priority: 0.7 },
+    { url: pkgUrl("/releasenotes"), changeFrequency: "weekly", priority: 0.6 },
     ...posts
       // A post that lives elsewhere is indexed there, not here.
       .filter((p) => !p.canonicalUrl)

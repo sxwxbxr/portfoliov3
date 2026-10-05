@@ -1,7 +1,8 @@
 import { getPackages } from "@/lib/packages"
 import { PACKAGES_ORIGIN, pkgUrl } from "@/lib/packages/urls"
 import { POSTS_TAG } from "./db"
-import type { BlogSource, Post } from "./types"
+import { inferType } from "./classify"
+import type { BlogSource, Post, PostType } from "./types"
 
 /**
  * Posts from the Schulz Media content API. Marco's system holds the posts;
@@ -30,6 +31,8 @@ interface RemotePost {
   seo: { title?: string | null; meta_description?: string | null; focus_keyword?: string | null } | null
   image: { url: string; alt?: string | null; credit?: string | null } | null
   url: string | null
+  /** Optional editorial category; decides the post type when present. */
+  category?: string | null
   published_at: string
   updated_at: string | null
 }
@@ -75,8 +78,22 @@ function packagesMentioned(p: RemotePost): string[] {
     .map((pkg) => pkg.slug)
 }
 
+const CATEGORY_TYPES: Record<string, PostType> = {
+  release: "release",
+  "release-notes": "release",
+  changelog: "release",
+  "patch-notes": "release",
+  tutorial: "tutorial",
+}
+
+/** The category when Schulz Media sends one, otherwise a guess from the content. */
+function typeOf(p: RemotePost, post: Omit<Post, "type">): PostType {
+  if (p.category) return CATEGORY_TYPES[p.category.trim().toLowerCase()] ?? "news"
+  return inferType(post)
+}
+
 function toPost(p: RemotePost): Post {
-  return {
+  const post: Omit<Post, "type"> = {
     slug: p.slug,
     title: p.title,
     excerpt: p.excerpt ?? "",
@@ -92,10 +109,10 @@ function toPost(p: RemotePost): Post {
     lang: "de-CH",
     tags: p.seo?.focus_keyword ? [p.seo.focus_keyword] : [],
     packages: packagesMentioned(p),
-    type: "news",
     videos: [],
     canonicalUrl: canonicalFor(p),
   }
+  return { ...post, type: typeOf(p, post) }
 }
 
 /**
@@ -151,4 +168,13 @@ export function createSchulzMediaSource(): BlogSource | null {
       }
     },
   }
+}
+
+/**
+ * Marco's posts for the portfolio blog: Schulz Media posts that are articles,
+ * not release notes. Empty when SCHULZ_MEDIA_API_KEY is not set.
+ */
+export async function getExternalArticles(): Promise<Post[]> {
+  const posts = (await createSchulzMediaSource()?.getPosts()) ?? []
+  return posts.filter((p) => p.type !== "release")
 }

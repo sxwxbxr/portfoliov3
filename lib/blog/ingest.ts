@@ -1,7 +1,9 @@
 import { timingSafeEqual } from "crypto"
 import { NextResponse, type NextRequest } from "next/server"
 import { z } from "zod"
+import { inferType } from "./classify"
 import { postInput } from "./input"
+import type { PostType } from "./types"
 import { pkgUrl } from "@/lib/packages/urls"
 
 function matches(given: string, expected: string) {
@@ -35,6 +37,8 @@ export const INGEST_SOURCE = process.env.BLOG_INGEST_SOURCE || "schulz-media"
 
 /** A pushed post: the normal post fields plus the sender's own ID. Published unless it says otherwise. */
 export const ingestInput = postInput.extend({
+  // Absent means "decide from the content" (see withInferredType); an explicit value wins.
+  type: z.enum(["news", "tutorial", "release"]).optional(),
   externalId: z.string().trim().min(1).max(200),
   status: z.enum(["draft", "published"]).default("published"),
 })
@@ -54,4 +58,11 @@ export function guardIngest(req: NextRequest): NextResponse | null {
 /** Public URL of a post, or null while it is a draft. */
 export function publicUrl(row: { slug: string; status: string }) {
   return row.status === "published" ? pkgUrl(`/blog/${row.slug}`) : null
+}
+
+/** Fills the post type from the content when the sender did not set one. */
+export function withInferredType<
+  T extends { type?: PostType; title: string; excerpt: string; body: string; tags: string[] },
+>(fields: T): Omit<T, "type"> & { type: PostType } {
+  return { ...fields, type: fields.type ?? inferType(fields) }
 }

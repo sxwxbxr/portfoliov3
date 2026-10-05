@@ -14,7 +14,7 @@ import { YouTubeEmbed } from "@/components/packages/YouTubeEmbed"
 import { getPackage, getPackages } from "@/lib/packages"
 import type { Package } from "@/lib/packages/schema"
 import { pkgPath, pkgUrl } from "@/lib/packages/urls"
-import { getPostsForPackage } from "@/lib/blog"
+import { getPostsForPackage, getReleaseNotesForPackage } from "@/lib/blog"
 import { bundlesWith } from "@/lib/packages/bundles"
 import { copy } from "@/lib/copy"
 
@@ -115,6 +115,7 @@ export default async function PackagePage({ params }: Props) {
   if (!pkg) notFound()
 
   const posts = await getPostsForPackage(pkg.slug, 3)
+  const releaseNotes = await getReleaseNotesForPackage(pkg.slug, 3)
   const showPosts = posts.length > 0
   const showArticles = !showPosts && pkg.articles.length > 0
   const s = copy.packages.sections
@@ -331,7 +332,7 @@ export default async function PackagePage({ params }: Props) {
         </Block>
       )}
 
-      {(showPosts || showArticles) && (
+      {(showPosts || showArticles || releaseNotes.length > 0) && (
         <Block label={s.articles.label} title={s.articles.title} sub={s.articles.sub}>
           <ul className="grid gap-3 md:grid-cols-3">
             {showPosts &&
@@ -360,6 +361,32 @@ export default async function PackagePage({ params }: Props) {
                 </li>
               ))}
           </ul>
+          {releaseNotes.length > 0 && (
+            <div className="mt-8 flex flex-col gap-3">
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <p className="annotate">{copy.releaseNotes.latestOfPackage}</p>
+                <Link
+                  href={`${pkgPath("/releasenotes")}?package=${pkg.slug}`}
+                  className="annotate transition-colors duration-150 hover:text-fg"
+                >
+                  {copy.releaseNotes.allForPackage} →
+                </Link>
+              </div>
+              <ul className="flex flex-col border-t border-edge-soft">
+                {releaseNotes.map((post) => (
+                  <li key={post.slug} className="relative flex flex-wrap items-baseline gap-x-4 gap-y-1 border-b border-edge-soft py-3">
+                    <time dateTime={post.publishedAt} className="annotate">{post.publishedAt}</time>
+                    <Link
+                      href={pkgPath(`/blog/${post.slug}`)}
+                      className="text-fg after:absolute after:inset-0 after:content-[''] hover:text-fg-muted"
+                    >
+                      {post.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </Block>
       )}
 

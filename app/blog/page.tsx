@@ -4,6 +4,8 @@ import { ChevronRight } from "lucide-react"
 import PageLayout, { Section } from "../../components/PageLayout"
 import { EmptyState } from "../../components/EmptyState"
 import { getBlogPosts } from "@/lib/data"
+import { getExternalArticles } from "@/lib/blog"
+import { pkgUrl } from "@/lib/packages/urls"
 import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
 import { copy } from "@/lib/copy"
 
@@ -11,7 +13,18 @@ export const revalidate = 86400
 
 export default async function Blog() {
   if (!BLOG_ENABLED) notFound()
-  const blogPosts = await getBlogPosts()
+  // Marco's posts live on the package site; they link there, so no page exists twice.
+  const [own, external] = await Promise.all([getBlogPosts(), getExternalArticles().catch(() => [])])
+  const blogPosts = [
+    ...own.map((p) => ({ slug: p.slug, title: p.title, publishedAt: p.publishedAt, meta: p.readTime, href: `/blog/${p.slug}` })),
+    ...external.map((p) => ({
+      slug: p.slug,
+      title: p.title,
+      publishedAt: p.publishedAt,
+      meta: copy.blog.externalLabel,
+      href: pkgUrl(`/blog/${p.slug}`),
+    })),
+  ].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
 
   return (
     <PageLayout
@@ -27,7 +40,7 @@ export default async function Blog() {
               <li key={post.slug} className="border-b border-edge-soft">
                 <Section delay={i * 0.04}>
                   <Link
-                    href={`/blog/${post.slug}`}
+                    href={post.href}
                     className="group flex flex-col gap-2 py-5 md:flex-row md:items-baseline md:gap-6"
                   >
                     <span className="annotate shrink-0" aria-hidden="true">
@@ -43,7 +56,7 @@ export default async function Blog() {
                       )}
                     </span>
                     <span className="annotate md:w-20 md:text-right">
-                      {post.readTime}
+                      {post.meta}
                     </span>
                   </Link>
                 </Section>

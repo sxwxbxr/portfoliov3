@@ -56,6 +56,7 @@ export const copy = {
     education: "Education",
     skills: "Skills",
     blog: "Blog",
+    releaseNotes: "Release notes",
     connect: "Connect",
     privacy: "Privacy",
     imprint: "Imprint",
@@ -227,6 +228,7 @@ export const copy = {
     subtitle:
       "Notes on software development, project delivery and digital transformation.",
     empty: "No articles published yet.",
+    externalLabel: "Packages",
     allArticles: "All articles",
     previousArticle: "Previous article",
     nextArticle: "Next article",
@@ -541,11 +543,13 @@ export const copy = {
   pkgBlog: {
     label: "Blog",
     title: "News and tutorials",
-    subtitle: "Releases, tutorials and notes on the libraries.",
+    subtitle: "Tutorials and notes on the libraries.",
     empty: "No posts match this filter yet.",
     filterPackage: "Package",
     filterType: "Type",
     all: "All",
+    allArticles: "All articles",
+    releaseNotesLink: "Release notes",
     types: { news: "News", tutorial: "Tutorial", release: "Release" },
     rss: "RSS feed",
     backToBlog: "All posts",
@@ -560,6 +564,23 @@ export const copy = {
     next: "Older posts",
     pageOf: (page: number, total: number) => `Page ${page} of ${total}`,
     originallyPublished: "Originally published elsewhere",
+  },
+
+  /** Release notes of the packages: /packages/releasenotes. */
+  releaseNotes: {
+    label: "Release notes",
+    title: "Release notes",
+    subtitle: "What changed in each version of the libraries.",
+    empty: "No release notes match this filter yet.",
+    filterPackage: "Package",
+    all: "All",
+    rss: "RSS feed",
+    articlesLink: "Articles",
+    previous: "Newer releases",
+    next: "Older releases",
+    pageOf: (page: number, total: number) => `Page ${page} of ${total}`,
+    allForPackage: "All release notes",
+    latestOfPackage: "Latest release notes",
   },
 
   notFound: {
@@ -580,6 +601,22 @@ export const copy = {
       "Open-source libraries by Seya Weber for agencies in Switzerland, Germany and Austria, with optional Pro add-ons.",
     count: (n: number) => `${n} ${plural(n, "package", "packages")}`,
     allPackages: "All packages",
+    browser: {
+      searchLabel: "Search packages",
+      searchPlaceholder: "Search by name, tag or npm package",
+      searchHint: "Press / to search",
+      clear: "Clear search",
+      filterTag: "Tag",
+      filterStatus: "Status",
+      filterLicense: "License",
+      all: "All",
+      results: (n: number, total: number) =>
+        n === total
+          ? `${total} ${plural(total, "package", "packages")}`
+          : `${n} of ${total} ${plural(total, "package", "packages")}`,
+      empty: "No package matches these filters.",
+      reset: "Reset filters",
+    },
     status: {
       stable: "Stable",
       beta: "Beta",

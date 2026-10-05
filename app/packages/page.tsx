@@ -1,8 +1,9 @@
 import type { Metadata } from "next"
+import { Suspense } from "react"
 import Link from "next/link"
 import { ChevronRight } from "lucide-react"
 import PageLayout, { Section } from "@/components/PageLayout"
-import { PackageBadges } from "@/components/packages/Badges"
+import { PackageBrowser, PackageGrid, type PackageCardData } from "@/components/packages/PackageBrowser"
 import { getPackages } from "@/lib/packages"
 import { getBundles } from "@/lib/packages/bundles"
 import { pkgPath, pkgUrl } from "@/lib/packages/urls"
@@ -25,7 +26,20 @@ export const metadata: Metadata = {
 export default function PackagesOverview() {
   const packages = getPackages()
   const bundles = getBundles()
-  const link = "relative z-10 text-sm text-fg-muted transition-colors duration-150 hover:text-fg"
+  const cards: PackageCardData[] = packages.map((p) => ({
+    slug: p.slug,
+    name: p.name,
+    tagline: p.tagline,
+    description: p.description,
+    tags: p.tags,
+    npm: p.npm,
+    status: p.status,
+    license: p.license,
+    hasDocs: !!p.docs,
+    docsUrl: p.links.docs,
+    githubUrl: p.links.github,
+    hasPricing: !!p.pricing,
+  }))
 
   return (
     <PageLayout>
@@ -44,61 +58,10 @@ export default function PackagesOverview() {
       </header>
 
       <section id="packages" className="sheet pb-24 md:pb-32" style={{ scrollMarginTop: "6rem" }}>
-        <Section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {packages.map((pkg) => (
-            <article key={pkg.slug} className="cast card-link relative flex flex-col gap-5 p-6 md:p-7">
-              <PackageBadges pkg={pkg} />
-
-              <div className="flex flex-col gap-1.5">
-                <h2 className="text-lg tracking-tight">
-                  {/* Stretched link: the whole card opens the detail page while
-                      the Docs, GitHub and Pricing links stay separate anchors. */}
-                  <Link
-                    href={pkgPath(`/${pkg.slug}`)}
-                    className="after:absolute after:inset-0 after:content-['']"
-                  >
-                    {pkg.name}
-                  </Link>
-                </h2>
-                <p className="text-sm leading-relaxed text-fg-muted">{pkg.tagline}</p>
-              </div>
-
-              {pkg.tags.length > 0 && (
-                <ul className="flex flex-wrap gap-2">
-                  {pkg.tags.map((tag) => (
-                    <li key={tag} className="tab text-xs text-fg-muted">
-                      {tag}
-                    </li>
-                  ))}
-                </ul>
-              )}
-
-              <div className="mt-auto flex flex-wrap gap-x-5 gap-y-2 pt-2">
-                {pkg.docs ? (
-                  <Link href={pkgPath(`/${pkg.slug}/docs`)} className={link}>
-                    {copy.packages.docs}
-                  </Link>
-                ) : (
-                  pkg.links.docs && (
-                    <a href={pkg.links.docs} target="_blank" rel="noopener noreferrer" className={link}>
-                      {copy.packages.docs}
-                    </a>
-                  )
-                )}
-                {pkg.links.github && (
-                  <a href={pkg.links.github} target="_blank" rel="noopener noreferrer" className={link}>
-                    {copy.packages.github}
-                  </a>
-                )}
-                {pkg.pricing && (
-                  <Link href={pkgPath(`/${pkg.slug}#pricing`)} className={link}>
-                    {copy.packages.pricing}
-                  </Link>
-                )}
-              </div>
-            </article>
-          ))}
-        </Section>
+        {/* Every card is in the server HTML (fallback); the browser adds search and filters. */}
+        <Suspense fallback={<PackageGrid packages={cards} />}>
+          <PackageBrowser packages={cards} />
+        </Suspense>
       </section>
 
       {bundles.length > 0 && (
