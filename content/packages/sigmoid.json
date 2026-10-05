@@ -1,0 +1,71 @@
+{
+  "slug": "sigmoid",
+  "name": "Sigmoid",
+  "tagline": "Scroll motion without the JavaScript tax: native CSS scroll timelines, spring and S-curve easings as CSS linear(), reduced motion by default. About 2 kB.",
+  "seoTitle": "Sigmoid – scroll-driven animations and spring easing for CSS and React",
+  "description": "Most scroll animations still run in JavaScript: a listener measures elements and changes styles on every frame. Browsers can now do this themselves with CSS scroll-driven animations. Sigmoid is a small layer on top of that platform feature. Reveals, parallax and scroll-linked effects run on native view and scroll timelines, and a tiny fallback with the same range maths covers browsers that do not have them yet.\n\nWith `sigmoid.css` you do not even need JavaScript: write `data-sigmoid=\"fade-up\"` and the browser animates it. The easing curves are the other half: physically correct springs, the logistic S-curve and Bézier curves that work as JavaScript functions and as CSS `linear()`, also together with Motion, GSAP or Tailwind. When people ask their system for reduced motion, Sigmoid shows the content without moving it.",
+  "status": "beta",
+  "tags": [
+    "Animation",
+    "Scroll-driven animations",
+    "Easing",
+    "Spring",
+    "CSS",
+    "React",
+    "Reduced motion"
+  ],
+  "license": "MIT",
+  "order": 30,
+  "install": "pnpm add @sweberdev/sigmoid",
+  "npm": [
+    "@sweberdev/sigmoid",
+    "@sweberdev/sigmoid-react"
+  ],
+  "code": {
+    "title": "app/page.tsx",
+    "language": "tsx",
+    "snippet": "import \"@sweberdev/sigmoid/sigmoid.css\"\nimport { ease } from \"@sweberdev/sigmoid\"\nimport { Reveal, ScrollProgress } from \"@sweberdev/sigmoid-react\"\n\nexport default function Page() {\n  return (\n    <>\n      <ScrollProgress className=\"fixed inset-x-0 top-0 h-1 bg-black\" />\n      <h1 data-sigmoid=\"fade-up\">No JavaScript needed</h1>\n      <Reveal as=\"article\" preset=\"scale-in\" easing={ease.bouncy}>\n        …\n      </Reveal>\n    </>\n  )\n}"
+  },
+  "links": {
+    "docs": "https://packages.sweber.dev/sigmoid/docs",
+    "github": "https://github.com/Weber-Development/sigmoid",
+    "npm": "https://www.npmjs.com/package/@sweberdev/sigmoid"
+  },
+  "docs": {
+    "repo": "Weber-Development/sigmoid",
+    "path": "docs",
+    "ref": "main"
+  },
+  "demoUrl": "/sigmoid/demo",
+  "features": {
+    "free": [
+      "reveal, parallax, scrub and a reading progress bar on native CSS view and scroll timelines",
+      "Zero-JavaScript mode: data-sigmoid attributes in one stylesheet",
+      "A small fallback with the same range maths as the CSS spec, so every browser looks the same",
+      "Physically correct springs, the logistic S-curve and Bézier curves as functions and as CSS linear()",
+      "Curves usable with Motion, GSAP, CSS transitions and Tailwind",
+      "prefers-reduced-motion respected by default",
+      "React components and hooks: Reveal, Parallax, ScrollProgress, useScrub",
+      "About 2 kB for a reveal, 3.4 kB for everything, checked in CI"
+    ]
+  },
+  "faq": [
+    {
+      "q": "Why not just use Motion or GSAP?",
+      "a": "Both are excellent and do far more: layout animations, gestures, timelines. If you only need scroll-linked motion and good curves, Sigmoid lets the browser do the work and stays around 2 kB. Its easing curves also work inside Motion and GSAP."
+    },
+    {
+      "q": "Which browsers run it natively?",
+      "a": "Browsers with CSS scroll-driven animations, such as Chrome, Edge and Safari 26. Others get the JavaScript fallback with the same result. The docs list the details."
+    },
+    {
+      "q": "Does it work with Next.js and Server Components?",
+      "a": "Yes. The data-sigmoid attributes work in Server Components without client code. The React components are client components that render one element."
+    },
+    {
+      "q": "What happens with reduced motion?",
+      "a": "Reveals and parallax are skipped and the content is shown. Only the reading progress bar stays, because it moves only when the user scrolls."
+    }
+  ],
+  "publishedAt": "2026-10-05"
+}
