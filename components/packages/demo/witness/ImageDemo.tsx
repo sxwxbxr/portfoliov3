@@ -7,6 +7,7 @@ import { type ImageMarking, toDataUrl, useWitness } from "./runtime"
 
 const t = witnessDemoCopy.images
 const SAMPLE = "/demos/witness/lagoon.jpg"
+const SAMPLE_AUDIO = "/demos/witness/voice.mp3"
 const KINDS = ["generated", "edited"] as const
 type Kind = (typeof KINDS)[number]
 
@@ -15,13 +16,21 @@ interface Picked {
   bytes: Uint8Array
 }
 
-const MIME: Record<string, string> = { png: "image/png", jpeg: "image/jpeg", webp: "image/webp" }
+const MIME: Record<string, string> = {
+  png: "image/png",
+  jpeg: "image/jpeg",
+  webp: "image/webp",
+  mp3: "audio/mpeg",
+  wav: "audio/wav",
+  mp4: "video/mp4",
+}
+const IMAGE_FORMATS = new Set(["png", "jpeg", "webp"])
 
 function size(bytes: number): string {
   return bytes < 1024 ? `${bytes} B` : `${(bytes / 1024).toFixed(1)} kB`
 }
 
-/** Marks a picked image in memory and shows what Witness reads before and after. */
+/** Marks a picked image, audio or video file in memory and shows what Witness reads before and after. */
 export function ImageDemo() {
   const mod = useWitness()
   const [picked, setPicked] = useState<Picked | null>(null)
@@ -31,15 +40,18 @@ export function ImageDemo() {
 
   const result = useMemo(() => {
     if (!mod || !picked) return null
-    const before = mod.readImageMarking(picked.bytes)
+    const before = mod.readMarking(picked.bytes)
     const marking = mod.createMarking({ kind, generator: generator.trim() || undefined })
-    const marked = mod.markImage(picked.bytes, marking)
-    const after = marked.status === "marked" ? mod.readImageMarking(marked.bytes) : null
+    const marked = mod.markFile(picked.bytes, marking)
+    const after = marked.status === "marked" ? mod.readMarking(marked.bytes) : null
     return { before, marked, after }
   }, [mod, picked, kind, generator])
 
   const preview = useMemo(
-    () => (picked && result?.before.format ? toDataUrl(picked.bytes, MIME[result.before.format] ?? "image/png") : null),
+    () =>
+      picked && result?.before.format && IMAGE_FORMATS.has(result.before.format)
+        ? toDataUrl(picked.bytes, MIME[result.before.format] ?? "image/png")
+        : null,
     [picked, result?.before.format],
   )
   const download = useObjectUrl(
@@ -53,9 +65,10 @@ export function ImageDemo() {
     if (!file) return
     setPicked({ name: file.name, bytes: new Uint8Array(await file.arrayBuffer()) })
   }
-  const useSample = async () => {
-    const response = await fetch(SAMPLE)
-    setPicked({ name: "lagoon.jpg", bytes: new Uint8Array(await response.arrayBuffer()) })
+  const loadSample = async (url: string) => {
+    const response = await fetch(url)
+    const name = url.split("/").pop() ?? "sample"
+    setPicked({ name, bytes: new Uint8Array(await response.arrayBuffer()) })
   }
 
   const downloadName = picked ? picked.name.replace(/(\.[a-z0-9]+)?$/i, "-marked$1") : "marked"
@@ -69,14 +82,27 @@ export function ImageDemo() {
             <input
               id={ids.file}
               type="file"
-              accept="image/png,image/jpeg,image/webp"
+              accept="image/png,image/jpeg,image/webp,audio/mpeg,audio/wav,audio/x-wav,audio/mp4,video/mp4,video/quicktime,.m4a,.mov"
               className="sr-only"
               onChange={(e) => onFile(e.target.files?.[0])}
               disabled={!mod}
             />
           </label>
-          <button type="button" className="control px-4 py-2 text-sm" onClick={useSample} disabled={!mod}>
+          <button
+            type="button"
+            className="control px-4 py-2 text-sm"
+            onClick={() => loadSample(SAMPLE)}
+            disabled={!mod}
+          >
             {t.sample}
+          </button>
+          <button
+            type="button"
+            className="control px-4 py-2 text-sm"
+            onClick={() => loadSample(SAMPLE_AUDIO)}
+            disabled={!mod}
+          >
+            {t.sampleAudio}
           </button>
           {!mod && <span className="text-sm text-fg-muted">{witnessDemoCopy.loading}</span>}
         </div>

@@ -3,7 +3,7 @@
   "name": "Witness",
   "tagline": "AI notices, AI labels and machine-readable marking for Article 50 of the EU AI Act, for any web app and the Vercel AI SDK.",
   "seoTitle": "Witness – AI Act Article 50 transparency kit: chatbot notice, AI labels, image and text marking",
-  "description": "Since 2 August 2026, Article 50 of the EU AI Act asks for transparency around AI: people must know when they are talking to a chatbot, generated content must be marked in a machine-readable way, and deepfakes and AI text on matters of public interest must be disclosed. Witness gives you the building blocks for that in one small package.\n\nA chatbot notice and an AI label as web components and React components, in English, German, French and Italian. IPTC/XMP marking written straight into PNG, JPEG and WebP files, an invisible watermark for generated text, schema.org and meta tags for pages, and middleware for the Vercel AI SDK that marks text and images as the model produces them. Witness is a tool, not legal advice: it helps you implement the duties, it does not confirm compliance.",
+  "description": "Since 2 August 2026, Article 50 of the EU AI Act asks for transparency around AI: people must know when they are talking to a chatbot, generated content must be marked in a machine-readable way, and deepfakes and AI text on matters of public interest must be disclosed. Witness gives you the building blocks for that in one small package.\n\nA chatbot notice and an AI label as web components and React components, in English, German, French and Italian. IPTC/XMP marking written straight into image, audio and video files (PNG, JPEG, WebP, MP3, WAV, MP4, MOV, M4A), an invisible watermark for generated text, schema.org and meta tags for pages, and middleware for the Vercel AI SDK that marks text and images as the model produces them. Witness is a tool, not legal advice: it helps you implement the duties, it does not confirm compliance.",
   "status": "beta",
   "tags": [
     "EU AI Act",
@@ -41,15 +41,16 @@
       "<witness-notice>: chatbot notice before the first message, then a compact label that can be reopened, with shown and acknowledged events as evidence",
       "<witness-label>: badge for AI-generated, AI-edited or deepfake content with a details popover, inline or as an image overlay",
       "Image marking: IPTC digital source type in XMP for PNG, JPEG and WebP, in the browser or on the server; C2PA files are left untouched",
+      "Audio and video marking: the same XMP in MP3, WAV, MP4, MOV and M4A files, without re-encoding",
       "Invisible text watermark that survives copy and paste and can be read back",
       "Vercel AI SDK middleware for generateText, streamText and generateImage",
       "schema.org JSON-LD, meta tags and Next.js metadata for AI content",
-      "witness CLI: mark images in a build step and inspect files",
+      "witness CLI: mark images, audio and video in a build step and inspect files",
       "React components: <AiNotice>, <AiLabel>, <AiContent> and useAiDisclosure; wording in English, German, French and Italian"
     ],
     "pro": [
       "Notice and label wording in all 24 official EU languages",
-      "CI scanner that fails the build when AI images or text lack a label or marking, or a chat lacks its notice",
+      "CI scanner that fails the build when AI images, audio, video or text lack a label or marking, or a chat lacks its notice",
       "AI register with a transparency report for clients and a public \"How we use AI\" page"
     ]
   },
@@ -100,7 +101,7 @@
       },
       {
         "name": "@weber-development/witness-scan",
-        "description": "Checks your build output in CI for AI images and text without a label or marking and for chats without a notice."
+        "description": "Checks your build output in CI for AI images, audio, video and text without a label or marking and for chats without a notice."
       },
       {
         "name": "@weber-development/witness-report",
@@ -171,7 +172,7 @@
     },
     {
       "q": "Which duties does Witness cover?",
-      "a": "The chatbot notice of Article 50(1), machine-readable marking of generated images and text for 50(2), and visible labels for deepfakes and AI text on matters of public interest under 50(4). Emotion recognition and biometric categorisation (50(3)) get notice wording, but the duty itself lies in how you inform people. Audio and video watermarking are out of scope."
+      "a": "The chatbot notice of Article 50(1), machine-readable marking of generated images and text for 50(2), and visible labels for deepfakes and AI text on matters of public interest under 50(4). Emotion recognition and biometric categorisation (50(3)) get notice wording, but the duty itself lies in how you inform people. Audio and video files get the same machine-readable XMP marking as images; a watermark inside the sound or picture itself is out of scope."
     },
     {
       "q": "Does Witness sign images with C2PA?",

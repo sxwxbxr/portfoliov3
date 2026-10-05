@@ -9,7 +9,7 @@ import { useTheme } from "next-themes"
  * not depend on the package. Same code as on npm, bundled into one file.
  */
 
-export const WITNESS_URL = "/demos/witness/witness-0.1.1.min.js"
+export const WITNESS_URL = "/demos/witness/witness-0.2.0.min.js"
 
 export type DisclosureKind =
   | "chatbot"
@@ -52,6 +52,8 @@ export interface WitnessModule {
   createMarking(input: { kind?: string; generator?: string }): Marking
   markImage(bytes: Uint8Array, marking: Marking): MarkResult
   readImageMarking(bytes: Uint8Array): ImageMarking
+  markFile(bytes: Uint8Array, marking: Marking): MarkResult
+  readMarking(bytes: Uint8Array): ImageMarking
   watermarkText(text: string, data: TextWatermark): string
   readTextWatermark(text: string): TextWatermark | null
   stripTextWatermark(text: string): string
