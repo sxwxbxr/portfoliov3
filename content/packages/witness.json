@@ -92,7 +92,7 @@
   ],
   "pro": {
     "name": "Witness Pro",
-    "availability": "coming-soon",
+    "availability": "available",
     "packages": [
       {
         "name": "@weber-development/witness-locales",
@@ -120,7 +120,11 @@
         "monthly": 19,
         "yearly": 190,
         "seats": 1,
-        "support": false
+        "support": false,
+        "checkout": {
+          "monthly": "https://buy.polar.sh/polar_cl_9PVoh1CuJafXixusz2dQQXqA4dbdtRxZ7vRpp05Xi8f",
+          "yearly": "https://buy.polar.sh/polar_cl_lt9dRiuTfGR1REArHcTYpxFmMn8MvPdDtbeNI2qIj1C"
+        }
       },
       {
         "id": "agency",
@@ -130,7 +134,11 @@
         "yearly": 590,
         "seats": 10,
         "support": true,
-        "highlighted": true
+        "highlighted": true,
+        "checkout": {
+          "monthly": "https://buy.polar.sh/polar_cl_zhvncGq54yoTTU3nRbspbfUWu7o5AMmxt25GJ2HqvSL",
+          "yearly": "https://buy.polar.sh/polar_cl_IPh0suWcbAgqzIF5qkH5uqy7D2waoTGYJcj8X443cH3"
+        }
       },
       {
         "id": "lifetime",
@@ -138,7 +146,10 @@
         "description": "Pay once for up to ten people and keep updates and repository access.",
         "oneTime": 1990,
         "seats": 10,
-        "support": true
+        "support": true,
+        "checkout": {
+          "oneTime": "https://buy.polar.sh/polar_cl_8M5kwzcBPS9Eh17W0cBMz5AsGvEQyLnz7GWhG1vgUpm"
+        }
       }
     ],
     "notes": [
