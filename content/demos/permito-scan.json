@@ -1,0 +1,80 @@
+{
+  "pages": [
+    "http://127.0.0.1:4317/"
+  ],
+  "summary": {
+    "unconfigured": 5,
+    "beforeConsent": 2,
+    "matched": 0
+  },
+  "unconfigured": [
+    {
+      "status": "unconfigured",
+      "type": "host",
+      "name": "connect.facebook.net",
+      "suggestions": [
+        {
+          "id": "facebook-embed",
+          "name": "Facebook (Social Plugins, eingebettete Beiträge)"
+        },
+        {
+          "id": "meta-pixel",
+          "name": "Meta Pixel"
+        }
+      ]
+    },
+    {
+      "status": "unconfigured",
+      "type": "host",
+      "name": "fonts.googleapis.com",
+      "suggestions": [
+        {
+          "id": "google-fonts",
+          "name": "Google Fonts"
+        }
+      ]
+    },
+    {
+      "status": "unconfigured",
+      "type": "host",
+      "name": "region1.google-analytics.com",
+      "suggestions": []
+    },
+    {
+      "status": "unconfigured",
+      "type": "host",
+      "name": "www.facebook.com",
+      "suggestions": [
+        {
+          "id": "meta-pixel",
+          "name": "Meta Pixel"
+        }
+      ]
+    },
+    {
+      "status": "unconfigured",
+      "type": "host",
+      "name": "www.googletagmanager.com",
+      "suggestions": []
+    }
+  ],
+  "beforeConsent": [
+    {
+      "status": "before-consent",
+      "type": "cookie",
+      "name": "_ga_DEMO123456",
+      "thirdParty": false,
+      "serviceId": "google-analytics-4",
+      "category": "statistics"
+    },
+    {
+      "status": "before-consent",
+      "type": "cookie",
+      "name": "_ga",
+      "thirdParty": false,
+      "serviceId": "google-analytics-4",
+      "category": "statistics"
+    }
+  ],
+  "matched": []
+}

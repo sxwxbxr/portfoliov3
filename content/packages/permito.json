@@ -16,10 +16,11 @@
     "snippet": "\"use client\"\n\nimport {\n  ConsentBanner,\n  PermitoProvider,\n  PreferenceCenter,\n  PreferencesButton,\n} from \"@permitojs/react\"\nimport \"@permitojs/react/styles.css\"\n\nexport function Providers({ children }: { children: React.ReactNode }) {\n  return (\n    <PermitoProvider\n      config={{\n        consentVersion: \"2026-10\",\n        language: \"de-CH\",\n        categories: [\n          { id: \"necessary\", required: true },\n          { id: \"statistics\" },\n          { id: \"marketing\" },\n        ],\n      }}\n      privacyPolicyUrl=\"/datenschutz\"\n      googleConsentMode\n    >\n      {children}\n      <ConsentBanner />\n      <PreferenceCenter />\n      <PreferencesButton />\n    </PermitoProvider>\n  )\n}"
   },
   "links": {
-    "docs": "https://permito.sweber.dev",
+    "docs": "https://packages.sweber.dev/permito/docs",
     "github": "https://github.com/sxwxbxr/permito",
     "npm": "https://www.npmjs.com/package/@permitojs/react"
   },
+  "docs": { "repo": "sxwxbxr/permito", "path": "docs", "ref": "main" },
   "features": {
     "free": [
       "Opt-in by default, with \"Reject all\" exactly as prominent as \"Accept all\"",
@@ -60,7 +61,8 @@
       { "name": "@weber-development/permito-scanner", "description": "Lists the cookies, storage and requests a site sets before consent." },
       { "name": "@weber-development/permito-themes", "description": "Theme templates and layouts for @permitojs/react." }
     ],
-    "waitlistUrl": "mailto:info@sweber.dev?subject=Permito%20Pro%20waitlist"
+    "waitlistUrl": "mailto:info@sweber.dev?subject=Permito%20Pro%20waitlist",
+    "demoUrl": "/permito/demo"
   },
   "pricing": {
     "currency": "CHF",

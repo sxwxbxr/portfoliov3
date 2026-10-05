@@ -148,9 +148,10 @@ export default async function PackagePage({ params }: Props) {
           </div>
 
           <div className="flex flex-wrap gap-3">
-            {pkg.links.docs && (
+            {(pkg.docs || pkg.links.docs) && (
               <TrackedLink
-                href={pkg.links.docs}
+                // Own docs open on this site (and host); only external docs leave it.
+                href={pkg.docs ? pkgPath(`/${pkg.slug}/docs`) : pkg.links.docs!}
                 event="docs_click"
                 data={{ package: pkg.slug }}
                 className={btn + " control-primary"}
@@ -258,7 +259,22 @@ export default async function PackagePage({ params }: Props) {
       )}
 
       {pkg.pro && pkg.pro.packages.length > 0 && (
-        <Block label={s.proPackages.label} title={s.proPackages.title} sub={s.proPackages.sub}>
+        <Block
+          label={s.proPackages.label}
+          title={s.proPackages.title}
+          sub={s.proPackages.sub}
+          aside={
+            pkg.pro.demoUrl && (
+              <div className="flex flex-col items-start gap-3">
+                <Link href={pkgPath(pkg.pro.demoUrl)} className={btn + " control-primary"}>
+                  {copy.packages.liveDemo}
+                  {chev}
+                </Link>
+                <p className="annotate">{copy.packages.liveDemoNote}</p>
+              </div>
+            )
+          }
+        >
           <ul className="grid gap-3 md:grid-cols-2">
             {pkg.pro.packages.map((p) => (
               <li key={p.name} className="cast flex flex-col gap-2 p-6">
