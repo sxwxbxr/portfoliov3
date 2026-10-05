@@ -14,6 +14,7 @@ export const sigmoidDemo = {
     { href: "#curves", label: "Curves" },
     { href: "#reveal", label: "Reveal" },
     { href: "#parallax", label: "Parallax and scrub" },
+    { href: "#numbers", label: "Numbers" },
     { href: "#zero-js", label: "Zero JavaScript" },
   ],
   docs: "Read the docs",
@@ -49,6 +50,7 @@ export const sigmoidDemo = {
     lede:
       "Each card is revealed with reveal() over the range entry 0% to cover 40%: the animation starts when the card enters the window and ends when it has covered 40% of its way through. Change the curve or force the JavaScript fallback to compare: both paths compute the same progress.",
     easing: "Curve",
+    stagger: "Stagger (new in 0.2)",
     fallback: "Force JavaScript fallback",
     runningNative: "Running on a native view timeline",
     runningFallback: "Running on the JavaScript fallback",
@@ -61,6 +63,19 @@ export const sigmoidDemo = {
     lede:
       "The squares move against the scroll by 20, 60 and 120 pixels while they cross the window. The ring is linked to the scroll position of the whole page with scrub(): it turns once from top to bottom.",
     codeHeading: "parallax() and scrub()",
+  },
+  track: {
+    label: "Numbers",
+    title: "Progress as a number.",
+    sub: "New in 0.2: track() for what CSS cannot animate.",
+    lede:
+      "These counters are not animations. track() reports how far each card has travelled through the window, and a few lines of code turn that into a number. The same works for video frames, canvas drawings or a chart.",
+    stats: [
+      { value: 2200, unit: "bytes", label: "for reveal and init, min+gzip" },
+      { value: 36, unit: "tests", label: "for the range maths, curves and React" },
+      { value: 8, unit: "presets", label: "from fade-in to clip-up" },
+    ],
+    codeHeading: "track()",
   },
   zeroJs: {
     label: "Zero JavaScript",

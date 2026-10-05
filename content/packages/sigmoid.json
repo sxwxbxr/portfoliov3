@@ -1,7 +1,7 @@
 {
   "slug": "sigmoid",
   "name": "Sigmoid",
-  "tagline": "Scroll motion without the JavaScript tax: native CSS scroll timelines, spring and S-curve easings as CSS linear(), reduced motion by default. About 2 kB.",
+  "tagline": "Scroll motion without the JavaScript tax: native CSS scroll timelines, spring and S-curve easings as CSS linear(), reduced motion by default. About 2 kB for a reveal.",
   "seoTitle": "Sigmoid – scroll-driven animations and spring easing for CSS and React",
   "description": "Most scroll animations still run in JavaScript: a listener measures elements and changes styles on every frame. Browsers can now do this themselves with CSS scroll-driven animations. Sigmoid is a small layer on top of that platform feature. Reveals, parallax and scroll-linked effects run on native view and scroll timelines, and a tiny fallback with the same range maths covers browsers that do not have them yet.\n\nWith `sigmoid.css` you do not even need JavaScript: write `data-sigmoid=\"fade-up\"` and the browser animates it. The easing curves are the other half: physically correct springs, the logistic S-curve and Bézier curves that work as JavaScript functions and as CSS `linear()`, also together with Motion, GSAP or Tailwind. When people ask their system for reduced motion, Sigmoid shows the content without moving it.",
   "status": "beta",
@@ -40,13 +40,15 @@
   "features": {
     "free": [
       "reveal, parallax, scrub and a reading progress bar on native CSS view and scroll timelines",
+      "Staggered lists and grids with one option, also in CSS with --sigmoid-index",
+      "track(): scroll progress as a number for counters, video or canvas",
       "Zero-JavaScript mode: data-sigmoid attributes in one stylesheet",
       "A small fallback with the same range maths as the CSS spec, so every browser looks the same",
       "Physically correct springs, the logistic S-curve and Bézier curves as functions and as CSS linear()",
       "Curves usable with Motion, GSAP, CSS transitions and Tailwind",
       "prefers-reduced-motion respected by default",
       "React components and hooks: Reveal, Parallax, ScrollProgress, useScrub",
-      "About 2 kB for a reveal, 3.4 kB for everything, checked in CI"
+      "About 2.2 kB for a reveal, 3.6 kB for everything, checked in CI"
     ]
   },
   "faq": [
@@ -67,5 +69,13 @@
       "a": "Reveals and parallax are skipped and the content is shown. Only the reading progress bar stays, because it moves only when the user scrolls."
     }
   ],
-  "publishedAt": "2026-10-05"
+  "publishedAt": "2026-10-05",
+  "releases": [
+    {
+      "version": "0.2.0",
+      "date": "2026-10-05",
+      "title": "Sigmoid 0.2.0: stagger and track()",
+      "url": "https://packages.sweber.dev/blog/sigmoid-0-2-0-released"
+    }
+  ]
 }

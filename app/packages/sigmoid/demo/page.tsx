@@ -9,6 +9,7 @@ import { CurveLab } from "@/components/packages/demo/sigmoid/CurveLab"
 import { ParallaxScene } from "@/components/packages/demo/sigmoid/ParallaxScene"
 import { RevealGallery } from "@/components/packages/demo/sigmoid/RevealGallery"
 import { SigmoidStatus } from "@/components/packages/demo/sigmoid/SigmoidStatus"
+import { TrackStats } from "@/components/packages/demo/sigmoid/TrackStats"
 import { InstallCommand } from "@/components/packages/InstallCommand"
 import { sigmoidDemo as t } from "@/lib/demo/sigmoid-copy"
 import { pkgPath, pkgUrl } from "@/lib/packages/urls"
@@ -35,6 +36,12 @@ scrub(".ring", [
   { transform: "rotate(0deg)" },
   { transform: "rotate(360deg)" },
 ])`
+
+const TRACK_CODE = `import { track } from "@sweberdev/sigmoid"
+
+track(".stat", (p, el) => {
+  el.textContent = Math.round(2200 * p).toLocaleString()
+}, { range: "entry 0% cover 50%" })`
 
 /** The lines of the zero-JavaScript section, rendered and shown as code. */
 const LINES = [
@@ -108,6 +115,15 @@ export default function SigmoidDemoPage() {
           <ParallaxScene />
           <div className="max-w-xl">
             <CodeBlock title={t.parallax.codeHeading} code={SCRUB_CODE} />
+          </div>
+        </div>
+      </Block>
+
+      <Block id="numbers" label={t.track.label} title={t.track.title} sub={t.track.sub} lede={<p>{t.track.lede}</p>}>
+        <div className="flex flex-col gap-10">
+          <TrackStats />
+          <div className="max-w-xl">
+            <CodeBlock title={t.track.codeHeading} code={TRACK_CODE} />
           </div>
         </div>
       </Block>
