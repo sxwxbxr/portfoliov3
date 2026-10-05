@@ -8,12 +8,12 @@
   "tags": ["Accessibility", "WCAG 2.2", "BFSG", "EAA", "Playwright", "Vitest", "React"],
   "license": "MIT + Pro",
   "order": 20,
-  "install": "pnpm add -D @sweber/surjection",
-  "npm": ["@sweber/surjection", "@sweber/surjection-react"],
+  "install": "pnpm add -D @sweberdev/surjection",
+  "npm": ["@sweberdev/surjection", "@sweberdev/surjection-react"],
   "code": {
     "title": "tests/a11y.spec.ts",
     "language": "ts",
-    "snippet": "import { test } from \"@playwright/test\"\nimport { expectAccessible } from \"@sweber/surjection/playwright\"\nimport baseline from \"./a11y-baseline.json\"\n\nfor (const path of [\"/\", \"/shop\", \"/checkout\"]) {\n  test(`${path} is accessible`, async ({ page }) => {\n    await page.goto(path)\n    await expectAccessible(page, { baseline, failOn: \"serious\", locale: \"de\" })\n  })\n}"
+    "snippet": "import { test } from \"@playwright/test\"\nimport { expectAccessible } from \"@sweberdev/surjection/playwright\"\nimport baseline from \"./a11y-baseline.json\"\n\nfor (const path of [\"/\", \"/shop\", \"/checkout\"]) {\n  test(`${path} is accessible`, async ({ page }) => {\n    await page.goto(path)\n    await expectAccessible(page, { baseline, failOn: \"serious\", locale: \"de\" })\n  })\n}"
   },
   "links": {},
   "features": {
