@@ -1,0 +1,233 @@
+{
+  "container": {
+    "name": "example.ch",
+    "publicId": "GTM-ABC1234",
+    "versionId": "42"
+  },
+  "tags": [
+    {
+      "tagId": "1",
+      "name": "GA4 - Config",
+      "type": "gaawc",
+      "paused": false,
+      "triggers": [
+        "Consent Initialization - All Pages"
+      ],
+      "consentStatus": "notSet",
+      "matchedBy": "builtin-type",
+      "matchDetail": "tag type \"gaawc\"",
+      "service": {
+        "id": "google-analytics-4",
+        "name": "Google Analytics 4"
+      },
+      "category": "statistics",
+      "finding": "no-consent-check",
+      "severity": "notice",
+      "reason": "Google documents built-in consent checks for this tag type; it adjusts its behavior to the consent mode state",
+      "hint": "make sure consent mode is wired to your Permito consent state; an additional consent check on the tag is optional."
+    },
+    {
+      "tagId": "2",
+      "name": "GA4 - purchase",
+      "type": "gaawe",
+      "paused": false,
+      "triggers": [
+        "Event - purchase"
+      ],
+      "consentStatus": "notSet",
+      "matchedBy": "builtin-type",
+      "matchDetail": "tag type \"gaawe\"",
+      "service": {
+        "id": "google-analytics-4",
+        "name": "Google Analytics 4"
+      },
+      "category": "statistics",
+      "finding": "no-consent-check",
+      "severity": "notice",
+      "reason": "Google documents built-in consent checks for this tag type; it adjusts its behavior to the consent mode state",
+      "hint": "make sure consent mode is wired to your Permito consent state; an additional consent check on the tag is optional."
+    },
+    {
+      "tagId": "3",
+      "name": "Ads - Purchase conversion",
+      "type": "awct",
+      "paused": false,
+      "triggers": [
+        "Event - purchase"
+      ],
+      "consentStatus": "notSet",
+      "matchedBy": "builtin-type",
+      "matchDetail": "tag type \"awct\"",
+      "service": {
+        "id": "google-ads-conversion",
+        "name": "Google Ads Conversion Tracking / Remarketing"
+      },
+      "category": "marketing",
+      "finding": "no-consent-check",
+      "severity": "notice",
+      "reason": "Google documents built-in consent checks for this tag type; it adjusts its behavior to the consent mode state",
+      "hint": "make sure consent mode is wired to your Permito consent state; an additional consent check on the tag is optional."
+    },
+    {
+      "tagId": "4",
+      "name": "Conversion Linker",
+      "type": "gclidw",
+      "paused": false,
+      "triggers": [
+        "All Pages"
+      ],
+      "consentStatus": "notSet",
+      "matchedBy": "builtin-type",
+      "matchDetail": "tag type \"gclidw\"",
+      "service": {
+        "id": "google-ads-conversion",
+        "name": "Google Ads Conversion Tracking / Remarketing"
+      },
+      "category": "marketing",
+      "finding": "no-consent-check",
+      "severity": "notice",
+      "reason": "Google documents built-in consent checks for this tag type; it adjusts its behavior to the consent mode state",
+      "hint": "make sure consent mode is wired to your Permito consent state; an additional consent check on the tag is optional."
+    },
+    {
+      "tagId": "5",
+      "name": "HTML - Meta Pixel",
+      "type": "html",
+      "paused": false,
+      "triggers": [
+        "All Pages"
+      ],
+      "consentStatus": "notSet",
+      "matchedBy": "host",
+      "matchDetail": "host connect.facebook.net, www.facebook.com",
+      "hosts": [
+        "connect.facebook.net",
+        "www.facebook.com"
+      ],
+      "finding": "not-in-config",
+      "severity": "error",
+      "service": {
+        "id": "meta-pixel",
+        "name": "Meta Pixel"
+      },
+      "suggestions": [
+        {
+          "id": "meta-pixel",
+          "name": "Meta Pixel"
+        }
+      ],
+      "hint": "add the service to your Permito config (catalog: meta-pixel), or remove the tag."
+    },
+    {
+      "tagId": "6",
+      "name": "HTML - Hotjar",
+      "type": "html",
+      "paused": false,
+      "triggers": [
+        "All Pages"
+      ],
+      "consentStatus": "needed",
+      "matchedBy": "host",
+      "matchDetail": "host static.hotjar.com",
+      "hosts": [
+        "static.hotjar.com"
+      ],
+      "service": {
+        "id": "hotjar",
+        "name": "Hotjar"
+      },
+      "category": "statistics",
+      "finding": "ok",
+      "severity": "info",
+      "reason": "consent check set on the tag (needed)",
+      "hint": "no action."
+    },
+    {
+      "tagId": "7",
+      "name": "HTML - Chat widget",
+      "type": "html",
+      "paused": false,
+      "triggers": [
+        "All Pages"
+      ],
+      "consentStatus": "notSet",
+      "matchedBy": "none",
+      "hosts": [
+        "widget.chatbubble.example"
+      ],
+      "finding": "unknown-tag",
+      "severity": "error",
+      "hint": "no catalog service matches this tag. Check what it loads, then add a custom service to your Permito config or confirm the tag needs none."
+    },
+    {
+      "tagId": "8",
+      "name": "Pinterest Tag",
+      "type": "cvt_98765432_21",
+      "paused": false,
+      "triggers": [
+        "All Pages"
+      ],
+      "consentStatus": "notSet",
+      "matchedBy": "community-template",
+      "matchDetail": "template \"Pinterest Tag\"",
+      "service": {
+        "id": "pinterest-tag",
+        "name": "Pinterest Tag"
+      },
+      "category": "marketing",
+      "finding": "no-consent-check",
+      "severity": "error",
+      "hint": "this tag fires without an additional consent check. Set a consent check on the tag or gate it by a Permito consent trigger."
+    },
+    {
+      "tagId": "9",
+      "name": "Pixel - Meta noscript fallback (old)",
+      "type": "img",
+      "paused": true,
+      "triggers": [
+        "All Pages"
+      ],
+      "consentStatus": "notSet",
+      "matchedBy": "host",
+      "matchDetail": "host www.facebook.com",
+      "hosts": [
+        "www.facebook.com"
+      ],
+      "finding": "not-in-config",
+      "severity": "error",
+      "service": {
+        "id": "meta-pixel",
+        "name": "Meta Pixel"
+      },
+      "suggestions": [
+        {
+          "id": "meta-pixel",
+          "name": "Meta Pixel"
+        }
+      ],
+      "hint": "add the service to your Permito config (catalog: meta-pixel), or remove the tag."
+    },
+    {
+      "tagId": "10",
+      "name": "Cookie banner (Foo)",
+      "type": "cvt_98765432_33",
+      "paused": false,
+      "triggers": [
+        "Consent Initialization - All Pages"
+      ],
+      "consentStatus": "notSet",
+      "matchedBy": "none",
+      "finding": "unknown-tag",
+      "severity": "error",
+      "hint": "no catalog service matches this tag. Check what it loads, then add a custom service to your Permito config or confirm the tag needs none."
+    }
+  ],
+  "summary": {
+    "not-in-config": 2,
+    "no-consent-check": 5,
+    "unknown-tag": 2,
+    "ok": 1,
+    "paused": 1,
+    "exitCode": 1
+  }
+}

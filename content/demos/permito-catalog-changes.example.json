@@ -1,0 +1,45 @@
+[
+  {
+    "version": "0.3.0",
+    "date": "2026-11-02",
+    "serviceId": "google-analytics-4",
+    "change": "changed",
+    "fields": [
+      {
+        "path": "cookies[_ga].duration.de",
+        "before": "2 Jahre",
+        "after": "13 Monate"
+      },
+      {
+        "path": "cookies[_ga].duration.en",
+        "before": "2 years",
+        "after": "13 months"
+      },
+      {
+        "path": "cookies[_ga].duration.fr",
+        "before": "2 ans",
+        "after": "13 mois"
+      },
+      {
+        "path": "cookies[_ga].duration.it",
+        "before": "2 anni",
+        "after": "13 mesi"
+      }
+    ]
+  },
+  {
+    "version": "0.3.0",
+    "date": "2026-11-02",
+    "serviceId": "hotjar",
+    "change": "changed",
+    "fields": [
+      {
+        "path": "thirdCountryTransfer.countries",
+        "before": [],
+        "after": [
+          "US"
+        ]
+      }
+    ]
+  }
+]

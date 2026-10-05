@@ -1,0 +1,7 @@
+{
+  "sites": [
+    { "name": "Bakery Muster", "url": "http://127.0.0.1:4318/", "config": "./clean.config.mjs" },
+    { "name": "Shop Beispiel", "url": "http://127.0.0.1:4317/", "config": "./consent.config.mjs",
+      "accepted": [{ "type": "host", "name": "fonts.googleapis.com", "note": "Fonts are loaded on purpose; the client decided." }] }
+  ]
+}

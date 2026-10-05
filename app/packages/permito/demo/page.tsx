@@ -3,9 +3,12 @@ import Link from "next/link"
 import { ArrowLeft, ChevronRight } from "lucide-react"
 import PageLayout from "@/components/PageLayout"
 import { Block } from "@/components/site/Block"
+import { CatalogChangesSection } from "@/components/packages/demo/CatalogChangesSection"
 import { CoreDemo } from "@/components/packages/demo/CoreDemo"
 import { ConsentLogSection } from "@/components/packages/demo/ConsentLogSection"
 import { CookieTableSection } from "@/components/packages/demo/CookieTableSection"
+import { GtmCheckSection } from "@/components/packages/demo/GtmCheckSection"
+import { MonitoringSection } from "@/components/packages/demo/MonitoringSection"
 import { ScannerSection } from "@/components/packages/demo/ScannerSection"
 import { ServiceCatalog } from "@/components/packages/demo/ServiceCatalog"
 import { ThemeDemo } from "@/components/packages/demo/ThemeDemo"
@@ -108,6 +111,36 @@ export default function PermitoDemoPage() {
         lede={<p>{t.scanner.lede}</p>}
       >
         <ScannerSection />
+      </Block>
+
+      <Block
+        id="gtm-check"
+        label={t.gtmCheck.label}
+        title={t.gtmCheck.title}
+        sub={t.gtmCheck.sub}
+        lede={<p>{t.gtmCheck.lede}</p>}
+      >
+        <GtmCheckSection />
+      </Block>
+
+      <Block
+        id="monitoring"
+        label={t.monitoring.label}
+        title={t.monitoring.title}
+        sub={t.monitoring.sub}
+        lede={<p>{t.monitoring.lede}</p>}
+      >
+        <MonitoringSection />
+      </Block>
+
+      <Block
+        id="catalog-changes"
+        label={t.catalogChanges.label}
+        title={t.catalogChanges.title}
+        sub={t.catalogChanges.sub}
+        lede={<p>{t.catalogChanges.lede}</p>}
+      >
+        <CatalogChangesSection />
       </Block>
 
       <Block id="log" label={t.log.label} title={t.log.title} sub={t.log.sub} lede={<p>{t.log.lede}</p>}>
