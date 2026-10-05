@@ -135,8 +135,8 @@
         "id": "freelancer",
         "name": "Freelancer",
         "description": "For one developer.",
-        "monthly": 19,
-        "yearly": 190,
+        "monthly": 29,
+        "yearly": 290,
         "seats": 1,
         "support": false
       },
@@ -144,8 +144,8 @@
         "id": "agency",
         "name": "Team",
         "description": "For teams of up to ten named people, one price.",
-        "monthly": 59,
-        "yearly": 590,
+        "monthly": 89,
+        "yearly": 890,
         "seats": 10,
         "support": true,
         "highlighted": true
@@ -154,7 +154,7 @@
         "id": "lifetime",
         "name": "Lifetime",
         "description": "Pay once for up to ten people and keep updates and repository access.",
-        "oneTime": 1990,
+        "oneTime": 2990,
         "seats": 10,
         "support": true
       }
