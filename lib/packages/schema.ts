@@ -98,6 +98,8 @@ export const packageSchema = z.object({
         .array(z.object({ name: z.string(), description: z.string() }))
         .default([]),
       waitlistUrl: z.string().optional(),
+      /** Path on the package site of a live demo of the Pro packages, e.g. "/permito/demo". */
+      demoUrl: z.string().startsWith("/").optional(),
     })
     .optional(),
   pricing: z

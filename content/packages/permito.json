@@ -60,7 +60,8 @@
       { "name": "@weber-development/permito-scanner", "description": "Lists the cookies, storage and requests a site sets before consent." },
       { "name": "@weber-development/permito-themes", "description": "Theme templates and layouts for @permitojs/react." }
     ],
-    "waitlistUrl": "mailto:info@sweber.dev?subject=Permito%20Pro%20waitlist"
+    "waitlistUrl": "mailto:info@sweber.dev?subject=Permito%20Pro%20waitlist",
+    "demoUrl": "/permito/demo"
   },
   "pricing": {
     "currency": "CHF",
