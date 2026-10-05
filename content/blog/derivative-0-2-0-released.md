@@ -45,7 +45,7 @@ In React, both are props: `<WhatsNew src="/changelog.json" announce types={["fea
 - **Mastodon:** `derivative-announce post --to mastodon` posts each release as a status of at most 500 characters, with the changelog link and your hashtags. The token stays in an environment variable and only needs the `write:statuses` scope.
 - **CSV export:** `derivative-insights report --csv releases.csv` writes readers, opens and clicks per release, plus opens per day, ready for Excel. Values that look like spreadsheet formulas are defused.
 
-Existing licences get the update automatically. Pro starts at 9 CHF per month.
+Existing licences get the update automatically. Pro starts at 12 CHF per month.
 
 ## Try it
 
