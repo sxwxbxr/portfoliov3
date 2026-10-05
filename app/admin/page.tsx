@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic"
 
 import Link from "next/link"
 import { db } from "@/lib/db"
-import { projects, experienceEntries, blogPosts, caseStudies, certificates, skills } from "@/lib/schema"
+import { projects, experienceEntries, blogPosts, caseStudies, certificates, skills, packagePosts } from "@/lib/schema"
 import { count } from "drizzle-orm"
 import { getSession } from "@/lib/auth"
 import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
@@ -17,6 +17,7 @@ export default async function AdminDashboardPage() {
     [caseStudyCount],
     [certificateCount],
     [skillCount],
+    newsCount,
   ] = await Promise.all([
     db.select({ value: count() }).from(projects),
     db.select({ value: count() }).from(experienceEntries),
@@ -24,6 +25,12 @@ export default async function AdminDashboardPage() {
     db.select({ value: count() }).from(caseStudies),
     db.select({ value: count() }).from(certificates),
     db.select({ value: count() }).from(skills),
+    // The table may not exist yet before db:push; show 0 instead of crashing.
+    db
+      .select({ value: count() })
+      .from(packagePosts)
+      .then((r) => r[0]?.value ?? 0)
+      .catch(() => 0),
   ])
 
   const stats = [
@@ -42,6 +49,11 @@ export default async function AdminDashboardPage() {
       count: blogCount.value,
       href: "/admin/blog",
       disabled: !BLOG_ENABLED,
+    },
+    {
+      label: "Package News",
+      count: newsCount,
+      href: "/admin/news",
     },
     {
       label: "Case Studies",

@@ -2,7 +2,10 @@ import { renderRss, type FeedItem } from "@/lib/blog/rss"
 import { getPackages } from "@/lib/packages"
 import { pkgUrl } from "@/lib/packages/urls"
 
-export const revalidate = 60
+// Rendered per request: these list package posts, and a post published in
+// /admin/news or through the ingest API must appear here immediately. A
+// cached route handler did not pick up revalidatePath/revalidateTag.
+export const dynamic = "force-dynamic"
 
 export async function GET() {
   const items: FeedItem[] = getPackages().flatMap((p) => [

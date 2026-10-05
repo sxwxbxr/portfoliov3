@@ -9,6 +9,7 @@ const navItems = [
   { href: "/admin/projects", label: "Projects", icon: "folder" },
   { href: "/admin/experience", label: "Experience", icon: "briefcase" },
   { href: "/admin/blog", label: "Blog", icon: "pen", disabled: !BLOG_ENABLED },
+  { href: "/admin/news", label: "News (packages)", icon: "pen" },
   {
     href: "/admin/case-studies",
     label: "Case Studies",

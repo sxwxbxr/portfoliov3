@@ -1,23 +1,53 @@
+import { createDbSource } from "./db"
 import { createLocalSource } from "./local"
-import type { BlogSource, Post } from "./types"
+import type { BlogSource, Post, PostQuery } from "./types"
 
 export type { BlogSource, Post, PostQuery, PostType } from "./types"
 
 /**
- * Picks where posts come from. Pages only ever import `blog` from here.
+ * Merges several sources into one. A slug that exists in more than one keeps
+ * the entry from the earlier source, so a database post can replace a
+ * Markdown file of the same name.
+ */
+function combine(...sources: BlogSource[]): BlogSource {
+  return {
+    async getPosts(query?: PostQuery) {
+      const seen = new Set<string>()
+      const all: Post[] = []
+      for (const list of await Promise.all(sources.map((s) => s.getPosts(query)))) {
+        for (const p of list) {
+          if (seen.has(p.slug)) continue
+          seen.add(p.slug)
+          all.push(p)
+        }
+      }
+      return all.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
+    },
+    async getPost(slug) {
+      for (const s of sources) {
+        const p = await s.getPost(slug)
+        if (p) return p
+      }
+      return null
+    },
+  }
+}
+
+/**
+ * Where posts come from. Pages only ever import `blog` from here.
  *
- * BLOG_SOURCE=local (default): Markdown in content/blog.
+ * - package_posts in the database: written in /admin/news, or pushed by an
+ *   external blog system (Schulz Media) through /api/packages/posts.
+ * - Markdown in content/blog, for posts that live in the repository.
  *
- * FUTURE: BLOG_SOURCE=schulz-media, a remote adapter for the Schulz Media
- * blog system. Add `createSchulzMediaSource()` in ./schulz-media.ts, return it
- * from the switch below, and have its webhook call POST /api/revalidate.
- * Not implemented until it is known how that system delivers posts.
+ * BLOG_SOURCE=local restricts it to Markdown, e.g. for a build without a
+ * database. A pull-based remote adapter would be added here as another source.
  */
 function createSource(): BlogSource {
-  const kind = process.env.BLOG_SOURCE ?? "local"
+  const kind = process.env.BLOG_SOURCE ?? "all"
   switch (kind) {
-    // case "schulz-media":
-    //   return createSchulzMediaSource()
+    case "all":
+      return combine(createDbSource(), createLocalSource())
     case "local":
       return createLocalSource()
     default:

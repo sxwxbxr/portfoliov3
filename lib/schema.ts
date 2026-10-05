@@ -174,3 +174,31 @@ export const aiSettings = pgTable("ai_settings", {
   dailyLimit: integer("daily_limit").notNull().default(500),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 })
+
+// News, tutorials and release notes for packages.sweber.dev. Separate from
+// blog_posts (the portfolio blog) because these link to packages, can be
+// drafts, and may be pushed in by an external blog system. Field meanings
+// match the Post type in lib/blog/types.ts.
+export const packagePosts = pgTable("package_posts", {
+  id: serial("id").primaryKey(),
+  slug: text("slug").notNull().unique(),
+  title: text("title").notNull(),
+  excerpt: text("excerpt").notNull().default(""),
+  body: text("body").notNull().default(""),
+  type: text("type").notNull().default("news"),
+  status: text("status").notNull().default("draft"),
+  // YYYY-MM-DD; a future date schedules the post.
+  publishedAt: text("published_at").notNull(),
+  author: text("author").notNull().default("Seya Weber"),
+  coverImage: text("cover_image").notNull().default(""),
+  tags: json("tags").$type<string[]>().notNull().default([]),
+  packages: json("packages").$type<string[]>().notNull().default([]),
+  videos: json("videos").$type<string[]>().notNull().default([]),
+  canonicalUrl: text("canonical_url").notNull().default(""),
+  // "admin" for posts written in /admin/news, otherwise the external system.
+  source: text("source").notNull().default("admin"),
+  // The external system's own ID, so repeated deliveries update one row.
+  externalId: text("external_id").unique(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+})
