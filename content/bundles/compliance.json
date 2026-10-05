@@ -1,0 +1,83 @@
+{
+  "slug": "compliance",
+  "name": "Compliance Bundle",
+  "tagline": "Every Pro add-on an agency needs for the legal side of client websites and SaaS apps, under one licence.",
+  "seoTitle": "Compliance Bundle – cookie consent, accessibility and audit log Pro for agencies",
+  "description": "Client websites in Switzerland, Germany and Austria have to ask for cookie consent, meet accessibility rules and, for SaaS apps, show who changed what. The Compliance Bundle combines the Pro add-ons for all three in one subscription, for less than buying them one by one.\n\nNew compliance packages join the bundle when they are released, without a higher price for running subscriptions. Next up are a withdrawal and cancellation button kit for the German and Austrian button laws, and transparency labels for AI content under the EU AI Act.",
+  "includes": ["permito", "surjection", "logarithm"],
+  "upcoming": [
+    {
+      "name": "Withdrawal and cancellation button",
+      "description": "The withdrawal button (§ 356a BGB) and cancellation button (§ 312k BGB) for Next.js and React, with confirmation e-mail and records."
+    },
+    {
+      "name": "AI transparency",
+      "description": "Labels and machine-readable markers for AI-generated content and chatbots under Art. 50 of the EU AI Act."
+    }
+  ],
+  "pro": {
+    "name": "Compliance Bundle",
+    "availability": "coming-soon",
+    "packages": [],
+    "waitlistUrl": "mailto:info@sweber.dev?subject=Compliance%20Bundle"
+  },
+  "pricing": {
+    "currency": "CHF",
+    "merchant": "Polar",
+    "tiers": [
+      {
+        "id": "freelancer",
+        "name": "Freelancer",
+        "description": "For one person working on client projects.",
+        "monthly": 49,
+        "yearly": 490,
+        "seats": 1,
+        "support": false
+      },
+      {
+        "id": "agency",
+        "name": "Agency",
+        "description": "For teams of up to ten named people, one price.",
+        "monthly": 149,
+        "yearly": 1490,
+        "seats": 10,
+        "support": true,
+        "highlighted": true
+      },
+      {
+        "id": "lifetime",
+        "name": "Lifetime",
+        "description": "Pay once for up to ten people and keep updates and repository access for every package in the bundle.",
+        "oneTime": 4990,
+        "seats": 10,
+        "support": true
+      }
+    ],
+    "notes": [
+      "Bought one by one, the three Pro add-ons cost CHF 67 a month for Freelancer and CHF 207 for Agency.",
+      "Packages that join the bundle later are included at no extra cost.",
+      "After cancelling, every version you already received keeps working. Only updates and repository access end.",
+      "Agency and Lifetime cover up to ten named people for one price: you choose the number of seats at checkout and assign them in Polar. Your clients and their websites need no licence of their own.",
+      "Checkout, invoices and VAT are handled by Polar as merchant of record."
+    ],
+    "custom": {
+      "label": "11 people or more",
+      "email": "info@sweber.dev"
+    }
+  },
+  "faq": [
+    {
+      "q": "What do I get after checkout?",
+      "a": "Polar gives your GitHub account read access to the Pro repositories of every package in the bundle. The Pro packages then install from GitHub Packages with a read-only token, exactly as with a single Pro licence."
+    },
+    {
+      "q": "I already pay for one Pro add-on. Can I switch?",
+      "a": "Yes. Buy the bundle and cancel the single licence; it stays active until the end of the period you paid for."
+    },
+    {
+      "q": "Does the price go up when new packages join?",
+      "a": "Not for running subscriptions and not for Lifetime licences. New buyers may pay a higher price once the bundle contains more packages."
+    }
+  ],
+  "publishedAt": "2026-10-05"
+}

@@ -1079,6 +1079,18 @@ export const copy = {
     licenseLink: "Read the licence terms",
     // Install / links
     backToOverview: "All packages",
+    // Bundles of several Pro add-ons (/bundles/<slug>)
+    bundle: {
+      badge: "Bundle",
+      seePricing: "See pricing",
+      included: { label: "Included", title: "What is included", sub: "The full Pro add-on of each package." },
+      upcoming: { label: "Next", title: "Coming to the bundle", sub: "Included at no extra cost once released." },
+      pricing: { label: "Pricing", title: "Pricing", sub: "One licence for all of them, prices in CHF." },
+      overviewHeading: "Bundles",
+      overviewSub: "Several Pro add-ons under one licence.",
+      packageNote: (pro: string, bundle: string) => `${pro} is also part of the ${bundle}.`,
+      packageLink: (bundle: string) => `See the ${bundle}`,
+    },
     // Licence page
     licenseLabel: "Licence",
     licenseTitle: "Licence terms",

@@ -19,7 +19,11 @@ function monthsFree(tier: PriceTier): number {
   return Math.max(0, Math.round(12 - tier.yearly / tier.monthly))
 }
 
-export function PricingBlock({ pkg }: { pkg: Package }) {
+export function PricingBlock({
+  pkg,
+}: {
+  pkg: Pick<Package, "slug" | "name" | "pricing" | "pro">
+}) {
   const [period, setPeriod] = useState<Period>("yearly")
   const { pricing, pro } = pkg
   if (!pricing) return null

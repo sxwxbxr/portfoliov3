@@ -15,6 +15,7 @@ import { getPackage, getPackages } from "@/lib/packages"
 import type { Package } from "@/lib/packages/schema"
 import { pkgPath, pkgUrl } from "@/lib/packages/urls"
 import { getPostsForPackage } from "@/lib/blog"
+import { bundlesWith } from "@/lib/packages/bundles"
 import { copy } from "@/lib/copy"
 
 export const revalidate = 60
@@ -292,7 +293,20 @@ export default async function PackagePage({ params }: Props) {
 
       {pkg.pricing && (
         <Block id="pricing" label={s.pricing.label} title={s.pricing.title} sub={s.pricing.sub}>
-          <PricingBlock pkg={pkg} />
+          <div className="flex flex-col gap-8">
+            {bundlesWith(pkg.slug).map((b) => (
+              <p key={b.slug} className="well px-5 py-4 text-sm text-fg-muted">
+                {copy.packages.bundle.packageNote(pkg.pro?.name ?? pkg.name, b.name)}{" "}
+                <Link
+                  href={pkgPath(`/bundles/${b.slug}`)}
+                  className="text-fg underline underline-offset-2 hover:text-fg-muted"
+                >
+                  {copy.packages.bundle.packageLink(b.name)}
+                </Link>
+              </p>
+            ))}
+            <PricingBlock pkg={pkg} />
+          </div>
         </Block>
       )}
 
