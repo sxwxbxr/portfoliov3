@@ -1,0 +1,156 @@
+{
+  "slug": "integral",
+  "name": "Integral",
+  "tagline": "Licenses, plans and feature entitlements for developers who sell software. Signed offline license keys, Polar.sh license keys and React feature gates, without a licensing SaaS.",
+  "seoTitle": "Integral – software licensing, license keys and entitlements for Polar.sh, Node and React",
+  "description": "Integral is a library for developers who sell software: desktop apps, self-hosted tools, CLIs or paid libraries. Licenses are signed with Ed25519 on your side and verified offline in your app with the public key, so nobody can forge or change one, and no licensing server has to be reachable at runtime. Declare plans with features and limits once, then ask `has(\"export\")` or `check(\"projects\", used)` anywhere.\n\nPolar.sh is built in: validate, activate and deactivate Polar license keys through Polar's public API, with a cache and grace period so customers are not locked out offline. Licenses can end updates instead of usage, so versions released before the end keep working after a cancellation. Zero dependencies, runs in Node, browsers and edge runtimes, MIT-licensed. Integral Pro adds a license server that turns Polar orders and subscriptions into signed licenses automatically, and a React activation view.",
+  "status": "beta",
+  "tags": [
+    "Licensing",
+    "License keys",
+    "Entitlements",
+    "Polar.sh",
+    "Ed25519",
+    "React",
+    "Node.js"
+  ],
+  "license": "MIT + Pro",
+  "order": 25,
+  "install": "pnpm add @sweberdev/integral",
+  "npm": [
+    "@sweberdev/integral",
+    "@sweberdev/integral-react"
+  ],
+  "code": {
+    "title": "lib/license.ts",
+    "language": "ts",
+    "snippet": "import { createEntitlements, definePlans, verifyLicense } from \"@sweberdev/integral\"\n\nexport const plans = definePlans({\n  free: { features: [\"editor\"], limits: { projects: 1 } },\n  pro: { extends: \"free\", features: [\"export\"], limits: { projects: 50 } },\n})\n\nconst result = await verifyLicense(license, { publicKey: INTEGRAL_PUBLIC_KEY, product: \"my-app\" })\nconst entitlements = createEntitlements({ plans, license: result.valid ? result.license : null })\n\nentitlements.has(\"export\") // true on Pro\nentitlements.check(\"projects\", projects.length).allowed"
+  },
+  "links": {
+    "docs": "https://packages.sweber.dev/integral/docs",
+    "github": "https://github.com/Weber-Development/integral",
+    "npm": "https://www.npmjs.com/package/@sweberdev/integral"
+  },
+  "docs": {
+    "repo": "Weber-Development/integral",
+    "path": "docs",
+    "ref": "main"
+  },
+  "features": {
+    "free": [
+      "Signed offline license keys (Ed25519): no server needed to check them, impossible to forge without your private key",
+      "Plans with features and limits, inheritance and per-customer extras signed into the license",
+      "Polar.sh license keys: validate, activate and deactivate without an access token in your app",
+      "Offline grace: cached checks keep paying customers working when the network is down",
+      "Update periods: licenses that end updates instead of usage, so installed versions keep working",
+      "CLI to create keys and issue, verify and inspect licenses",
+      "React bindings: <Feature>, <Limit>, useFeature and an async license check hook",
+      "Zero dependencies, runs in Node 20+, browsers, Bun, Deno and edge runtimes"
+    ],
+    "pro": [
+      "License server that turns Polar orders and subscriptions into signed licenses: issue, renew, end, revoke",
+      "Verified Polar webhooks, storage for SQLite, Postgres and MySQL, one fetch handler for Next.js, Hono, Bun and Workers",
+      "Exchange of Polar license keys for signed offline licenses, refresh after renewals",
+      "React license activation view with automatic renewal and upgrade prompts, English and German"
+    ]
+  },
+  "comparison": [
+    { "feature": "Sign and verify licenses offline", "free": true, "pro": true },
+    { "feature": "Plans, features and limits", "free": true, "pro": true },
+    { "feature": "Polar license key validation and activations", "free": true, "pro": true },
+    { "feature": "Offline grace and update periods", "free": true, "pro": true },
+    { "feature": "CLI and React feature gates", "free": true, "pro": true },
+    { "feature": "Licenses issued automatically from Polar webhooks", "free": false, "pro": true },
+    { "feature": "Renewal, cancellation and refund handling", "free": false, "pro": true },
+    { "feature": "SQL storage and ready-made API routes", "free": false, "pro": true },
+    { "feature": "React license activation and upgrade prompt", "free": false, "pro": true },
+    { "feature": "Licence", "free": "MIT", "pro": "Per person" },
+    { "feature": "Support", "free": "GitHub issues", "pro": "Agency and Lifetime" }
+  ],
+  "pro": {
+    "name": "Integral Pro",
+    "availability": "coming-soon",
+    "packages": [
+      {
+        "name": "@weber-development/integral-server",
+        "description": "License server: Polar webhooks, issuing, renewing and revoking licenses, SQL storage and a fetch handler."
+      },
+      {
+        "name": "@weber-development/integral-portal",
+        "description": "React license activation with Polar key exchange, offline verification, automatic renewal and upgrade prompts."
+      }
+    ],
+    "demoUrl": "/integral/demo",
+    "waitlistUrl": "mailto:info@sweber.dev?subject=Integral%20Pro%20waitlist"
+  },
+  "pricing": {
+    "currency": "CHF",
+    "merchant": "Polar",
+    "tiers": [
+      {
+        "id": "freelancer",
+        "name": "Freelancer",
+        "description": "For one developer selling their own software.",
+        "monthly": 19,
+        "yearly": 190,
+        "seats": 1,
+        "support": false
+      },
+      {
+        "id": "agency",
+        "name": "Agency",
+        "description": "For teams of up to ten named people, one price.",
+        "monthly": 59,
+        "yearly": 590,
+        "seats": 10,
+        "support": true,
+        "highlighted": true
+      },
+      {
+        "id": "lifetime",
+        "name": "Lifetime",
+        "description": "Pay once for up to ten people and keep updates and repository access.",
+        "oneTime": 1990,
+        "seats": 10,
+        "support": true
+      }
+    ],
+    "notes": [
+      "After cancelling, every version you already received keeps working. Only updates and repository access end.",
+      "Your own customers never need a licence for Integral Pro, even though the activation view ships inside your app.",
+      "Agency and Lifetime cover up to ten named people for one price: you choose the number of seats at checkout and assign them in Polar.",
+      "Checkout, invoices and VAT are handled by Polar as merchant of record."
+    ],
+    "custom": {
+      "label": "11 people or more",
+      "email": "info@sweber.dev"
+    }
+  },
+  "faq": [
+    {
+      "q": "How is this different from Keygen or other licensing services?",
+      "a": "Integral is a library, not a hosted API. Licenses are signed by you and checked offline in your app, so there is no monthly fee per license and no outage that locks out your customers. With Integral Pro you run the license server yourself, next to your app."
+    },
+    {
+      "q": "Can someone crack it?",
+      "a": "Anyone who can change your application can remove a license check, with any licensing tool. What they cannot do is create or change a license without your private key. Integral makes honest use easy and dishonest use deliberate."
+    },
+    {
+      "q": "Do I need Polar?",
+      "a": "No. The free package signs and checks its own licenses with any shop or none. Polar is built in because it handles payments, invoices and VAT as merchant of record and has license keys of its own."
+    },
+    {
+      "q": "What happens to my customers when they cancel?",
+      "a": "You decide. By default Integral Pro limits the license to the paid update period: versions released until then keep working, newer ones ask for a renewal. Set it to expire instead if you prefer."
+    },
+    {
+      "q": "Do my customers need a licence for Integral Pro?",
+      "a": "No. The licence covers the people building your software. Your customers and the apps you ship to them need nothing."
+    },
+    {
+      "q": "Can I use the open-source part on its own?",
+      "a": "Yes. @sweberdev/integral and @sweberdev/integral-react are MIT-licensed and complete without Pro."
+    }
+  ],
+  "publishedAt": "2026-10-05"
+}
