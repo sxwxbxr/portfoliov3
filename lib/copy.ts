@@ -1025,6 +1025,7 @@ export const copy = {
         tabsLabel: "Report language",
         frameTitle: (lang: string) => `Example report, ${lang}`,
         pdf: "Download the PDF (German)",
+        csv: "Download the fix list (CSV for Excel, German)",
       },
 
       history: {

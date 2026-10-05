@@ -41,12 +41,15 @@
       "Playwright helper and Vitest matcher on top of axe-core, tested against WCAG 2.2 AA by default",
       "Every finding mapped to its WCAG success criterion and EN 301 549 clause",
       "Baseline for existing sites: CI fails only on new issues, not on the whole backlog",
+      "CLI for whole sites: sitemap, desktop or mobile viewport, JUnit XML for GitLab, Azure DevOps and Jenkins",
+      "surjection init sets up a config file and a GitHub Actions workflow in one command",
       "Markdown report for pull requests and job summaries, in German, Swiss German, French, Italian and English",
       "Accessibility statement generator (DE, DE-CH, FR, IT, EN) as Markdown and HTML",
       "Accessible React building blocks: skip link, visually hidden text, live announcements, reduced motion"
     ],
     "pro": [
       "Client reports in your agency's branding, as HTML and PDF",
+      "Fix list as CSV for Excel: one row per element, with status and note columns for your developers",
       "History across all client projects, so you can show progress over time",
       "Guided manual checklist for the criteria automated tests cannot cover"
     ]
@@ -109,7 +112,7 @@
     "packages": [
       {
         "name": "@weber-development/surjection-report",
-        "description": "Client reports in your branding as HTML and PDF, in German, Swiss German, French, Italian and English."
+        "description": "Client reports in your branding as HTML and PDF, plus a fix list as CSV, in German, Swiss German, French, Italian and English."
       },
       {
         "name": "@weber-development/surjection-history",

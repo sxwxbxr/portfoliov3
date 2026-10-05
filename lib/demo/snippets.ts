@@ -79,7 +79,8 @@ export const { POST } = createConsentLogRoute(log, {
 })`
 
 export const SURJECTION_CHECK_COMMAND = `npx surjection check https://baeckerei-muster.example/ \\
-  --project "Bäckerei Muster" --out-md a11y.md --out-json a11y.json
+  --project "Bäckerei Muster" --viewport mobile \\
+  --out-md a11y.md --out-json a11y.json --out-junit a11y.xml
 
 ✗ https://baeckerei-muster.example/ (6 issues)
 
@@ -89,4 +90,5 @@ export const SURJECTION_PRO_COMMANDS = `npx surjection-history record --results 
 npx surjection-checklist apply --checklist checklist.json --results a11y.json
 npx surjection-report --results a11y.json --brand brand.json \\
   --checklist checklist.json --history-dir .surjection-history \\
-  --locale de --out bericht.pdf`
+  --locale de --out bericht.pdf
+npx surjection-report --results a11y.json --locale de --out massnahmen.csv`
