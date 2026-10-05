@@ -28,7 +28,8 @@
       "Gate scripts, iframes and components with ConsentScript, ConsentIframe and ConsentGate",
       "Server-safe Next.js helpers, so gated content never flashes on load",
       "Google Consent Mode v2 with a configurable category mapping",
-      "German, Swiss German, English, French and Italian built in; keyboard and screen-reader accessible"
+      "German, Swiss German, English, French and Italian built in; keyboard and screen-reader accessible",
+      "Decisions expire after a number of days you choose, Global Privacy Control is honoured on request, and a choice applies in every open tab at once"
     ],
     "pro": [
       "Service catalog with 71 providers, each entry sourced from the provider's own documentation with a retrieval date",
@@ -47,6 +48,7 @@
     { "feature": "Consent gates for scripts, iframes and components", "free": true, "pro": true },
     { "feature": "Google Consent Mode v2", "free": true, "pro": true },
     { "feature": "DE, DE-CH, EN, FR, IT translations", "free": true, "pro": true },
+    { "feature": "Consent expiry, Global Privacy Control, tab sync", "free": true, "pro": true },
     { "feature": "Service catalog", "free": false, "pro": true },
     { "feature": "Cookie table for the privacy policy", "free": false, "pro": true },
     { "feature": "Consent log", "free": false, "pro": true },
