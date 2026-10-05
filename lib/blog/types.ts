@@ -1,11 +1,10 @@
 /**
  * Blog contract for the package site.
  *
- * Pages and components only ever talk to a `BlogSource`. The first
- * implementation reads local Markdown from content/blog; a second one will
- * fetch from the Schulz Media blog system once it is known how that system
- * delivers posts (API, feed, webhook or commits). Swapping the source must not
- * touch a single page.
+ * Pages and components only ever talk to a `BlogSource`. Sources: Markdown in
+ * content/blog, the package_posts table, and the Schulz Media content API
+ * (lib/blog/schulz-media.ts). Adding or swapping a source must not touch a
+ * single page.
  */
 
 export type PostType = "news" | "tutorial" | "release"
@@ -14,13 +13,22 @@ export interface Post {
   slug: string
   title: string
   excerpt: string
-  /** Markdown. A remote source that delivers HTML converts or wraps it. */
+  /** The post content, in `bodyFormat`. */
   body: string
+  /** "markdown" (default) for local and admin posts, "html" for sources that deliver finished HTML. */
+  bodyFormat?: "markdown" | "html"
   /** ISO date, YYYY-MM-DD. */
   publishedAt: string
   updatedAt?: string
   author: string
   coverImage?: string
+  coverAlt?: string
+  /** <title> override; falls back to `title`. */
+  seoTitle?: string
+  /** Meta description override; falls back to `excerpt`. */
+  metaDescription?: string
+  /** BCP 47 language of the content when it differs from the site (English), e.g. "de-CH". */
+  lang?: string
   tags: string[]
   /** Package slugs from content/packages this post is about. */
   packages: string[]

@@ -1,5 +1,6 @@
 import { createDbSource } from "./db"
 import { createLocalSource } from "./local"
+import { createSchulzMediaSource } from "./schulz-media"
 import type { BlogSource, Post, PostQuery } from "./types"
 
 export type { BlogSource, Post, PostQuery, PostType } from "./types"
@@ -37,17 +38,22 @@ function combine(...sources: BlogSource[]): BlogSource {
  * Where posts come from. Pages only ever import `blog` from here.
  *
  * - package_posts in the database: written in /admin/news, or pushed by an
- *   external blog system (Schulz Media) through /api/packages/posts.
+ *   external system through /api/packages/posts.
+ * - The Schulz Media content API, when SCHULZ_MEDIA_API_KEY is set.
  * - Markdown in content/blog, for posts that live in the repository.
  *
  * BLOG_SOURCE=local restricts it to Markdown, e.g. for a build without a
- * database. A pull-based remote adapter would be added here as another source.
+ * database or API key.
  */
 function createSource(): BlogSource {
   const kind = process.env.BLOG_SOURCE ?? "all"
   switch (kind) {
     case "all":
-      return combine(createDbSource(), createLocalSource())
+      return combine(
+        ...[createDbSource(), createSchulzMediaSource(), createLocalSource()].filter(
+          (s): s is BlogSource => s !== null
+        )
+      )
     case "local":
       return createLocalSource()
     default:
@@ -76,8 +82,22 @@ export async function getRelatedPosts(post: Post, limit = 3): Promise<Post[]> {
     .map(({ p }) => p)
 }
 
-export function readingTime(body: string): number {
-  return Math.max(1, Math.round(body.split(/\s+/).filter(Boolean).length / 220))
+const ENTITIES: Record<string, string> = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " " }
+
+/** Plain text of an HTML fragment: tags removed, common entities decoded. */
+function htmlText(html: string): string {
+  return html
+    .replace(/<[^>]*>/g, "")
+    .replace(/&(#x?[0-9a-f]+|[a-z]+);/gi, (m, e: string) =>
+      e[0] === "#"
+        ? String.fromCodePoint(parseInt(e.slice(e[1].toLowerCase() === "x" ? 2 : 1), e[1].toLowerCase() === "x" ? 16 : 10))
+        : (ENTITIES[e.toLowerCase()] ?? m)
+    )
+}
+
+export function readingTime(body: string, format: Post["bodyFormat"] = "markdown"): number {
+  const text = format === "html" ? htmlText(body) : body
+  return Math.max(1, Math.round(text.split(/\s+/).filter(Boolean).length / 220))
 }
 
 /** One slug function for TOC links and rendered heading ids, so they always match. */
@@ -108,4 +128,13 @@ export function extractHeadings(body: string): Heading[] {
     headings.push({ id: slugify(text), text, level: m[1].length as 2 | 3 })
   }
   return headings
+}
+
+/** Headings of a post for its table of contents, in either body format. */
+export function headingsOf(post: Pick<Post, "body" | "bodyFormat">): Heading[] {
+  if (post.bodyFormat !== "html") return extractHeadings(post.body)
+  return [...post.body.matchAll(/<h([23])\b[^>]*>([\s\S]*?)<\/h\1>/gi)].map((m) => {
+    const text = htmlText(m[2]).trim()
+    return { id: slugify(text), text, level: Number(m[1]) as 2 | 3 }
+  })
 }

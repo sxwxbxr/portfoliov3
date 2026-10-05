@@ -1,16 +1,13 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { Children, isValidElement, type ReactNode } from "react"
-import ReactMarkdown from "react-markdown"
-import remarkGfm from "remark-gfm"
 import { ArrowLeft, ChevronRight } from "lucide-react"
 import PageLayout, { Section } from "@/components/PageLayout"
 import { JsonLd } from "@/components/JsonLd"
-import { PROSE } from "@/components/ProseMarkdown"
+import { PostBody } from "@/components/packages/PostBody"
 import { InstallCommand } from "@/components/packages/InstallCommand"
 import { YouTubeEmbed } from "@/components/packages/YouTubeEmbed"
-import { blog, extractHeadings, getRelatedPosts, readingTime, slugify } from "@/lib/blog"
+import { blog, getRelatedPosts, headingsOf, readingTime } from "@/lib/blog"
 import { getPackage } from "@/lib/packages"
 import { pkgPath, pkgUrl, MAIN_ORIGIN } from "@/lib/packages/urls"
 import { copy } from "@/lib/copy"
@@ -29,15 +26,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = await blog.getPost(slug)
   if (!post) return {}
   const url = post.canonicalUrl ?? pkgUrl(`/blog/${post.slug}`)
+  const description = post.metaDescription || post.excerpt
   return {
-    title: post.title,
-    description: post.excerpt,
+    title: { absolute: post.seoTitle || post.title },
+    description,
     alternates: { canonical: url },
     openGraph: {
       type: "article",
       title: post.title,
       description: post.excerpt,
       url,
+      locale: post.lang?.replace("-", "_"),
       publishedTime: post.publishedAt,
       modifiedTime: post.updatedAt,
       authors: [post.author],
@@ -47,34 +46,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-function textOf(node: ReactNode): string {
-  return Children.toArray(node)
-    .map((c) =>
-      typeof c === "string" || typeof c === "number"
-        ? String(c)
-        : isValidElement<{ children?: ReactNode }>(c)
-          ? textOf(c.props.children)
-          : ""
-    )
-    .join("")
-}
-
-// Headings get the same ids extractHeadings() produces for the TOC.
-const components = {
-  h2: ({ children }: { children?: ReactNode }) => (
-    <h2 id={slugify(textOf(children))} style={{ scrollMarginTop: "6rem" }}>{children}</h2>
-  ),
-  h3: ({ children }: { children?: ReactNode }) => (
-    <h3 id={slugify(textOf(children))} style={{ scrollMarginTop: "6rem" }}>{children}</h3>
-  ),
-}
-
 export default async function BlogPost({ params }: Props) {
   const { slug } = await params
   const post = await blog.getPost(slug)
   if (!post) notFound()
 
-  const headings = extractHeadings(post.body)
+  const headings = headingsOf(post)
   const related = await getRelatedPosts(post)
   const pkgs = post.packages.flatMap((s) => {
     const p = getPackage(s)
@@ -102,15 +79,20 @@ export default async function BlogPost({ params }: Props) {
       <JsonLd
         data={{
           "@context": "https://schema.org",
-          "@type": "Article",
+          "@type": "BlogPosting",
           headline: post.title,
-          description: post.excerpt,
+          description: post.metaDescription || post.excerpt,
           datePublished: post.publishedAt,
           dateModified: post.updatedAt ?? post.publishedAt,
-          author: { "@type": "Person", name: post.author, url: MAIN_ORIGIN },
+          ...(post.lang && { inLanguage: post.lang }),
+          author:
+            post.author === "Seya Weber"
+              ? { "@type": "Person", name: post.author, url: MAIN_ORIGIN }
+              : { "@type": "Organization", name: post.author, url: MAIN_ORIGIN },
+          publisher: { "@type": "Organization", name: "Weber Development", url: MAIN_ORIGIN },
           url,
-          mainEntityOfPage: url,
-          image: pkgUrl(`/blog/${post.slug}/opengraph-image`),
+          mainEntityOfPage: { "@type": "WebPage", "@id": url },
+          image: post.coverImage ?? pkgUrl(`/blog/${post.slug}/opengraph-image`),
         }}
       />
 
@@ -128,12 +110,12 @@ export default async function BlogPost({ params }: Props) {
             <time dateTime={post.publishedAt} className="annotate">
               {formatDate(post.publishedAt)}
             </time>
-            <span className="annotate">{copy.pkgBlog.readingTime(readingTime(post.body))}</span>
+            <span className="annotate">{copy.pkgBlog.readingTime(readingTime(post.body, post.bodyFormat))}</span>
           </div>
-          <h1 className="display text-balance">
+          <h1 className="display text-balance" lang={post.lang}>
             {post.title}
           </h1>
-          <p className="lede measure">{post.excerpt}</p>
+          <p className="lede measure" lang={post.lang}>{post.excerpt}</p>
           <p className="annotate">{copy.pkgBlog.postedBy(post.author)}</p>
           {post.canonicalUrl && (
             <a href={post.canonicalUrl} rel="canonical" className="annotate self-start hover:text-fg">
@@ -146,11 +128,18 @@ export default async function BlogPost({ params }: Props) {
           <div className="flex min-w-0 flex-col gap-10">
             {toc && <div className="well p-4 lg:hidden">{toc}</div>}
 
-            <article className={`${PROSE} measure`}>
-              <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
-                {post.body}
-              </ReactMarkdown>
-            </article>
+            {post.coverImage && (
+              // Remote cover images come from whatever host the source uses,
+              // so a plain <img> instead of next/image and its host allow-list.
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={post.coverImage}
+                alt={post.coverAlt ?? ""}
+                className="measure h-auto w-full rounded-lg border border-edge-soft"
+              />
+            )}
+
+            <PostBody post={post} />
 
             {post.videos.length > 0 && (
               <Section className="flex flex-col gap-4">

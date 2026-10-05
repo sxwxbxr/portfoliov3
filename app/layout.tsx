@@ -6,7 +6,6 @@ import { ThemeProvider } from "@/components/ThemeProvider"
 import { Analytics } from "@/components/Analytics"
 import { SpeedInsights } from "@/components/SpeedInsights"
 import { JsonLd } from "@/components/JsonLd"
-import { Suspense } from "react"
 import { Footer } from "@/components/Footer"
 import SmoothScroll from "@/components/SmoothScroll"
 import { ScrollProgress } from "@/components/ScrollProgress"
@@ -178,18 +177,16 @@ export default async function RootLayout({
         >
           {copy.common.skipToContent}
         </a>
-        <Suspense fallback={null}>
-          <ThemeProvider attribute="class" forcedTheme="dark" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
-            <ScrollProgress />
-            <SmoothScroll>
-              <div className="flex min-h-screen flex-col">
-                <main id="main-content" className="flex-1">{children}</main>
-                <Footer settings={settings} />
-              </div>
-            </SmoothScroll>
-            {AI_FEATURES_ENABLED && <ChatWidget />}
-          </ThemeProvider>
-        </Suspense>
+        <ThemeProvider attribute="class" forcedTheme="dark" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
+          <ScrollProgress />
+          <SmoothScroll>
+            <div className="flex min-h-screen flex-col">
+              <main id="main-content" className="flex-1">{children}</main>
+              <Footer settings={settings} />
+            </div>
+          </SmoothScroll>
+          {AI_FEATURES_ENABLED && <ChatWidget />}
+        </ThemeProvider>
         <Analytics />
         <SpeedInsights />
       </body>
