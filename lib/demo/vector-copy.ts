@@ -142,7 +142,7 @@ export const vectorDemoCopy = {
     portalUi: "And the React components on your settings page",
     portalNote:
       "The handler serves endpoints, secrets, the message log, retries and test events for exactly one tenant, the one your authorize function returns. The components talk to it and bring their own styles.",
-    catalog: "Event catalog (sketch; the final API is in the Pro docs)",
+    catalog: "Event catalog",
     catalogNote:
       "Every event type gets a schema (Zod, Valibot, ArkType or any Standard Schema library). Payloads are checked before they are sent, and the same catalog generates Markdown docs, an AsyncAPI 3 file and TypeScript types for your customers.",
     ops: "vector-ops sends alerts to Slack, email or a webhook when an endpoint keeps failing, replays everything that failed during an outage in one command, writes a health report, exposes Prometheus metrics and deletes old log data on a schedule.",

@@ -35,11 +35,15 @@ import { defineCatalog } from "@weber-development/vector-catalog"
 export const catalog = defineCatalog({
   "invoice.paid": {
     description: "An invoice was paid in full.",
-    schema: z.object({ invoiceId: z.string(), amount: z.number().int(), currency: z.string() }),
+    schema: z.object({ invoiceId: z.string(), amount: z.number().int() }),
+    example: { invoiceId: "inv_123", amount: 4200 },
   },
 })
 
-// Validated against the schema before Vector stores the message
-await catalog.send(vector, { tenant: "acme", eventType: "invoice.paid", payload })
+// Typed and validated before Vector stores the message
+await catalog.send(vector, "invoice.paid", { invoiceId: "inv_123", amount: 4200 }, { tenant: "acme" })
 
-// npx vector-catalog docs | asyncapi | types`
+// Docs for your customers
+catalog.toMarkdown()
+catalog.toAsyncAPI({ title: "Acme webhooks", version: "1.0.0" })
+catalog.toTypeScript()`
