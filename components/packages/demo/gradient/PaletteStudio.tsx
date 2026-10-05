@@ -6,11 +6,16 @@ import { Block } from "@/components/site/Block"
 import { CodeBlock } from "@/components/packages/demo/CodeBlock"
 import { CookieTableTabs } from "@/components/packages/demo/CookieTableTabs"
 import {
+  checkDistinguishable,
   checkPalette,
+  DEFICIENCIES,
+  type Deficiency,
   createPalette,
   type Mode,
   type Palette,
   parseColor,
+  STATUS_NAMES,
+  simulate,
   STEPS,
   toCss,
   toHex,
@@ -94,19 +99,36 @@ function ColorField({
   )
 }
 
+type Vision = "normal" | Deficiency
+
+/** How the color looks with the selected color vision. */
+function see(hex: string, vision: Vision) {
+  return vision === "normal" ? hex : simulate(hex, vision)
+}
+
 /** Custom properties `--g-<name>-<step>` and `--g-<name>-on-<step>` of one mode. */
-function variables(palette: Palette, mode: Mode): CSSProperties {
+function variables(palette: Palette, mode: Mode, vision: Vision): CSSProperties {
   const vars: Record<string, string> = {}
   for (const scale of palette.scales) {
     for (const step of STEPS) {
-      vars[`--g-${scale.name}-${step}`] = scale[mode][step].hex
-      vars[`--g-${scale.name}-on-${step}`] = scale[mode][step].on
+      vars[`--g-${scale.name}-${step}`] = see(scale[mode][step].hex, vision)
+      vars[`--g-${scale.name}-on-${step}`] = see(scale[mode][step].on, vision)
     }
   }
   return vars as CSSProperties
 }
 
-function Preview({ palette, mode, hasAccent }: { palette: Palette; mode: Mode; hasAccent: boolean }) {
+function Preview({
+  palette,
+  mode,
+  hasAccent,
+  vision,
+}: {
+  palette: Palette
+  mode: Mode
+  hasAccent: boolean
+  vision: Vision
+}) {
   const p = t.preview
   const inputId = useId()
   const accent = hasAccent ? "accent" : "brand"
@@ -114,7 +136,7 @@ function Preview({ palette, mode, hasAccent }: { palette: Palette; mode: Mode; h
     <div className="flex min-w-0 flex-col gap-2">
       <p className="annotate">{mode === "light" ? t.scales.light : t.scales.dark}</p>
       <div
-        style={{ ...variables(palette, mode), colorScheme: mode }}
+        style={{ ...variables(palette, mode, vision), colorScheme: mode }}
         className="flex flex-col gap-5 rounded-xl border border-edge bg-[var(--g-neutral-50)] p-6 text-[var(--g-neutral-800)]"
         data-mode={mode}
       >
@@ -171,12 +193,29 @@ function Preview({ palette, mode, hasAccent }: { palette: Palette; mode: Mode; h
             {p.alert}
           </p>
         </div>
+        {STATUS_NAMES.some((name) => palette.scales.some((s) => s.name === name)) && (
+          <ul className="grid gap-2 sm:grid-cols-2">
+            {STATUS_NAMES.map((name) => (
+              <li
+                key={name}
+                className="rounded-md border px-3 py-2 text-sm"
+                style={{
+                  borderColor: `var(--g-${name}-500)`,
+                  background: `var(--g-${name}-50)`,
+                  color: `var(--g-${name}-800)`,
+                }}
+              >
+                <span className="font-semibold">{p.status[name].title}</span> {p.status[name].text}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   )
 }
 
-function ScaleRows({ palette, pinned }: { palette: Palette; pinned: boolean }) {
+function ScaleRows({ palette, pinned, vision }: { palette: Palette; pinned: boolean; vision: Vision }) {
   return (
     <div className="flex flex-col gap-10">
       {palette.scales.map((scale) => (
@@ -202,7 +241,7 @@ function ScaleRows({ palette, pinned }: { palette: Palette; pinned: boolean }) {
                       key={step}
                       aria-label={t.scales.swatch(scale.name, mode, step, s.hex, ratio)}
                       className="flex min-h-20 flex-col justify-between rounded-md p-2 font-mono text-[11px] leading-tight"
-                      style={{ background: s.hex, color: s.on }}
+                      style={{ background: see(s.hex, vision), color: see(s.on, vision) }}
                     >
                       <span aria-hidden="true" className="text-xs font-semibold">
                         {step}
@@ -255,7 +294,11 @@ export function PaletteStudio() {
   const [accent, setAccent] = useState("#0a84ff")
   const [useAccent, setUseAccent] = useState(true)
   const [pin, setPin] = useState(false)
+  const [status, setStatus] = useState(true)
+  const [vision, setVision] = useState<Vision>("normal")
   const pinId = useId()
+  const statusId = useId()
+  const visionId = useId()
   const accentId = useId()
 
   // Dragging the color picker fires many events; let React skip stale ones.
@@ -265,8 +308,8 @@ export function PaletteStudio() {
     if (!isColor(deferredBrand) || (useAccent && !isColor(deferredAccent))) return null
     const colors: Record<string, string> = { brand: deferredBrand }
     if (useAccent) colors.accent = deferredAccent
-    return createPalette(colors, { pin })
-  }, [deferredBrand, deferredAccent, useAccent, pin])
+    return createPalette(colors, { pin, status })
+  }, [deferredBrand, deferredAccent, useAccent, pin, status])
   // Keep showing the last valid palette while someone is typing a color.
   const last = useRef<Palette | null>(null)
   useEffect(() => {
@@ -277,12 +320,28 @@ export function PaletteStudio() {
 
   const checks = useMemo(() => checkPalette(shown), [shown])
   const failed = checks.filter((c) => !c.pass)
+  const alike = useMemo(
+    () => checkDistinguishable(shown).filter((c) => c.mode === "light" && !c.pass),
+    [shown],
+  )
+  // One line per pair, listing every vision in which it looks alike.
+  const alikePairs = useMemo(() => {
+    const pairs = new Map<string, { a: string; b: string; visions: string[] }>()
+    for (const c of alike) {
+      const key = `${c.a}|${c.b}`
+      const entry = pairs.get(key) ?? { a: c.a, b: c.b, visions: [] }
+      entry.visions.push(t.vision.names[c.vision])
+      pairs.set(key, entry)
+    }
+    return [...pairs.values()]
+  }, [alike])
 
   const outputs = useMemo(() => {
     const v3 = toTailwindV3(shown)
     return {
       tailwind: toTailwind(shown),
       css: toCss(shown),
+      lightDark: toCss(shown, { dark: "light-dark" }),
       tailwind3: `${v3.css}\n// tailwind.config.js → theme.extend.colors\n${JSON.stringify(v3.colors, null, 2)}\n`,
       tokens: `${JSON.stringify(toTokens(shown), null, 2)}\n`,
     }
@@ -292,13 +351,14 @@ export function PaletteStudio() {
     "npx @sweberdev/gradient",
     shellQuote(shown.scales[0]?.source ?? brand),
     hasAccent ? `accent=${shown.scales.find((s) => s.name === "accent")?.source}` : "",
+    status ? "--status" : "",
     pin ? "--pin --check" : "",
     "--format tailwind --out app/gradient.css",
   ]
     .filter(Boolean)
     .join(" ")
 
-  const tabs = (["tailwind", "css", "tailwind3", "tokens"] as const).map((id) => ({
+  const tabs = (["tailwind", "css", "lightDark", "tailwind3", "tokens"] as const).map((id) => ({
     id,
     label: t.export[id],
     content: (
@@ -344,16 +404,38 @@ export function PaletteStudio() {
                 <input id={pinId} type="checkbox" checked={pin} onChange={(e) => setPin(e.target.checked)} />
                 {t.controls.pin}
               </label>
+              <label htmlFor={statusId} className="inline-flex items-center gap-2">
+                <input id={statusId} type="checkbox" checked={status} onChange={(e) => setStatus(e.target.checked)} />
+                {t.controls.status}
+              </label>
+            </div>
+            <div className="flex flex-col gap-2 pt-2">
+              <label htmlFor={visionId} className="annotate">
+                {t.vision.label}
+              </label>
+              <select
+                id={visionId}
+                value={vision}
+                onChange={(e) => setVision(e.target.value as Vision)}
+                className="well h-11 w-full max-w-xs px-3 text-sm text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
+              >
+                {(["normal", ...DEFICIENCIES] as const).map((v) => (
+                  <option key={v} value={v}>
+                    {t.vision.names[v]}
+                  </option>
+                ))}
+              </select>
+              <p className="text-sm text-fg-muted">{t.vision.hint}</p>
             </div>
           </div>
-          <ScaleRows palette={shown} pinned={pin} />
+          <ScaleRows palette={shown} pinned={pin} vision={vision} />
         </div>
       </Block>
 
       <Block label={t.preview.label} title={t.preview.title} sub={t.preview.sub} lede={<p>{t.preview.lede}</p>}>
         <div className="grid gap-6 lg:grid-cols-2">
-          <Preview palette={shown} mode="light" hasAccent={hasAccent} />
-          <Preview palette={shown} mode="dark" hasAccent={hasAccent} />
+          <Preview palette={shown} mode="light" hasAccent={hasAccent} vision={vision} />
+          <Preview palette={shown} mode="dark" hasAccent={hasAccent} vision={vision} />
         </div>
       </Block>
 
@@ -371,6 +453,14 @@ export function PaletteStudio() {
                 ))}
               </ul>
             </>
+          )}
+          <p className="text-sm text-fg">{t.vision.summary(alikePairs.length)}</p>
+          {alikePairs.length > 0 && (
+            <ul className="flex list-disc flex-col gap-1 pl-5 font-mono text-xs text-fg-muted">
+              {alikePairs.map((c) => (
+                <li key={`${c.a}-${c.b}`}>{t.vision.alike(c.a, c.b, c.visions.join(", "))}</li>
+              ))}
+            </ul>
           )}
         </div>
       </Block>

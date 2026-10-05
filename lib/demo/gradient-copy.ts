@@ -17,6 +17,7 @@ export const gradientDemo = {
     accent: "Accent color",
     useAccent: "Add an accent color",
     pin: "Keep the exact brand color on its closest step",
+    status: "Add matching status colors (success, warning, danger, info)",
     presets: "Examples",
     invalid: "Use a color like #e30613, rgb(227 6 19) or oklch(60% 0.2 25).",
     picker: (name: string) => `Pick the ${name} color`,
@@ -50,6 +51,27 @@ export const gradientDemo = {
     inputPlaceholder: "you@example.ch",
     alertTitle: "Accent",
     alert: "Notices use the accent scale, with the same steps as the brand.",
+    status: {
+      success: { title: "Saved.", text: "Your changes are live." },
+      warning: { title: "Check this.", text: "The address looks incomplete." },
+      danger: { title: "Failed.", text: "The card was declined." },
+      info: { title: "Note.", text: "Shipping takes two days." },
+    },
+  },
+  vision: {
+    label: "Color vision",
+    hint: "Shows the scales and the preview as people with a color vision deficiency see them.",
+    names: {
+      normal: "Normal vision",
+      protanopia: "Protanopia (no red cones)",
+      deuteranopia: "Deuteranopia (no green cones)",
+      tritanopia: "Tritanopia (no blue cones)",
+    },
+    summary: (count: number) =>
+      count === 0
+        ? "Every pair of colors stays distinguishable at step 600, also with a color vision deficiency."
+        : `${count} ${count === 1 ? "pair looks" : "pairs look"} alike at step 600. Add an icon or a label, never rely on color alone:`,
+    alike: (a: string, b: string, visions: string) => `${a} and ${b}: ${visions}`,
   },
   checks: {
     label: "Checks",
@@ -68,6 +90,7 @@ export const gradientDemo = {
     cli: "Same result with the CLI",
     tailwind: "Tailwind v4",
     css: "CSS variables",
+    lightDark: "CSS light-dark()",
     tailwind3: "Tailwind v3",
     tokens: "Design tokens",
     copy: "Copy",

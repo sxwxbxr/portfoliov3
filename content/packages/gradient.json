@@ -10,6 +10,7 @@
     "OKLCH",
     "Accessibility",
     "WCAG 2.2",
+    "Color blindness",
     "Dark mode",
     "Tailwind CSS",
     "Design tokens"
@@ -42,7 +43,9 @@
       "Dark mode with the same step numbers and the same promises, so one set of classes works in both modes",
       "OKLCH throughout, with gamut mapping that never moves lightness",
       "A neutral grey tinted with your brand hue, and a readable text color for every step",
-      "Export as Tailwind CSS v4 theme, Tailwind v3 config, CSS variables, W3C design tokens or JSON",
+      "Status colors on request: success, warning, danger and info that match your brand and keep the same contrast promises",
+      "Color vision check: simulates protanopia, deuteranopia and tritanopia and flags colors that look alike",
+      "Export as Tailwind CSS v4 theme, Tailwind v3 config, CSS variables (also with light-dark()), W3C design tokens or JSON",
       "Contrast checks for CI, also when you pin your exact brand color",
       "CLI and a zero-dependency library that runs in Node.js and the browser"
     ]
@@ -63,6 +66,10 @@
     {
       "q": "Is there a paid version?",
       "a": "No. Gradient is MIT-licensed and complete. It is also the color foundation of the upcoming UI library Lattice."
+    },
+    {
+      "q": "Can people with a color vision deficiency tell my colors apart?",
+      "a": "Run gradient --check or checkDistinguishable(). It simulates protanopia, deuteranopia and tritanopia and lists the pairs that look alike at step 600. For those, add an icon or a label: color alone is never enough for status messages."
     }
   ],
   "publishedAt": "2026-10-05"
