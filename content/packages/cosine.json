@@ -1,0 +1,139 @@
+{
+  "slug": "cosine",
+  "name": "Cosine",
+  "tagline": "Semantic search for documentation sites that runs entirely in the browser. No search server, no API key, no query leaves the device.",
+  "seoTitle": "Cosine – semantic docs search in the browser, without a server",
+  "description": "Most docs search either needs a hosted service or matches only exact words: someone who types \"how do I get rid of the app\" finds nothing on a page called \"Uninstall\". Cosine closes that gap without a server. `cosine build` splits your Markdown, MDX or HTML pages at their headings and stores a small vector per section next to your site. In the browser, keyword results appear on the first keystroke, and once the embedding model has loaded (about 23 MB, cached) the ranking combines keywords and meaning.\n\nThe search field is an accessible web component in English, German, French and Italian that works in any framework, with React bindings on top. Queries are never sent anywhere, and the model can be served from your own domain.",
+  "status": "beta",
+  "tags": [
+    "Search",
+    "Documentation",
+    "Embeddings",
+    "transformers.js",
+    "Web Component",
+    "React",
+    "Privacy"
+  ],
+  "license": "MIT + Pro",
+  "order": 30,
+  "install": "pnpm add @sweberdev/cosine @huggingface/transformers",
+  "npm": [
+    "@sweberdev/cosine",
+    "@sweberdev/cosine-react"
+  ],
+  "code": {
+    "title": "Build the index, add the field",
+    "language": "html",
+    "snippet": "<!-- npx cosine build docs --out public/cosine --base-url /docs -->\n<script type=\"module\">\n  import \"@sweberdev/cosine/element\"\n</script>\n\n<cosine-search index=\"/cosine/cosine-index.json\" lang=\"de\"></cosine-search>"
+  },
+  "links": {
+    "docs": "https://packages.sweber.dev/cosine/docs",
+    "github": "https://github.com/Weber-Development/cosine",
+    "npm": "https://www.npmjs.com/package/@sweberdev/cosine"
+  },
+  "docs": {
+    "repo": "Weber-Development/cosine",
+    "path": "docs",
+    "ref": "main"
+  },
+  "features": {
+    "free": [
+      "Index builder and CLI for Markdown, MDX and built HTML, split at headings with deep links",
+      "Hybrid ranking in the browser: BM25 keyword search with prefix matching plus cosine similarity on embeddings",
+      "Instant keyword results, semantic ranking as soon as the model is loaded, keyword-only for visitors who save data",
+      "Compact int8 vectors: about 400 bytes per section",
+      "Accessible <cosine-search> web component (ARIA combobox) in English, German, French and Italian",
+      "React component and hooks, English or multilingual models, model self-hosting for GDPR and FADP"
+    ],
+    "pro": [
+      "Vite plugin: the index builds itself in Vite, Astro, VitePress, SvelteKit and Nuxt, and in dev",
+      "Embedding cache: a rebuild embeds only the sections that changed",
+      "Search insights without tracking: queries without results, results nobody opened, HTML and Markdown report"
+    ]
+  },
+  "comparison": [
+    {
+      "feature": "Index builder, CLI and hybrid search",
+      "free": true,
+      "pro": true
+    },
+    {
+      "feature": "Web component and React bindings",
+      "free": true,
+      "pro": true
+    },
+    {
+      "feature": "English and multilingual models, self-hosting",
+      "free": true,
+      "pro": true
+    },
+    {
+      "feature": "Index in every Vite build, dev server and rebuild on change",
+      "free": false,
+      "pro": true
+    },
+    {
+      "feature": "Embedding cache for fast rebuilds",
+      "free": false,
+      "pro": true
+    },
+    {
+      "feature": "Search insights and report",
+      "free": false,
+      "pro": true
+    },
+    {
+      "feature": "Licence",
+      "free": "MIT",
+      "pro": "Per person"
+    },
+    {
+      "feature": "Support",
+      "free": "GitHub issues",
+      "pro": "Agency and Lifetime"
+    }
+  ],
+  "pro": {
+    "name": "Cosine Pro",
+    "availability": "coming-soon",
+    "packages": [
+      {
+        "name": "@weber-development/cosine-vite",
+        "description": "Vite plugin that builds the index with every build, serves it in dev and re-embeds only changed sections."
+      },
+      {
+        "name": "@weber-development/cosine-insights",
+        "description": "Records searches without cookies or ids and reports queries without results and results nobody opened."
+      }
+    ],
+    "demoUrl": "/cosine/demo",
+    "waitlistUrl": "mailto:info@sweber.dev?subject=Cosine%20Pro%20waitlist"
+  },
+  "faq": [
+    {
+      "q": "Does it need a server or an API key?",
+      "a": "No. The index is a static file next to your site and the model runs in the visitor's browser through transformers.js."
+    },
+    {
+      "q": "How big is the download?",
+      "a": "The library is about 7 KB gzip. The index needs about 400 bytes per section. The English model is about 23 MB, loaded only when the search field gets focus and then cached by the browser."
+    },
+    {
+      "q": "Is it compliant with the GDPR and the Swiss FADP?",
+      "a": "Queries never leave the browser. The model is downloaded from Hugging Face by default; serve it from your own domain if that request is a problem for your site. Keyword-only mode contacts no third party at all."
+    },
+    {
+      "q": "Does it work with German, French or Italian docs?",
+      "a": "Keyword search works in every language and folds accents and ß. For semantic search in these languages use the multilingual model, which also matches queries and pages in different languages."
+    },
+    {
+      "q": "Which frameworks are supported?",
+      "a": "Any. The search field is a web component; the index is built from Markdown, MDX or the HTML your site generator produces. React bindings are included, and Cosine Pro adds a Vite plugin."
+    },
+    {
+      "q": "Can I use the open-source part on its own?",
+      "a": "Yes. @sweberdev/cosine and @sweberdev/cosine-react are MIT-licensed and complete without Pro."
+    }
+  ],
+  "publishedAt": "2026-10-05"
+}

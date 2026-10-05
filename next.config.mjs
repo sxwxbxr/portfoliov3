@@ -84,6 +84,28 @@ const nextConfig = {
           },
         ],
       },
+      {
+        // The Cosine demo runs transformers.js from jsDelivr and downloads the
+        // embedding model from Hugging Face, only on this page. Later entries
+        // override the same header key of the site-wide rule above.
+        source: "/:prefix(packages)?/cosine/demo",
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' https://va.vercel-scripts.com https://cdn.jsdelivr.net",
+              "style-src 'self' 'unsafe-inline'",
+              "img-src 'self' data: https:",
+              "connect-src 'self' https://api.github.com https://va.vercel-scripts.com https://vitals.vercel-insights.com https://cdn.jsdelivr.net https://huggingface.co https://*.huggingface.co https://*.hf.co",
+              "worker-src 'self' blob:",
+              "font-src 'self' https://fonts.gstatic.com",
+              "frame-src https://www.youtube-nocookie.com",
+              "frame-ancestors 'none'",
+            ].join("; "),
+          },
+        ],
+      },
     ]
   },
 }
