@@ -69,7 +69,7 @@
   ],
   "pro": {
     "name": "Integral Pro",
-    "availability": "coming-soon",
+    "availability": "available",
     "packages": [
       {
         "name": "@weber-development/integral-server",
