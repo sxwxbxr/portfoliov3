@@ -32,13 +32,16 @@ export function InstallCommand({
   }
 
   return (
-    <div className="well flex items-center gap-3 py-2 pl-4 pr-2">
-      <span aria-hidden="true" className="font-mono text-sm text-fg-subtle select-none">
-        $
+    // As wide as the command, never wider than its container. A command that
+    // does not fit wraps onto further lines instead of scrolling sideways.
+    <div className="well flex w-fit max-w-full items-center gap-3 py-2 pl-4 pr-2">
+      {/* Baseline-aligned, so the prompt sits on the first line when the command wraps. */}
+      <span className="flex min-w-0 items-baseline gap-3 font-mono text-sm leading-relaxed">
+        <span aria-hidden="true" className="text-fg-subtle select-none">
+          $
+        </span>
+        <code className="min-w-0 whitespace-pre-wrap text-fg [overflow-wrap:anywhere]">{command}</code>
       </span>
-      <code className="min-w-0 flex-1 overflow-x-auto whitespace-nowrap font-mono text-sm text-fg">
-        {command}
-      </code>
       <button
         type="button"
         onClick={onCopy}

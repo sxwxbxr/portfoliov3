@@ -143,9 +143,7 @@ export default async function PackagePage({ params }: Props) {
             </h1>
           </div>
 
-          <div className="w-full max-w-2xl">
-            <InstallCommand command={pkg.install} packageSlug={pkg.slug} />
-          </div>
+          <InstallCommand command={pkg.install} packageSlug={pkg.slug} />
 
           <div className="flex flex-wrap gap-3">
             {(pkg.docs || pkg.links.docs) && (

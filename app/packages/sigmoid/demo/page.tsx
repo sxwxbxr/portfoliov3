@@ -137,9 +137,7 @@ export default function SigmoidDemoPage() {
         lede={<p>{t.closing.lede}</p>}
         aside={
           <div className="flex flex-col items-start gap-5">
-            <div className="w-full max-w-xl">
-              <InstallCommand command="pnpm add @sweberdev/sigmoid" packageSlug="sigmoid" />
-            </div>
+            <InstallCommand command="pnpm add @sweberdev/sigmoid" packageSlug="sigmoid" />
             <Link href={pkgPath("/sigmoid/docs")} className={btn + " control-primary"}>
               {t.docs}
               <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
