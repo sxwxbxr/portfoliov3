@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
+import { ChevronRight } from "lucide-react"
 import PageLayout from "@/components/PageLayout"
 import { DocsNav } from "@/components/packages/docs/DocsNav"
 import { DocsMarkdown } from "@/components/packages/docs/DocsMarkdown"
@@ -87,7 +88,7 @@ export default async function DocsPage({ params }: Props) {
       <PageLayout>
         <div className="sheet pt-10 pb-24 md:pt-16">
           <div className="md:grid md:grid-cols-[14rem_minmax(0,1fr)] md:gap-12 lg:gap-16">
-            {nav && <DocsNav nav={nav} slug={slug} />}
+            {nav && <DocsNav nav={nav} slug={slug} demoUrl={pkg.pro?.demoUrl} />}
             <div className="min-w-0">
               <nav aria-label={t.crumbs} className="annotate mb-6 flex flex-wrap gap-x-2">
                 <Link href={pkgPath(`/${slug}`)} className={crumbLink}>
@@ -100,6 +101,15 @@ export default async function DocsPage({ params }: Props) {
                 {t.overviewTitle(pkg.name)}
               </h1>
               <p className="measure mt-4 text-lg leading-relaxed text-fg-muted">{pkg.tagline}</p>
+              {pkg.pro?.demoUrl && (
+                <Link
+                  href={pkgPath(pkg.pro.demoUrl)}
+                  className="control control-primary mt-6 inline-flex items-center gap-1 py-2.5 pr-4 pl-5 text-sm"
+                >
+                  {t.tryDemo}
+                  <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
+                </Link>
+              )}
 
               {nav ? (
                 <div className="mt-12 flex flex-col gap-10">
@@ -161,7 +171,7 @@ export default async function DocsPage({ params }: Props) {
     <PageLayout>
       <div className="sheet pt-10 pb-24 md:pt-16">
         <div className="md:grid md:grid-cols-[14rem_minmax(0,1fr)] md:gap-12 lg:gap-16 xl:grid-cols-[14rem_minmax(0,1fr)_12rem]">
-          <DocsNav nav={nav} slug={slug} current={page} />
+          <DocsNav nav={nav} slug={slug} current={page} demoUrl={pkg.pro?.demoUrl} />
           <div className="min-w-0">
             <nav aria-label={t.crumbs} className="annotate mb-6 flex flex-wrap gap-x-2">
               <Link href={pkgPath(`/${slug}`)} className={crumbLink}>

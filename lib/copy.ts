@@ -598,6 +598,8 @@ export const copy = {
       crumbs: "Breadcrumb",
       navLabel: "Documentation pages",
       menu: "Documentation menu",
+      liveDemo: "Live demo",
+      tryDemo: "Try the live demo",
       previous: "Previous",
       next: "Next",
       editOnGitHub: "Edit on GitHub",
@@ -644,25 +646,49 @@ export const copy = {
     liveDemoNote: "Try the themes, browse the catalog and read a real scanner report.",
     // Live demo of the Pro packages (/permito/demo)
     demo: {
-      seoTitle: "Permito Pro live demo: themes, service catalog, cookie table, scanner",
+      seoTitle: "Permito live demo: free core and Pro themes, catalog, cookie table, scanner",
       description:
-        "Try the Permito Pro themes and layouts in your browser. The service catalog, cookie table and scanner report are rendered from the real Pro packages.",
-      title: "Permito Pro",
-      titleSub: "Live demo.",
+        "Try Permito in your browser. The free core gives you the banner, the settings dialog and gates. The Pro themes, service catalog, cookie table and scanner report are rendered from the real Pro packages.",
+      title: "Permito",
+      titleSub: "Live demo, core and Pro.",
       intro:
-        "Every section on this page is produced by the Pro packages themselves. The themes and layouts run in your browser. The catalog, the cookie table and the scanner report are rendered on the server, so what reaches your browser is the finished HTML and not the packages.",
+        "The first section runs the free core (MIT). Every section after it is produced by the Pro packages themselves. The themes and layouts run in your browser. The catalog, the cookie table and the scanner report are rendered on the server, so what reaches your browser is the finished HTML and not the packages.",
       isolation:
         "The banner preview uses its own in-memory storage. Nothing you click here changes the consent of this site.",
       overview: "Permito overview",
       pricing: "See pricing",
       jump: "On this page",
       jumpLinks: [
+        { href: "#core", label: "Core" },
         { href: "#themes", label: "Themes" },
         { href: "#catalog", label: "Catalog" },
         { href: "#cookie-table", label: "Cookie table" },
         { href: "#scanner", label: "Scanner" },
         { href: "#log", label: "Consent log" },
       ],
+
+      core: {
+        label: "Core",
+        title: "Core (free, MIT)",
+        sub: "Banner, dialog and gates.",
+        lede: "The banner, the settings dialog and the gates belong to the free core, @permitojs/react. Decide in the banner, then watch the gate and the video below react. The decision is kept in memory only and is gone on reload.",
+        openPreferences: "Open preference center",
+        restart: "Restart demo",
+        statsAllowed: "Statistics: allowed. An analytics script could load now.",
+        statsBlocked: "Statistics: blocked until you agree.",
+        gateLabel: "ConsentGate, category statistics",
+        iframeLabel: "ConsentIframe, YouTube via youtube-nocookie.com",
+        videoTitle: "Demo video",
+        previewLabel: "Preview of a customer website. The banner and the dialog are the real components.",
+        resultHeading: "Decision in the preview",
+        resultPending: "No decision yet. Choose in the banner.",
+        resultLoading: "Reading stored decision",
+        granted: "true",
+        declined: "false",
+        mockHost: "client.example",
+        mockHeading: "Page content",
+        mockBody: "This mock page stands in for a client site. The consent UI is drawn on top of it.",
+      },
 
       themes: {
         label: "Themes",

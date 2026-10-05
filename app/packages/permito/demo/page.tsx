@@ -3,6 +3,7 @@ import Link from "next/link"
 import { ArrowLeft, ChevronRight } from "lucide-react"
 import PageLayout from "@/components/PageLayout"
 import { Block } from "@/components/site/Block"
+import { CoreDemo } from "@/components/packages/demo/CoreDemo"
 import { ConsentLogSection } from "@/components/packages/demo/ConsentLogSection"
 import { CookieTableSection } from "@/components/packages/demo/CookieTableSection"
 import { ScannerSection } from "@/components/packages/demo/ScannerSection"
@@ -70,6 +71,10 @@ export default function PermitoDemoPage() {
           </nav>
         </div>
       </header>
+
+      <Block id="core" label={t.core.label} title={t.core.title} sub={t.core.sub} lede={<p>{t.core.lede}</p>}>
+        <CoreDemo />
+      </Block>
 
       <Block id="themes" label={t.themes.label} title={t.themes.title} sub={t.themes.sub} lede={<p>{t.themes.lede}</p>}>
         <ThemeDemo />
