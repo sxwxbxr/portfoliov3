@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "releases": [
+    {
+      "id": "3.2.0",
+      "entries": [
+        {
+          "type": "feature",
+          "text": "Dark mode for the whole app. It follows your system setting, or pick it under **Settings → Appearance**."
+        },
+        {
+          "type": "feature",
+          "text": "Export the journal as `CSV` for your accountant",
+          "link": "https://git.example/muster/ledger/pull/214"
+        },
+        {
+          "type": "fix",
+          "text": "Swiss franc amounts are rounded to 5 centimes again on QR invoices."
+        }
+      ],
+      "version": "3.2.0",
+      "title": "Dark mode is here",
+      "summary": "Muster Ledger now follows your system theme. Easier on the eyes for late-night bookkeeping.",
+      "date": "2026-10-01"
+    },
+    {
+      "id": "3.1.0",
+      "entries": [
+        {
+          "type": "feature",
+          "text": "Recurring invoices: send the same invoice every month or quarter."
+        },
+        {
+          "type": "fix",
+          "text": "The receipt scanner reads dates written as `05.10.26`."
+        }
+      ],
+      "version": "3.1.0",
+      "date": "2026-09-12"
+    },
+    {
+      "id": "3.0.0",
+      "entries": [
+        {
+          "type": "breaking",
+          "text": "Sign-in now requires a second factor for every account.",
+          "details": "Set it up under **Account → Security** before 1 November."
+        },
+        {
+          "type": "feature",
+          "text": "Invite your fiduciary with read-only access."
+        }
+      ],
+      "version": "3.0.0",
+      "date": "2026-08-20"
+    }
+  ],
+  "title": "Muster Ledger changelog",
+  "link": "/changelog"
+}
