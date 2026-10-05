@@ -109,7 +109,7 @@
   ],
   "pro": {
     "name": "Logarithm Pro",
-    "availability": "coming-soon",
+    "availability": "available",
     "packages": [
       {
         "name": "@weber-development/logarithm-integrity",
@@ -138,7 +138,11 @@
         "monthly": 29,
         "yearly": 290,
         "seats": 1,
-        "support": false
+        "support": false,
+        "checkout": {
+          "monthly": "https://buy.polar.sh/polar_cl_XIu85Suu5KIzGaixl3QD0ECftEZ1ebfSWaMzR0s8xcY",
+          "yearly": "https://buy.polar.sh/polar_cl_Z6y3vqt0fdTbGm0iILUXCEeYzYzUxi1jSqmJi2QM5o4"
+        }
       },
       {
         "id": "agency",
@@ -148,7 +152,11 @@
         "yearly": 890,
         "seats": 10,
         "support": true,
-        "highlighted": true
+        "highlighted": true,
+        "checkout": {
+          "monthly": "https://buy.polar.sh/polar_cl_G8BoDNyGTLvJwPeI4XM4kD7IeOyk9sB103lcp2VhwMf",
+          "yearly": "https://buy.polar.sh/polar_cl_2GrWNlm05JyI0GM92KsAlCKSUdoX9SsQ4VPVU1jRuqa"
+        }
       },
       {
         "id": "lifetime",
@@ -156,7 +164,10 @@
         "description": "Pay once for up to ten people and keep updates and repository access.",
         "oneTime": 2990,
         "seats": 10,
-        "support": true
+        "support": true,
+        "checkout": {
+          "oneTime": "https://buy.polar.sh/polar_cl_LnK1nETcN6NyM4RcLyM7SKKuVxaaAtd4cpFNG2HWGz5"
+        }
       }
     ],
     "notes": [
