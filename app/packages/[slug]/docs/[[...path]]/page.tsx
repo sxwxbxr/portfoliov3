@@ -13,6 +13,7 @@ import {
   isValidDocsPath,
 } from "@/lib/packages/docs"
 import { pkgPath, pkgUrl } from "@/lib/packages/urls"
+import { extractHeadings } from "@/lib/blog"
 import { copy } from "@/lib/copy"
 
 export const revalidate = 3600
@@ -101,26 +102,26 @@ export default async function DocsPage({ params }: Props) {
               <p className="measure mt-4 text-lg leading-relaxed text-fg-muted">{pkg.tagline}</p>
 
               {nav ? (
-                <div className="mt-12 flex flex-col gap-12">
+                <div className="mt-12 flex flex-col gap-10">
                   {nav.sections.map((section, i) => (
                     <section key={section.label} aria-labelledby={`sec-${i}`}>
                       <h2 id={`sec-${i}`} className="annotate border-b border-edge-soft pb-3">
                         {section.label}
                       </h2>
-                      <ul className="divide-y divide-edge-soft">
+                      <ul className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                         {section.pages.map((p) => (
-                          <li key={p.path} className="py-4">
+                          <li key={p.path} className="flex">
                             <Link
                               href={docsPath(slug, p.path)}
-                              className="text-lg tracking-tight text-fg underline decoration-edge underline-offset-4 hover:decoration-fg"
+                              className="flex w-full flex-col gap-1.5 rounded-lg border border-edge-soft p-5 transition-colors duration-150 hover:border-edge hover:bg-plate"
                             >
-                              {p.title}
+                              <span className="tracking-tight text-fg">{p.title}</span>
+                              {p.description && (
+                                <span className="text-sm leading-relaxed text-fg-muted">
+                                  {p.description}
+                                </span>
+                              )}
                             </Link>
-                            {p.description && (
-                              <p className="measure mt-1 text-sm leading-relaxed text-fg-muted">
-                                {p.description}
-                              </p>
-                            )}
                           </li>
                         ))}
                       </ul>
@@ -154,11 +155,12 @@ export default async function DocsPage({ params }: Props) {
   const prev = nav.pages[index - 1]
   const next = nav.pages[index + 1]
   const section = nav.sections.find((s) => s.pages.some((p) => p.path === page))
+  const headings = extractHeadings(doc.body)
 
   return (
     <PageLayout>
       <div className="sheet pt-10 pb-24 md:pt-16">
-        <div className="md:grid md:grid-cols-[14rem_minmax(0,1fr)] md:gap-12 lg:gap-16">
+        <div className="md:grid md:grid-cols-[14rem_minmax(0,1fr)] md:gap-12 lg:gap-16 xl:grid-cols-[14rem_minmax(0,1fr)_12rem]">
           <DocsNav nav={nav} slug={slug} current={page} />
           <div className="min-w-0">
             <nav aria-label={t.crumbs} className="annotate mb-6 flex flex-wrap gap-x-2">
@@ -223,6 +225,30 @@ export default async function DocsPage({ params }: Props) {
               </nav>
             </footer>
           </div>
+
+          {/* Only on wide screens, where a third column fits beside the text. */}
+          {headings.length >= 2 && (
+            <aside className="hidden xl:block">
+              <nav aria-label={t.onThisPage} className="sticky top-28 flex flex-col gap-3">
+                <p className="annotate">{t.onThisPage}</p>
+                <ul className="flex flex-col gap-2 border-l border-edge-soft">
+                  {headings.map((h) => (
+                    <li key={h.id}>
+                      <a
+                        href={`#${h.id}`}
+                        className={
+                          "-ml-px block border-l border-transparent text-sm leading-snug text-fg-muted transition-colors duration-150 hover:border-fg hover:text-fg " +
+                          (h.level === 3 ? "pl-6" : "pl-3")
+                        }
+                      >
+                        {h.text}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            </aside>
+          )}
         </div>
       </div>
     </PageLayout>

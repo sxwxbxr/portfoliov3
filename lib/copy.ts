@@ -601,6 +601,7 @@ export const copy = {
       previous: "Previous",
       next: "Next",
       editOnGitHub: "Edit on GitHub",
+      onThisPage: "On this page",
       unavailable:
         "The documentation could not be loaded right now. Try again in a few minutes, or read it in the repository.",
       openRepository: "Open the repository",

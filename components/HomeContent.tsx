@@ -383,7 +383,7 @@ export default function HomeContent({
         )}
 
         {/* ─── Closing call to action ─── */}
-        <section className="block">
+        <section className="section-block">
           <div className="sheet flex flex-col items-center gap-8 py-8 text-center md:py-12">
             <p className="annotate">{copy.home.ctaEyebrow}</p>
             <h2 className="display">{copy.home.ctaTitle}</h2>
