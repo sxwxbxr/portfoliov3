@@ -15,6 +15,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly" as const,
       priority: 0.9,
     })),
+    ...getPackages().flatMap((p) =>
+      p.pro?.demoUrl
+        ? [{ url: pkgUrl(p.pro.demoUrl), changeFrequency: "monthly" as const, priority: 0.8 }]
+        : []
+    ),
     { url: pkgUrl("/license"), changeFrequency: "yearly", priority: 0.4 },
     { url: pkgUrl("/blog"), changeFrequency: "weekly", priority: 0.7 },
     ...posts
