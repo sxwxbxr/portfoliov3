@@ -23,7 +23,7 @@ export const cosineDemoCopy = {
     label: "Search",
     title: "The search field (free, MIT)",
     sub: "Try it, then load the model.",
-    lede: "This is <cosine-search>, the web component from @sweberdev/cosine, on an index of 28 documentation pages. Keyword results appear on the first keystroke. Load the model and the same field also finds sections that use other words than your query. Press / to focus it.",
+    lede: "This is <cosine-search>, the web component from @sweberdev/cosine, on an index of 28 documentation pages. Keyword results appear on the first keystroke, and typos are forgiven: try “instalation” or “acessibility”. Load the model and the same field also finds sections that use other words than your query. Press / to focus it.",
     fieldLabel: "Search the Cosine and Surjection docs",
   },
 
