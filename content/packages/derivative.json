@@ -1,0 +1,69 @@
+{
+  "slug": "derivative",
+  "name": "Derivative",
+  "tagline": "Self-hosted changelog and \"What's new\" widget, built from your Changesets, CHANGELOG.md or commits. No SaaS, no tracking.",
+  "seoTitle": "Derivative – self-hosted changelog and What's new widget for any web app",
+  "description": "Derivative turns the changelog you already keep into a \"What's new\" button for your app. It reads Changesets output, any CHANGELOG.md in the Keep a Changelog or conventional-changelog style, or conventional commits with version tags, and writes a static changelog.json, an Atom feed and a changelog page.\n\nThe widget is a single web component of about 6 kB gzipped with an unread badge, keyboard and screen reader support, dark mode and labels in English, German, French and Italian. The feed ships with your app and the read state stays in the browser, so there is no third-party service, no cookie and nothing to add to your privacy policy. A lean alternative to hosted tools such as Beamer or Headway.",
+  "status": "beta",
+  "tags": [
+    "Changelog",
+    "Release notes",
+    "Changesets",
+    "Web component",
+    "React",
+    "Self-hosted"
+  ],
+  "license": "MIT",
+  "order": 30,
+  "install": "pnpm add @sweberdev/derivative",
+  "npm": [
+    "@sweberdev/derivative",
+    "@sweberdev/derivative-react"
+  ],
+  "code": {
+    "title": "header.html",
+    "language": "html",
+    "snippet": "<!-- package.json: \"build\": \"derivative build && vite build\" -->\n<header>\n  <a href=\"/\">Acme</a>\n  <derivative-widget src=\"/changelog.json\" lang=\"de\"></derivative-widget>\n</header>\n<script type=\"module\">\n  import \"@sweberdev/derivative/widget\"\n</script>"
+  },
+  "links": {
+    "docs": "https://packages.sweber.dev/derivative/docs",
+    "github": "https://github.com/Weber-Development/derivative",
+    "npm": "https://www.npmjs.com/package/@sweberdev/derivative"
+  },
+  "docs": {
+    "repo": "Weber-Development/derivative",
+    "path": "docs",
+    "ref": "main"
+  },
+  "demoUrl": "/derivative/demo",
+  "features": {
+    "free": [
+      "Reads Changesets (default and GitHub formats), Keep a Changelog, conventional-changelog and conventional commits with tags",
+      "derivative build writes changelog.json, an Atom feed and a standalone changelog page",
+      "<derivative-widget>: popover or inline, unread badge, about 6 kB gzipped, no dependencies",
+      "Accessible: labelled dialog, focus handling, Escape to close, reduced motion respected",
+      "Labels and dates in English, German, French and Italian; dark mode and CSS custom properties",
+      "Highlights: a title, summary and image for the releases that matter",
+      "React bindings: <WhatsNew>, useChangelog and an unstyled <ChangelogList>"
+    ]
+  },
+  "faq": [
+    {
+      "q": "Does Derivative send data to a server?",
+      "a": "No. The feed is a static file you deploy with your app, and the widget stores the last release a reader has seen in their browser's local storage. Nothing else is stored or sent."
+    },
+    {
+      "q": "I don't use Changesets. Does it still work?",
+      "a": "Yes. Derivative also reads Keep a Changelog and conventional-changelog files, or builds the feed from conventional commits and version tags. You can also write changelog.json by hand or from a CMS."
+    },
+    {
+      "q": "Can I write friendlier release notes than my commit messages?",
+      "a": "Yes. Highlights in derivative.config.json add a title, a summary and an image to any release, while the generated entries stay as they are."
+    },
+    {
+      "q": "Does it work without React?",
+      "a": "Yes. The widget is a standard web component that works in any framework or plain HTML. The React package is an optional wrapper."
+    }
+  ],
+  "publishedAt": "2026-10-05"
+}

@@ -1,0 +1,11 @@
+{
+  "title": "Muster Ledger changelog",
+  "link": "/changelog",
+  "highlights": {
+    "3.2.0": {
+      "title": "Dark mode is here",
+      "summary": "Muster Ledger now follows your system theme. Easier on the eyes for late-night bookkeeping."
+    }
+  },
+  "out": { "json": "changelog.json" }
+}
