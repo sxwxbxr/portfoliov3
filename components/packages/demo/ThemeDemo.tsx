@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
   ConsentBanner,
   PermitoProvider,
@@ -226,6 +226,16 @@ function Panel({
 }
 
 export function ThemeDemo() {
+  // The demo manager uses memory storage, so it is ready on the server too and would render the
+  // banner there, while the client portals it into the preview frame. Rendering only after mount
+  // keeps server and client markup identical.
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+  if (!mounted) return <div className="min-h-[36rem]" aria-busy="true" />
+  return <ThemeDemoInner />
+}
+
+function ThemeDemoInner() {
   const [theme, setTheme] = useState<ThemeName>("neutral")
   const [mode, setMode] = useState<Mode>("light")
   const [layout, setLayout] = useState<Layout>("bottom")
