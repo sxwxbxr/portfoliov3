@@ -1,0 +1,178 @@
+{
+  "slug": "inverse",
+  "name": "Inverse",
+  "tagline": "The withdrawal button (§ 356a BGB) and the cancellation button (§ 312k BGB) for Next.js and React, with the two-step flow, the receipt e-mail and a page check.",
+  "seoTitle": "Inverse – Widerrufsbutton and Kündigungsbutton for Next.js and React",
+  "description": "Since 19 June 2026, every online business that concludes contracts with consumers in the EU needs a withdrawal button labelled \"Vertrag widerrufen\". German subscription businesses have needed a cancellation button labelled \"Verträge hier kündigen\" since 2022. Shopify, Shopware and WooCommerce have plugins for this; custom shops, SaaS products and booking apps built with Next.js or React mostly don't.\n\nInverse adds both buttons to your own app. It gets the details right that courts look at: the statutory labels, a second step with \"Widerruf bestätigen\" or \"Jetzt kündigen\", the time of receipt set by your server, an acknowledgement e-mail with the content of the declaration, and a copy the consumer can download. You keep the data and send the e-mail with your own provider. A CLI checks your pages for the buttons, so a redesign can't quietly remove them.",
+  "status": "beta",
+  "tags": [
+    "Widerrufsbutton",
+    "Kündigungsbutton",
+    "§ 356a BGB",
+    "§ 312k BGB",
+    "Next.js",
+    "React",
+    "Compliance"
+  ],
+  "license": "MIT + Pro",
+  "order": 15,
+  "install": "pnpm add @sweberdev/inverse @sweberdev/inverse-react",
+  "npm": [
+    "@sweberdev/inverse",
+    "@sweberdev/inverse-react"
+  ],
+  "code": {
+    "title": "app/api/inverse/route.ts",
+    "language": "ts",
+    "snippet": "import { createInverseHandler } from \"@sweberdev/inverse\"\n\nexport const POST = createInverseHandler({\n  company: { name: \"Acme GmbH\", email: \"hallo@acme.de\" },\n  onDeclaration: (record) => db.declaration.create({ data: record }),\n  sendReceipt: (receipt) => resend.emails.send({ from: \"service@acme.de\", ...receipt }),\n})\n\n// footer: <InverseLink kind=\"withdrawal\" href=\"/widerruf\" />\n// app/widerruf/page.tsx: <WithdrawalForm endpoint=\"/api/inverse\" />"
+  },
+  "links": {
+    "docs": "https://packages.sweber.dev/inverse/docs",
+    "github": "https://github.com/Weber-Development/inverse",
+    "npm": "https://www.npmjs.com/package/@sweberdev/inverse"
+  },
+  "docs": {
+    "repo": "Weber-Development/inverse",
+    "path": "docs",
+    "ref": "main"
+  },
+  "demoUrl": "/inverse/demo",
+  "features": {
+    "free": [
+      "<InverseLink> with the statutory labels \"Vertrag widerrufen\" and \"Verträge hier kündigen\"",
+      "<WithdrawalForm> and <CancellationForm>: details, review with the statutory confirm button, receipt with download",
+      "Server-side record with date and time of receipt, and the acknowledgement e-mail with the content of the declaration",
+      "Labels, errors and receipts in German, English, French and Italian",
+      "Withdrawal deadline and contract end date, with weekends and your public holidays",
+      "Request → Response handler for Next.js, Remix, Hono, SvelteKit and Astro; form posts without JavaScript",
+      "inverse check: finds missing or mislabelled buttons on a page, exit code for CI"
+    ],
+    "pro": [
+      "Evidence ledger: every declaration and receipt in a SHA-256 hash chain, evidence sheet per declaration, erasure that keeps the chain verifiable",
+      "Site audit: every page from the sitemap, buttons followed to the form without login, HTML report for clients, many sites in one run",
+      "Branded receipts, a team notification with the refund or end date, and transports for Resend, Postmark, SendGrid, Brevo, Mailgun and SMTP"
+    ]
+  },
+  "comparison": [
+    {
+      "feature": "Buttons, two-step forms and receipt e-mail",
+      "free": true,
+      "pro": true
+    },
+    {
+      "feature": "Deadlines, handler and page check CLI",
+      "free": true,
+      "pro": true
+    },
+    {
+      "feature": "Tamper-evident evidence ledger",
+      "free": false,
+      "pro": true
+    },
+    {
+      "feature": "Site-wide audit with client report",
+      "free": false,
+      "pro": true
+    },
+    {
+      "feature": "Branded receipts, team notification, mail transports",
+      "free": false,
+      "pro": true
+    },
+    {
+      "feature": "Licence",
+      "free": "MIT",
+      "pro": "Per person"
+    },
+    {
+      "feature": "Support",
+      "free": "GitHub issues",
+      "pro": "Agency and Lifetime"
+    }
+  ],
+  "pro": {
+    "name": "Inverse Pro",
+    "availability": "coming-soon",
+    "packages": [
+      {
+        "name": "@weber-development/inverse-ledger",
+        "description": "Stores declarations and receipts in a hash chain, so later changes are detected, and prints an evidence sheet per declaration."
+      },
+      {
+        "name": "@weber-development/inverse-audit",
+        "description": "Checks every page of a site for both buttons, follows them to the form without login and writes a report for clients."
+      },
+      {
+        "name": "@weber-development/inverse-mail",
+        "description": "Sends receipts in your branding, notifies your team with the next due date, and ships transports for the common mail providers."
+      }
+    ],
+    "waitlistUrl": "mailto:info@sweber.dev?subject=Inverse%20Pro%20waitlist"
+  },
+  "pricing": {
+    "currency": "CHF",
+    "merchant": "Polar",
+    "tiers": [
+      {
+        "id": "freelancer",
+        "name": "Freelancer",
+        "description": "For one person working on client projects.",
+        "monthly": 19,
+        "yearly": 190,
+        "seats": 1,
+        "support": false
+      },
+      {
+        "id": "agency",
+        "name": "Agency",
+        "description": "For teams of up to ten named people, one price.",
+        "monthly": 59,
+        "yearly": 590,
+        "seats": 10,
+        "support": true,
+        "highlighted": true
+      },
+      {
+        "id": "lifetime",
+        "name": "Lifetime",
+        "description": "Pay once for up to ten people and keep updates and repository access.",
+        "oneTime": 1990,
+        "seats": 10,
+        "support": true
+      }
+    ],
+    "notes": [
+      "After cancelling, every version you already received keeps working. Only updates and repository access end.",
+      "No licence key, no phone-home. The packages never contact a server to check your licence.",
+      "Agency and Lifetime cover up to ten named people for one price: you choose the number of seats at checkout and assign them in Polar. Your clients and their websites need no licence of their own.",
+      "Checkout, invoices and VAT are handled by Polar as merchant of record."
+    ],
+    "custom": {
+      "label": "11 people or more",
+      "email": "info@sweber.dev"
+    }
+  },
+  "faq": [
+    {
+      "q": "Do I need both buttons?",
+      "a": "The withdrawal button is needed wherever consumers can conclude a contract on your site or app, including shops, bookings and subscriptions. The cancellation button is needed in Germany for continuing contracts such as subscriptions and memberships that can be concluded online. Many SaaS products need both."
+    },
+    {
+      "q": "Does Inverse store anything or send data to you?",
+      "a": "No. The handler calls your own function to store the declaration and your own mail provider to send the receipt. Nothing goes to Inverse or to us."
+    },
+    {
+      "q": "Can I change the labels?",
+      "a": "Yes, every text can be overridden. The law allows an equivalent, unambiguous wording, but the statutory labels are the safe choice, so they are the default."
+    },
+    {
+      "q": "Does it work without Next.js?",
+      "a": "Yes. The handler takes a Fetch API Request and returns a Response, so it runs on Remix, Hono, SvelteKit, Astro and any Node server. The forms need React; without React you can render your own and post to the same handler."
+    },
+    {
+      "q": "Is this legal advice?",
+      "a": "No. Inverse implements the published wording and process of § 356a and § 312k BGB and explains its reasoning in the docs. For your specific case, ask a lawyer or your trade association."
+    }
+  ],
+  "publishedAt": "2026-10-05"
+}
