@@ -41,6 +41,7 @@ export const logarithmDemo = {
     reset: "Start over",
     activity: "Activity",
     language: "Language of the view",
+    feedHint: "<ActivityFeed>: the latest entries as a dashboard widget.",
     lastEvent: "Last recorded event, as stored",
     lastEventHint: "This is the row Logarithm writes to Postgres or SQLite.",
   },
