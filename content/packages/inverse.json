@@ -43,13 +43,14 @@
       "<WithdrawalForm> and <CancellationForm>: details, review with the statutory confirm button, receipt with download",
       "Server-side record with date and time of receipt, and the acknowledgement e-mail with the content of the declaration",
       "Labels, errors and receipts in German, English, French and Italian",
-      "Withdrawal deadline and contract end date, with weekends and your public holidays",
-      "Request → Response handler for Next.js, Remix, Hono, SvelteKit and Astro; form posts without JavaScript",
+      "Withdrawal deadline with days left, and contract end date, with weekends and your public holidays",
+      "Request → Response handler for Next.js, Remix, Hono, SvelteKit and Astro, a Node handler for Express, Fastify and the Pages Router; form posts without JavaScript",
+      "Optional rate limit against scripted submissions, and a contract select for signed-in customers",
       "inverse check: finds missing or mislabelled buttons on a page, exit code for CI"
     ],
     "pro": [
-      "Evidence ledger: every declaration and receipt in a SHA-256 hash chain, evidence sheet per declaration, erasure that keeps the chain verifiable",
-      "Site audit: every page from the sitemap, buttons followed to the form without login, HTML report for clients, many sites in one run",
+      "Evidence ledger: every declaration and receipt in a SHA-256 hash chain, evidence sheet per declaration, erasure and a retention period that keep the chain verifiable",
+      "Site audit: every page from the sitemap, buttons followed to the form without login, HTML report for clients, many sites in one run, and a comparison with the last run that flags what got worse",
       "Branded receipts, a team notification with the refund or end date, and transports for Resend, Postmark, SendGrid, Brevo, Mailgun and SMTP"
     ]
   },

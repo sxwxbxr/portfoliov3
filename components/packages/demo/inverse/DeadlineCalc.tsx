@@ -1,10 +1,10 @@
 "use client"
 
-import { contractEndDate, formatDate, withdrawalDeadline } from "@sweberdev/inverse"
+import { contractEndDate, formatDate, withdrawalStatus } from "@sweberdev/inverse"
 import { useId, useMemo, useState } from "react"
 import { inverseDemoCopy } from "@/lib/demo/inverse-copy"
 
-/* withdrawalDeadline() and contractEndDate() from @sweberdev/inverse. */
+/* withdrawalStatus() and contractEndDate() from @sweberdev/inverse. */
 
 const t = inverseDemoCopy.deadlines
 
@@ -19,8 +19,8 @@ export function DeadlineCalc() {
   const [notice, setNotice] = useState(1)
   const [termEnd, setTermEnd] = useState("")
 
-  const lastDay = useMemo(
-    () => (valid(start) ? withdrawalDeadline({ start, informed }) : null),
+  const status = useMemo(
+    () => (valid(start) ? withdrawalStatus({ start, informed }) : null),
     [start, informed],
   )
   const endsOn = useMemo(
@@ -53,7 +53,12 @@ export function DeadlineCalc() {
         </label>
         <p className="text-sm text-fg-muted" aria-live="polite">
           {t.lastDay}:{" "}
-          <strong className="text-lg text-fg">{lastDay ? formatDate(lastDay, "en") : "–"}</strong>
+          <strong className="text-lg text-fg">{status ? formatDate(status.deadline, "en") : "–"}</strong>
+          {status && (
+            <span className="block">
+              {status.open ? t.daysLeft.replace("{n}", String(status.daysLeft)) : t.closed}
+            </span>
+          )}
         </p>
       </div>
       <div className="flex min-w-0 flex-col gap-4 rounded-xl border border-edge-soft bg-plate p-5 md:p-6">
