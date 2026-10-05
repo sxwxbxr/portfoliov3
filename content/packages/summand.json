@@ -1,0 +1,183 @@
+{
+  "slug": "summand",
+  "name": "Summand",
+  "tagline": "Validate XRechnung, ZUGFeRD and Factur-X e-invoices against EN 16931 in pure TypeScript: in Node, the browser and at the edge, without Java.",
+  "seoTitle": "Summand – XRechnung, ZUGFeRD and Factur-X validator for TypeScript (EN 16931, no Java)",
+  "description": "Germany requires businesses to receive e-invoices since 1 January 2025, and to send them from 2027. Checking an XRechnung or ZUGFeRD invoice has so far meant the KoSIT validator: Java, Saxon and a server. Summand runs the same official rule sets in pure TypeScript, so you can check invoices in your Node backend, in a serverless function, in the browser before upload, or in CI.\n\nSummand ships its own XPath 2.0 and Schematron engine and the official EN 16931 rules from CEN (UBL and CII) and the XRechnung rules from KoSIT, including the severity changes KoSIT applies for the standard, extension and CVD profiles. It passes all 1'142 CEN rule tests and every invoice of the KoSIT test suite. It reads the XML embedded in ZUGFeRD and Factur-X PDFs, recognises the profile, checks Leitweg-IDs and reports every finding with rule, message, XPath and line. Summand checks invoices technically; it is not tax advice.",
+  "status": "beta",
+  "tags": [
+    "E-invoicing",
+    "XRechnung",
+    "ZUGFeRD",
+    "Factur-X",
+    "EN 16931",
+    "Schematron",
+    "TypeScript"
+  ],
+  "license": "MIT + Pro",
+  "order": 18,
+  "install": "pnpm add @sweberdev/summand",
+  "npm": [
+    "@sweberdev/summand"
+  ],
+  "code": {
+    "title": "app/api/invoices/route.ts",
+    "language": "ts",
+    "snippet": "import { validateInvoice } from \"@sweberdev/summand\"\n\nexport async function POST(req: Request) {\n  const bytes = new Uint8Array(await req.arrayBuffer()) // XML or ZUGFeRD PDF\n  const result = validateInvoice(bytes)\n\n  if (!result.valid) {\n    return Response.json({ errors: result.errors }, { status: 422 })\n  }\n  return Response.json({ profile: result.profile?.label, invoice: result.summary })\n}"
+  },
+  "links": {
+    "docs": "https://packages.sweber.dev/summand/docs",
+    "github": "https://github.com/Weber-Development/summand",
+    "npm": "https://www.npmjs.com/package/@sweberdev/summand"
+  },
+  "docs": {
+    "repo": "Weber-Development/summand",
+    "path": "docs",
+    "ref": "main"
+  },
+  "demoUrl": "/summand/demo",
+  "features": {
+    "free": [
+      "Official rule sets: CEN EN 16931 1.3.16 for UBL and CII, KoSIT XRechnung 2.6.0 for XRechnung 3.0, with KoSIT's severity changes for standard, extension and CVD",
+      "Passes all 1'142 CEN rule tests and every invoice of the KoSIT test suite",
+      "UBL Invoice, UBL Credit Note and UN/CEFACT CII, detected automatically",
+      "ZUGFeRD 2.x and Factur-X PDFs: reads the embedded XML and compares the profile in the PDF metadata with the XML",
+      "Profiles recognised: XRechnung, Peppol BIS, EN 16931, Factur-X MINIMUM, BASIC WL, BASIC and EXTENDED",
+      "Leitweg-ID check with ISO 7064 check digits",
+      "Every finding with rule ID, message, XPath and line number; an invoice summary with number, parties and totals",
+      "Pure TypeScript with its own XPath 2.0 and Schematron engine: Node, browsers, workers and edge runtimes, no Java",
+      "summand CLI: validate, extract the XML from a PDF, check a Leitweg-ID"
+    ],
+    "pro": [
+      "Read any invoice into one typed object with all EN 16931 business terms, from UBL or CII, XML or PDF",
+      "Show invoices as readable, printable HTML in German or English, with the validation report",
+      "Validate whole folders: JSON, CSV, JUnit and HTML reports, duplicate detection and a hash-chained audit log"
+    ]
+  },
+  "comparison": [
+    {
+      "feature": "EN 16931 and XRechnung validation, UBL and CII",
+      "free": true,
+      "pro": true
+    },
+    {
+      "feature": "ZUGFeRD and Factur-X PDFs, Leitweg-ID check, CLI",
+      "free": true,
+      "pro": true
+    },
+    {
+      "feature": "Typed invoice object with all business terms",
+      "free": "Summary only",
+      "pro": true
+    },
+    {
+      "feature": "Readable HTML view with validation report",
+      "free": false,
+      "pro": true
+    },
+    {
+      "feature": "Batch validation, duplicates, audit log",
+      "free": false,
+      "pro": true
+    },
+    {
+      "feature": "Licence",
+      "free": "MIT",
+      "pro": "Per person"
+    },
+    {
+      "feature": "Support",
+      "free": "GitHub issues",
+      "pro": "Agency and Lifetime"
+    }
+  ],
+  "pro": {
+    "name": "Summand Pro",
+    "availability": "available",
+    "packages": [
+      {
+        "name": "@weber-development/summand-read",
+        "description": "Reads XRechnung, ZUGFeRD and Factur-X (UBL or CII, XML or PDF) into one typed Invoice object: parties, lines, VAT breakdown, allowances and charges, payment details, references and attachments."
+      },
+      {
+        "name": "@weber-development/summand-view",
+        "description": "Renders an invoice as readable, printable HTML in German or English, with the validation report. What your users look at before they approve an invoice."
+      },
+      {
+        "name": "@weber-development/summand-inbox",
+        "description": "Validates folders of invoices from the command line or your code: JSON, CSV, JUnit and HTML reports, duplicate detection across runs and an audit log with a SHA-256 per file."
+      }
+    ],
+    "waitlistUrl": "mailto:info@sweber.dev?subject=Summand%20Pro%20waitlist"
+  },
+  "pricing": {
+    "currency": "CHF",
+    "merchant": "Polar",
+    "tiers": [
+      {
+        "id": "freelancer",
+        "name": "Freelancer",
+        "description": "For one person working on client projects.",
+        "monthly": 19,
+        "yearly": 190,
+        "seats": 1,
+        "support": false,
+        "checkout": {}
+      },
+      {
+        "id": "agency",
+        "name": "Agency",
+        "description": "For teams of up to ten named people, one price.",
+        "monthly": 59,
+        "yearly": 590,
+        "seats": 10,
+        "support": true,
+        "highlighted": true,
+        "checkout": {}
+      },
+      {
+        "id": "lifetime",
+        "name": "Lifetime",
+        "description": "Pay once for up to ten people and keep updates and repository access.",
+        "oneTime": 1990,
+        "seats": 10,
+        "support": true,
+        "checkout": {}
+      }
+    ],
+    "notes": [
+      "Pay yearly and get two months free: CHF 190 instead of CHF 228 for Freelancer, CHF 590 instead of CHF 708 for Agency.",
+      "After cancelling, every version you already received keeps working. Only updates and repository access end.",
+      "No licence key, no phone-home. The Pro packages never contact a server to check your licence.",
+      "Agency and Lifetime cover up to ten named people for one price: you choose the number of seats at checkout and assign them in Polar. Your clients and their websites need no licence of their own.",
+      "Checkout, invoices and VAT are handled by Polar as merchant of record."
+    ],
+    "custom": {
+      "label": "11 people or more",
+      "email": "info@sweber.dev"
+    }
+  },
+  "faq": [
+    {
+      "q": "Does Summand replace the KoSIT validator?",
+      "a": "For the business rules, yes: Summand runs the same official Schematron files and passes the KoSIT test suite. It does not check the XML schemas (XSD) yet, so a document with an element in the wrong place can pass Summand and still fail the KoSIT validator. Schema validation is on the roadmap."
+    },
+    {
+      "q": "Which formats does Summand accept?",
+      "a": "XRechnung 3.0 in UBL and CII, ZUGFeRD 2.x and Factur-X as PDF or XML, Peppol BIS and plain EN 16931 invoices. ZUGFeRD 1.0 predates EN 16931 and is reported as unsupported. Factur-X MINIMUM and BASIC WL are recognised but are not full invoices under EN 16931, which Summand says in the result."
+    },
+    {
+      "q": "Does an invoice that passes meet the German VAT rules?",
+      "a": "Not automatically. Summand checks the technical rules of EN 16931 and XRechnung. Whether an invoice is correct for VAT purposes, for example the tax rate or an exemption, is a question for your accounting or tax adviser."
+    },
+    {
+      "q": "Does Summand send invoices anywhere?",
+      "a": "No. It runs where you call it: on your server, in your function or in the browser. Nothing is uploaded, and the Pro packages do not contact a licence server either."
+    },
+    {
+      "q": "Why are the rule sets under other licences?",
+      "a": "Summand's code is MIT. The bundled rules are the official artefacts: EN 16931 from CEN under the EUPL 1.2 and XRechnung from KoSIT under the Apache License 2.0. Both allow this use; the notices ship with the package."
+    }
+  ],
+  "publishedAt": "2026-10-05"
+}
