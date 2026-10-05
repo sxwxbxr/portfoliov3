@@ -31,6 +31,13 @@ export interface RevealOptions extends MotionOptions {
   keyframes?: PresetName | Keyframe[];
   /** CSS `animation-range`. Default `"entry 0% cover 40%"`. */
   range?: string;
+  /**
+   * Percent each further element starts later, so lists and grids arrive one
+   * after another. `8` is a good start. Default 0.
+   */
+  stagger?: number;
+  /** Percent the whole range starts later, e.g. `index * 8` for one element of a list. */
+  shift?: number;
 }
 
 export interface ScrubOptions extends MotionOptions {
@@ -141,8 +148,8 @@ function run(
   options: MotionOptions,
   defaultEasing: string,
   timeline: (el: Element) => AnimationTimeline,
-  progress: (el: Element) => number,
-  rangeCss?: string,
+  progress: (el: Element, index: number) => number,
+  rangeAt?: (index: number) => Range,
 ): Controller {
   const elements = resolve(targets);
   if (!elements.length) return controller([], false);
@@ -154,12 +161,12 @@ function run(
   if (reduced) return controller([], native);
 
   if (native) {
-    const animations = elements.map((el) => {
+    const animations = elements.map((el, i) => {
       return el.animate(keyframes, {
         fill: "both",
         easing: css,
         timeline: timeline(el),
-        ...(rangeCss ? splitRange(rangeCss) : {}),
+        ...(rangeAt ? rangeOptions(rangeAt(i)) : {}),
       } as KeyframeAnimationOptions);
     });
     return controller(animations, true);
@@ -172,7 +179,7 @@ function run(
   });
   const drive = () => {
     animations.forEach((a, i) => {
-      const p = progress(elements[i] as Element);
+      const p = progress(elements[i] as Element, i);
       a.currentTime = (js ? Math.min(Math.max(js(p), 0), 1) : p) * 1000;
     });
   };
@@ -180,18 +187,26 @@ function run(
   return controller(animations, false, () => removeDriver(drive));
 }
 
-function splitRange(value: string) {
-  const r = parseRange(value);
+function rangeOptions(r: Range) {
   return {
     rangeStart: `${r.start.name} ${r.start.offset}%`,
     rangeEnd: `${r.end.name} ${r.end.offset}%`,
   };
 }
 
-function viewDriver(range: Range) {
-  return (el: Element) => {
+/** Moves both edges of a range later by `shift` percent of their named ranges. */
+function shiftRange(r: Range, shift: number): Range {
+  if (!shift) return r;
+  return {
+    start: { ...r.start, offset: r.start.offset + shift },
+    end: { ...r.end, offset: r.end.offset + shift },
+  };
+}
+
+function viewDriver(rangeAt: (index: number) => Range) {
+  return (el: Element, index: number) => {
     const { top, height } = measure(el);
-    return viewProgress(range, top, height, innerHeight);
+    return viewProgress(rangeAt(index), top, height, innerHeight);
   };
 }
 
@@ -202,8 +217,9 @@ function viewDriver(range: Range) {
  * @example reveal(".card", { keyframes: "fade-up", easing: ease.bouncy })
  */
 export function reveal(targets: Targets, options: RevealOptions = {}): Controller {
-  const rangeCss = options.range ?? "entry 0% cover 40%";
-  const range = parseRange(rangeCss);
+  const range = parseRange(options.range ?? "entry 0% cover 40%");
+  const rangeAt = (i: number) =>
+    shiftRange(range, (options.shift ?? 0) + i * (options.stagger ?? 0));
   const keyframes =
     typeof options.keyframes === "object"
       ? options.keyframes
@@ -214,8 +230,8 @@ export function reveal(targets: Targets, options: RevealOptions = {}): Controlle
     options,
     "cubic-bezier(0.16, 1, 0.3, 1)",
     (el) => new ViewTimeline({ subject: el, axis: "block" }),
-    viewDriver(range),
-    rangeCss,
+    viewDriver(rangeAt),
+    rangeAt,
   );
 }
 
@@ -232,8 +248,8 @@ export function parallax(targets: Targets, options: ParallaxOptions = {}): Contr
     { easing: "linear", ...options },
     "linear",
     (el) => new ViewTimeline({ subject: el, axis: "block" }),
-    viewDriver(range),
-    "cover",
+    viewDriver(() => range),
+    () => range,
   );
 }
 
@@ -274,4 +290,39 @@ export function progress(targets: Targets, options: ScrubOptions = {}): Controll
     reducedMotion: "allow",
     ...options,
   });
+}
+
+export interface TrackOptions {
+  /** CSS `animation-range` the progress runs over. Default `"cover"`. */
+  range?: string;
+}
+
+/**
+ * Calls `onProgress` with the view progress (0 to 1) of each element whenever
+ * it changes: for counters, video scrubbing, canvas or anything CSS cannot do.
+ * Uses the same range maths as the animations.
+ *
+ * @example track(".stat", (p, el) => (el.textContent = String(Math.round(p * 120))))
+ */
+export function track(
+  targets: Targets,
+  onProgress: (progress: number, element: Element) => void,
+  options: TrackOptions = {},
+): Controller {
+  const elements = resolve(targets);
+  if (!elements.length) return controller([], false);
+  const range = parseRange(options.range ?? "cover");
+  const read = viewDriver(() => range);
+  const last = elements.map(() => Number.NaN);
+  const drive = () => {
+    elements.forEach((el, i) => {
+      const p = read(el, i);
+      if (p !== last[i]) {
+        last[i] = p;
+        onProgress(p, el);
+      }
+    });
+  };
+  addDriver(drive);
+  return controller([], false, () => removeDriver(drive));
 }

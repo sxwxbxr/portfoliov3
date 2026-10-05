@@ -7,7 +7,8 @@ import { type PresetName, presets } from "./presets";
  *
  * With `sigmoid.css` loaded, modern browsers animate `data-sigmoid` elements
  * without any JavaScript, so `init()` does nothing there. Elsewhere it reads
- * the same attributes and `--sigmoid-range` / `--sigmoid-easing` and starts
+ * the same attributes and custom properties (`--sigmoid-range`, `--sigmoid-easing`,
+ * `--sigmoid-index`, `--sigmoid-stagger`) and starts
  * the JavaScript fallback. Returns a function that stops everything.
  */
 export function init(root: ParentNode = document, options: { force?: boolean } = {}): () => void {
@@ -27,7 +28,12 @@ export function init(root: ParentNode = document, options: { force?: boolean } =
     } else if (name === "progress") {
       controllers.push(progress(el, { fallback }));
     } else if (name in presets) {
-      controllers.push(reveal(el, { keyframes: name as PresetName, range, easing, fallback }));
+      const index = Number.parseFloat(style.getPropertyValue("--sigmoid-index")) || 0;
+      const stagger = Number.parseFloat(style.getPropertyValue("--sigmoid-stagger")) || 8;
+      const shift = range ? 0 : index * stagger;
+      controllers.push(
+        reveal(el, { keyframes: name as PresetName, range, easing, shift, fallback }),
+      );
     }
   }
   return () => {
