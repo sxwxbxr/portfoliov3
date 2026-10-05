@@ -5,17 +5,35 @@
   "seoTitle": "Surjection – accessibility testing and statements for agencies (BFSG, EAA)",
   "description": "Surjection helps agencies make accessibility part of every project instead of a one-off scan. It runs axe-core in Playwright and Vitest, maps every finding to WCAG 2.2 and EN 301 549, and fails the build only on new problems thanks to a baseline for existing sites.\n\nIt also generates the accessibility statement (Erklärung zur Barrierefreiheit) in German, Swiss German, French, Italian and English, and ships small accessible React building blocks. Surjection is deliberately not an overlay widget: it helps you fix the code, it does not hide problems. Automated tests find only part of all barriers, so Surjection does not promise legal conformity.",
   "status": "coming-soon",
-  "tags": ["Accessibility", "WCAG 2.2", "BFSG", "EAA", "Playwright", "Vitest", "React"],
+  "tags": [
+    "Accessibility",
+    "WCAG 2.2",
+    "BFSG",
+    "EAA",
+    "Playwright",
+    "Vitest",
+    "React"
+  ],
   "license": "MIT + Pro",
   "order": 20,
   "install": "pnpm add -D @sweberdev/surjection",
-  "npm": ["@sweberdev/surjection", "@sweberdev/surjection-react"],
+  "npm": [
+    "@sweberdev/surjection",
+    "@sweberdev/surjection-react"
+  ],
   "code": {
     "title": "tests/a11y.spec.ts",
     "language": "ts",
     "snippet": "import { test } from \"@playwright/test\"\nimport { expectAccessible } from \"@sweberdev/surjection/playwright\"\nimport baseline from \"./a11y-baseline.json\"\n\nfor (const path of [\"/\", \"/shop\", \"/checkout\"]) {\n  test(`${path} is accessible`, async ({ page }) => {\n    await page.goto(path)\n    await expectAccessible(page, { baseline, failOn: \"serious\", locale: \"de\" })\n  })\n}"
   },
-  "links": {},
+  "links": {
+    "docs": "https://packages.sweber.dev/surjection/docs"
+  },
+  "docs": {
+    "repo": "Weber-Development/surjection",
+    "path": "docs",
+    "ref": "main"
+  },
   "features": {
     "free": [
       "Playwright helper and Vitest matcher on top of axe-core, tested against WCAG 2.2 AA by default",
@@ -31,11 +49,122 @@
       "Guided manual checklist for the criteria automated tests cannot cover"
     ]
   },
+  "comparison": [
+    {
+      "feature": "Playwright helper, Vitest matcher and CLI",
+      "free": true,
+      "pro": true
+    },
+    {
+      "feature": "WCAG 2.2 and EN 301 549 mapping",
+      "free": true,
+      "pro": true
+    },
+    {
+      "feature": "Baseline for existing sites",
+      "free": true,
+      "pro": true
+    },
+    {
+      "feature": "Markdown report and accessibility statement in five languages",
+      "free": true,
+      "pro": true
+    },
+    {
+      "feature": "Accessible React building blocks",
+      "free": true,
+      "pro": true
+    },
+    {
+      "feature": "Client report in your branding (HTML and PDF)",
+      "free": false,
+      "pro": true
+    },
+    {
+      "feature": "History and dashboard across client projects",
+      "free": false,
+      "pro": true
+    },
+    {
+      "feature": "Manual WCAG 2.2 checklist with browser editor",
+      "free": false,
+      "pro": true
+    },
+    {
+      "feature": "Licence",
+      "free": "MIT",
+      "pro": "Per person"
+    },
+    {
+      "feature": "Support",
+      "free": "GitHub issues",
+      "pro": "Agency and Lifetime"
+    }
+  ],
   "pro": {
     "name": "Surjection Pro",
     "availability": "coming-soon",
-    "packages": [],
+    "packages": [
+      {
+        "name": "@weber-development/surjection-report",
+        "description": "Client reports in your branding as HTML and PDF, in German, Swiss German, French, Italian and English."
+      },
+      {
+        "name": "@weber-development/surjection-history",
+        "description": "Records every run per project and renders a dashboard with status, change and trend."
+      },
+      {
+        "name": "@weber-development/surjection-checklist",
+        "description": "The 55 WCAG 2.2 A/AA criteria with instructions for manual testing, a browser editor and export to the statement."
+      }
+    ],
     "waitlistUrl": "mailto:info@sweber.dev?subject=Surjection%20Pro%20waitlist"
+  },
+  "pricing": {
+    "currency": "CHF",
+    "merchant": "Polar",
+    "tiers": [
+      {
+        "id": "freelancer",
+        "name": "Freelancer",
+        "description": "For one person working on client projects.",
+        "monthly": 19,
+        "yearly": 190,
+        "seats": 1,
+        "support": false,
+        "checkout": {}
+      },
+      {
+        "id": "agency",
+        "name": "Agency",
+        "description": "For teams of up to ten named people, one price.",
+        "monthly": 59,
+        "yearly": 590,
+        "seats": 10,
+        "support": true,
+        "highlighted": true,
+        "checkout": {}
+      },
+      {
+        "id": "lifetime",
+        "name": "Lifetime",
+        "description": "Pay once for up to ten people and keep updates and repository access.",
+        "oneTime": 1990,
+        "seats": 10,
+        "support": true,
+        "checkout": {}
+      }
+    ],
+    "notes": [
+      "After cancelling, every version you already received keeps working. Only updates and repository access end.",
+      "No licence key, no phone-home. The packages never contact a server to check your licence.",
+      "Agency and Lifetime cover up to ten named people for one price: you choose the number of seats at checkout and assign them in Polar. Your clients and their websites need no licence of their own.",
+      "Checkout, invoices and VAT are handled by Polar as merchant of record."
+    ],
+    "custom": {
+      "label": "11 people or more",
+      "email": "info@sweber.dev"
+    }
   },
   "faq": [
     {
@@ -45,6 +174,30 @@
     {
       "q": "Is this an accessibility overlay?",
       "a": "No. Overlays add a widget on top of a site and leave the code unchanged. Surjection runs in development and CI and helps you fix the code itself."
+    },
+    {
+      "q": "Who needs a licence?",
+      "a": "Every person on your team who works with the Pro packages. Freelancer covers one person. Agency and Lifetime cover up to ten named people for the same price: you pick the number of seats at checkout, assign them in Polar, and each person connects their own GitHub account. For eleven or more, get in touch."
+    },
+    {
+      "q": "What happens when I cancel?",
+      "a": "Every version you already received keeps working, in every project you used it in. Only new updates and access to the private repository end."
+    },
+    {
+      "q": "Do my clients need their own licence?",
+      "a": "No. The licence covers the people building the sites. The websites you deliver and the clients who own them need nothing."
+    },
+    {
+      "q": "Is there a licence key or usage tracking?",
+      "a": "No. The packages are installed from a private GitHub Packages registry and never contact a licence server."
+    },
+    {
+      "q": "Who issues the invoice, and is VAT included?",
+      "a": "Polar sells Surjection Pro as merchant of record. It handles checkout, invoices and VAT for your country."
+    },
+    {
+      "q": "Can I use the open-source part on its own?",
+      "a": "Yes. @sweberdev/surjection and @sweberdev/surjection-react are MIT-licensed and complete without Pro."
     }
   ],
   "publishedAt": "2026-10-05"
