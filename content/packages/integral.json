@@ -43,7 +43,10 @@
       "Polar.sh license keys: validate, activate and deactivate without an access token in your app",
       "Offline grace: cached checks keep paying customers working when the network is down",
       "Update periods: licenses that end updates instead of usage, so installed versions keep working",
-      "CLI to create keys and issue, verify and inspect licenses",
+      "Signed revocation lists: revoke licenses that are only ever checked offline, including lifetime licenses after a refund",
+      "Device binding: lock a license to one machine with an anonymous machineId()",
+      "Trial licenses and licenseStatus(): days left, expiring soon, update period ended",
+      "CLI to create keys and issue, verify, inspect and revoke licenses",
       "React bindings: <Feature>, <Limit>, useFeature and an async license check hook",
       "Zero dependencies, runs in Node 20+, browsers, Bun, Deno and edge runtimes"
     ],
@@ -51,7 +54,9 @@
       "License server that turns Polar orders and subscriptions into signed licenses: issue, renew, end, revoke",
       "Verified Polar webhooks, storage for SQLite, Postgres and MySQL, one fetch handler for Next.js, Hono, Bun and Workers",
       "Exchange of Polar license keys for signed offline licenses, refresh after renewals",
-      "React license activation view with automatic renewal and upgrade prompts, English and German"
+      "Signed revocation list endpoint, downloaded and cached offline by the activation view",
+      "React license activation view with automatic renewal and upgrade prompts, English and German",
+      "License status banner that warns before a trial, license or update period ends"
     ]
   },
   "comparison": [
@@ -59,11 +64,13 @@
     { "feature": "Plans, features and limits", "free": true, "pro": true },
     { "feature": "Polar license key validation and activations", "free": true, "pro": true },
     { "feature": "Offline grace and update periods", "free": true, "pro": true },
+    { "feature": "Revocation lists, device binding and trial licenses", "free": true, "pro": true },
     { "feature": "CLI and React feature gates", "free": true, "pro": true },
     { "feature": "Licenses issued automatically from Polar webhooks", "free": false, "pro": true },
     { "feature": "Renewal, cancellation and refund handling", "free": false, "pro": true },
     { "feature": "SQL storage and ready-made API routes", "free": false, "pro": true },
-    { "feature": "React license activation and upgrade prompt", "free": false, "pro": true },
+    { "feature": "Revocation list served and applied automatically", "free": false, "pro": true },
+    { "feature": "React license activation, status banner and upgrade prompt", "free": false, "pro": true },
     { "feature": "Licence", "free": "MIT", "pro": "Per person" },
     { "feature": "Support", "free": "GitHub issues", "pro": "Agency and Lifetime" }
   ],

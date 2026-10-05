@@ -39,8 +39,9 @@
   "features": {
     "free": [
       "Index builder and CLI for Markdown, MDX and built HTML, split at headings with deep links",
-      "Hybrid ranking in the browser: BM25 keyword search with prefix matching plus cosine similarity on embeddings",
+      "Hybrid ranking in the browser: BM25 keyword search with prefix matching and typo tolerance, plus cosine similarity on embeddings",
       "Instant keyword results, semantic ranking as soon as the model is loaded, keyword-only for visitors who save data",
+      "Scoped search: limit a search field to parts of the site, e.g. only the API reference",
       "Compact int8 vectors: about 400 bytes per section",
       "Accessible <cosine-search> web component (ARIA combobox) in English, German, French and Italian",
       "React component and hooks, English or multilingual models, model self-hosting for GDPR and FADP"
@@ -48,7 +49,7 @@
     "pro": [
       "Vite plugin: the index builds itself in Vite, Astro, VitePress, SvelteKit and Nuxt, and in dev",
       "Embedding cache: a rebuild embeds only the sections that changed",
-      "Search insights without tracking: queries without results, results nobody opened, HTML and Markdown report"
+      "Search insights without tracking: queries without results, results nobody opened, as HTML, Markdown or CSV"
     ]
   },
   "comparison": [
@@ -190,5 +191,13 @@
       "a": "Yes. @sweberdev/cosine and @sweberdev/cosine-react are MIT-licensed and complete without Pro."
     }
   ],
-  "publishedAt": "2026-10-05"
+  "publishedAt": "2026-10-05",
+  "releases": [
+    {
+      "version": "0.3.0",
+      "date": "2026-10-05",
+      "title": "Typo tolerance and scoped search",
+      "url": "https://packages.sweber.dev/blog/cosine-0-3-0-released"
+    }
+  ]
 }

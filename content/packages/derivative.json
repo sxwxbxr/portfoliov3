@@ -1,9 +1,9 @@
 {
   "slug": "derivative",
   "name": "Derivative",
-  "tagline": "Self-hosted changelog and \"What's new\" widget, built from your Changesets, CHANGELOG.md or commits. No SaaS, no tracking.",
+  "tagline": "Self-hosted changelog and \"What's new\" widget, built from your Changesets, CHANGELOG.md, commits or GitHub Releases. No SaaS, no tracking.",
   "seoTitle": "Derivative – self-hosted changelog and What's new widget for any web app",
-  "description": "Derivative turns the changelog you already keep into a \"What's new\" button for your app. It reads Changesets output, any CHANGELOG.md in the Keep a Changelog or conventional-changelog style, or conventional commits with version tags, and writes a static changelog.json, an Atom feed and a changelog page.\n\nThe widget is a single web component of about 6 kB gzipped with an unread badge, keyboard and screen reader support, dark mode and labels in English, German, French and Italian. The feed ships with your app and the read state stays in the browser, so there is no third-party service, no cookie and nothing to add to your privacy policy. A lean alternative to hosted tools such as Beamer or Headway.",
+  "description": "Derivative turns the changelog you already keep into a \"What's new\" button for your app. It reads Changesets output, any CHANGELOG.md in the Keep a Changelog or conventional-changelog style, conventional commits with version tags, or GitHub Releases, and writes a static changelog.json, an Atom feed and a changelog page.\n\nThe widget is a single web component of about 6 kB gzipped with an unread badge, keyboard and screen reader support, dark mode and labels in English, German, French and Italian. The feed ships with your app and the read state stays in the browser, so there is no third-party service, no cookie and nothing to add to your privacy policy. A lean alternative to hosted tools such as Beamer or Headway.",
   "status": "beta",
   "tags": [
     "Changelog",
@@ -38,18 +38,19 @@
   "demoUrl": "/derivative/demo",
   "features": {
     "free": [
-      "Reads Changesets (default and GitHub formats), Keep a Changelog, conventional-changelog and conventional commits with tags",
+      "Reads Changesets (default and GitHub formats), Keep a Changelog, conventional-changelog, conventional commits with tags and GitHub Releases",
       "derivative build writes changelog.json, an Atom feed and a standalone changelog page",
       "<derivative-widget>: popover or inline, unread badge, about 6 kB gzipped, no dependencies",
+      "Announcement toast for the newest titled release, shown once per reader, and a filter for the entry types users see",
       "Accessible: labelled dialog, focus handling, Escape to close, reduced motion respected",
       "Labels and dates in English, German, French and Italian; dark mode and CSS custom properties",
       "Highlights: a title, summary and image for the releases that matter",
       "React bindings: <WhatsNew>, useChangelog and an unstyled <ChangelogList>"
     ],
     "pro": [
-      "Read statistics without cookies or visitor IDs: opens, reads and link clicks per release, with an HTML report",
+      "Read statistics without cookies or visitor IDs: opens, reads and link clicks per release, with an HTML report and CSV export",
       "Audience segments: entries only for certain plans or roles, via rules or a [for: pro] marker, and scheduled releases",
-      "Announcements: an e-mail digest in your branding and posts to Slack, Teams, Discord, Mattermost and Google Chat"
+      "Announcements: an e-mail digest in your branding and posts to Slack, Teams, Discord, Mattermost, Google Chat and Mastodon"
     ]
   },
   "comparison": [
@@ -64,7 +65,7 @@
       "pro": true
     },
     {
-      "feature": "Read statistics and report",
+      "feature": "Read statistics, report and CSV export",
       "free": false,
       "pro": true
     },
@@ -74,7 +75,7 @@
       "pro": true
     },
     {
-      "feature": "E-mail digest and chat announcements",
+      "feature": "E-mail digest, chat and Mastodon announcements",
       "free": false,
       "pro": true
     },

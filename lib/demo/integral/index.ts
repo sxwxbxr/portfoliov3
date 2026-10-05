@@ -1,4 +1,7 @@
 export { createEntitlements, definePlans, planFor, type Entitlements, type Plans } from "./entitlements"
 export { generateKeyPair, type KeyPair } from "./keys"
 export { coversRelease, decodeLicense, signLicense, verifyLicense } from "./license"
+export { machineId } from "./machine"
+export { signRevocationList, verifyRevocationList, type RevocationList } from "./revocation"
+export { licenseStatus, type LicenseStatus } from "./status"
 export type { LicensePayload, LicenseVerification } from "./types"

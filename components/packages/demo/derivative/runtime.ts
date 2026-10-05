@@ -8,7 +8,7 @@ import { useEffect, useState } from "react"
  * the package. Same code as on npm, bundled into one file.
  */
 
-export const DERIVATIVE_URL = "/demos/derivative/derivative-0.1.0.min.js"
+export const DERIVATIVE_URL = "/demos/derivative/derivative-0.2.0.min.js"
 
 export type EntryType =
   | "feature"

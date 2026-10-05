@@ -11,7 +11,7 @@ import { pkgPath } from "@/lib/packages/urls"
  */
 
 const t = cosineDemoCopy
-const LIB_URL = "/demos/cosine/cosine-0.1.0.js"
+const LIB_URL = "/demos/cosine/cosine-0.3.0.js"
 const INDEX_URL = "/demos/cosine/cosine-index.json"
 const TRANSFORMERS_URL = "https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.3.0"
 

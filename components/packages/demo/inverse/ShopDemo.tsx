@@ -175,6 +175,10 @@ export function ShopDemo() {
                     locale={locale}
                     submit={submit}
                     defaultValues={{ contractRef: "ABO-2207" }}
+                    contracts={[
+                      { value: "ABO-2207", label: "Coffee subscription, ABO-2207" },
+                      { value: "ABO-3120", label: "Tea box, ABO-3120" },
+                    ]}
                   />
                 )}
               </>

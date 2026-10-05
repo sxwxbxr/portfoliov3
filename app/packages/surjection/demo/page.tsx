@@ -136,6 +136,10 @@ export default function SurjectionDemoPage() {
               <Download className="mr-1 h-3.5 w-3.5" aria-hidden="true" />
               {t.report.pdf}
             </a>
+            <a href="/demos/surjection/massnahmen-beispiel.csv" download className={btn}>
+              <Download className="mr-1 h-3.5 w-3.5" aria-hidden="true" />
+              {t.report.csv}
+            </a>
           </div>
           <CodeBlock code={SURJECTION_PRO_COMMANDS} label="Pro commands" />
         </div>

@@ -46,11 +46,13 @@
       "Multi-tenant by default: a scoped log cannot read other tenants",
       "Filters by actor, action prefix, target, time and text, with keyset paging",
       "Fetch API handler for Next.js, Remix, Hono and Workers, with your own access check",
-      "React activity view with search, filters, day groups and diffs, in English and German"
+      "contextFromRequest() fills IP, browser, request id and location from Vercel, Cloudflare or Nginx headers",
+      "React activity view with search, filters, day groups and diffs, in English and German",
+      "Compact <ActivityFeed> with relative times for dashboards and project pages"
     ],
     "pro": [
-      "Tamper evidence: an HMAC hash chain per tenant and a verifier that names changed, removed or reordered events",
-      "Retention periods per customer with archiving, GDPR and Swiss FADP erasure and access requests",
+      "Tamper evidence: an HMAC hash chain per tenant, signed checkpoints, and a verifier that names changed, removed or reordered events",
+      "Retention periods per customer with archiving and legal holds, GDPR and Swiss FADP erasure and access requests",
       "Streamed CSV, NDJSON and JSON export for your customers",
       "Forwarding to signed webhooks, Splunk and Datadog"
     ]

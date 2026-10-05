@@ -111,11 +111,11 @@ importers:
         specifier: ^0.2.0
         version: 0.2.0
       '@sweberdev/inverse':
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.2.0
+        version: 0.2.0
       '@sweberdev/inverse-react':
-        specifier: ^0.1.0
-        version: 0.1.0(react@19.1.2)
+        specifier: ^0.2.0
+        version: 0.2.0(react@19.1.2)
       '@vercel/analytics':
         specifier: ^1.5.0
         version: 1.5.0(next@15.2.6(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(react@19.1.2)
@@ -2012,13 +2012,13 @@ packages:
     resolution: {integrity: sha512-JBmqBoHK3cVmYX0N9gqN1tplasXcaUxD62f0tElSz8gREMt5y3L8VkdHEgjjuBPIRHwAkXKdkh4Qc39ANdjkyg==}
     hasBin: true
 
-  '@sweberdev/inverse-react@0.1.0':
-    resolution: {integrity: sha512-zxLCKPOSf2SykElUaIHl5Uej9YD9KpqjhsDTNcwJA7NeZXQfhb2JWwkOrlk0Okoffmi/8+m6TF5YR/+bONNEYg==}
+  '@sweberdev/inverse-react@0.2.0':
+    resolution: {integrity: sha512-8I/Rzpchb0eqmnJVgDWH/NpJpn1G88ABxh9KxAdlsgsS5JmagJp0ZLWwJeDZZu88nqDh+G/uoDqZbYpyrEeyQw==}
     peerDependencies:
       react: '>=18'
 
-  '@sweberdev/inverse@0.1.0':
-    resolution: {integrity: sha512-T+oug+Pd9Qk8WQEu72pu0adyvJw2PRFJLamsCnorAjbnY3u51Ky/SPKS5HX0feO/UliPK59SXO39HMeejcn25g==}
+  '@sweberdev/inverse@0.2.0':
+    resolution: {integrity: sha512-siuPg0aIbNd7CGqW+Pr+/oT4RsLOQQMLLjat0kKUjxiTLyWyDeS50H+H3EbYJ5ntfO46i3cpoKfpwWfbSgctPA==}
     hasBin: true
 
   '@tailwindcss/node@4.1.9':
@@ -6064,12 +6064,12 @@ snapshots:
 
   '@sweberdev/gradient@0.2.0': {}
 
-  '@sweberdev/inverse-react@0.1.0(react@19.1.2)':
+  '@sweberdev/inverse-react@0.2.0(react@19.1.2)':
     dependencies:
-      '@sweberdev/inverse': 0.1.0
+      '@sweberdev/inverse': 0.2.0
       react: 19.1.2
 
-  '@sweberdev/inverse@0.1.0': {}
+  '@sweberdev/inverse@0.2.0': {}
 
   '@tailwindcss/node@4.1.9':
     dependencies:
