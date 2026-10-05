@@ -1,0 +1,8 @@
+$ npx summand-inbox incoming --html report.html --audit-log audit.jsonl
+ok   incoming/2026-10/lieferant-471102.pdf
+ok   incoming/2026-10/mustermann-18383.xml
+ok   incoming/2026-10/mustermann-18383_cii.xml  duplicate of incoming/2026-10/mustermann-18383.xml
+FAIL incoming/2026-10/mustermann-18383_resent.xml  1 error(s), 1 warning(s)  duplicate of incoming/2026-10/mustermann-18383.xml
+ERR  incoming/2026-10/scan-0815.pdf  The PDF contains no embedded invoice XML. A ZUGFeRD / Factur-X invoice must embed the XML (for example factur-x.xml); a plain PDF is not an e-invoice.
+ok   incoming/2026-10/stadtwerke-2026-10.xml
+6 file(s): 4 valid, 1 invalid, 1 unreadable, 2 duplicate(s), 1 warning(s)
