@@ -1,0 +1,200 @@
+{
+  "slug": "logarithm",
+  "name": "Logarithm",
+  "tagline": "A self-hosted audit log for SaaS apps: who changed what, and when. Field-level diffs in your own Postgres or SQLite, and a ready React view for your customers' admins.",
+  "seoTitle": "Logarithm – self-hosted audit log for SaaS apps with React viewer (Postgres, SQLite)",
+  "description": "Sooner or later a B2B customer asks who changed what in their account, and security questionnaires, ISO 27001 and SOC 2 audits ask the same. Logarithm records it with one call: actor, action, targets and a field-level diff computed from the state before and after. Passwords, tokens and card numbers are never stored, also inside nested objects.\n\nEvents live in your own database: Postgres 13+ (also Neon and Supabase) or SQLite (better-sqlite3, node:sqlite, Bun). Every event belongs to a tenant, and a scoped log cannot read other tenants. A Fetch API handler serves Next.js, Remix, Hono or Workers, and the React view shows your customers' admins an activity log with search, filters, day groups and diffs, in English and German. No external service, MIT-licensed.",
+  "status": "beta",
+  "tags": [
+    "Audit log",
+    "SaaS",
+    "Multi-tenant",
+    "Postgres",
+    "SQLite",
+    "React",
+    "Next.js",
+    "GDPR"
+  ],
+  "license": "MIT + Pro",
+  "order": 40,
+  "install": "pnpm add @sweberdev/logarithm @sweberdev/logarithm-react",
+  "npm": [
+    "@sweberdev/logarithm",
+    "@sweberdev/logarithm-react"
+  ],
+  "code": {
+    "title": "app/projects/actions.ts",
+    "language": "ts",
+    "snippet": "import { createAuditLog } from \"@sweberdev/logarithm\"\nimport { postgresStore } from \"@sweberdev/logarithm/postgres\"\n\nconst audit = createAuditLog({ store: postgresStore({ client: pool }) })\n\nawait audit.with({ tenantId: org.id, actor: { id: user.id, name: user.name } }).record({\n  action: \"project.updated\",\n  targets: [{ type: \"project\", id: project.id, name: project.name }],\n  before: project, // { plan: \"free\", smtpPassword: \"…\" }\n  after: updated,  // diff: plan free → pro, smtpPassword [redacted]\n})"
+  },
+  "demoUrl": "/logarithm/demo",
+  "links": {
+    "docs": "https://packages.sweber.dev/logarithm/docs",
+    "github": "https://github.com/Weber-Development/logarithm",
+    "npm": "https://www.npmjs.com/package/@sweberdev/logarithm"
+  },
+  "docs": {
+    "repo": "Weber-Development/logarithm",
+    "path": "docs",
+    "ref": "main"
+  },
+  "features": {
+    "free": [
+      "Record events in one call: actor, action, targets and a field-level diff from before and after",
+      "Passwords, tokens, API keys and card numbers stored as [redacted], also in nested objects and metadata",
+      "Stores for Postgres 13+ (Neon, Supabase) and SQLite (better-sqlite3, node:sqlite, Bun), or your own",
+      "Multi-tenant by default: a scoped log cannot read other tenants",
+      "Filters by actor, action prefix, target, time and text, with keyset paging",
+      "Fetch API handler for Next.js, Remix, Hono and Workers, with your own access check",
+      "React activity view with search, filters, day groups and diffs, in English and German"
+    ],
+    "pro": [
+      "Tamper evidence: an HMAC hash chain per tenant and a verifier that names changed, removed or reordered events",
+      "Retention periods per customer with archiving, GDPR and Swiss FADP erasure and access requests",
+      "Streamed CSV, NDJSON and JSON export for your customers",
+      "Forwarding to signed webhooks, Splunk and Datadog"
+    ]
+  },
+  "comparison": [
+    {
+      "feature": "Events, diffs and redaction",
+      "free": true,
+      "pro": true
+    },
+    {
+      "feature": "Postgres and SQLite stores",
+      "free": true,
+      "pro": true
+    },
+    {
+      "feature": "Tenant-scoped queries and API handler",
+      "free": true,
+      "pro": true
+    },
+    {
+      "feature": "React activity view",
+      "free": true,
+      "pro": true
+    },
+    {
+      "feature": "Tamper evidence (hash chain and verifier)",
+      "free": false,
+      "pro": true
+    },
+    {
+      "feature": "Retention with archiving",
+      "free": "Delete by date",
+      "pro": true
+    },
+    {
+      "feature": "GDPR/FADP erasure and access requests",
+      "free": false,
+      "pro": true
+    },
+    {
+      "feature": "CSV/NDJSON export and SIEM forwarding",
+      "free": false,
+      "pro": true
+    },
+    {
+      "feature": "Licence",
+      "free": "MIT",
+      "pro": "Per person"
+    },
+    {
+      "feature": "Support",
+      "free": "GitHub issues",
+      "pro": "Agency and Lifetime"
+    }
+  ],
+  "pro": {
+    "name": "Logarithm Pro",
+    "availability": "coming-soon",
+    "packages": [
+      {
+        "name": "@weber-development/logarithm-integrity",
+        "description": "HMAC hash chain per tenant and a verifier that shows which event was changed, removed or reordered."
+      },
+      {
+        "name": "@weber-development/logarithm-retention",
+        "description": "Retention periods per customer with archiving, erasure with a stable pseudonym and access-request export."
+      },
+      {
+        "name": "@weber-development/logarithm-export",
+        "description": "Streamed CSV, NDJSON and JSON downloads, forwarding to signed webhooks, Splunk and Datadog."
+      }
+    ],
+    "demoUrl": "/logarithm/demo",
+    "waitlistUrl": "mailto:info@sweber.dev?subject=Logarithm%20Pro%20waitlist"
+  },
+  "pricing": {
+    "currency": "CHF",
+    "merchant": "Polar",
+    "tiers": [
+      {
+        "id": "freelancer",
+        "name": "Freelancer",
+        "description": "For one developer.",
+        "monthly": 19,
+        "yearly": 190,
+        "seats": 1,
+        "support": false
+      },
+      {
+        "id": "agency",
+        "name": "Team",
+        "description": "For teams of up to ten named people, one price.",
+        "monthly": 59,
+        "yearly": 590,
+        "seats": 10,
+        "support": true,
+        "highlighted": true
+      },
+      {
+        "id": "lifetime",
+        "name": "Lifetime",
+        "description": "Pay once for up to ten people and keep updates and repository access.",
+        "oneTime": 1990,
+        "seats": 10,
+        "support": true
+      }
+    ],
+    "notes": [
+      "After cancelling, every version you already received keeps working. Only updates and repository access end.",
+      "No licence key, no phone-home. The packages never contact a server to check your licence.",
+      "The licence covers the people who build with Logarithm Pro. The users of your SaaS app need nothing.",
+      "Checkout, invoices and VAT are handled by Polar as merchant of record."
+    ],
+    "custom": {
+      "label": "11 people or more",
+      "email": "info@sweber.dev"
+    }
+  },
+  "faq": [
+    {
+      "q": "Why not a hosted audit log service?",
+      "a": "Audit events contain personal data and say a lot about your customers. With Logarithm they stay in the database you already run and back up, and there is no per-event bill."
+    },
+    {
+      "q": "Which databases are supported?",
+      "a": "Postgres 13 or newer, including Neon and Supabase, and SQLite 3.38 or newer via better-sqlite3, node:sqlite or Bun. Other databases work by implementing a small store interface."
+    },
+    {
+      "q": "Can a customer see another customer's events?",
+      "a": "Not through Logarithm. The API handler takes the tenant from your access check, and a log scoped to a tenant adds it to every query."
+    },
+    {
+      "q": "Is the log tamper-proof?",
+      "a": "The free version stores events like any other table; restrict the app's database role to INSERT and SELECT. Logarithm Pro adds a hash chain that makes later changes visible, even to someone with database access."
+    },
+    {
+      "q": "What about GDPR and the Swiss FADP?",
+      "a": "Secrets are never stored and you control retention. Logarithm Pro handles erasure with a stable pseudonym and collects a person's events for access requests. This is not legal advice."
+    },
+    {
+      "q": "Can I use the open-source part on its own?",
+      "a": "Yes. @sweberdev/logarithm and @sweberdev/logarithm-react are MIT-licensed and complete without Pro."
+    }
+  ],
+  "publishedAt": "2026-10-05"
+}
