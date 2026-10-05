@@ -118,6 +118,7 @@
         "description": "The 55 WCAG 2.2 A/AA criteria with instructions for manual testing, a browser editor and export to the statement."
       }
     ],
+    "demoUrl": "/surjection/demo",
     "waitlistUrl": "mailto:info@sweber.dev?subject=Surjection%20Pro%20waitlist"
   },
   "pricing": {

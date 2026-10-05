@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Accessibility: all projects</title>
+<style>
+body{font:16px/1.5 system-ui,sans-serif;margin:2rem;color:#1a1a1a;background:#fff}
+h1{font-size:1.6rem}
+table{border-collapse:collapse;width:100%}
+th,td{padding:.5rem .75rem;border-bottom:1px solid #d0d0d0;text-align:left;vertical-align:middle}
+thead th{font-size:.85rem;text-transform:uppercase;letter-spacing:.04em;color:#444}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.good{color:#0a6b2d}.bad{color:#a4161a}
+.spark{color:#1f4fa3}
+p.note{color:#444;font-size:.9rem;margin-top:2rem}
+</style>
+</head>
+<body>
+<main>
+<h1>Accessibility: all projects</h1>
+<table>
+<thead><tr><th scope="col">Project</th><th scope="col">Last check</th><th scope="col" class="num">Pages</th><th scope="col" class="num">Affected elements</th><th scope="col" class="num">Critical</th><th scope="col" class="num">Serious</th><th scope="col" class="num">Change</th><th scope="col">Trend</th></tr></thead>
+<tbody>
+<tr><th scope="row">Bäckerei Muster</th><td>5 October 2026</td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num"><span class="good">−2</span></td><td><svg class="spark" width="120" height="32" viewBox="0 0 120 32" role="img" aria-label="Affected elements per check: 6, 3, 1"><polyline fill="none" stroke="currentColor" stroke-width="2" points="0.0,2.0 60.0,16.0 120.0,25.3"/></svg></td></tr>
+<tr><th scope="row">Praxis Dr. Keller</th><td>5 October 2026</td><td class="num">1</td><td class="num">2</td><td class="num">2</td><td class="num">0</td><td class="num"><span class="bad">+2</span></td><td><svg class="spark" width="120" height="32" viewBox="0 0 120 32" role="img" aria-label="Affected elements per check: 0, 0, 2"><polyline fill="none" stroke="currentColor" stroke-width="2" points="0.0,30.0 60.0,30.0 120.0,2.0"/></svg></td></tr>
+<tr><th scope="row">Velo Huber</th><td>5 October 2026</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num"><span class="good">−1</span></td><td><svg class="spark" width="120" height="32" viewBox="0 0 120 32" role="img" aria-label="Affected elements per check: 5, 1, 0"><polyline fill="none" stroke="currentColor" stroke-width="2" points="0.0,2.0 60.0,24.4 120.0,30.0"/></svg></td></tr>
+</tbody>
+</table>
+<p class="note">Automated tests detect only part of all possible barriers.</p>
+</main>
+</body>
+</html>
