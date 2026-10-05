@@ -321,18 +321,20 @@
   }
 
   /* A section: hairline on top, generous air, label column on the left,
-     content column on the right. See components/site/Block.tsx. */
+     content column on the right. See components/site/Block.tsx.
+     Not named .block: that is Tailwind's display utility, and every
+     `className="block"` picked up this padding and rule. */
   /* The rule is drawn at content width, not edge to edge. */
-  .block { padding-bottom: 4.5rem; }
-  .block::before {
+  .section-block { padding-bottom: 4.5rem; }
+  .section-block::before {
     content: "";
     display: block;
     margin: 0 var(--gutter) 4.5rem;
     border-top: 1px solid var(--edge-soft);
   }
   @media (min-width: 768px) {
-    .block { padding-bottom: 6rem; }
-    .block::before { margin-bottom: 6rem; }
+    .section-block { padding-bottom: 6rem; }
+    .section-block::before { margin-bottom: 6rem; }
   }
   .block-head {
     display: grid;

@@ -66,7 +66,7 @@ export function DocsNav({ nav, slug, current }: { nav: Nav; slug: string; curren
 
       <nav
         aria-label={t.navLabel}
-        className="sticky top-28 hidden max-h-[calc(100vh-8rem)] overflow-y-auto pr-2 md:block"
+        className="sticky top-28 hidden max-h-[calc(100vh-8rem)] overflow-y-auto pr-2 [scrollbar-color:var(--edge-soft)_transparent] [scrollbar-width:thin] md:block"
       >
         <PageLinks nav={nav} slug={slug} current={current} />
       </nav>

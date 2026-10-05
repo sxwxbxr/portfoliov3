@@ -38,7 +38,7 @@ export function Block({ label, title, sub, lede, children, aside, id, flush }: B
       ref={ref}
       id={id}
       style={id ? { scrollMarginTop: "6rem" } : undefined}
-      className={flush ? "py-18 md:py-24" : "block"}
+      className={flush ? "py-18 md:py-24" : "section-block"}
     >
       <motion.div
         className="sheet"
