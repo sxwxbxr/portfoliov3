@@ -17,11 +17,11 @@ import {
   toTailwind,
   toTailwindV3,
   toTokens,
-} from "@/lib/demo/gradient"
+} from "@sweberdev/gradient"
 import { gradientDemo } from "@/lib/demo/gradient-copy"
 
 /*
- * Runs the vendored copy of @sweberdev/gradient in the browser. The preview
+ * Runs @sweberdev/gradient in the browser. The preview
  * panels get the generated values as custom properties on their own element,
  * so nothing here changes the colors of the page around it.
  */

@@ -107,6 +107,9 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: 1.1.6
         version: 1.1.6(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      '@sweberdev/gradient':
+        specifier: ^0.1.0
+        version: 0.1.0
       '@vercel/analytics':
         specifier: ^1.5.0
         version: 1.5.0(next@15.2.6(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(react@19.1.2)
@@ -1998,6 +2001,10 @@ packages:
 
   '@swc/helpers@0.5.15':
     resolution: {integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==}
+
+  '@sweberdev/gradient@0.1.0':
+    resolution: {integrity: sha512-at2hvwemwlNv5Qo8VCVhyfrQYtFiURiDZbqSOscbM9d0X3gL+7uuoS2rWwiIYDrhJaislC5MHn16oJmj9p1SOQ==}
+    hasBin: true
 
   '@tailwindcss/node@4.1.9':
     resolution: {integrity: sha512-ZFsgw6lbtcZKYPWvf6zAuCVSuer7UQ2Z5P8BETHcpA4x/3NwOjAIXmRnYfG77F14f9bPeuR4GaNz3ji1JkQMeQ==}
@@ -6039,6 +6046,8 @@ snapshots:
   '@swc/helpers@0.5.15':
     dependencies:
       tslib: 2.8.1
+
+  '@sweberdev/gradient@0.1.0': {}
 
   '@tailwindcss/node@4.1.9':
     dependencies:
