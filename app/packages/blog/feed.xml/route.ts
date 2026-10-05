@@ -1,4 +1,4 @@
-import { blog } from "@/lib/blog"
+import { getArticles } from "@/lib/blog"
 import { renderRss } from "@/lib/blog/rss"
 import { pkgUrl } from "@/lib/packages/urls"
 
@@ -8,11 +8,11 @@ import { pkgUrl } from "@/lib/packages/urls"
 export const dynamic = "force-dynamic"
 
 export async function GET() {
-  const posts = await blog.getPosts()
+  const posts = await getArticles()
   return renderRss({
     title: "Seya Weber Packages: Blog",
     link: pkgUrl("/blog"),
-    description: "Releases, tutorials and notes on the libraries from sweber.dev.",
+    description: "Tutorials and notes on the libraries from sweber.dev.",
     self: pkgUrl("/blog/feed.xml"),
     items: posts.map((p) => ({
       title: p.title,

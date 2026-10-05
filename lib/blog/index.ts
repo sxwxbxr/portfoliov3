@@ -1,8 +1,9 @@
 import { createDbSource } from "./db"
 import { createLocalSource } from "./local"
-import { createSchulzMediaSource } from "./schulz-media"
+import { createSchulzMediaSource, getExternalArticles } from "./schulz-media"
 import type { BlogSource, Post, PostQuery } from "./types"
 
+export { getExternalArticles }
 export type { BlogSource, Post, PostQuery, PostType } from "./types"
 
 /**
@@ -63,18 +64,33 @@ function createSource(): BlogSource {
 
 export const blog: BlogSource = createSource()
 
+/** Latest articles of a package; release notes come from getReleaseNotesForPackage. */
 export async function getPostsForPackage(slug: string, limit = 3): Promise<Post[]> {
-  return (await blog.getPosts({ package: slug })).slice(0, limit)
+  return (await blog.getPosts({ package: slug })).filter((p) => p.type !== "release").slice(0, limit)
 }
 
-/** Posts sharing a package or tag with `post`, best overlap first, newest as tiebreak. */
+/** Articles (news and tutorials), no release notes. */
+export async function getArticles(query: Omit<PostQuery, "type"> = {}): Promise<Post[]> {
+  return (await blog.getPosts(query)).filter((p) => p.type !== "release")
+}
+
+export async function getReleaseNotes(query: Omit<PostQuery, "type"> = {}): Promise<Post[]> {
+  return blog.getPosts({ ...query, type: "release" })
+}
+
+/** Latest release notes of a package. */
+export async function getReleaseNotesForPackage(slug: string, limit = 3): Promise<Post[]> {
+  return (await blog.getPosts({ package: slug, type: "release" })).slice(0, limit)
+}
+
+/** Posts sharing a package or tag with `post`, best overlap first, newest as tiebreak. Releases only relate to releases. */
 export async function getRelatedPosts(post: Post, limit = 3): Promise<Post[]> {
   const score = (p: Post) =>
     p.packages.filter((x) => post.packages.includes(x)).length * 2 +
     p.tags.filter((x) => post.tags.includes(x)).length
 
   return (await blog.getPosts())
-    .filter((p) => p.slug !== post.slug)
+    .filter((p) => p.slug !== post.slug && (p.type === "release") === (post.type === "release"))
     .map((p) => ({ p, s: score(p) }))
     .filter(({ s }) => s > 0)
     .sort((a, b) => b.s - a.s || b.p.publishedAt.localeCompare(a.p.publishedAt))

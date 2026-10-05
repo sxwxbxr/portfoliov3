@@ -16,6 +16,7 @@ const PACKAGE_FILES = new Set([
   "/sitemap.xml",
   "/blog/feed.xml",
   "/blog/posts.json",
+  "/releasenotes/feed.xml",
 ])
 
 /**

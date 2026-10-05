@@ -3,8 +3,9 @@ import { eq } from "drizzle-orm"
 import { db } from "@/lib/db"
 import { packagePosts } from "@/lib/schema"
 import { describeIssues } from "@/lib/blog/input"
-import { guardIngest, ingestInput, INGEST_SOURCE, publicUrl } from "@/lib/blog/ingest"
+import { guardIngest, ingestInput, INGEST_SOURCE, publicUrl, withInferredType } from "@/lib/blog/ingest"
 import { revalidatePackagePosts } from "@/lib/blog/revalidate"
+import type { PostType } from "@/lib/blog/types"
 
 export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
@@ -37,14 +38,14 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) {
     return NextResponse.json({ error: describeIssues(parsed.error) }, { status: 400 })
   }
-  const { externalId, ...fields } = parsed.data
+  const { externalId, ...input } = parsed.data
 
   // The slug is the public URL, so it must not belong to a different post,
   // whether that one was written in the admin or delivered under another ID.
-  const [bySlug] = await db.select().from(packagePosts).where(eq(packagePosts.slug, fields.slug))
+  const [bySlug] = await db.select().from(packagePosts).where(eq(packagePosts.slug, input.slug))
   if (bySlug && bySlug.externalId !== externalId) {
     return NextResponse.json(
-      { error: `slug "${fields.slug}" is already used by another post` },
+      { error: `slug "${input.slug}" is already used by another post` },
       { status: 409 }
     )
   }
@@ -53,6 +54,12 @@ export async function POST(req: NextRequest) {
     .select()
     .from(packagePosts)
     .where(eq(packagePosts.externalId, externalId))
+
+  // A re-delivery without `type` keeps the stored one, so a type corrected in
+  // the admin is not overwritten by inference.
+  const fields = withInferredType(
+    existing && !input.type ? { ...input, type: existing.type as PostType } : input
+  )
 
   const [row] = existing
     ? await db

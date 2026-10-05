@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { redirect } from "next/navigation"
 import { Rss } from "lucide-react"
 import PageLayout, { Section } from "@/components/PageLayout"
 import { blog } from "@/lib/blog"
@@ -12,7 +13,8 @@ import { PostCard } from "./PostCard"
 export const revalidate = 60
 
 const PAGE_SIZE = 10
-const TYPES: PostType[] = ["news", "tutorial", "release"]
+/** Release notes have their own page (/releasenotes). */
+const TYPES: PostType[] = ["news", "tutorial"]
 
 export const metadata: Metadata = {
   title: copy.pkgBlog.title,
@@ -56,9 +58,14 @@ export default async function BlogIndex({
   const sp = await searchParams
   const packages = getPackages()
   const pkg = packages.some((p) => p.slug === sp.package) ? sp.package : undefined
+  if (sp.type === "release") {
+    redirect(pkgPath("/releasenotes") + (pkg ? `?package=${pkg}` : ""))
+  }
   const type = TYPES.find((t) => t === sp.type)
 
-  const all = await blog.getPosts({ package: pkg, type })
+  const all = type
+    ? await blog.getPosts({ package: pkg, type })
+    : (await blog.getPosts({ package: pkg })).filter((p) => p.type !== "release")
   const pages = Math.max(1, Math.ceil(all.length / PAGE_SIZE))
   const page = Math.min(Math.max(1, parseInt(sp.page ?? "1", 10) || 1), pages)
   const posts = all.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
@@ -69,12 +76,18 @@ export default async function BlogIndex({
         <Section className="flex flex-col gap-4">
           <div className="flex flex-wrap items-center gap-2">
             <span className="annotate mr-1">{copy.pkgBlog.filterType}</span>
-            <Chip href={listHref({ package: pkg })} active={!type}>{copy.pkgBlog.all}</Chip>
+            <Chip href={listHref({ package: pkg })} active={!type}>{copy.pkgBlog.allArticles}</Chip>
             {TYPES.map((t) => (
               <Chip key={t} href={listHref({ package: pkg, type: t })} active={type === t}>
                 {copy.pkgBlog.types[t]}
               </Chip>
             ))}
+            <Link
+              href={pkgPath("/releasenotes") + (pkg ? `?package=${pkg}` : "")}
+              className="annotate ml-1 transition-colors duration-150 hover:text-fg"
+            >
+              {copy.pkgBlog.releaseNotesLink} →
+            </Link>
           </div>
           {packages.length > 1 && (
             <div className="flex flex-wrap items-center gap-2">
