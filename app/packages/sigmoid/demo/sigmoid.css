@@ -1,0 +1,57 @@
+/* @sweberdev/sigmoid: scroll-driven motion without JavaScript.
+   Elements animate natively where the browser supports CSS scroll timelines.
+   Call init() from @sweberdev/sigmoid to cover the other browsers. */
+
+:root {
+  --sigmoid-ease-linear: linear;
+  --sigmoid-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --sigmoid-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --sigmoid-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --sigmoid-ease-sigmoid: linear(0, 0.0114 10%, 0.0195 13.75%, 0.031 17.5%, 0.0452 20.83%, 0.0617 23.75%, 0.0828 26.67%, 0.1054 29.17%, 0.138 32.08%, 0.1719 34.58%, 0.2117 37.08%, 0.2576 39.58%, 0.3093 42.08%, 0.366 44.58%, 0.6041 54.17%, 0.6534 56.25%, 0.6997 58.33%, 0.7505 60.83%, 0.7883 62.92%, 0.8219 65%, 0.8567 67.5%, 0.8903 70.42%, 0.9172 73.33%, 0.9409 76.67%, 0.9606 80.42%, 0.9746 84.17%, 0.9862 88.75%, 0.9942 93.75%, 1);
+  --sigmoid-ease-smooth: linear(0, 0.0028 0.83%, 0.0163 2.08%, 0.0387 3.33%, 0.0789 5%, 0.1145 6.25%, 0.1667 7.92%, 0.3625 13.75%, 0.4553 16.67%, 0.5047 18.33%, 0.5511 20%, 0.5943 21.67%, 0.6344 23.33%, 0.6712 25%, 0.705 26.67%, 0.7639 30%, 0.7893 31.67%, 0.8177 33.75%, 0.8602 37.5%, 0.8797 39.58%, 0.8998 42.08%, 0.9309 47.08%, 0.9542 52.5%, 0.9717 58.75%, 0.9833 65.42%, 0.9914 73.75%, 0.996 83.33%, 1);
+  --sigmoid-ease-bouncy: linear(0, 0.0009 0.42%, 0.0078 1.25%, 0.0293 2.5%, 0.062 3.75%, 0.0888 4.58%, 0.1189 5.42%, 0.1689 6.67%, 0.2232 7.92%, 0.4754 13.33%, 0.5859 15.83%, 0.6539 17.5%, 0.7013 18.75%, 0.7455 20%, 0.7862 21.25%, 0.8234 22.5%, 0.8571 23.75%, 0.8875 25%, 0.9229 26.67%, 0.9656 29.17%, 0.9828 30.42%, 1.0017 32.08%, 1.0226 34.58%, 1.0359 37.08%, 1.0439 40%, 1.046 42.92%, 1.0409 47.92%, 1.0121 62.5%, 1.0027 70.42%, 0.998 82.08%, 1);
+  --sigmoid-ease-wobbly: linear(0, 0.002 0.42%, 0.0077 0.83%, 0.0171 1.25%, 0.0297 1.67%, 0.0455 2.08%, 0.0853 2.92%, 0.109 3.33%, 0.1626 4.17%, 0.2231 5%, 0.3233 6.25%, 0.6109 9.58%, 0.7482 11.25%, 0.8121 12.08%, 0.8719 12.92%, 0.9272 13.75%, 0.9776 14.58%, 1.023 15.42%, 1.0631 16.25%, 1.0979 17.08%, 1.1275 17.92%, 1.1519 18.75%, 1.1714 19.58%, 1.1862 20.42%, 1.1965 21.25%, 1.2028 22.08%, 1.2052 23.33%, 1.2005 24.58%, 1.1898 25.83%, 1.1745 27.08%, 1.1559 28.33%, 1.0547 34.17%, 1.0119 37.08%, 0.9929 38.75%, 0.9781 40.42%, 0.9676 42.08%, 0.96 44.17%, 0.9578 46.25%, 0.9606 48.75%, 0.9971 60%, 1.0035 62.92%, 1.0076 66.25%, 1.0082 71.67%, 0.9987 87.92%, 1);
+}
+
+@keyframes sigmoid-fade-in { from { opacity: 0; } }
+@keyframes sigmoid-fade-up { from { opacity: 0; transform: translateY(var(--sigmoid-distance, 24px)); } }
+@keyframes sigmoid-fade-down { from { opacity: 0; transform: translateY(calc(-1 * var(--sigmoid-distance, 24px))); } }
+@keyframes sigmoid-slide-left { from { opacity: 0; transform: translateX(var(--sigmoid-distance, 24px)); } }
+@keyframes sigmoid-slide-right { from { opacity: 0; transform: translateX(calc(-1 * var(--sigmoid-distance, 24px))); } }
+@keyframes sigmoid-scale-in { from { opacity: 0; transform: scale(0.94); } }
+@keyframes sigmoid-blur-in { from { opacity: 0; filter: blur(8px); } }
+@keyframes sigmoid-clip-up { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes sigmoid-parallax {
+  from { transform: translateY(calc(var(--sigmoid-parallax, 60) * 1px)); }
+  to { transform: translateY(calc(var(--sigmoid-parallax, 60) * -1px)); }
+}
+@keyframes sigmoid-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-sigmoid] {
+      animation: var(--sigmoid-keyframes, none) both;
+      animation-timing-function: var(--sigmoid-easing, var(--sigmoid-ease-out));
+      animation-timeline: view();
+      animation-range: var(--sigmoid-range, entry 0% cover 40%);
+    }
+  [data-sigmoid="fade-in"] { --sigmoid-keyframes: sigmoid-fade-in; }
+  [data-sigmoid="fade-up"] { --sigmoid-keyframes: sigmoid-fade-up; }
+  [data-sigmoid="fade-down"] { --sigmoid-keyframes: sigmoid-fade-down; }
+  [data-sigmoid="slide-left"] { --sigmoid-keyframes: sigmoid-slide-left; }
+  [data-sigmoid="slide-right"] { --sigmoid-keyframes: sigmoid-slide-right; }
+  [data-sigmoid="scale-in"] { --sigmoid-keyframes: sigmoid-scale-in; }
+  [data-sigmoid="blur-in"] { --sigmoid-keyframes: sigmoid-blur-in; }
+  [data-sigmoid="clip-up"] { --sigmoid-keyframes: sigmoid-clip-up; }
+    [data-sigmoid="parallax"] {
+      --sigmoid-keyframes: sigmoid-parallax;
+      animation-timing-function: linear;
+      animation-range: cover;
+    }
+  }
+  [data-sigmoid="progress"] {
+    transform-origin: 0 50%;
+    animation: sigmoid-progress linear both;
+    animation-timeline: scroll(root block);
+  }
+}

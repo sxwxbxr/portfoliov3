@@ -1,0 +1,85 @@
+// Copy of the Sigmoid live demo (/sigmoid/demo). Kept next to the demo so
+// parallel package launches do not all edit lib/copy.ts.
+export const sigmoidDemo = {
+  seoTitle: "Sigmoid live demo: scroll-driven animations, springs and the S-curve",
+  description:
+    "Tune a spring and watch it turn into CSS linear(), scroll through eight reveal presets on native CSS scroll timelines, and compare them with the JavaScript fallback.",
+  title: "Sigmoid",
+  titleSub: "Live demo. Scroll, tune, compare.",
+  overview: "Sigmoid overview",
+  intro:
+    "Everything on this page that moves while you scroll is driven by @sweberdev/sigmoid. In browsers with CSS scroll-driven animations the browser does the work, without a script per frame. The thin bar at the top of the window is a data-sigmoid attribute, nothing else.",
+  jump: "Jump to",
+  jumpLinks: [
+    { href: "#curves", label: "Curves" },
+    { href: "#reveal", label: "Reveal" },
+    { href: "#parallax", label: "Parallax and scrub" },
+    { href: "#zero-js", label: "Zero JavaScript" },
+  ],
+  docs: "Read the docs",
+  path: {
+    label: "Your browser",
+    native: "runs scroll timelines natively. No JavaScript per frame.",
+    fallback: "has no scroll timelines yet. Sigmoid uses its JavaScript fallback, with the same result.",
+    reduced: "Reduced motion is on: reveals and parallax are skipped and the content is shown as it is.",
+  },
+  curves: {
+    label: "Curves",
+    title: "Easing you can use in CSS.",
+    sub: "Springs, the S-curve and Bézier curves as one object.",
+    lede:
+      "Pick a curve and move the sliders. Sigmoid solves the spring, samples it and keeps only the points that matter, so the curve fits into a short CSS linear() value. Press play to run it as a plain CSS transition.",
+    kinds: { spring: "Spring", logistic: "S-curve", bezier: "Bézier" },
+    kindLabel: "Curve",
+    bounce: "Bounce",
+    duration: "Duration",
+    steepness: "Steepness",
+    bezierPreset: "Preset",
+    play: "Play",
+    plotLabel: (name: string) => `Plot of the ${name} curve from 0 to 1`,
+    stops: (n: number) => `${n} stops`,
+    rest: (ms: number) => `at rest after ${ms} ms`,
+    cssHeading: "CSS",
+    jsHeading: "JavaScript",
+  },
+  reveal: {
+    label: "Reveal",
+    title: "Eight presets, one function.",
+    sub: "Scroll down slowly and watch them arrive.",
+    lede:
+      "Each card is revealed with reveal() over the range entry 0% to cover 40%: the animation starts when the card enters the window and ends when it has covered 40% of its way through. Change the curve or force the JavaScript fallback to compare: both paths compute the same progress.",
+    easing: "Curve",
+    fallback: "Force JavaScript fallback",
+    runningNative: "Running on a native view timeline",
+    runningFallback: "Running on the JavaScript fallback",
+    codeHeading: "The code for one card",
+  },
+  parallax: {
+    label: "Parallax and scrub",
+    title: "Depth without layout work.",
+    sub: "Three layers, three distances, one transform each.",
+    lede:
+      "The squares move against the scroll by 20, 60 and 120 pixels while they cross the window. The ring is linked to the scroll position of the whole page with scrub(): it turns once from top to bottom.",
+    codeHeading: "parallax() and scrub()",
+  },
+  zeroJs: {
+    label: "Zero JavaScript",
+    title: "Only an attribute.",
+    sub: "Works in Server Components and plain HTML.",
+    lede:
+      "These lines are animated by sigmoid.css alone. Custom properties tune the range, the curve and the distance. In browsers without scroll timelines, one call to init() starts the fallback; elsewhere it does nothing.",
+    lines: [
+      "fade-up with the default curve",
+      "slide-left with the bouncy spring",
+      "blur-in over a longer range",
+      "clip-up with the S-curve",
+    ],
+    codeHeading: "The markup of these lines",
+  },
+  closing: {
+    label: "Get started",
+    title: "MIT licensed.",
+    sub: "Free for every project.",
+    lede: "Install the package, add the stylesheet, and mark your first element. The docs cover the API, the curves, React and reduced motion.",
+  },
+}
