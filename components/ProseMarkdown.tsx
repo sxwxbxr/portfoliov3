@@ -1,3 +1,4 @@
+import type { Components } from "react-markdown"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 
@@ -38,9 +39,12 @@ export const PROSE = [
 export function ProseMarkdown({
   children,
   className = "measure",
+  components,
 }: {
   children: string
   className?: string
+  /** Element overrides merged over the defaults, e.g. heading anchors. */
+  components?: Components
 }) {
   return (
     <div className={`${PROSE} ${className}`}>
@@ -54,6 +58,7 @@ export function ProseMarkdown({
               <table {...props} />
             </div>
           ),
+          ...components,
         }}
       >
         {children}
