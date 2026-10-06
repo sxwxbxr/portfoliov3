@@ -154,7 +154,7 @@
   ],
   "pro": {
     "name": "Lagrangian Pro",
-    "availability": "coming-soon",
+    "availability": "available",
     "packages": [
       {
         "name": "@weber-development/lagrangian-pro",
@@ -180,7 +180,10 @@
         "yearly": 120,
         "seats": 1,
         "support": false,
-        "checkout": {}
+        "checkout": {
+          "monthly": "https://buy.polar.sh/polar_cl_YViAYxp2ZZ0HRyw0qyp91jxHINaQSjjxL8ogb0A4QsK",
+          "yearly": "https://buy.polar.sh/polar_cl_8rTdmveSzBgJPWn0fJfrghvKMLHFdwb1NRWvL1CndcI"
+        }
       },
       {
         "id": "agency",
@@ -191,7 +194,10 @@
         "seats": 10,
         "support": true,
         "highlighted": true,
-        "checkout": {}
+        "checkout": {
+          "monthly": "https://buy.polar.sh/polar_cl_nie12NnR4AUBX5OvUtKxfGkBa4juANuRDHrYE13XPty",
+          "yearly": "https://buy.polar.sh/polar_cl_jOsAEqZ7AA9xQJG8RIwCWkSipAliCMtvD8dNL4B6on9"
+        }
       },
       {
         "id": "lifetime",
@@ -200,7 +206,9 @@
         "oneTime": 1290,
         "seats": 10,
         "support": true,
-        "checkout": {}
+        "checkout": {
+          "oneTime": "https://buy.polar.sh/polar_cl_OqDhUqNxmMWU6pSsLC1bOR1Z4IEPEu4QP7pcA3Ch2o9"
+        }
       }
     ],
     "notes": [
