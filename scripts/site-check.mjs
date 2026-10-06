@@ -44,7 +44,7 @@ while (queue.length) {
     if (!ct.includes("html")) return
     const html = await r.text()
     pages.set(u, html)
-    const text = html.replace(/<script[\s\S]*?<\/script>/g, "").replace(/<style[\s\S]*?<\/style>/g, "").replace(/<[^>]+>/g, " ")
+    const text = html.replace(/<pre[\s\S]*?<\/pre>/g, "").replace(/<code[\s\S]*?<\/code>/g, "").replace(/<script[\s\S]*?<\/script>/g, "").replace(/<style[\s\S]*?<\/style>/g, "").replace(/<[^>]+>/g, " ")
     for (const re of BAD_TEXT) if (re.test(text)) problems.push(`Text ${re} auf ${u}`)
     if (!/<title>[^<]{3,}/.test(html)) problems.push(`kein Title: ${u}`)
     for (const m of html.matchAll(/href="([^"#]+)(?:#[^"]*)?"/g)) {
@@ -60,7 +60,7 @@ while (queue.length) {
 
 console.log(`\nexterne Links: ${externalLinks.size}`)
 const ext = [...externalLinks.entries()]
-const SKIP = /linkedin\.com|twitter\.com|x\.com|instagram\.com|tiktok\.com|threads\.net/
+const SKIP = /npmjs\.com\/package|127\.0\.0\.1|twint\.ch|eur-lex|github\.com\/[^/]+\/[^/]+\/(edit|blob)|linkedin\.com|twitter\.com|x\.com|instagram\.com|tiktok\.com|threads\.net/
 while (ext.length) {
   const batch = ext.splice(0, 8)
   await Promise.all(batch.map(async ([u, from]) => {
@@ -73,6 +73,37 @@ while (ext.length) {
   }))
 }
 
+// checkout links from the content files: each must be on its page and answer 200
+import { readFileSync, readdirSync } from "node:fs"
+const checkoutByPage = new Map()
+for (const f of readdirSync("content/packages")) {
+  const d = JSON.parse(readFileSync(`content/packages/${f}`, "utf8"))
+  const links = []
+  for (const t of d.pricing?.tiers ?? []) links.push(...Object.values(t.checkout ?? {}))
+  checkoutByPage.set(`${ORIGIN}/${d.slug}`, links)
+  for (const n of d.npm ?? []) {
+    const r = await get(`https://registry.npmjs.org/${n}`, { redirect: "follow" })
+    const j = r.status === 200 ? await r.json() : null
+    const v = j?.["dist-tags"]?.latest
+    console.log(`npm ${n}: ${r.status} ${v ?? "-"}`)
+    if (!v) problems.push(`npm ${n} nicht gefunden (${r.status})`)
+  }
+}
+for (const f of readdirSync("content/bundles")) {
+  const d = JSON.parse(readFileSync(`content/bundles/${f}`, "utf8"))
+  const links = []
+  for (const t of d.pricing?.tiers ?? []) links.push(...Object.values(t.checkout ?? {}))
+  checkoutByPage.set(`${ORIGIN}/bundles/${f.replace(".json", "")}`, links)
+}
+for (const [page, links] of checkoutByPage) {
+  const html = pages.get(page) ?? ""
+  for (const l of links) {
+    if (!html.includes(l)) problems.push(`Checkout-Link fehlt auf ${page}: ${l}`)
+    const r = await get(l, { redirect: "follow" })
+    console.log(`checkout ${r.status} ${l} (${page})`)
+    if (r.status !== 200) problems.push(`Checkout ${r.status} ${l} (${page})`)
+  }
+}
 // every Pro package page must carry checkout links
 const polar = [...pages.entries()].filter(([, h]) => /polar\.sh\/checkout|buy\.polar\.sh|polar_cl_/.test(h)).map(([u]) => u)
 console.log(`\nSeiten mit Polar-Checkout-Link: ${polar.length}`)
