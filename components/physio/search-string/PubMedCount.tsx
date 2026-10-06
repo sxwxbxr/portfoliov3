@@ -102,13 +102,14 @@ export function PubMedCount({
       : ""
 
   return (
-    <section aria-labelledby="ss-pubmed" className="flex flex-col gap-4">
+    <section aria-labelledby="ss-pubmed" className="flex flex-col gap-3 border-t border-edge-soft pt-6">
       <div className="flex flex-col gap-1">
-        <h3 id="ss-pubmed" className="text-xl tracking-tight">
+        <h3 id="ss-pubmed" className="text-lg tracking-tight">
           {t.heading}
         </h3>
-        <p className="measure text-sm leading-relaxed text-fg-muted">{t.hint}</p>
-        <p className="measure text-sm leading-relaxed text-fg-muted">{t.privacy}</p>
+        <p className="measure text-xs leading-relaxed text-fg-muted">
+          {t.hint} {t.privacy}
+        </p>
       </div>
 
       <div className="flex flex-wrap items-center gap-2.5">

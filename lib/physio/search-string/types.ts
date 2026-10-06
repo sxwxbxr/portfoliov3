@@ -118,6 +118,11 @@ export interface SearchModel {
   includedBlocks: Record<Block, boolean>
   /** Databases the result is written for. Missing means PubMed only. */
   databases?: DatabaseId[]
+  /**
+   * Databases written without subject headings (free text only). Only CINAHL and Embase read this:
+   * their headings are suggestions derived from MeSH (see BuiltQuery.vocabulary), and the person may leave them out.
+   */
+  headingsOff?: DatabaseId[]
 }
 
 export interface PicoInput {
@@ -189,6 +194,35 @@ export interface BuiltComponent {
   parts?: string[]
   /** The MeSH headings in the database's syntax, same order as `schlagworte`. */
   meshSyntax?: string[]
+  /**
+   * CINAHL and Embase: the same headings with their origin. Every entry is a suggestion derived from the
+   * concept's MeSH heading, never a claim that the heading exists in CINAHL Headings or Emtree.
+   */
+  headings?: BuiltHeading[]
+}
+
+/** One subject-heading suggestion in a built component (CINAHL, Embase). */
+export interface BuiltHeading {
+  /** The MeSH heading it was derived from. */
+  source: string
+  /** The finished heading in the database's syntax, e.g. `(MH "Low Back Pain+")` or `'low back pain'/exp`. */
+  syntax: string
+  explode: boolean
+  /** Always true for CINAHL and Embase: the heading is derived from MeSH and has to be checked in the database's thesaurus. */
+  suggested: boolean
+}
+
+/** Which controlled vocabulary the headings of a built query come from. Only set for CINAHL and Embase. */
+export interface VocabularyInfo {
+  id: "cinahl-headings" | "emtree"
+  /** "CINAHL Headings" or "Emtree". */
+  label: string
+  /** True: the headings are suggestions derived from MeSH. */
+  suggested: boolean
+  /** False when the person switched the headings off for this database (free text only). */
+  included: boolean
+  /** German hint to show next to the headings. */
+  note: string
 }
 
 /** One line of a Search Manager strategy (Cochrane Library). */
@@ -201,6 +235,10 @@ export interface StrategyLine {
   /** German description: the Suchkomponente or what the line combines. */
   label: string
   conceptId?: string
+  /** How the line is referred to: "S" for CINAHL (S1), default "#" (Cochrane #1, Embase #1). */
+  prefix?: string
+  /** CINAHL and Embase: this line is a subject-heading suggestion (derived from MeSH). */
+  suggested?: boolean
 }
 
 export interface BuiltQuery {
@@ -214,10 +252,16 @@ export interface BuiltQuery {
   lines?: StrategyLine[]
   /** Filters the string cannot express; the person sets them in the database's interface. */
   limitNotes?: string[]
+  /** CINAHL and Embase: the controlled vocabulary of the headings and whether they are suggestions. */
+  vocabulary?: VocabularyInfo
+  /** CINAHL and Embase: the platform the syntax is written for ("EBSCOhost", "embase.com (Elsevier)"). */
+  platform?: string
+  /** CINAHL and Embase: short German notes on entering the string on that platform. */
+  platformNotes?: string[]
 }
 
 /** Which syntax the linter checks. "auto" detects it from the field syntax. */
-export type LintDatabase = "pubmed" | "cochrane" | "auto"
+export type LintDatabase = "pubmed" | "cochrane" | "cinahl" | "embase" | "auto"
 
 export type LintSeverity = "error" | "warning" | "info"
 

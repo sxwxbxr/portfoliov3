@@ -10,7 +10,10 @@
  * wildcard, quotes or a field tag for phrases with a wildcard.
  */
 import { applyEdits, genericLevel, levenshtein, wrapOrRuns } from "./lint-shared"
-import { detectLintDatabase, lintCochrane } from "./lint-cochrane"
+import { detectLintDatabase as detectPubmedOrCochrane, lintCochrane } from "./lint-cochrane"
+import { detectLintDatabase } from "./detect"
+import { lintCinahl } from "./lint-cinahl"
+import { lintEmbase } from "./lint-embase"
 import { convertLineToPubmed } from "./convert"
 import { PUBMED_MIN_STEM, stemLength } from "./profiles"
 import type { Edit, LintDatabase, LintFinding, LintFix, LintSeverity, Range } from "./types"
@@ -521,7 +524,7 @@ function walk(items: Item[], ctx: Ctx, agg: Aggregates, closed: boolean, range: 
 /* ── Public API ─────────────────────────────────────────────────── */
 
 export interface LintOptions {
-  /** Which syntax to check. Default "auto": detected from the field syntax ([mh …] and :ti,ab,kw mean Cochrane). */
+  /** Which syntax to check. Default "auto": detected from the field syntax ([mh …] and :ti,ab,kw mean Cochrane, (MH "…") CINAHL, 'x'/exp Embase). */
   database?: LintDatabase
 }
 
@@ -545,8 +548,10 @@ export function lintQuery(src: string, opts: LintOptions = {}): LintFinding[] {
   const chosen = opts.database ?? "auto"
   const target = chosen === "auto" ? detectLintDatabase(src) : chosen
   if (target === "cochrane") return lintCochrane(src)
+  if (target === "cinahl") return lintCinahl(src)
+  if (target === "embase") return lintEmbase(src)
   const findings = lintPubmed(src)
-  if (chosen === "pubmed" && src.trim() && detectLintDatabase(src) === "cochrane") {
+  if (chosen === "pubmed" && src.trim() && detectPubmedOrCochrane(src) === "cochrane") {
     const m = /\[\s*mh\s*[\s^"“”„«»‟/][^\]]*\]|[\w)"*?]:(?:ti|ab|kw)\b[,\w]*/i.exec(src)
     if (m) {
       const converted = convertLineToPubmed(src)

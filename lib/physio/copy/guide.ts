@@ -58,7 +58,7 @@ export const guideCopy = {
         title: "Fall lesen",
         body: [
           "Lies den Fall zuerst selbst und markiere, was für die Suche zählt: Wer ist die Person, was fehlt ihr, was soll sich ändern?",
-          "Das Tool liest mit und zeigt dir unten, was es erkannt hat. Stimmt etwas nicht, ändere den Text oder korrigiere die Komponenten später.",
+          "Das Tool liest mit und zeigt dir im Ergebnis, was es erkannt hat. Stimmt etwas nicht, ändere den Text oder korrigiere die Komponenten später.",
         ],
         actionDemo: "Der Fall von Herrn Müller ist geladen. Lies ihn und vergleiche ihn mit der Liste. Bei «Beispiel laden» wählst du einen anderen Fall.",
         actionFull: "Füge deinen Fall (oder das ganze Aufgabenblatt) bei «Deine Fragestellung» ein und klick auf «Suchstring erstellen».",
@@ -77,7 +77,7 @@ export const guideCopy = {
           "Kriterien legen vorher fest, welche Studien du behältst und welche nicht. Jedes braucht eine kurze Begründung.",
           "Einige kannst du schon in der Suche als Filter setzen, zum Beispiel Studientyp, Sprache und Zeitraum. Die meisten wendest du erst beim Screening an, wenn du Titel und Abstracts liest.",
         ],
-        action: "Behalte, ändere oder streiche jedes Kriterium. Die Filter stellst du im Bereich «Datenbank und Filter» ein.",
+        action: "Behalte, ändere oder streiche jedes Kriterium. Die Filter stellst du unter «Anpassen» im Bereich «Filter» ein.",
       },
       components: {
         title: "Suchkomponenten festlegen",

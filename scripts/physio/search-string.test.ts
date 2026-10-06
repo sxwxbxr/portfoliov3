@@ -1111,12 +1111,12 @@ const notInfo = (findings: LintFinding[]) => findings.filter((f) => f.severity !
 const errorsOf = (findings: LintFinding[]) => findings.filter((f) => f.severity === "error")
 
 describe("Cochrane: profile", () => {
-  it("is available, CINAHL and Embase are not", () => {
+  it("is available together with CINAHL and Embase", () => {
     const by = Object.fromEntries(DATABASES.map((d) => [d.id, d.available]))
     assert.equal(by.pubmed, true)
     assert.equal(by.cochrane, true)
-    assert.equal(by.cinahl, false)
-    assert.equal(by.embase, false)
+    assert.equal(by.cinahl, true)
+    assert.equal(by.embase, true)
   })
 
   it("selects PubMed by default and keeps at least one database", () => {
@@ -1127,7 +1127,8 @@ describe("Cochrane: profile", () => {
     const onlyCochrane = toggleDatabase(both, "pubmed")
     assert.deepEqual(selectedDatabases(onlyCochrane), ["cochrane"])
     assert.deepEqual(selectedDatabases(toggleDatabase(onlyCochrane, "cochrane")), ["cochrane"])
-    assert.deepEqual(selectedDatabases({ ...m, databases: ["cinahl"] }), ["pubmed"])
+    assert.deepEqual(selectedDatabases({ ...m, databases: ["cinahl"] }), ["cinahl"])
+    assert.deepEqual(selectedDatabases({ ...m, databases: ["embase", "pubmed", "cinahl"] }), ["pubmed", "cinahl", "embase"])
     assert.deepEqual(selectedDatabases({ ...m, databases: undefined }), ["pubmed"])
   })
 })
@@ -1499,5 +1500,835 @@ describe("Cochrane: exports", () => {
 
   it("exposes the field code used", () => {
     assert.equal(COCHRANE_FIELDS, ":ti,ab,kw")
+  })
+})
+
+/* ── CINAHL (EBSCOhost) and Embase (embase.com) ──────────────────────────────── */
+
+import {
+  CINAHL_SOURCES,
+  EMBASE_SOURCES,
+  cinahlMesh,
+  convertToCinahl,
+  convertToEmbase,
+  embaseMesh,
+  emtreeSuggestion,
+  headingsEnabled,
+  lintCinahl,
+  lintEmbase,
+  setHeadings,
+} from "../../lib/physio/search-string"
+
+const MUELLER_CINAHL = '(TI ("office worker*" OR "desk worker*" OR "sedentary worker*" OR "white-collar worker*" OR "computer worker*" OR "clerical worker*") OR AB ("office worker*" OR "desk worker*" OR "sedentary worker*" OR "white-collar worker*" OR "computer worker*" OR "clerical worker*")) AND ((MH "Low Back Pain+") OR TI ("low back pain" OR "lower back pain" OR "lumbar pain" OR lumbago OR "low backache" OR LBP) OR AB ("low back pain" OR "lower back pain" OR "lumbar pain" OR lumbago OR "low backache" OR LBP)) AND ((MH "Exercise Therapy+") OR TI ("back exercise*" OR "back training" OR "back school" OR "core stability" OR "core stabilization exercise*" OR "core stabilisation exercise*" OR "trunk stabilization" OR "lumbar stabilization exercise*") OR AB ("back exercise*" OR "back training" OR "back school" OR "core stability" OR "core stabilization exercise*" OR "core stabilisation exercise*" OR "trunk stabilization" OR "lumbar stabilization exercise*")) AND ((MH "Work Capacity Evaluation+") OR (MH "Return to Work+") OR (MH "Sick Leave+") OR (MH "Absenteeism+") OR TI ("work ability" OR "ability to work" OR "work capacity" OR "work disability" OR "return to work" OR "sick leave" OR "sickness absence" OR absenteeism OR "work productivity" OR presenteeism) OR AB ("work ability" OR "ability to work" OR "work capacity" OR "work disability" OR "return to work" OR "sick leave" OR "sickness absence" OR absenteeism OR "work productivity" OR presenteeism))'
+
+const MUELLER_EMBASE = "((office NEXT/1 worker*):ti,ab,kw OR (desk NEXT/1 worker*):ti,ab,kw OR (sedentary NEXT/1 worker*):ti,ab,kw OR (white NEXT/1 collar NEXT/1 worker*):ti,ab,kw OR (computer NEXT/1 worker*):ti,ab,kw OR (clerical NEXT/1 worker*):ti,ab,kw) AND ('low back pain'/exp OR 'low back pain':ti,ab,kw OR 'lower back pain':ti,ab,kw OR 'lumbar pain':ti,ab,kw OR lumbago:ti,ab,kw OR 'low backache':ti,ab,kw OR LBP:ti,ab,kw) AND ('exercise therapy'/exp OR (back NEXT/1 exercise*):ti,ab,kw OR 'back training':ti,ab,kw OR 'back school':ti,ab,kw OR 'core stability':ti,ab,kw OR (core NEXT/1 stabilization NEXT/1 exercise*):ti,ab,kw OR (core NEXT/1 stabilisation NEXT/1 exercise*):ti,ab,kw OR 'trunk stabilization':ti,ab,kw OR (lumbar NEXT/1 stabilization NEXT/1 exercise*):ti,ab,kw) AND ('work capacity evaluation'/exp OR 'return to work'/exp OR 'sick leave'/exp OR 'absenteeism'/exp OR 'work ability':ti,ab,kw OR 'ability to work':ti,ab,kw OR 'work capacity':ti,ab,kw OR 'work disability':ti,ab,kw OR 'return to work':ti,ab,kw OR 'sick leave':ti,ab,kw OR 'sickness absence':ti,ab,kw OR absenteeism:ti,ab,kw OR 'work productivity':ti,ab,kw OR presenteeism:ti,ab,kw)"
+
+const muellerModel = () => createModel(analyze({ text: MUELLER.text, pico: MUELLER.pico }))
+const stripNotes = (n: BuiltQuery["notices"]) => n.map((x) => x.code)
+const findingCodes = (f: LintFinding[]) => f.map((x) => `${x.severity}:${x.code}`)
+
+describe("CINAHL and Embase: profiles", () => {
+  it("are available, with platform and the heading-suggestion flag", () => {
+    const by = Object.fromEntries(DATABASES.map((d) => [d.id, d]))
+    assert.equal(by.cinahl.available, true)
+    assert.equal(by.embase.available, true)
+    assert.equal(by.cinahl.platform, "EBSCOhost (CINAHL Complete)")
+    assert.equal(by.embase.platform, "embase.com (Elsevier)")
+    assert.equal(by.cinahl.headingSuggestions, true)
+    assert.equal(by.embase.headingSuggestions, true)
+    assert.equal(by.pubmed.headingSuggestions, undefined)
+    assert.equal(by.cochrane.headingSuggestions, undefined)
+    assert.deepEqual(DATABASES.map((d) => d.id), ["pubmed", "cochrane", "cinahl", "embase"])
+  })
+
+  it("documents their sources", () => {
+    assert.ok(CINAHL_SOURCES.length >= 4 && EMBASE_SOURCES.length >= 5)
+    for (const s of [...CINAHL_SOURCES, ...EMBASE_SOURCES]) assert.match(s.url, /^https:\/\//)
+  })
+
+  it("can be selected together with PubMed and Cochrane, in picker order", () => {
+    let m = muellerModel()
+    m = toggleDatabase(toggleDatabase(toggleDatabase(m, "embase"), "cinahl"), "cochrane")
+    assert.deepEqual(selectedDatabases(m), ["pubmed", "cochrane", "cinahl", "embase"])
+  })
+})
+
+describe("CINAHL: rendering", () => {
+  it("writes the Herr Müller example with (MH), TI/AB groups and quotes (exact string)", () => {
+    const built = buildQuery(muellerModel(), "cinahl")
+    assert.equal(built.databaseId, "cinahl")
+    assert.equal(built.query, MUELLER_CINAHL)
+  })
+
+  it("writes the whole Herr Müller case the same way", async () => {
+    const model = createModel(await run(FULL_CASE))
+    assert.equal(buildQuery(model, "cinahl").query, MUELLER_CINAHL)
+  })
+
+  it("follows the verified rules in every example", () => {
+    for (const e of EXAMPLES) {
+      const built = buildQuery(createModel(analyze({ text: e.text, pico: e.pico }), e.filters), "cinahl")
+      const q = built.query
+      assert.ok(balanced(q), e.id)
+      assert.ok(!/\[|\]/.test(q), `${e.id}: no brackets`)
+      assert.ok(!/:ti|:ab|\/exp|\bNEAR|\bNEXT/.test(q), `${e.id}: no Cochrane or Embase syntax`)
+      for (const m of q.matchAll(/\(MH "([^"]*)"\)/g)) assert.ok(/^[^+]+\+$/.test(m[1]), `${e.id}: ${m[0]} explodes by default, + inside the quotes`)
+      for (const m of q.matchAll(/\b(TI|AB) (\([^)]*\)|"[^"]*"|\S+)/g)) assert.ok(m[1] === "TI" || m[1] === "AB")
+      assert.deepEqual(notInfo(lintQuery(q)), [], `${e.id}: lint`)
+      assert.equal(detectLintDatabase(q), "cinahl", `${e.id}: detection`)
+    }
+  })
+
+  it("puts the free-text terms of a component into one TI group and one AB group", () => {
+    const built = buildQuery(muellerModel(), "cinahl")
+    const lbp = built.components.find((c) => c.conceptId === "low-back-pain")!
+    assert.equal(
+      lbp.query,
+      '((MH "Low Back Pain+") OR TI ("low back pain" OR "lower back pain" OR "lumbar pain" OR lumbago OR "low backache" OR LBP) OR AB ("low back pain" OR "lower back pain" OR "lumbar pain" OR lumbago OR "low backache" OR LBP))',
+    )
+    assert.equal(lbp.parts!.length, 3)
+    assert.deepEqual(lbp.stichworte, ["low back pain", "lower back pain", "lumbar pain", "lumbago", "low backache", "LBP"])
+  })
+
+  it("respects the explode toggle: + only for exploded headings", () => {
+    let m = muellerModel()
+    const lbp = m.concepts.find((c) => c.id === "low-back-pain")!
+    assert.ok(buildQuery(m, "cinahl").query.includes('(MH "Low Back Pain+")'))
+    m = toggleExplode(m, lbp.id, "Low Back Pain")
+    const q = buildQuery(m, "cinahl").query
+    assert.ok(q.includes('(MH "Low Back Pain")'))
+    assert.ok(!q.includes('(MH "Low Back Pain+")'))
+    assert.equal(cinahlMesh("Aged", true), '(MH "Aged+")')
+    assert.equal(cinahlMesh("Aged", false), '(MH "Aged")')
+  })
+
+  it("keeps truncation inside quotes and drops stems shorter than three characters", () => {
+    const base = kneeModel()
+    const id = base.concepts[0].id
+    const q = buildQuery(addFreeText(base, id, "white-collar worker*").model, "cinahl").query
+    assert.ok(q.includes('"white-collar worker*"'))
+    const built = buildQuery(addFreeText(base, id, "ab*").model, "cinahl")
+    assert.ok(built.query.includes("ab") && !built.query.includes("ab*"))
+    assert.ok(built.notices.some((n) => n.code === "trunc-dropped" && n.message.includes("CINAHL")))
+  })
+
+  it("quotes words that could be read as operators or contain punctuation", () => {
+    const base = kneeModel()
+    const id = base.concepts[0].id
+    const q = buildQuery(addFreeText(addFreeText(base, id, "N5").model, id, "e-health").model, "cinahl").query
+    assert.ok(q.includes('"N5"') && q.includes('"e-health"'))
+  })
+
+  it("never writes a heading as a claim: only suggestions, marked", () => {
+    const built = buildQuery(muellerModel(), "cinahl")
+    assert.equal(built.vocabulary?.id, "cinahl-headings")
+    assert.equal(built.vocabulary?.label, "CINAHL Headings")
+    assert.equal(built.vocabulary?.suggested, true)
+    assert.equal(built.vocabulary?.included, true)
+    assert.match(built.vocabulary!.note, /im Thesaurus der Datenbank/)
+    const hs = built.components.flatMap((c) => c.headings ?? [])
+    assert.ok(hs.length >= 5)
+    for (const h of hs) {
+      assert.equal(h.suggested, true)
+      assert.match(h.syntax, /^\(MH "[^"]+\+"\)$/)
+    }
+    assert.deepEqual(
+      built.components.map((c) => (c.headings ?? []).length),
+      built.components.map((c) => c.meshSyntax?.length ?? 0),
+    )
+    const note = built.notices.find((n) => n.code === "heading-suggestion")!
+    assert.equal(note.severity, "info")
+    assert.match(note.message, /Schlagwort-Vorschlag aus MeSH/)
+    assert.match(note.message, /CINAHL Headings/)
+  })
+})
+
+describe("Embase: rendering", () => {
+  it("writes the Herr Müller example with /exp, :ti,ab,kw and NEXT/1 (exact string)", () => {
+    const built = buildQuery(muellerModel(), "embase")
+    assert.equal(built.databaseId, "embase")
+    assert.equal(built.query, MUELLER_EMBASE)
+  })
+
+  it("writes the whole Herr Müller case the same way", async () => {
+    const model = createModel(await run(FULL_CASE))
+    assert.equal(buildQuery(model, "embase").query, MUELLER_EMBASE)
+  })
+
+  it("follows the verified rules in every example", () => {
+    for (const e of EXAMPLES) {
+      const built = buildQuery(createModel(analyze({ text: e.text, pico: e.pico }), e.filters), "embase")
+      const q = built.query
+      assert.ok(balanced(q.replace(/"[^"]*"/g, "x").replace(/'[^']*'/g, '"x"')), e.id)
+      assert.ok(!/\[(tiab|Mesh|Majr|mh|pt|dp|la)[\]:]/i.test(q), `${e.id}: no PubMed or Cochrane tags`)
+      assert.ok(!/\(MH |\bTI \(|\bAB \(/.test(q), `${e.id}: no CINAHL syntax`)
+      for (const phrase of q.replace(/"[^"]*"/g, "x").matchAll(/'([^']*)'/g)) assert.ok(!/[*?$]/.test(phrase[1]), `${e.id}: wildcard inside quotes`)
+      for (const m of q.matchAll(/(\([^()]*\)|\S+):ti,ab,kw/g)) assert.ok(!/^\(.*\bNEAR\b/.test(m[1]))
+      assert.ok(!/\bNOT\b/.test(q.replace(/NOT\b\s*\(?\s*\[/, "")) || true)
+      assert.deepEqual(notInfo(lintQuery(q)), [], `${e.id}: lint`)
+      assert.equal(detectLintDatabase(q), "embase", `${e.id}: detection`)
+    }
+  })
+
+  it("parenthesises every OR group, because Embase has no operator precedence", () => {
+    const q = buildQuery(muellerModel(), "embase").query
+    const top = q.replace(/\([^()]*(?:\([^()]*\)[^()]*)*\)/g, "G")
+    assert.equal(top, "G AND G AND G AND G")
+  })
+
+  it("writes Emtree suggestions in natural word order, lower case, in single quotes", () => {
+    assert.equal(embaseMesh("Osteoarthritis, Knee", true), "'knee osteoarthritis'/exp")
+    assert.equal(embaseMesh("Osteoarthritis, Knee", false), "'knee osteoarthritis'/de")
+    assert.equal(embaseMesh("Aged, 80 and over", true), "'aged, 80 and over'/exp")
+    assert.equal(embaseMesh("Exercise Therapy", true), "'exercise therapy'/exp")
+    assert.equal(emtreeSuggestion("Pain, Postoperative"), "postoperative pain")
+    assert.ok(buildQuery(kneeModel(), "embase").query.includes("'knee osteoarthritis'/exp"))
+  })
+
+  it("respects the explode toggle: /exp or /de", () => {
+    let m = kneeModel()
+    const oa = m.concepts.find((c) => c.mesh.some((x) => x.heading === "Osteoarthritis, Knee"))!
+    assert.ok(buildQuery(m, "embase").query.includes("'knee osteoarthritis'/exp"))
+    m = toggleExplode(m, oa.id, "Osteoarthritis, Knee")
+    const q = buildQuery(m, "embase").query
+    assert.ok(q.includes("'knee osteoarthritis'/de"))
+    assert.ok(!q.includes("'knee osteoarthritis'/exp"))
+  })
+
+  it("writes truncated phrases as NEXT/1 chains, hyphens as spaces", () => {
+    const base = kneeModel()
+    const id = base.concepts[0].id
+    const q = buildQuery(addFreeText(base, id, "white-collar worker*").model, "embase").query
+    assert.ok(q.includes("(white NEXT/1 collar NEXT/1 worker*):ti,ab,kw"))
+    assert.ok(!q.includes("white-collar"))
+    assert.ok(buildQuery(addFreeText(base, id, "geriatric*").model, "embase").query.includes("geriatric*:ti,ab,kw"))
+  })
+
+  it("drops a wildcard with fewer than three characters in front and says so", () => {
+    const base = kneeModel()
+    const built = buildQuery(addFreeText(base, base.concepts[0].id, "ab*").model, "embase")
+    assert.ok(built.query.includes("ab:ti,ab,kw"))
+    assert.ok(!built.query.includes("ab*"))
+    assert.ok(built.notices.some((n) => n.code === "trunc-dropped" && n.message.includes("Embase")))
+  })
+
+  it("uses double quotes for a term with an apostrophe", () => {
+    const base = kneeModel()
+    const q = buildQuery(addFreeText(base, base.concepts[0].id, "Baker's cyst").model, "embase").query
+    assert.ok(q.includes(`"Baker's cyst":ti,ab,kw`))
+  })
+
+  it("marks every heading as a suggestion", () => {
+    const built = buildQuery(muellerModel(), "embase")
+    assert.equal(built.vocabulary?.id, "emtree")
+    assert.equal(built.vocabulary?.label, "Emtree")
+    assert.equal(built.vocabulary?.suggested, true)
+    assert.match(built.vocabulary!.note, /kinesiotherapy/)
+    const hs = built.components.flatMap((c) => c.headings ?? [])
+    assert.ok(hs.length >= 5)
+    for (const h of hs) {
+      assert.equal(h.suggested, true)
+      assert.match(h.syntax, /^'[^']+'\/exp$/)
+    }
+    assert.ok(built.notices.some((n) => n.code === "heading-suggestion" && /Emtree/.test(n.message)))
+    assert.ok(built.notices.some((n) => n.code === "embase-platform" && /Ovid/.test(n.message)))
+  })
+})
+
+describe("CINAHL and Embase: headings can be left out", () => {
+  it("writes free text only when the headings are switched off", () => {
+    for (const db of ["cinahl", "embase"] as const) {
+      let m = muellerModel()
+      assert.equal(headingsEnabled(m, db), true)
+      m = setHeadings(m, db, false)
+      assert.equal(headingsEnabled(m, db), false)
+      const built = buildQuery(m, db)
+      assert.ok(!/\(MH |\/exp|\/de/.test(built.query), db)
+      assert.ok(built.components.every((c) => (c.headings ?? []).length === 0 && (c.schlagworte ?? []).length === 0), db)
+      assert.equal(built.vocabulary?.included, false)
+      assert.equal(built.vocabulary?.suggested, true)
+      const codes = stripNotes(built.notices)
+      assert.ok(codes.includes("headings-off"), db)
+      assert.ok(!codes.includes("heading-suggestion"), db)
+      assert.ok(!codes.includes("no-active-mesh"), db)
+      assert.equal(built.components.length, 4)
+      assert.deepEqual(notInfo(lintQuery(built.query)), [], db)
+      assert.ok(built.lines!.every((l) => !l.suggested), db)
+    }
+  })
+
+  it("switches back on and affects only the chosen database", () => {
+    let m = setHeadings(setHeadings(muellerModel(), "cinahl", false), "embase", false)
+    assert.deepEqual(m.headingsOff, ["cinahl", "embase"])
+    m = setHeadings(m, "cinahl", true)
+    assert.deepEqual(m.headingsOff, ["embase"])
+    assert.ok(buildQuery(m, "cinahl").query.includes('(MH "Low Back Pain+")'))
+    assert.ok(!buildQuery(m, "embase").query.includes("/exp"))
+    assert.equal(buildQuery(m, "pubmed").query, buildQuery(muellerModel(), "pubmed").query)
+    assert.equal(buildQuery(m, "cochrane").query, MUELLER_COCHRANE)
+  })
+
+  it("ignores the switch for PubMed and Cochrane, whose MeSH is their own vocabulary", () => {
+    const m = setHeadings(setHeadings(muellerModel(), "pubmed", false), "cochrane", false)
+    assert.equal(m.headingsOff, undefined)
+    assert.equal(headingsEnabled(m, "pubmed"), true)
+    assert.equal(headingsEnabled({ ...m, headingsOff: ["pubmed", "cochrane"] }, "cochrane"), true)
+    assert.ok(buildQuery({ ...m, headingsOff: ["pubmed", "cochrane"] }, "pubmed").query.includes('"Low Back Pain"[Mesh]'))
+    assert.equal(buildQuery({ ...m, headingsOff: ["cochrane"] }, "cochrane").query, MUELLER_COCHRANE)
+  })
+
+  it("keeps a concept that has only headings out of the string when they are off, with a notice", () => {
+    let m = muellerModel()
+    const c = m.concepts.find((x) => x.id === "low-back-pain")!
+    for (const t of c.freeText) m = setFreeTextRemoved(m, c.id, t.text, true)
+    assert.ok(buildQuery(m, "cinahl").query.includes('(MH "Low Back Pain+")'))
+    const off = buildQuery(setHeadings(m, "cinahl", false), "cinahl")
+    assert.ok(!off.components.some((x) => x.conceptId === "low-back-pain"))
+    assert.ok(off.notices.some((n) => n.code === "empty-component" && n.conceptId === "low-back-pain"))
+  })
+})
+
+describe("CINAHL and Embase: line strategy", () => {
+  for (const db of ["cinahl", "embase"] as const) {
+    const ref = db === "cinahl" ? "S" : "#"
+    const refRe = new RegExp(`${ref}(\\d+)`, "g")
+    const built = buildQuery(muellerModel(), db)
+    const lines = built.lines!
+
+    it(`${db}: numbers the lines without gaps and ends with the AND of all components`, () => {
+      assert.deepEqual(lines.map((l) => l.n), lines.map((_, i) => i + 1))
+      const last = lines[lines.length - 1]
+      assert.equal(last.kind, "final")
+      const comps = lines.filter((l) => l.kind === "component")
+      assert.equal(comps.length, 4)
+      assert.equal(last.query, comps.map((l) => `${ref}${l.n}`).join(" AND "))
+    })
+
+    it(`${db}: references only earlier lines, one kind of operator per combination line`, () => {
+      for (const l of lines) {
+        for (const m of l.query.matchAll(refRe)) assert.ok(Number(m[1]) < l.n, `${l.n}: ${l.query}`)
+        if (l.kind === "component" || l.kind === "final") {
+          assert.ok(new RegExp(`^${ref}\\d+( (AND|OR) ${ref}\\d+)+$`).test(l.query), l.query)
+          assert.equal(new Set(l.query.match(/\b(AND|OR)\b/g)).size, 1, l.query)
+        } else {
+          assert.ok(!refRe.test(l.query), l.query)
+          refRe.lastIndex = 0
+        }
+      }
+    })
+
+    it(`${db}: every OR line refers to the lines of its own component`, () => {
+      for (const c of lines.filter((l) => l.kind === "component")) {
+        for (const m of c.query.matchAll(refRe)) {
+          const target = lines[Number(m[1]) - 1]
+          assert.equal(target.kind, "term")
+          assert.equal(target.conceptId, c.conceptId)
+        }
+      }
+    })
+
+    it(`${db}: the numbered text carries the prefix and the linter accepts both texts`, () => {
+      const numbered = strategyText(lines, true)
+      const plain = strategyText(lines, false)
+      assert.ok(numbered.startsWith(`${ref}1 `))
+      assert.equal(plain.split("\n").length, lines.length)
+      assert.deepEqual(notInfo(lintQuery(numbered)), [])
+      assert.deepEqual(errorsOf(lintQuery(plain)), [])
+      assert.equal(detectLintDatabase(numbered), db)
+    })
+
+    it(`${db}: heading lines are marked as suggestions, nothing else is`, () => {
+      const marked = lines.filter((l) => l.suggested)
+      assert.equal(marked.length, built.components.flatMap((c) => c.headings ?? []).length)
+      for (const l of marked) assert.match(l.query, db === "cinahl" ? /^\(MH "/ : /\/exp$/)
+      for (const l of lines.filter((x) => !x.suggested)) assert.ok(!/\(MH |\/exp|\/de$/.test(l.query), l.query)
+    })
+  }
+
+  it("cinahl: one line per heading, one TI line, one AB line, then the OR line", () => {
+    const lines = buildQuery(muellerModel(), "cinahl").lines!
+    assert.equal(lines[0].query.startsWith("TI ("), true)
+    assert.equal(lines[1].query.startsWith("AB ("), true)
+    assert.equal(lines[2].query, "S1 OR S2")
+    assert.equal(lines[3].query, '(MH "Low Back Pain+")')
+    assert.equal(strategyText(lines, true).split("\n")[2], "S3 S1 OR S2")
+    assert.ok(lines.every((l) => l.prefix === "S"))
+  })
+
+  it("embase: every term has its own line, like the Cochrane strategy", () => {
+    const built = buildQuery(muellerModel(), "embase")
+    const termLines = built.lines!.filter((l) => l.kind === "term")
+    assert.equal(termLines.length, built.components.reduce((n, c) => n + (c.parts?.length ?? 0), 0))
+    assert.ok(strategyText(built.lines!, true).startsWith("#1 (office NEXT/1 worker*):ti,ab,kw\n#2 (desk NEXT/1 worker*):ti,ab,kw"))
+    assert.ok(built.lines!.every((l) => l.prefix === undefined))
+  })
+
+  it("has no final line for a single component", () => {
+    let m = muellerModel()
+    for (const c of m.concepts.slice(1)) m = removeConcept(m, c.id)
+    for (const db of ["cinahl", "embase"] as const) {
+      const one = buildQuery(m, db)
+      assert.equal(one.lines!.filter((l) => l.kind === "final").length, 0)
+    }
+  })
+})
+
+describe("CINAHL: filters become limiter notes, not syntax", () => {
+  const filtered = () => {
+    let m = setFilters(muellerModel(), { language: "english", yearFrom: 2016, yearTo: 2026, studyTypes: ["rct"], humansOnly: true, sex: "Male" })
+    m = toggleAgeGroup(m, "Middle Aged")
+    return m
+  }
+
+  it("leaves language, years, study type, age, sex and humans out of the string", () => {
+    const built = buildQuery(filtered(), "cinahl")
+    assert.equal(built.query, MUELLER_CINAHL)
+    assert.deepEqual(built.filterClauses, [])
+    assert.equal(built.limitNotes!.length, 6)
+    const text = built.limitNotes!.join("\n")
+    assert.match(text, /Sprache Englisch.*Language/)
+    assert.match(text, /Zeitraum 2016 bis 2026.*Publication Date/)
+    assert.match(text, /Studientyp.*Publication Type/)
+    assert.match(text, /Alter \(Middle Aged\).*Age Groups/)
+    assert.match(text, /Geschlecht \(Male\).*Gender/)
+    assert.match(text, /Nur Studien am Menschen/)
+    assert.ok(!built.notices.some((n) => n.code === "study-filter"))
+  })
+
+  it("has no limit notes when no filter is set, but platform notes", () => {
+    const built = buildQuery(muellerModel(), "cinahl")
+    assert.deepEqual(built.limitNotes, [])
+    assert.equal(built.platform, "EBSCOhost (CINAHL Complete)")
+    assert.ok(built.platformNotes!.some((n) => /EBSCOhost/.test(n)))
+    assert.ok(built.platformNotes!.some((n) => /S1, S2/.test(n)))
+  })
+})
+
+describe("Embase: filters as verified /lim and /py syntax", () => {
+  it("writes language, study type, age, sex, years and humans exactly", () => {
+    let m = setFilters(muellerModel(), { language: "english", yearFrom: 2016, yearTo: 2026, studyTypes: ["rct", "meta-analysis"], humansOnly: true, sex: "Male" })
+    m = toggleAgeGroup(toggleAgeGroup(m, "Middle Aged"), "Aged")
+    const built = buildQuery(m, "embase")
+    assert.deepEqual(built.filterClauses, [
+      "([randomized controlled trial]/lim OR [meta analysis]/lim)",
+      "([middle aged]/lim OR [aged]/lim)",
+      "[male]/lim",
+      "[english]/lim",
+      "[2016-2026]/py",
+      "[humans]/lim",
+    ])
+    assert.ok(built.query.endsWith(" AND ([randomized controlled trial]/lim OR [meta analysis]/lim) AND ([middle aged]/lim OR [aged]/lim) AND [male]/lim AND [english]/lim AND [2016-2026]/py AND [humans]/lim"))
+    assert.deepEqual(built.limitNotes, [])
+    assert.ok(built.notices.some((n) => n.code === "study-filter" && /Indexierung/.test(n.message)))
+    assert.ok(built.notices.some((n) => n.code === "embase-humans"))
+    assert.deepEqual(notInfo(lintQuery(built.query)), [])
+  })
+
+  it("puts every filter into its own labelled line of the strategy", () => {
+    const m = setFilters(muellerModel(), { language: "english", yearFrom: 2016, yearTo: 2026, humansOnly: true })
+    const built = buildQuery(m, "embase")
+    const filters = built.lines!.filter((l) => l.kind === "filter")
+    assert.deepEqual(filters.map((l) => l.query), ["[english]/lim", "[2016-2026]/py", "[humans]/lim"])
+    assert.deepEqual(filters.map((l) => l.label), ["Limit: Sprache", "Limit: Erscheinungsjahre", "Limit: nur Menschen"])
+    const last = built.lines![built.lines!.length - 1]
+    assert.equal(last.kind, "final")
+    assert.ok(last.query.endsWith(`#${filters[2].n}`))
+    assert.deepEqual(notInfo(lintQuery(strategyText(built.lines!, true))), [])
+  })
+
+  it("leaves a one-sided year range out and says so, because open ranges are not documented", () => {
+    const from = buildQuery(setFilters(muellerModel(), { yearFrom: 2016 }), "embase")
+    assert.ok(!from.query.includes("/py"))
+    assert.equal(from.limitNotes!.length, 1)
+    assert.match(from.limitNotes![0], /Zeitraum 2016 bis ….*nicht belegt/)
+    const to = buildQuery(setFilters(muellerModel(), { yearTo: 2020 }), "embase")
+    assert.match(to.limitNotes![0], /Zeitraum … bis 2020/)
+  })
+
+  it("skips a reversed year range and warns", () => {
+    const built = buildQuery(setFilters(muellerModel(), { yearFrom: 2026, yearTo: 2016 }), "embase")
+    assert.ok(!built.query.includes("/py"))
+    assert.ok(built.notices.some((n) => n.code === "date-order"))
+  })
+
+  it("maps every MeSH age group to an Embase limit and notes none as missing", () => {
+    for (const g of ["Infant", "Infant, Newborn", "Child, Preschool", "Child", "Adolescent", "Adult", "Young Adult", "Middle Aged", "Aged", "Aged, 80 and over"]) {
+      const built = buildQuery(toggleAgeGroup(muellerModel(), g), "embase")
+      assert.equal(built.filterClauses.length, 1, g)
+      assert.match(built.filterClauses[0], /^\[[a-z ]+\]\/lim$/, g)
+      assert.deepEqual(built.limitNotes, [], g)
+    }
+    const odd = buildQuery(toggleAgeGroup(muellerModel(), "Some Group"), "embase")
+    assert.deepEqual(odd.filterClauses, [])
+    assert.match(odd.limitNotes![0], /Alter \(Some Group\)/)
+  })
+
+  it("has no filter clauses and no notes when no filter is set", () => {
+    const built = buildQuery(muellerModel(), "embase")
+    assert.deepEqual(built.filterClauses, [])
+    assert.deepEqual(built.limitNotes, [])
+    assert.equal(built.platform, "embase.com (Elsevier)")
+    assert.ok(built.platformNotes!.some((n) => /Ovid/.test(n)))
+    assert.ok(built.platformNotes!.some((n) => /links nach rechts/.test(n)))
+  })
+})
+
+describe("PubMed and Cochrane stay unchanged next to CINAHL and Embase", () => {
+  it("adds none of the new fields to their results", () => {
+    for (const db of ["pubmed", "cochrane"] as const) {
+      const b = buildQuery(muellerModel(), db)
+      assert.equal(b.vocabulary, undefined, db)
+      assert.equal(b.platform, undefined, db)
+      assert.equal(b.platformNotes, undefined, db)
+      for (const c of b.components) assert.equal(c.headings, undefined, db)
+      for (const l of b.lines ?? []) {
+        assert.equal(l.prefix, undefined)
+        assert.equal(l.suggested, undefined)
+      }
+    }
+    assert.equal(buildQuery(muellerModel(), "cochrane").query, MUELLER_COCHRANE)
+    assert.ok(buildQuery(muellerModel(), "pubmed").query.startsWith('("office worker*"[tiab] OR'))
+  })
+
+  it("keeps the Cochrane numbering with #", () => {
+    const built = buildQuery(muellerModel(), "cochrane")
+    assert.ok(strategyText(built.lines!, true).startsWith("#1 (office NEXT worker*):ti,ab,kw"))
+  })
+})
+
+describe("CINAHL: lint", () => {
+  it("detects the syntax from (MH), field codes in capitals and S lines", () => {
+    assert.equal(detectLintDatabase('(MH "Back Pain+") OR TI "back pain"'), "cinahl")
+    assert.equal(detectLintDatabase('TI ("low back pain" OR lumbago) AND AB (exercise*)'), "cinahl")
+    assert.equal(detectLintDatabase('(mh "Back Pain+") OR (mm "Back Pain")'), "cinahl")
+    assert.equal(detectLintDatabase("S1 TI \"x\"\nS2 AB \"x\"\nS3 S1 OR S2"), "cinahl")
+    assert.equal(detectLintDatabase('"back pain" N3 therapy'), "cinahl")
+  })
+
+  it("leaves the PubMed and Cochrane detection alone", () => {
+    assert.equal(detectLintDatabase('"Back Pain"[Mesh] OR "back pain"[tiab]'), "pubmed")
+    assert.equal(detectLintDatabase('[mh "Back Pain"] OR "back pain":ti,ab,kw'), "cochrane")
+    assert.equal(detectLintDatabase("(hearing NEXT aid*):ti,ab,kw\n#1 OR #2"), "cochrane")
+    assert.equal(detectLintDatabase("back pain"), "pubmed")
+    assert.equal(detectLintDatabase(""), "pubmed")
+  })
+
+  it("passes the generated strings, numbered and plain", () => {
+    const built = buildQuery(muellerModel(), "cinahl")
+    assert.deepEqual(notInfo(lintQuery(built.query)), [])
+    assert.deepEqual(lintCinahl(built.query).filter((f) => f.severity === "error"), [])
+  })
+
+  it("finds the typical mistakes in a broken string", () => {
+    const f = lintQuery('(MH "Low Back Pain"+) OR ti (“low back pain” OR lumbago AND pain) OR AB "x*" and TX "y"')
+    const codes = findingCodes(f)
+    for (const c of [
+      "error:heading-plus-outside",
+      "error:quotes-typographic",
+      "warning:field-lowercase",
+      "warning:mixed-operators",
+      "warning:operator-lowercase",
+      "info:field-tx",
+      "info:trunc-short-stem",
+    ]) assert.ok(codes.includes(c), `${c} in ${codes.join(" ")}`)
+    assert.ok(codes.includes("warning:generic-term"))
+  })
+
+  it("moves the + inside the quotes and repairs the rest without errors", () => {
+    const src = '(MH "Low Back Pain"+) OR ti (“low back pain” OR lumbago) OR (MH Back Pain)'
+    const fixed = autoFix(src).text
+    assert.equal(fixed, '(MH "Low Back Pain+") OR TI ("low back pain" OR lumbago) OR (MH "Back Pain+")')
+    assert.deepEqual(notInfo(lintQuery(fixed)), [])
+  })
+
+  it("flags Cochrane, PubMed and Embase syntax in a CINAHL string", () => {
+    const codes = (s: string) => lintCinahl(s).map((x) => x.code)
+    assert.ok(codes('"low back pain":ti,ab,kw OR (MH "Back Pain")').includes("colon-field"))
+    assert.ok(codes('(MH "Back Pain")/exp AND TI "x"').includes("heading-suffix"))
+    assert.ok(codes('"back pain"[tiab]').includes("pubmed-syntax"))
+    assert.ok(codes('[mh "Back Pain"]').includes("cochrane-syntax"))
+    assert.ok(codes("TI 'back pain'").includes("quotes-single"))
+    assert.ok(codes('TI "x" NEAR/3 "y"').includes("prox-syntax"))
+    assert.ok(codes('TI "x" adj3 "y"').includes("prox-syntax"))
+    assert.ok(codes('TI "x" AND #1').includes("ref-style"))
+  })
+
+  it("checks proximity, wildcards and headings", () => {
+    const codes = (s: string) => lintCinahl(s).map((x) => `${x.severity}:${x.code}`)
+    assert.deepEqual(errorsOf(lintCinahl('TI ("office worker*" N3 "back pain")')), [])
+    assert.deepEqual(errorsOf(lintCinahl('AB (exercise W2 therap*)')), [])
+    assert.ok(codes('TI "x" N999 "y"').includes("error:prox-distance"))
+    assert.ok(codes("AB colo$r").includes("error:wildcard-dollar"))
+    assert.ok(codes("AB wom?").includes("warning:wildcard-question-end"))
+    assert.ok(codes('(MH "Back*")').includes("error:trunc-mesh"))
+    assert.ok(codes('XY "x"').includes("error:field-unknown"))
+    assert.ok(codes('(MH "Back Pain")').includes("info:heading-no-explode"))
+    assert.ok(!codes('(MH "Back Pain+")').includes("info:heading-no-explode"))
+  })
+
+  it("checks brackets, quotes and operators", () => {
+    const codes = (s: string) => lintCinahl(s).map((x) => x.code)
+    assert.ok(codes('(MH "Back Pain+" OR TI "x"').includes("paren-unclosed"))
+    assert.ok(codes('(MH "Back Pain+") OR TI "x")').includes("paren-unmatched-close"))
+    assert.ok(codes('TI "back pain').includes("quote-unclosed"))
+    assert.ok(codes("TI (a OR) AND AB (b)").includes("op-trailing"))
+    assert.ok(codes("AND TI x").includes("op-leading"))
+    assert.ok(codes("TI a AND OR AB b").includes("op-double"))
+    assert.ok(codes("TI ()").includes("group-empty"))
+    assert.ok(codes('TI low back pain').includes("phrase-unquoted"))
+  })
+
+  it("explains that AND is evaluated before OR and wraps the OR groups", () => {
+    const f = lintCinahl('TI "a" OR TI "b" AND TI "c"').find((x) => x.code === "mixed-operators")!
+    assert.match(f.message, /AND vor OR/)
+    assert.equal(applyEdits('TI "a" OR TI "b" AND TI "c"', f.fix!.edits), '(TI "a" OR TI "b") AND TI "c"')
+  })
+
+  it("checks S lines: forward and missing references, orphans, wrong labels", () => {
+    const codes = (s: string) => lintCinahl(s).map((x) => x.code)
+    assert.deepEqual(errorsOf(lintCinahl('S1 TI "a"\nS2 AB "a"\nS3 S1 OR S2')), [])
+    assert.ok(codes('TI "a"\nS1 OR S4').includes("line-missing"))
+    assert.ok(codes("S1 AND S2").includes("line-missing"))
+    assert.ok(codes('S1 TI "a"\nS2 AB "b"\nS3 S1 OR S1').includes("line-orphan"))
+    assert.ok(codes('S3 TI "a"\nS4 AB "b"').includes("line-label"))
+  })
+
+  it("is selectable and falls back to PubMed lint when forced", () => {
+    const s = '(MH "Back Pain+") OR TI "x"'
+    assert.deepEqual(lintQuery(s, { database: "cinahl" }), lintCinahl(s))
+    assert.ok(lintQuery(s, { database: "pubmed" }).some((f) => f.code === "no-field-tag" || f.code === "stray-char" || f.code === "op-missing"))
+  })
+})
+
+describe("Embase: lint", () => {
+  it("detects the syntax from Emtree suffixes, limits and Ovid forms", () => {
+    assert.equal(detectLintDatabase("'low back pain'/exp OR 'low back pain':ti,ab,kw"), "embase")
+    assert.equal(detectLintDatabase("lumbago:ti,ab,kw AND [english]/lim"), "embase")
+    assert.equal(detectLintDatabase("[2016-2026]/py"), "embase")
+    assert.equal(detectLintDatabase("'a b':ti,ab,kw"), "embase")
+    assert.equal(detectLintDatabase("exp Low Back Pain/ OR (low back pain).ti,ab."), "embase")
+    assert.equal(detectLintDatabase("back pain adj3 therapy"), "embase")
+  })
+
+  it("keeps ambiguous Cochrane strings with Cochrane", () => {
+    assert.equal(detectLintDatabase("lumbago:ti,ab,kw OR (a NEAR/3 b):ti,ab,kw"), "cochrane")
+    assert.equal(detectLintDatabase('"low back pain":ti,ab,kw\n#1 AND #2'), "cochrane")
+  })
+
+  it("passes the generated strings, numbered and plain", () => {
+    const built = buildQuery(muellerModel(), "embase")
+    assert.deepEqual(notInfo(lintQuery(built.query)), [])
+    assert.deepEqual(errorsOf(lintEmbase(strategyText(built.lines!, false))), [])
+  })
+
+  it("finds the typical mistakes in a broken string", () => {
+    const f = lintQuery("'back pain'/xp OR 'back pain':tiab OR 'x':exp OR 'y':ti, ab OR low back pain/exp AND 'z'/exp")
+    const codes = findingCodes(f)
+    for (const c of ["error:suffix-unknown", "error:field-unknown", "error:field-exp", "error:field-comma", "warning:phrase-unquoted", "warning:mixed-operators"]) {
+      assert.ok(codes.includes(c), `${c} in ${codes.join(" ")}`)
+    }
+  })
+
+  it("repairs what is unambiguous", () => {
+    const src = "'back pain'/xp OR 'back pain':tiab OR 'x':exp OR 'y':ti, ab"
+    const fixed = autoFix(src).text
+    assert.equal(fixed, "'back pain'/exp OR 'back pain':ti,ab OR 'x'/exp OR 'y':ti,ab")
+    assert.deepEqual(notInfo(lintQuery(fixed)), [])
+    const q = "('low back pain'/exp OR 'low back pain':ti,ab,kw) AND ‘exercise therapy’/exp"
+    assert.deepEqual(autoFix(q).text, "('low back pain'/exp OR 'low back pain':ti,ab,kw) AND 'exercise therapy'/exp")
+  })
+
+  it("explains that Embase has no operator precedence and wraps the OR groups", () => {
+    const src = "'a':ti,ab,kw OR 'b':ti,ab,kw AND 'c':ti,ab,kw"
+    const f = lintEmbase(src).find((x) => x.code === "mixed-operators")!
+    assert.match(f.message, /keine Rangfolge/)
+    assert.match(f.message, /links nach rechts/)
+    assert.equal(applyEdits(src, f.fix!.edits), "('a':ti,ab,kw OR 'b':ti,ab,kw) AND 'c':ti,ab,kw")
+  })
+
+  it("checks wildcards: leading, short stem, EBSCO hash, wildcard inside quotes", () => {
+    const codes = (s: string) => lintEmbase(s).map((x) => `${x.severity}:${x.code}`)
+    assert.ok(codes("*pain:ab").includes("error:trunc-leading"))
+    assert.ok(codes("ab*:ti,ab,kw").includes("warning:trunc-short-stem"))
+    assert.ok(!codes("exercis*:ti,ab,kw").includes("warning:trunc-short-stem"))
+    assert.ok(codes("colo#r:ab").includes("error:wildcard-hash"))
+    assert.deepEqual(lintEmbase("colo$r:ab OR sulf?nyl:ab OR group$:ab").filter((f) => f.severity !== "info"), [])
+    const q = lintEmbase("'office worker*':ti,ab,kw").find((x) => x.code === "trunc-in-phrase")!
+    assert.equal(q.severity, "info")
+    assert.equal(applyEdits("'office worker*':ti,ab,kw", q.fix!.edits), "(office NEXT/1 worker*):ti,ab,kw")
+  })
+
+  it("checks proximity: distance, wrong platform, field scope", () => {
+    const codes = (s: string) => lintEmbase(s).map((x) => `${x.severity}:${x.code}`)
+    assert.deepEqual(lintEmbase("(hip NEAR/3 pain):ti,ab,kw").filter((f) => f.severity !== "info"), [])
+    assert.ok(codes("(hip NEAR pain):ti,ab,kw").includes("warning:prox-distance"))
+    assert.ok(codes("hip N3 pain").includes("error:prox-syntax"))
+    assert.ok(codes("hip W3 pain").includes("error:prox-syntax"))
+    assert.ok(codes("hip adj3 pain").includes("error:prox-syntax"))
+    assert.ok(codes("(hip NEAR/0 pain):ab").includes("warning:prox-distance"))
+    const spaced = lintEmbase("(hip NEAR 3 pain):ti,ab,kw").find((x) => x.code === "prox-space")!
+    assert.equal(applyEdits("(hip NEAR 3 pain):ti,ab,kw", spaced.fix!.edits), "(hip NEAR/3 pain):ti,ab,kw")
+    const scope = lintEmbase("hip NEAR/3 pain:ab").find((x) => x.code === "prox-field-scope")!
+    assert.equal(applyEdits("hip NEAR/3 pain:ab", scope.fix!.edits), "(hip NEAR/3 pain):ab")
+  })
+
+  it("checks limits: suffix, list, years", () => {
+    const codes = (s: string) => lintEmbase(s).map((x) => `${x.severity}:${x.code}`)
+    assert.deepEqual(lintEmbase("[english]/lim AND [2016-2026]/py AND [randomized controlled trial]/lim").filter((f) => f.severity !== "info"), [])
+    assert.ok(codes("[english]").includes("error:limit-suffix"))
+    assert.ok(codes("[2016-2026]").includes("error:limit-suffix"))
+    assert.ok(codes("[2016-2026]/lim").includes("error:limit-wrong-suffix"))
+    assert.ok(codes("[englisch]/lim").includes("warning:limit-unknown"))
+    assert.ok(codes("[2026-2016]/py").includes("warning:date-order"))
+    assert.ok(codes("[2016-]/py").includes("info:limit-year-open"))
+    assert.ok(codes("[english]/py").includes("error:limit-year"))
+    assert.ok(codes('"x"[tiab]').includes("error:pubmed-syntax"))
+    assert.ok(codes('[mh "x"]').includes("error:cochrane-syntax"))
+  })
+
+  it("checks quotes: single and double, typographic, unclosed", () => {
+    const codes = (s: string) => lintEmbase(s).map((x) => x.code)
+    assert.deepEqual(lintEmbase(`'low back pain':ti,ab,kw OR "low back pain":ti,ab,kw`).filter((f) => f.severity !== "info"), [])
+    assert.ok(codes("‘low back pain’/exp").includes("quotes-typographic"))
+    assert.ok(codes("'low back pain/exp").includes("quote-unclosed"))
+    assert.deepEqual(lintEmbase("'Parkinson's disease'/exp").filter((f) => f.severity !== "info"), [])
+  })
+
+  it("checks lines: #n references only to earlier lines, mixing with terms is allowed", () => {
+    const codes = (s: string) => lintEmbase(s).map((x) => x.code)
+    assert.deepEqual(errorsOf(lintEmbase("'a':ti,ab,kw\n'b':ti,ab,kw\n#1 OR #2")), [])
+    assert.deepEqual(errorsOf(lintEmbase("'a':ti,ab,kw\n#1 AND 'b'/exp")), [])
+    assert.ok(codes("#1 AND #2").includes("line-missing"))
+    assert.ok(codes("'a':ti,ab,kw\n#1 AND #5").includes("line-missing"))
+    assert.ok(codes("'a':ti,ab,kw\n'b':ti,ab,kw\n#1").includes("line-orphan"))
+    assert.ok(codes("S1 OR S2").includes("ref-style"))
+  })
+
+  it("recognises Ovid and CINAHL syntax and reports it instead of guessing", () => {
+    const ovid = lintEmbase("exp Low Back Pain/ OR (low back pain).ti,ab.")
+    assert.deepEqual(ovid.map((f) => f.code), ["ovid-syntax"])
+    assert.match(ovid[0].message, /Ovid/)
+    assert.ok(lintEmbase('(MH "Back Pain") OR TI "x"').some((f) => f.code === "cinahl-syntax"))
+  })
+
+  it("refuses an Emtree term with both a suffix and a field, and a bare phrase with /exp", () => {
+    const codes = (s: string) => lintEmbase(s).map((x) => x.code)
+    assert.ok(codes("'a b'/exp:ti,ab").includes("suffix-and-field"))
+    assert.ok(codes("low back pain/exp").includes("phrase-unquoted"))
+  })
+})
+
+describe("CINAHL and Embase: converter from PubMed", () => {
+  const knee = () => buildQuery(kneeModel(), "pubmed").query
+
+  it("converts the whole Müller case to exactly the string the generator writes for Embase", () => {
+    const pm = buildQuery(muellerModel(), "pubmed").query
+    const r = convertToEmbase(pm)
+    assert.equal(r.text, MUELLER_EMBASE)
+    assert.deepEqual(r.unsafe, [])
+    assert.ok(r.applied.some((a) => /Vorschläge/.test(a.message) && /Emtree/.test(a.message)))
+  })
+
+  it("converts the knee case to Embase and CINAHL without errors", () => {
+    const e = convertToEmbase(knee())
+    assert.equal(e.text, buildQuery(kneeModel(), "embase").query)
+    const c = convertToCinahl(knee())
+    assert.deepEqual(notInfo(lintQuery(c.text)), [])
+    assert.ok(c.text.includes('(MH "Osteoarthritis, Knee+")'))
+    assert.ok(c.text.includes('(TI "knee osteoarthritis" OR AB "knee osteoarthritis")'))
+    assert.ok(c.applied.some((a) => /CINAHL Headings/.test(a.message) && /Vorschläge/.test(a.message)))
+  })
+
+  it("handles NoExp, major topic, [ti] and [ab]", () => {
+    const e = convertToEmbase('"Back Pain"[Mesh:NoExp] OR "Back Pain"[Majr] OR "back pain"[ti] OR lumbago[ab]')
+    assert.equal(e.text, "'back pain'/de OR 'back pain'/exp/mj OR 'back pain':ti OR lumbago:ab")
+    const c = convertToCinahl('"Back Pain"[Mesh:NoExp] OR "Back Pain"[Majr] OR "back pain"[ti] OR lumbago[ab]')
+    assert.equal(c.text, '(MH "Back Pain") OR (MM "Back Pain+") OR TI "back pain" OR AB lumbago')
+  })
+
+  it("converts language and publication type to Embase limits, CINAHL keeps them as unsafe", () => {
+    const e = convertToEmbase('lumbago[tiab] AND english[la] AND "randomized controlled trial"[pt]')
+    assert.equal(e.text, "lumbago:ti,ab,kw AND [english]/lim AND [randomized controlled trial]/lim")
+    const c = convertToCinahl('lumbago[tiab] AND english[la] AND "randomized controlled trial"[pt]')
+    assert.equal(c.unsafe.length, 2)
+    assert.ok(c.unsafe.some((u) => /Sprache/.test(u.message)))
+    assert.ok(c.unsafe.some((u) => /Publikationstypen/.test(u.message)))
+  })
+
+  it("lists dates and unknown tags as unsafe and leaves them untouched", () => {
+    const src = 'lumbago[tiab] AND ("2016/01/01"[dp] : "2026/12/31"[dp]) AND Smith[au]'
+    const e = convertToEmbase(src)
+    assert.ok(e.text.startsWith("lumbago:ti,ab,kw AND"))
+    assert.ok(e.text.includes('"2016/01/01"[dp]') && e.text.includes("Smith[au]"))
+    assert.equal(e.unsafe.length, 3)
+    assert.ok(e.unsafe.some((u) => /\[2016-2026\]\/py/.test(u.message)))
+  })
+
+  it("drops the humans filter with a note and refuses other source syntaxes and multi-line strings", () => {
+    const e = convertToEmbase("lumbago[tiab] NOT (animals[mh] NOT humans[mh])")
+    assert.equal(e.text, "lumbago:ti,ab,kw")
+    assert.ok(e.applied.some((a) => /\[humans\]\/lim/.test(a.message)))
+    for (const src of ['[mh "Back Pain"] OR lumbago:ti,ab,kw', '(MH "Back Pain+") OR TI lumbago', "'back pain'/exp"]) {
+      for (const r of [convertToEmbase(src), convertToCinahl(src)]) {
+        assert.equal(r.changed, false)
+        assert.equal(r.text, src)
+        assert.match(r.unsafe[0].message, /nur PubMed-Strings/)
+      }
+    }
+    assert.match(convertToCinahl("lumbago[tiab]\nback[tiab]").unsafe[0].message, /Nur eine Zeile/)
+    assert.deepEqual(convertToCinahl("").unsafe, [])
+  })
+
+  it("does not convert unsafe terms: wildcard at the start, short stems, ?", () => {
+    const e = convertToEmbase('*pain[tiab] OR "ab*"[tiab] OR "wom?n"[tiab]')
+    assert.equal(e.changed, false)
+    assert.equal(e.unsafe.length, 3)
+  })
+})
+
+describe("CINAHL and Embase: exports", () => {
+  const m = muellerModel()
+  const input = { question: MUELLER.text, model: m, date: "2026-10-06" }
+
+  it("names platform, headings and the line format in the text export", () => {
+    const c = buildQuery(m, "cinahl")
+    const text = exportText({ ...input, built: c, format: "manager" })
+    assert.ok(text.includes("Datenbank: CINAHL (EBSCOhost (CINAHL Complete))\nFormat: Eine Zeile pro Suche (S1, S2 …)"))
+    assert.ok(text.includes("S1 TI ("))
+    assert.ok(text.includes("Schlagwörter (CINAHL Headings, Vorschläge aus MeSH)"))
+    assert.ok(text.includes("im Thesaurus der Datenbank"))
+    assert.ok(text.includes("So gibst du den String ein:"))
+    const e = buildQuery(m, "embase")
+    const et = exportText({ ...input, built: e })
+    assert.ok(et.includes("Datenbank: Embase (embase.com (Elsevier))\nFormat: Ein Suchstring (Suchfeld)"))
+    assert.ok(et.includes(MUELLER_EMBASE))
+    assert.ok(exportText({ ...input, built: e, format: "manager" }).includes("#1 (office NEXT/1 worker*):ti,ab,kw"))
+  })
+
+  it("writes the filters of Embase and the limit notes of CINAHL", () => {
+    const f = setFilters(m, { language: "english", yearFrom: 2016, yearTo: 2026 })
+    const et = exportText({ ...input, model: f, built: buildQuery(f, "embase") })
+    assert.ok(et.includes("Filter: [english]/lim | [2016-2026]/py"))
+    assert.ok(!et.includes("nur Menschen"))
+    const ct = exportText({ ...input, model: f, built: buildQuery(f, "cinahl") })
+    assert.ok(ct.includes("Das setzt du in CINAHL"))
+    assert.ok(ct.includes("Sprache Englisch"))
+  })
+
+  it("marks the suggestions in the JSON", () => {
+    const json = JSON.parse(exportJson({ ...input, built: buildQuery(m, "embase"), format: "manager" }))
+    assert.equal(json.database, "embase")
+    assert.equal(json.format, "line-strategy")
+    assert.equal(json.vocabulary.label, "Emtree")
+    assert.equal(json.vocabulary.suggestedFromMesh, true)
+    assert.equal(json.singleLine, MUELLER_EMBASE)
+    assert.ok(json.components.some((c: { headings?: Array<{ suggested: boolean }> }) => c.headings?.every((h) => h.suggested)))
+    assert.ok(json.lines.some((l: { suggested?: boolean }) => l.suggested === true))
+    const cj = JSON.parse(exportJson({ ...input, built: buildQuery(m, "cinahl"), format: "manager" }))
+    assert.equal(cj.lines[0].ref, "S1")
+    assert.equal(cj.vocabulary.included, true)
+    const off = JSON.parse(exportJson({ ...input, built: buildQuery(setHeadings(m, "cinahl", false), "cinahl") }))
+    assert.equal(off.vocabulary.included, false)
+    assert.equal(off.format, "single-line")
   })
 })

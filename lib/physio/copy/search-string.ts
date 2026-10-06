@@ -14,12 +14,12 @@ export const ssCopy = {
   hero: {
     title: "Suchstring-Generator",
     sub: "Von der PICO-Frage zum Suchstring für PubMed und die Cochrane Library.",
-    lede: "Schreib deine Fragestellung rein, oder gleich den ganzen Fall. Das Tool erkennt die Suchkomponenten, schlägt Schlagworte (MeSH) und Stichworte vor und baut daraus einen String mit Klammern, Field Tags und Trunkierung, für PubMed, für die Cochrane Library oder für beide. Du gehst drüber und korrigierst, bevor du kopierst.",
+    lede: "Fall einfügen, Suchstring kopieren, bei Bedarf anpassen.",
     demoBadge: "Demo",
-    demoLede:
-      "In der Demo arbeitest du mit festen Beispielen, darunter dem ganzen Fall von Herrn Müller. Komponenten und Begriffe kannst du bearbeiten, im MeSH-Wörterbuch stöbern, den String für PubMed und die Cochrane Library kopieren, Treffer in PubMed zählen und den Prüfmodus am Beispielstring testen.",
+    demoLede: "Probier den Generator an einem festen Beispielfall aus.",
   },
 
+  privacyShort: "Dein Fall bleibt auf deinem Gerät.",
   privacy:
     "Deine Fragestellung bleibt auf deinem Gerät. Das Tool lädt nur Teile eines öffentlichen MeSH-Wörterbuchs von physio.sweber.dev nach; abgefragt wird dabei ein Dateiname wie «terms/lo.json», nie dein Text. Die Trefferzählung ist optional und schickt nur den fertigen Suchstring an PubMed (NCBI).",
   attribution: {
@@ -39,23 +39,18 @@ export const ssCopy = {
     body: "Geh Begriffe und Schlagworte durch und schau dir die Trefferliste an, bevor du den String in einer Arbeit verwendest. Das Tool arbeitet mit festen Regeln, dem MeSH-Wörterbuch und einer eigenen Begriffstabelle. Wie es deutsche Wörter den Schlagworten zuordnet, ist fachlich noch nicht geprüft.",
   },
 
-  tabs: { generate: "Suchstring erstellen", lint: "Eigenen String prüfen" },
-
-  step: { label: "Schritt" },
+  tabs: { generate: "Suchstring erstellen", lint: "Eigenen String prüfen", label: "Werkzeug" },
 
   question: {
-    heading: "Fragestellung",
-    hint: "Forschungsfrage, PICO-Frage oder der ganze Fall samt Aufgabenblatt, auf Deutsch oder Englisch. Arbeitsaufträge wie «Formulieren Sie …» überliest das Tool.",
-    exampleLabel: "Beispiel laden",
+    exampleLabel: "Beispiel",
     examplePlaceholder: "Beispiel wählen",
-    textLabel: "Deine Fragestellung",
+    textLabel: "Fall oder Fragestellung einfügen",
+    textLabelDemo: "Fall",
     textPlaceholder: "Wie wirkt Krafttraining auf die Schmerzen bei älteren Menschen mit Kniearthrose?",
     textHint:
-      "Tipp: «bei» leitet die Population ein, «im Vergleich zu» den Vergleich, «auf die» das Outcome. Zeilen mit «P:», «I:», «C:», «O:» oder «Population:», «Intervention:», «Outcome:» haben Vorrang. Schreib Hauptwörter gross, dann erkennt das Tool sie sicherer.",
-    analysing: "Wörterbuch wird geladen und Fragestellung ausgewertet",
-    analysed: "Auswertung fertig.",
-    picoSummary: "Optional: PICO-Felder einzeln ausfüllen",
-    picoHint: "Was du hier einträgst, landet fix im passenden Block.",
+      "Tipp: «bei» leitet die Population ein, «im Vergleich zu» den Vergleich, «auf die» das Outcome. Zeilen mit «P:», «I:», «C:», «O:» oder «Population:», «Intervention:», «Outcome:» haben Vorrang. Schreib Hauptwörter gross, dann erkennt das Tool sie sicherer. Arbeitsaufträge wie «Formulieren Sie …» überliest das Tool.",
+    analysing: "Wörterbuch wird geladen und Fall ausgewertet",
+    picoHint: "Was du hier einträgst, landet fix im passenden Block. Die Felder gelten, sobald du den Suchstring neu erstellst.",
     pico: {
       population: { label: "Population (P)", placeholder: "Wer? Person oder Erkrankung" },
       intervention: { label: "Intervention (I)", placeholder: "Was wird gemacht?" },
@@ -65,20 +60,57 @@ export const ssCopy = {
     },
     submit: "Suchstring erstellen",
     submitting: "Wird ausgewertet",
-    reset: "Zurücksetzen",
-    emptyError: "Schreib zuerst eine Fragestellung oder füll mindestens ein PICO-Feld aus.",
-    failError: "Die Fragestellung liess sich nicht auswerten. Kürze den Text oder füll die PICO-Felder direkt aus.",
-    lockedTitle: "In der Demo kannst du nur die Beispiele wählen.",
-    lockedBody: "Eigene Fragestellungen und PICO-Felder gibt es mit dem Abo.",
+    resubmit: "Mit diesen Feldern neu erstellen",
+    emptyError: "Schreib zuerst einen Fall oder eine Fragestellung, oder füll mindestens ein PICO-Feld aus.",
+    failError: "Der Fall liess sich nicht auswerten. Kürze den Text oder füll die PICO-Felder direkt aus.",
+    lockedBody: "In der Demo wählst du nur Beispiele. Eigene Fälle gibt es mit dem Abo.",
     editedHint: "«Suchstring erstellen» setzt deine Änderungen an den Komponenten zurück.",
+    created: "Suchstring erstellt.",
+  },
+
+  /** The areas under the result, folded by default. Status lines tell whether it is worth opening one. */
+  sections: {
+    heading: "Anpassen",
+    hint: "Alles optional. Was du hier änderst, steht sofort im String oben.",
+    current: "Aktueller Schritt",
+    concepts: {
+      title: "Suchkomponenten bearbeiten",
+      status: (n: number, withoutMesh: number, unused: number) => {
+        const parts = [`${n} ${n === 1 ? "Komponente" : "Komponenten"}`]
+        if (withoutMesh) parts.push(`${withoutMesh} ohne Schlagwort`)
+        if (unused) parts.push(`${unused} ${unused === 1 ? "Wort" : "Wörter"} nicht übernommen`)
+        return parts.join(", ")
+      },
+      none: "noch keine Komponente",
+    },
+    pico: {
+      title: "PICO-Felder",
+      status: (filled: number, total: number) => (filled ? `${filled} von ${total} ausgefüllt` : "nicht ausgefüllt"),
+      statusLocked: (filled: number, total: number) => (filled ? `${filled} von ${total} aus dem Beispiel` : "im Beispiel nicht ausgefüllt"),
+    },
+    filters: {
+      title: "Filter",
+      none: "keine Filter",
+      active: (n: number) => `${n} Filter aktiv`,
+      suggestions: (n: number) => `${n} ${n === 1 ? "Vorschlag" : "Vorschläge"} aus deinem Fall`,
+      names: { language: "Sprache", years: "Zeitraum", studyTypes: "Studientyp", humans: "nur Menschen", age: "Alter", sex: "Geschlecht" },
+    },
+    mesh: { title: "MeSH-Wörterbuch durchsuchen", status: "Schlagwort auf Deutsch oder Englisch suchen" },
+    table: {
+      title: "Tabelle für die Übung (RefHunter)",
+      status: (rows: number) => `${rows} ${rows === 1 ? "Zeile" : "Zeilen"}: Komponente, Stichworte, Schlagworte`,
+    },
+    diff: {
+      title: "Unterschiede zwischen Datenbanken",
+      status: (names: string) => names,
+    },
+    export: { title: "Export (.txt / .json)", status: "den String als Datei speichern" },
   },
 
   concepts: {
-    heading: "Erkannte Suchkomponenten",
     hint: "Schau nach, ob das Tool deine Frage richtig verstanden hat. Entferne, verschiebe oder ergänze Komponenten, bevor du den String übernimmst.",
     emptyTitle: "Noch keine Suchkomponente.",
-    emptyBody: "Erstelle den String im ersten Schritt oder füge unten eine Komponente hinzu.",
-    waiting: "Der Rest erscheint, sobald du im ersten Schritt auf «Suchstring erstellen» klickst.",
+    emptyBody: "Erstelle den Suchstring oben oder füge unten eine Komponente hinzu.",
     detectedFrom: "erkannt aus",
     custom: "eigene Komponente",
     noMesh: "Kein Schlagwort hinterlegt. Diese Komponente wird nur über Stichworte gesucht.",
@@ -207,20 +239,10 @@ export const ssCopy = {
   },
 
   database: {
-    heading: "Datenbank und Filter",
-    hint: "Wähle PubMed, die Cochrane Library oder beide. Zu jeder gewählten Datenbank bekommst du einen eigenen String. CINAHL und Embase kommen später.",
     legend: "Datenbank",
-    soon: "bald",
     atLeastOne: "Mindestens eine Datenbank bleibt gewählt.",
-    dbHints: {
-      pubmed: "[Mesh], [tiab], alle Filter im String.",
-      cochrane: "[mh …], :ti,ab,kw. Sprache, Zeitraum und Studientyp stellst du dort selbst ein.",
-      cinahl: "Kommt später.",
-      embase: "Kommt später.",
-    } as Record<string, string>,
     cochraneFilters:
       "Für die Cochrane Library stehen Sprache, Zeitraum, Studientyp und «nur Menschen» nicht im String, weil sich das dort nicht zuverlässig als Syntax schreiben lässt. Im Ergebnis steht dann, was du unter «Search limits» einstellst. Alter und Geschlecht schreibt das Tool als MeSH-Check-Tag.",
-    filtersHeading: "Filter",
     filtersHint: "Alle Filter sind optional.",
     language: "Sprache",
     languageAny: "alle Sprachen",
@@ -256,9 +278,32 @@ export const ssCopy = {
   },
 
   result: {
-    heading: "Suchstring",
-    hint: "Kopiere den String direkt ins Suchfeld der Datenbank oder lade ihn herunter. Pro gewählter Datenbank gibt es einen eigenen String.",
+    heading: "Dein Suchstring",
+    created: "Suchstring erstellt",
     stringLabel: "Suchstring für PubMed",
+    draftShort: "Entwurf. Prüfe Begriffe und Trefferzahl, bevor du ihn verwendest.",
+    draftMore: "mehr",
+    draftLess: "weniger",
+    componentsLabel: "Erkannte Suchkomponenten",
+    blockLetters: { population: "P", intervention: "I", comparison: "C", outcome: "O" } as Record<Block, string>,
+    blockNames: { population: "Population", intervention: "Intervention", comparison: "Vergleich", outcome: "Outcome" } as Record<Block, string>,
+    withMesh: "mit Schlagwort (MeSH)",
+    meshMark: "MeSH",
+    notInString: "nicht im String",
+    noneInBlock: "keine",
+    hints: (n: number, warnings: number) =>
+      `${n} ${n === 1 ? "Hinweis" : "Hinweise"}${warnings ? `, davon ${warnings} ${warnings === 1 ? "Warnung" : "Warnungen"}` : ""}`,
+    hintsShow: "anzeigen",
+    hintsHide: "ausblenden",
+    managerTitle: "Search Manager (zeilenweise)",
+    openIn: (db: string) => `In ${db} öffnen`,
+    noCount: (db: string) => `Für ${db} gibt es hier keine Trefferzählung: Die Datenbank ist lizenziert und hat keine offene Schnittstelle. Die Trefferzahl siehst du in der Datenbank selbst.`,
+    managerTitleFor: (db: string) => `${db}, zeilenweise`,
+    managerStatus: (n: number) => `${n} ${n === 1 ? "Zeile" : "Zeilen"}`,
+    downloadLines: "Zeilen als .txt",
+    exportFor: (db: string) => `Export ${db}`,
+    exportLinesTxt: "Als .txt, zeilenweise",
+    exportLinesJson: "Als .json, zeilenweise",
     stringLabelFor: (db: string) => `Suchstring für ${db}`,
     format: {
       label: "Format",
@@ -279,8 +324,6 @@ export const ssCopy = {
     limitsHint: "Diese Filter lassen sich dort nicht zuverlässig als Syntax schreiben. Sie stehen darum nicht im String.",
     lineKinds: { term: "Begriff", component: "Suchkomponente", filter: "Filter", final: "Alles verknüpft" },
     diff: {
-      show: "Unterschiede PubMed und Cochrane anzeigen",
-      hide: "Unterschiede ausblenden",
       heading: "So steht jede Suchkomponente in PubMed und in der Cochrane Library",
       intro:
         "Dieselben Begriffe, zweimal geschrieben. Gleich bleiben die Logik (OR innerhalb, AND zwischen den Suchkomponenten) und die Klammern.",
@@ -302,7 +345,7 @@ export const ssCopy = {
     downloadJson: "Als .json",
     stats: (components: number, terms: number) =>
       `${components} ${components === 1 ? "Suchkomponente" : "Suchkomponenten"}, ${terms} ${terms === 1 ? "Begriff" : "Begriffe"}`,
-    noticesHeading: "Auf einen Blick",
+    noticesHeading: "Hinweise zur Auswertung",
     tableHeading: "Suchkomponenten im Überblick",
     tableCols: { component: "Suchkomponente", keywords: "Stichworte", subjectHeadings: "Schlagworte (MeSH)", syntax: "Schreibweise" },
     none: "keine",
@@ -349,7 +392,14 @@ export const ssCopy = {
 
   lint: {
     heading: "Eigenen String prüfen",
-    hint: "Füge deinen Suchstring für PubMed oder die Cochrane Library ein, zum Beispiel aus einer Übung. Das Tool erkennt die Syntax, markiert typische Fehler wie typografische Anführungszeichen, fehlende Klammern bei AND und OR oder fehlende Field Tags beziehungsweise Feldcodes, und korrigiert, wo es geht.",
+    hint: "Das Tool erkennt die Syntax, markiert typische Fehler und korrigiert, wo es geht.",
+    check: "Prüfen",
+    checkAgain: "Erneut prüfen",
+    moreOptions: "Mehr Optionen",
+    moreOptionsStatus: (syntax: string) => `Syntax: ${syntax}. Umwandeln für andere Datenbanken.`,
+    marked: "Markierte Stellen im String",
+    markedStatus: "den String mit Markierungen lesen",
+    resultsLabel: "Ergebnis der Prüfung",
     syntax: {
       label: "Syntax",
       auto: "Automatisch",
@@ -367,17 +417,17 @@ export const ssCopy = {
       unsafeHeading: "Nicht umgewandelt, das prüfst du selbst",
       unsafeHint: "Diese Teile sind unverändert im String geblieben, weil es keine sichere Entsprechung gibt. Raten tut das Tool nicht.",
     },
-    inputLabel: "Dein Suchstring",
+    inputLabel: "Suchstring einfügen",
     inputPlaceholder: '("back pain"[tiab] OR "Back Pain"[Mesh]) AND ...',
-    lockedTitle: "In der Demo kannst du nur den Beispielstring prüfen.",
-    lockedBody: "Eigene Strings prüfst du mit dem Abo. Die Korrekturen kannst du hier schon ausprobieren.",
+    lockedBody: "In der Demo prüfst du nur den Beispielstring. Eigene Strings gibt es mit dem Abo.",
     insertExample: "Beispielstring einfügen",
     resetExample: "Beispielstring zurücksetzen",
     clear: "Leeren",
     undo: "Rückgängig",
     markedHeading: "Markierte Stellen",
     emptyTitle: "Noch kein String.",
-    emptyBody: "Füge oben einen Suchstring ein. Die Prüfung läuft beim Tippen mit.",
+    emptyBody: "Füge einen Suchstring ein und klick auf «Prüfen».",
+    notChecked: "Klick auf «Prüfen», dann siehst du hier, was das Tool findet. Danach läuft die Prüfung beim Tippen mit.",
     cleanTitle: "Nichts gefunden.",
     cleanBody: "Die Syntax stimmt. Ob die Begriffe zu deiner Frage passen, kann das Tool nicht beurteilen, das bleibt bei dir.",
     summary: (errors: number, warnings: number, infos: number) => {
@@ -406,10 +456,62 @@ export const ssCopy = {
       "Die Beispiele, die Begriffstabelle und das MeSH-Wörterbuch sind dieselben wie im Abo. Wörterbuch-Suche und Trefferzählung kannst du auch in der Demo nutzen, denn dafür brauchst du keine eigene Fragestellung.",
   },
 
+  /**
+   * CINAHL (EBSCOhost) and Embase (embase.com): labels for the fields the engine puts into BuiltQuery
+   * (vocabulary, platform, platformNotes, limitNotes, components[].headings, lines[].suggested) and for the lint syntax picker.
+   */
+  databasesExtra: {
+    hints: {
+      cinahl: "(MH \"…+\"), TI/AB und N-Operatoren für EBSCOhost. Schlagwörter sind Vorschläge aus MeSH. Sprache, Zeitraum und Studientyp stellst du dort selbst ein.",
+      embase: "'…'/exp, :ti,ab,kw und NEXT/n für embase.com. Schlagwörter sind Vorschläge aus MeSH. Sprache, Jahre und Studientyp stehen als Limits im String.",
+    } as Record<string, string>,
+    platforms: {
+      cinahl: "EBSCOhost (CINAHL Complete)",
+      embase: "embase.com (Elsevier)",
+    } as Record<string, string>,
+    vocabularyLabels: {
+      "cinahl-headings": "CINAHL Headings",
+      emtree: "Emtree",
+    } as Record<string, string>,
+    headings: {
+      toggleLegend: "Schlagwörter",
+      toggleOn: "Schlagwort-Vorschläge einschliessen",
+      toggleOff: "Nur Stichworte (ohne Schlagwörter)",
+      toggleHint: (vocabulary: string) =>
+        `Die Schlagwörter für ${vocabulary} leitet das Tool aus MeSH ab. Der Thesaurus der Datenbank ist lizenziert, das Tool kennt ihn nicht. Schalte sie aus, wenn du nur mit Stichworten suchen willst.`,
+      badge: "Vorschlag aus MeSH",
+      badgeTitle: (vocabulary: string) => `Schlagwort-Vorschlag aus MeSH, im Thesaurus der Datenbank prüfen (${vocabulary})`,
+      checkNote: (vocabulary: string) => `Schlagwort-Vorschlag aus MeSH. Im Thesaurus der Datenbank prüfen (${vocabulary}).`,
+      columnTitle: (vocabulary: string) => `Schlagwörter (${vocabulary}, Vorschläge)`,
+      offNote: "Dieser String enthält keine Schlagwörter, nur Stichworte.",
+    },
+    platformHeading: "So gibst du den String ein",
+    limitNotesHeading: (db: string) => `Das stellst du in ${db} selbst ein`,
+    lines: {
+      cinahl: "Zeilenweise (S1, S2 …)",
+      embase: "Zeilenweise (#1, #2 …)",
+      single: "Eine Zeile",
+    } as Record<string, string>,
+    lint: {
+      syntaxLabels: {
+        cinahl: "CINAHL (EBSCOhost)",
+        embase: "Embase (embase.com)",
+      } as Record<string, string>,
+      detected: (label: string) => `Erkannt: ${label}`,
+      ovidNote:
+        "Embase über Ovid hat eine andere Syntax (exp …/, .ti,ab.). Sie wird erkannt, aber nicht geprüft.",
+    },
+    convert: {
+      toCinahl: "In CINAHL-Syntax umwandeln",
+      toEmbase: "In Embase-Syntax umwandeln",
+      pubmedOnly: "Umgewandelt werden nur PubMed-Strings.",
+    },
+  },
+
   paywall: {
     title: "Suchstring-Generator",
     sub: "Mit dem Abo freigeschaltet.",
-    lede: "Du schreibst deine PICO-Frage oder die Aufgabe aus dem Unterricht rein. Das Tool erkennt die Suchkomponenten, ordnet Schlagworte (MeSH) und Stichworte zu und baut daraus einen String für PubMed, für die Cochrane Library oder für beide. Du gehst drüber und korrigierst, bevor du ihn kopierst.",
+    lede: "Fall einfügen, fertigen Suchstring erhalten und bei Bedarf anpassen.",
     whatHeading: "Was das Tool macht",
     points: [
       "Verarbeitet ganze Fälle und Aufgabenblätter: erkennt «P:»-Zeilen, überliest Arbeitsaufträge und schlägt Alter und Geschlecht als Filter vor, die du selbst einschaltest.",

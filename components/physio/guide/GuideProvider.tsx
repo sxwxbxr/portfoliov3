@@ -16,6 +16,8 @@ export interface GuideApi {
   invited: boolean
   index: number
   total: number
+  /** `data-guide` ids of the current step while the guide is on (empty otherwise). A collapsed area uses this to open itself. */
+  anchors: readonly string[]
   minimised: boolean
   setOn: (on: boolean) => void
   dismissInvite: () => void
@@ -33,6 +35,11 @@ export function useGuide(): GuideApi {
   const api = useContext(GuideContext)
   if (!api) throw new Error("useGuide needs a <GuideProvider>")
   return api
+}
+
+/** The guide state, or null outside a GuideProvider. For areas that only react to the guide. */
+export function useGuideOptional(): GuideApi | null {
+  return useContext(GuideContext)
 }
 
 function prefersReducedMotion(): boolean {
@@ -97,6 +104,8 @@ export function GuideProvider<C>({ guide, ctx, panels, children }: Props<C>) {
   const index = clampStep(stored.steps[guide.id], total)
   const step = guide.steps[index]
   const on = loaded && stored.on
+  const anchorKey = on ? anchorsOf(step).join("|") : ""
+  const anchors = useMemo(() => (anchorKey ? anchorKey.split("|") : []), [anchorKey])
 
   const setOn = useCallback(
     (value: boolean) => {
@@ -124,6 +133,7 @@ export function GuideProvider<C>({ guide, ctx, panels, children }: Props<C>) {
       invited: stored.invited,
       index,
       total,
+      anchors,
       minimised,
       setOn,
       dismissInvite: () => update((s) => ({ ...s, invited: true })),
@@ -138,7 +148,7 @@ export function GuideProvider<C>({ guide, ctx, panels, children }: Props<C>) {
     }),
     // ctx is read at call time through the closure; a new ctx on every render must not rebuild the API.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [loaded, on, stored.invited, index, total, minimised, setOn, update, goTo, guide],
+    [loaded, on, stored.invited, index, total, anchors, minimised, setOn, update, goTo, guide],
   )
 
   // Highlight the anchors of the current step; scroll once per step change (or once the area exists).

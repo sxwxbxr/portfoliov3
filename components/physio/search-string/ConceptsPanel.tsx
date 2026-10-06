@@ -28,12 +28,10 @@ import {
   type Category,
   type Concept,
   type MeshChoice,
-  type Notice,
   type SearchModel,
 } from "@/lib/physio/search-string"
-import { MeshBrowser, categoryLabel } from "./MeshBrowser"
+import { categoryLabel } from "./MeshBrowser"
 import { resolveHeading, useNeighbours } from "./mesh-hooks"
-import { Notices } from "./Notices"
 
 const t = ssCopy.concepts
 
@@ -42,14 +40,13 @@ interface Props {
   onChange: (model: SearchModel) => void
   candidates: Candidate[]
   onCandidatesChange: (candidates: Candidate[]) => void
-  notices: Notice[]
 }
 
-export function ConceptsPanel({ model, onChange, candidates, onCandidatesChange, notices }: Props) {
+export function ConceptsPanel({ model, onChange, candidates, onCandidatesChange }: Props) {
   const empty = model.concepts.length === 0
   return (
     <div className="flex flex-col gap-10">
-      <Notices notices={notices} heading={t.notices} />
+      <p className="measure text-sm leading-relaxed text-fg-muted">{t.hint}</p>
 
       {empty && (
         <div className="well flex flex-col gap-1 px-5 py-4" role="status">
@@ -69,7 +66,6 @@ export function ConceptsPanel({ model, onChange, candidates, onCandidatesChange,
       )}
 
       <AddConcept model={model} onChange={onChange} />
-      <MeshBrowser model={model} onChange={onChange} />
     </div>
   )
 }
@@ -83,7 +79,7 @@ function BlockGroup({ block, model, onChange }: { block: Block; model: SearchMod
     <section aria-label={copy.title} className="flex flex-col gap-4">
       <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
         <div className="flex flex-col gap-1">
-          <h3 className="text-xl tracking-tight">{copy.title}</h3>
+          <h4 className="text-xl tracking-tight">{copy.title}</h4>
           <p className="text-sm text-fg-muted">{copy.sub}</p>
         </div>
         <div className="flex items-center gap-2.5">
@@ -141,9 +137,9 @@ function ConceptCard({
     <article aria-labelledby={`${uid}-h`} className={`cast flex flex-col gap-6 p-5 md:p-6 ${dimmed ? "opacity-70" : ""}`}>
       <header className="flex flex-wrap items-start justify-between gap-x-4 gap-y-3">
         <div className="flex min-w-0 flex-col gap-1">
-          <h4 id={`${uid}-h`} className="text-lg tracking-tight [overflow-wrap:anywhere]">
+          <h5 id={`${uid}-h`} className="text-lg tracking-tight [overflow-wrap:anywhere]">
             {concept.label}
-          </h4>
+          </h5>
           {descriptor && (
             <p className="annotate text-fg-muted [overflow-wrap:anywhere]">
               {t.englishName}: {descriptor.name} · {categoryLabel(descriptor)}
@@ -201,7 +197,7 @@ function ConceptCard({
       )}
 
       <div className="flex flex-col gap-2.5">
-        <h5 className="annotate text-fg-muted">{t.schlagworte}</h5>
+        <h6 className="annotate text-fg-muted">{t.schlagworte}</h6>
         {activeMesh.length === 0 ? (
           <p className="text-sm text-fg-muted">{concept.mesh.length === 0 ? t.noMesh : t.allMeshRemoved}</p>
         ) : (
@@ -263,7 +259,7 @@ function ConceptCard({
       </div>
 
       <div className="flex flex-col gap-2.5">
-        <h5 className="annotate text-fg-muted">{t.stichworte}</h5>
+        <h6 className="annotate text-fg-muted">{t.stichworte}</h6>
         {activeText.length === 0 ? (
           <p className="text-sm text-fg-muted">{t.allTextRemoved}</p>
         ) : (
@@ -370,9 +366,9 @@ function Alternatives({ concept, onPick }: { concept: Concept; onPick: (ui: stri
   return (
     <section aria-labelledby={`${uid}-h`} className="well flex flex-col gap-3 px-4 py-4">
       <div className="flex flex-col gap-1">
-        <h5 id={`${uid}-h`} className="text-sm text-fg">
+        <h6 id={`${uid}-h`} className="text-sm text-fg">
           {t.alternativesHeading}
-        </h5>
+        </h6>
         <p className="text-xs leading-relaxed text-fg-muted">{t.alternativesHint}</p>
       </div>
       <ul className="flex flex-col gap-3">
@@ -588,9 +584,9 @@ function CandidateList({
   return (
     <section aria-labelledby="ss-candidates" className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">
-        <h3 id="ss-candidates" className="text-xl tracking-tight">
+        <h4 id="ss-candidates" className="text-xl tracking-tight">
           {t.candidatesHeading}
-        </h3>
+        </h4>
         <p className="measure text-sm leading-relaxed text-fg-muted">{t.candidatesHint}</p>
       </div>
       <ul className="flex flex-col gap-2">
@@ -678,9 +674,9 @@ function AddConcept({ model, onChange }: { model: SearchModel; onChange: (m: Sea
 
   return (
     <section aria-labelledby={`${uid}-h`} className="flex flex-col gap-5 border-t border-edge-soft pt-8">
-      <h3 id={`${uid}-h`} className="text-xl tracking-tight">
+      <h4 id={`${uid}-h`} className="text-xl tracking-tight">
         {t.addConceptHeading}
-      </h3>
+      </h4>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <form onSubmit={addFromList} className="flex flex-col gap-1.5">
           <label htmlFor={`${uid}-list`} className="text-sm text-fg-muted">

@@ -6,9 +6,10 @@
  *   analyze(input)            the same with the curated terminology only (synchronous, offline)
  *   createModel(analysis)     editable model
  *   edit.*                    removeConcept, moveConcept, toggleExplode, addFreeText, ...
- *   buildQuery(model, db)     model -> string for PubMed or Cochrane (+ Search Manager lines) + table rows + notices
- *   lintQuery(string, opts)   "Eigenen String prüfen" (PubMed or Cochrane, auto-detected) -> findings with fixes
+ *   buildQuery(model, db)     model -> string for PubMed, Cochrane, CINAHL or Embase (+ numbered lines) + table rows + notices
+ *   lintQuery(string, opts)   "Eigenen String prüfen" (PubMed, Cochrane, CINAHL or Embase, auto-detected) -> findings with fixes
  *   convertToCochrane / convertToPubmed   field tags and MeSH syntax of a pasted string
+ *   convertToCinahl / convertToEmbase     a PubMed string in CINAHL or Embase syntax (headings are suggestions)
  *   applyFix / autoFix        repair a string from lint findings
  *   exportText / exportJson   downloads
  */
@@ -35,11 +36,22 @@ export { PUBMED_TOOL, createPubMedCounter, countRows, getPubMedCounter, pubmedSe
 export type { CountRow, PubMedCounter, PubMedErrorCode } from "./pubmed"
 export { buildQuery, BLOCK_LABEL, MANY_COMPONENTS } from "./query-builder"
 export {
+  CINAHL_MIN_STEM,
+  CINAHL_SOURCES,
   COCHRANE_ADVANCED_SEARCH_URL,
   COCHRANE_FIELDS,
   COCHRANE_MIN_STEM,
   COCHRANE_SOURCES,
   DATABASES,
+  EMBASE_AGE_LIM,
+  EMBASE_FIELDS,
+  EMBASE_MIN_STEM,
+  EMBASE_SEARCH_URL,
+  EMBASE_SOURCES,
+  EMBASE_STUDY_LIM,
+  cinahlMesh,
+  embaseMesh,
+  emtreeSuggestion,
   LANGUAGES,
   STUDY_TYPE_PT,
   getRenderProfile,
@@ -48,11 +60,16 @@ export {
   PUBMED_MIN_STEM,
 } from "./profiles"
 export { buildStrategyLines, strategyText } from "./cochrane"
+export type { StrategyOptions } from "./cochrane"
 export type { DatabaseInfo, RenderProfile } from "./profiles"
 export { lintQuery, applyEdits, applyFix, autoFix, genericLevel } from "./lint"
 export type { LintOptions } from "./lint"
-export { detectLintDatabase } from "./lint-cochrane"
+export { detectLintDatabase, cinahlSignals } from "./detect"
+export type { DetectedDatabase } from "./detect"
+export { lintCinahl, CINAHL_FIELD_CODES } from "./lint-cinahl"
+export { lintEmbase, EMBASE_FIELD_CODES, EMBASE_LIM_VALUES } from "./lint-embase"
 export { convertToCochrane, convertToPubmed } from "./convert"
+export { convertToCinahl, convertToEmbase } from "./convert-platforms"
 export type { ConvertNote, ConvertResult } from "./convert"
 export * from "./edit"
 export { exportText, exportJson, DRAFT_NOTE } from "./export"

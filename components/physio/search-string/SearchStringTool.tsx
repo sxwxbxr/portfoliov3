@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ssCopy } from "@/lib/physio/copy/search-string"
 import { lintGuide, type LintGuideCtx } from "@/lib/physio/guide/lint-guide"
@@ -10,9 +10,12 @@ import {
   STUDENT_SEARCH_STRING,
   analyzeAsync,
   createModel,
+  setDatabases,
   type AnalysisResult,
+  type BuiltQuery,
   type Candidate,
   type CountRow,
+  type DatabaseId,
   type Filters,
   type LintFinding,
   type PicoInput,
@@ -23,10 +26,14 @@ import { GuideInvite, GuideToggle } from "@/components/physio/guide/GuideToggle"
 import { GuideProvider } from "@/components/physio/guide/GuideProvider"
 import { CriteriaPanel, LintFindingsPanel, PicoPanel, TermsPanel, WorksheetPanel } from "@/components/physio/guide/suchstring-panels"
 import { ConceptsPanel } from "./ConceptsPanel"
-import { DatabasePanel } from "./DatabasePanel"
+import { FilterPanel, activeFilterNames } from "./DatabasePanel"
+import { Disclosure, SectionsProvider } from "./Disclosure"
 import { LintPanel } from "./LintPanel"
-import { QuestionPanel } from "./QuestionPanel"
-import { ResultPanel } from "./ResultPanel"
+import { MeshBrowser } from "./MeshBrowser"
+import { PicoFields, QuestionPanel, picoFilledCount, PICO_KEYS } from "./QuestionPanel"
+import { ResultPanel, buildAll, mergeNotices } from "./ResultPanel"
+import { ComponentTables, Differences, ExportList, otherDatabases } from "./ResultSections"
+import { joinNames } from "./result-utils"
 
 interface Run {
   /** The case as it was analysed (the guided mode reads this, not what is typed right now). */
@@ -39,42 +46,22 @@ interface Run {
   edited: boolean
 }
 
-async function makeRun(text: string, pico: PicoInput, filters?: Partial<Filters>): Promise<Run> {
+async function makeRun(text: string, pico: PicoInput, databases: DatabaseId[], filters?: Partial<Filters>): Promise<Run> {
   const analysis = await analyzeAsync({ text, pico })
   return {
     text,
     pico,
     analysis,
     candidates: analysis.candidates,
-    model: createModel(analysis, filters),
+    model: setDatabases(createModel(analysis, filters), databases),
     question: [text, ...Object.values(pico)].filter((x) => x && x.trim()).join(" | "),
     edited: false,
   }
 }
 
-/** `guide` is the data-guide id the guided mode highlights and scrolls to. */
-function Step({ n, title, hint, guide, children }: { n?: number; title: string; hint: string; guide?: string; children: ReactNode }) {
-  const id = `ss-step-${n ?? "lint"}`
-  return (
-    <section aria-labelledby={id} data-guide={guide} className="grid grid-cols-1 gap-x-12 gap-y-6 border-t border-edge-soft py-10 md:py-14 lg:grid-cols-[15rem_minmax(0,1fr)]">
-      <header className="lg:sticky lg:top-28 lg:self-start">
-        {n !== undefined && (
-          <p className="annotate text-fg-muted">
-            {ssCopy.step.label} {n}
-          </p>
-        )}
-        <h2 id={id} className="headline mt-1">
-          {title}
-        </h2>
-        <p className="mt-2 max-w-[34ch] text-sm leading-relaxed text-fg-muted">{hint}</p>
-      </header>
-      <div className="min-w-0">{children}</div>
-    </section>
-  )
-}
-
+/** Quiet tabs: the case is the main thing on the page, the second tab is a side door. */
 const TAB_CLASS =
-  "min-h-11 rounded-full border border-edge-mid px-5 text-sm text-fg-muted data-[state=active]:border-signal data-[state=active]:bg-signal data-[state=active]:text-signal-fg data-[state=active]:shadow-none hover:text-fg"
+  "-mb-px min-h-11 rounded-none border-0 border-b-2 border-transparent bg-transparent px-1 text-sm text-fg-muted shadow-none hover:text-fg data-[state=active]:border-signal data-[state=active]:bg-transparent data-[state=active]:text-fg data-[state=active]:shadow-none"
 
 const GENERATE_PANELS = { pico: PicoPanel, criteria: CriteriaPanel, terms: TermsPanel, worksheet: WorksheetPanel }
 const LINT_PANELS = { "lint-findings": LintFindingsPanel }
@@ -95,10 +82,34 @@ function Attribution() {
   const c = meta?.counts as Record<string, number> | undefined
   return (
     <footer className="mt-10 flex flex-col gap-1 border-t border-edge-soft pt-6">
+      <p className="annotate text-fg-muted max-w-[72ch]">{ssCopy.privacy}</p>
       <p className="annotate text-fg-muted">{ssCopy.attribution.source}</p>
       {meta && c && <p className="annotate text-fg-muted">{ssCopy.attribution.version(meta.version, c.descriptors ?? 0, c.descriptorsWithGerman ?? 0)}</p>}
     </footer>
   )
+}
+
+/** One short line per folded area, so a student can tell whether it is worth opening. */
+function statusLines(run: Run, builds: BuiltQuery[], demo: boolean, pico: PicoInput) {
+  const s = ssCopy.sections
+  const concepts = run.model.concepts
+  const withoutMesh = concepts.filter((c) => !c.mesh.some((m) => !m.removed)).length
+  const filterNames = activeFilterNames(run.model)
+  const f = run.model.filters
+  const open = run.analysis.filterSuggestions.filter((sg) => (sg.kind === "age" ? !f.ageGroups.includes(sg.value) : f.sex !== sg.value)).length
+  const filters = filterNames.length
+    ? `${s.filters.active(filterNames.length)}: ${filterNames.join(", ")}`
+    : open
+      ? `${s.filters.none}, ${s.filters.suggestions(open)}`
+      : s.filters.none
+  const filled = picoFilledCount(pico)
+  return {
+    concepts: concepts.length ? s.concepts.status(concepts.length, withoutMesh, run.candidates.length) : s.concepts.none,
+    pico: demo ? s.pico.statusLocked(filled, PICO_KEYS.length) : s.pico.status(filled, PICO_KEYS.length),
+    filters,
+    table: s.table.status(builds[0]?.components.length ?? 0),
+    diff: s.diff.status(joinNames(["PubMed", ...otherDatabases().map((d) => d.label)])),
+  }
 }
 
 /**
@@ -120,13 +131,17 @@ export function SearchStringTool({ mode }: { mode: "full" | "demo" }) {
   const [run, setRun] = useState<Run | null>(null)
   const [busy, setBusy] = useState(demo)
   const [error, setError] = useState<string | null>(null)
+  const [databases, setDatabaseChoice] = useState<DatabaseId[]>(["pubmed"])
+  const databasesRef = useRef(databases)
   const ticket = useRef(0)
+  const resultHeading = useRef<HTMLHeadingElement>(null)
+  const focusResult = useRef(false)
 
   const analyse = useCallback(async (t: string, p: PicoInput, filters?: Partial<Filters>) => {
     const mine = ++ticket.current
     setBusy(true)
     try {
-      const next = await makeRun(t, p, filters)
+      const next = await makeRun(t, p, databasesRef.current, filters)
       if (mine !== ticket.current) return
       setRun(next)
       setError(null)
@@ -154,12 +169,29 @@ export function SearchStringTool({ mode }: { mode: "full" | "demo" }) {
     void analyse(ex.text, ex.pico ?? {}, ex.filters)
   }
 
+  /** The chips: the choice is kept here, and a result that already exists is rewritten for it (edits stay). */
+  function changeDatabases(ids: DatabaseId[]) {
+    if (!ids.length) return
+    databasesRef.current = ids
+    setDatabaseChoice(ids)
+    setRun((r) => (r ? { ...r, model: setDatabases(r.model, ids) } : r))
+  }
+
+  // After "Suchstring erstellen" the focus moves to the result, so keyboard and screen reader users land on it.
+  useEffect(() => {
+    if (run && !busy && focusResult.current) {
+      focusResult.current = false
+      resultHeading.current?.focus()
+    }
+  }, [run, busy])
+
   function submit() {
     const filled = text.trim() || Object.values(pico).some((v) => v && v.trim())
     if (!filled) {
       setError(ssCopy.question.emptyError)
       return
     }
+    focusResult.current = true
     void analyse(text, pico)
   }
 
@@ -207,82 +239,114 @@ export function SearchStringTool({ mode }: { mode: "full" | "demo" }) {
   )
   const lintCtx: LintGuideCtx = useMemo(() => ({ mode, text: lintState.text, findings: lintState.findings, baseline: lintBaseline }), [mode, lintState, lintBaseline])
 
+  const builds = useMemo(() => (run ? buildAll(run.model) : []), [run])
+  const notices = useMemo(() => (run ? mergeNotices(run.analysis.notices, builds) : []), [run, builds])
+  const sectionStatus = run ? statusLines(run, builds, demo, pico) : null
+
+  function create() {
+    if (demo) {
+      focusResult.current = true
+      pickExample(exampleId || EXAMPLES[0].id)
+    } else submit()
+  }
+
   const body = (
-    <>
-      <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-start md:justify-between md:gap-8">
-        <p className="annotate text-fg-muted max-w-[72ch]">{ssCopy.privacy}</p>
-        <GuideToggle className="shrink-0 self-start" />
-      </div>
-      <GuideInvite />
-
+    <SectionsProvider>
       <Tabs value={tab} onValueChange={setTab} className="gap-0">
-        <TabsList className="mb-2 h-auto flex-wrap justify-start gap-2 bg-transparent p-0">
-          <TabsTrigger value="generate" className={TAB_CLASS}>
-            {ssCopy.tabs.generate}
-          </TabsTrigger>
-          <TabsTrigger value="lint" className={TAB_CLASS}>
-            {ssCopy.tabs.lint}
-          </TabsTrigger>
-        </TabsList>
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-x-4 border-b border-edge-soft">
+          <TabsList aria-label={ssCopy.tabs.label} className="h-auto flex-wrap justify-start gap-x-6 rounded-none bg-transparent p-0">
+            <TabsTrigger value="generate" className={TAB_CLASS}>
+              {ssCopy.tabs.generate}
+            </TabsTrigger>
+            <TabsTrigger value="lint" className={TAB_CLASS}>
+              {ssCopy.tabs.lint}
+            </TabsTrigger>
+          </TabsList>
+          <GuideToggle className="control-ghost shrink-0" />
+        </div>
 
-        <TabsContent value="generate" className="mt-8">
-          <Step n={1} title={ssCopy.question.heading} hint={ssCopy.question.hint} guide="ss-case">
-            <QuestionPanel
-              locked={demo}
-              exampleId={exampleId}
-              onExample={pickExample}
-              text={text}
-              onText={setText}
-              pico={pico}
-              onPico={setPico}
-              onSubmit={demo ? () => pickExample(exampleId || EXAMPLES[0].id) : submit}
-              error={error}
-              edited={!!run?.edited}
-              busy={busy}
-            />
-          </Step>
+        <TabsContent value="generate" className="mt-0 flex max-w-4xl flex-col gap-6">
+          <QuestionPanel
+            locked={demo}
+            exampleId={exampleId}
+            onExample={pickExample}
+            text={text}
+            onText={setText}
+            databases={databases}
+            onDatabases={changeDatabases}
+            onSubmit={create}
+            error={error}
+            edited={!!run?.edited}
+            busy={busy}
+          />
 
-          {run ? (
-            <div aria-busy={busy} className={busy ? "opacity-60 transition-opacity" : "transition-opacity"}>
-              <Step n={2} title={ssCopy.concepts.heading} hint={ssCopy.concepts.hint} guide="ss-concepts">
-                <ConceptsPanel
-                  model={run.model}
-                  onChange={updateModel}
-                  candidates={run.candidates}
-                  onCandidatesChange={(candidates) => setRun((r) => (r ? { ...r, candidates } : r))}
-                  notices={run.analysis.notices}
-                />
-              </Step>
-              <Step n={3} title={ssCopy.database.heading} hint={ssCopy.database.hint} guide="ss-database">
-                <DatabasePanel model={run.model} onChange={updateModel} suggestions={run.analysis.filterSuggestions} />
-              </Step>
-              <Step n={4} title={ssCopy.result.heading} hint={ssCopy.result.hint} guide="ss-result">
-                <ResultPanel model={run.model} question={run.question} onCountsChange={setCounts} />
-              </Step>
-            </div>
-          ) : (
-            <div className="border-t border-edge-soft py-10">
-              {busy ? (
-                <p role="status" className="inline-flex items-center gap-2 text-sm text-fg-muted">
-                  <span aria-hidden="true" className="size-2 animate-pulse rounded-full bg-signal-bright" />
-                  {ssCopy.attribution.loading}
-                </p>
-              ) : (
-                <p className="text-sm text-fg-muted">{ssCopy.concepts.waiting}</p>
-              )}
-            </div>
-          )}
+          {run && sectionStatus ? (
+            <>
+              <div aria-busy={busy} className={busy ? "flex flex-col gap-6 opacity-60 transition-opacity" : "flex flex-col gap-6 transition-opacity"}>
+                <ResultPanel model={run.model} builds={builds} notices={notices} onCountsChange={setCounts} headingRef={resultHeading} onChange={updateModel} />
+              </div>
+
+              <GuideInvite />
+
+              <section aria-labelledby="ss-adjust-h" aria-busy={busy} className={busy ? "flex flex-col gap-4 opacity-60 transition-opacity" : "flex flex-col gap-4 transition-opacity"}>
+                <div className="flex flex-col gap-1">
+                  <h2 id="ss-adjust-h" className="headline">
+                    {ssCopy.sections.heading}
+                  </h2>
+                  <p className="text-sm text-fg-muted">{ssCopy.sections.hint}</p>
+                </div>
+                <div className="flex flex-col gap-3">
+                  <Disclosure id="sec-concepts" guide="ss-concepts" title={ssCopy.sections.concepts.title} status={sectionStatus.concepts}>
+                    <ConceptsPanel
+                      model={run.model}
+                      onChange={updateModel}
+                      candidates={run.candidates}
+                      onCandidatesChange={(candidates) => setRun((r) => (r ? { ...r, candidates } : r))}
+                    />
+                  </Disclosure>
+                  <Disclosure id="sec-pico" guide="ss-pico" title={ssCopy.sections.pico.title} status={sectionStatus.pico}>
+                    <PicoFields locked={demo} pico={pico} onPico={setPico} onSubmit={submit} busy={busy} edited={!!run.edited} />
+                  </Disclosure>
+                  <Disclosure id="sec-filters" guide="ss-filters" title={ssCopy.sections.filters.title} status={sectionStatus.filters}>
+                    <FilterPanel model={run.model} onChange={updateModel} suggestions={run.analysis.filterSuggestions} />
+                  </Disclosure>
+                  <Disclosure id="sec-mesh" guide="ss-mesh" title={ssCopy.sections.mesh.title} status={ssCopy.sections.mesh.status}>
+                    <MeshBrowser model={run.model} onChange={updateModel} />
+                  </Disclosure>
+                  {!builds[0].empty && (
+                    <>
+                      <Disclosure id="sec-table" guide="ss-table" title={ssCopy.sections.table.title} status={sectionStatus.table}>
+                        <ComponentTables builds={builds} />
+                      </Disclosure>
+                      <Disclosure id="sec-diff" guide="ss-diff" title={ssCopy.sections.diff.title} status={sectionStatus.diff}>
+                        <Differences model={run.model} />
+                      </Disclosure>
+                      <Disclosure id="sec-export" guide="ss-export" title={ssCopy.sections.export.title} status={ssCopy.sections.export.status}>
+                        <ExportList builds={builds} model={run.model} question={run.question} />
+                      </Disclosure>
+                    </>
+                  )}
+                </div>
+              </section>
+            </>
+          ) : busy ? (
+            <p role="status" className="inline-flex items-center gap-2 text-sm text-fg-muted">
+              <span aria-hidden="true" className="size-2 animate-pulse rounded-full bg-signal-bright" />
+              {ssCopy.attribution.loading}
+            </p>
+          ) : null}
         </TabsContent>
 
-        <TabsContent value="lint" className="mt-8">
-          <Step title={ssCopy.lint.heading} hint={ssCopy.lint.hint} guide="ss-lint">
+        <TabsContent value="lint" className="mt-0 flex max-w-4xl flex-col gap-6">
+          <div data-guide="ss-lint">
             <LintPanel locked={demo} exampleString={STUDENT_SEARCH_STRING} onStateChange={onLintState} />
-          </Step>
+          </div>
+          <GuideInvite />
         </TabsContent>
       </Tabs>
 
       <Attribution />
-    </>
+    </SectionsProvider>
   )
 
   return (

@@ -3,6 +3,10 @@
  * OST assignment (PICO, Ein- und Ausschlusskriterien, RefHunter steps a to c) and
  * every observation is derived from the student's own case, model and counts.
  * Pure: SearchStringTool builds the context, the panel renders the steps.
+ *
+ * Anchors (`data-guide` in components/physio/search-string): ss-case (the input), ss-result (the string
+ * and the hit count), and the folded areas under it: ss-pico, ss-filters, ss-concepts, ss-mesh, ss-table.
+ * A folded area opens itself while its step is the current one (Disclosure reads GuideApi.anchors).
  */
 import {
   DATABASES,
@@ -412,7 +416,7 @@ const steps: GuideStep<SuchstringGuideCtx>[] = [
   {
     id: "pico",
     title: t.steps.pico.title,
-    anchor: "ss-case",
+    anchor: "ss-pico",
     body: t.steps.pico.body,
     observe: observePico,
     ready: (c) => !!c.model && c.resolved.complete,
@@ -422,7 +426,7 @@ const steps: GuideStep<SuchstringGuideCtx>[] = [
   {
     id: "criteria",
     title: t.steps.criteria.title,
-    anchor: "ss-database",
+    anchor: "ss-filters",
     body: t.steps.criteria.body,
     observe: observeCriteria,
     ready: (c) => !!c.model && activeCriteria(c.criteria).length > 0,
@@ -441,7 +445,7 @@ const steps: GuideStep<SuchstringGuideCtx>[] = [
   {
     id: "terms",
     title: t.steps.terms.title,
-    anchor: "ss-concepts",
+    anchor: ["ss-concepts", "ss-mesh", "ss-table"],
     body: t.steps.terms.body,
     observe: observeTerms,
     ready: (c) => !!c.built && !c.built.empty,

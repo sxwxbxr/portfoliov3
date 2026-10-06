@@ -240,3 +240,22 @@ export function toggleAgeGroup(model: SearchModel, group: string): SearchModel {
   const has = model.filters.ageGroups.includes(group)
   return setFilters(model, { ageGroups: has ? model.filters.ageGroups.filter((g) => g !== group) : [...model.filters.ageGroups, group] })
 }
+
+/* ── Subject-heading suggestions (CINAHL, Embase) ───────────────── */
+
+/** Databases whose headings are suggestions derived from MeSH (CINAHL Headings, Emtree) and can be left out. */
+export function headingOptionDatabases(): DatabaseId[] {
+  return DATABASES.filter((d) => d.available && d.headingSuggestions).map((d) => d.id)
+}
+
+/** True when the string for this database contains headings. PubMed and Cochrane always do (MeSH is their own vocabulary). */
+export function headingsEnabled(model: SearchModel, id: DatabaseId): boolean {
+  return !headingOptionDatabases().includes(id) || !(model.headingsOff ?? []).includes(id)
+}
+
+/** Switches the subject-heading suggestions of one database on or off. Off means free text only. Other databases are ignored. */
+export function setHeadings(model: SearchModel, id: DatabaseId, on: boolean): SearchModel {
+  if (!headingOptionDatabases().includes(id)) return model
+  const off = (model.headingsOff ?? []).filter((d) => d !== id)
+  return { ...model, headingsOff: on ? off : [...off, id] }
+}
