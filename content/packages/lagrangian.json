@@ -14,7 +14,7 @@
     "Gravity",
     "React"
   ],
-  "license": "MIT",
+  "license": "MIT + Pro",
   "order": 31,
   "install": "pnpm add @sweberdev/lagrangian",
   "npm": [
@@ -50,6 +50,18 @@
       "Reduced motion respected: automatic motion jumps to where it would rest",
       "React hooks: useSpringProps, useSpring, useDraggable, useWorld, useBody",
       "About 7 kB min+gzip for everything, checked in CI"
+    ],
+    "pro": [
+      "Bottom sheet with detents: lands where the throw would carry it, rubber-bands at the top, closes on a flick, Escape or a tap on the backdrop",
+      "Swipe stack: cards tilt around the grip point, fly off at the thrown speed, come back with undo, stamps driven by a CSS variable",
+      "Sortable lists: drag to reorder with springs, neighbours make room, works with items of different heights",
+      "Keyboard and screen reader support for sorting: Space, arrow keys, Escape, announcements you can translate",
+      "Layout transitions for any DOM change, also through React state, and a second change mid-flight keeps its velocity",
+      "Jelly: squash and stretch from the real velocity, area-preserving, wobbles back when it stops or hits something",
+      "Ropes, chains and garlands with Verlet integration: grab them, swing them, hang elements from them",
+      "Impact sounds synthesized with Web Audio for a World: loudness from speed, pitch from size, five materials",
+      "React hooks for every piece, tested with React 18 and 19 and Strict Mode",
+      "Reduced motion respected everywhere"
     ]
   },
   "faq": [
@@ -68,7 +80,146 @@
     {
       "q": "What happens with reduced motion?",
       "a": "Springs and throws jump to where they would come to rest, so the layout ends up the same. Dragging and the world still follow the pointer, because the user is moving them."
+    },
+    {
+      "q": "What does Lagrangian Pro add?",
+      "a": "Finished interface pieces built on the free physics: a bottom sheet, a swipe stack, sortable lists, layout transitions, jelly deformation, ropes and impact sounds, with React hooks. The free library stays free and keeps everything it has today."
+    },
+    {
+      "q": "Do my customers need a licence?",
+      "a": "No. You can use Lagrangian Pro in any number of websites and apps you build. Your customers only need a licence if they use it outside the project you delivered."
+    },
+    {
+      "q": "Is sorting accessible?",
+      "a": "Yes. Items can be picked up with Space, moved with the arrow keys and dropped with Space or Enter, and every step is announced to screen readers. You can translate the announcements."
     }
   ],
-  "publishedAt": "2026-10-06"
+  "publishedAt": "2026-10-06",
+  "comparison": [
+    {
+      "feature": "Springs, throws, snap points and dragging",
+      "free": true,
+      "pro": true
+    },
+    {
+      "feature": "2D world with gravity, collisions and rolling",
+      "free": true,
+      "pro": true
+    },
+    {
+      "feature": "React hooks for the core",
+      "free": true,
+      "pro": true
+    },
+    {
+      "feature": "Bottom sheet with detents",
+      "free": false,
+      "pro": true
+    },
+    {
+      "feature": "Swipe stack with undo",
+      "free": false,
+      "pro": true
+    },
+    {
+      "feature": "Sortable lists with keyboard support",
+      "free": false,
+      "pro": true
+    },
+    {
+      "feature": "Layout transitions",
+      "free": false,
+      "pro": true
+    },
+    {
+      "feature": "Jelly squash and stretch",
+      "free": false,
+      "pro": true
+    },
+    {
+      "feature": "Ropes and chains",
+      "free": false,
+      "pro": true
+    },
+    {
+      "feature": "Impact sounds",
+      "free": false,
+      "pro": true
+    },
+    {
+      "feature": "Licence",
+      "free": "MIT",
+      "pro": "Commercial"
+    }
+  ],
+  "pro": {
+    "name": "Lagrangian Pro",
+    "availability": "available",
+    "packages": [
+      {
+        "name": "@weber-development/lagrangian-pro",
+        "description": "Bottom sheet, swipe stack, sortable lists, layout transitions, jelly, ropes and impact sounds, framework-free."
+      },
+      {
+        "name": "@weber-development/lagrangian-pro-react",
+        "description": "React hooks for every piece, for React 18 and 19."
+      }
+    ],
+    "demoUrl": "/lagrangian/demo#pro",
+    "waitlistUrl": "mailto:info@sweber.dev?subject=Lagrangian%20Pro%20waitlist"
+  },
+  "pricing": {
+    "currency": "CHF",
+    "merchant": "Polar",
+    "tiers": [
+      {
+        "id": "freelancer",
+        "name": "Freelancer",
+        "description": "For one developer building interfaces for clients.",
+        "monthly": 12,
+        "yearly": 120,
+        "seats": 1,
+        "support": false,
+        "checkout": {
+          "monthly": "https://buy.polar.sh/polar_cl_YViAYxp2ZZ0HRyw0qyp91jxHINaQSjjxL8ogb0A4QsK",
+          "yearly": "https://buy.polar.sh/polar_cl_8rTdmveSzBgJPWn0fJfrghvKMLHFdwb1NRWvL1CndcI"
+        }
+      },
+      {
+        "id": "agency",
+        "name": "Agency",
+        "description": "For teams of up to ten named people, one price.",
+        "monthly": 39,
+        "yearly": 390,
+        "seats": 10,
+        "support": true,
+        "highlighted": true,
+        "checkout": {
+          "monthly": "https://buy.polar.sh/polar_cl_nie12NnR4AUBX5OvUtKxfGkBa4juANuRDHrYE13XPty",
+          "yearly": "https://buy.polar.sh/polar_cl_jOsAEqZ7AA9xQJG8RIwCWkSipAliCMtvD8dNL4B6on9"
+        }
+      },
+      {
+        "id": "lifetime",
+        "name": "Lifetime",
+        "description": "Pay once for up to ten people and keep updates and repository access.",
+        "oneTime": 1290,
+        "seats": 10,
+        "support": true,
+        "checkout": {
+          "oneTime": "https://buy.polar.sh/polar_cl_OqDhUqNxmMWU6pSsLC1bOR1Z4IEPEu4QP7pcA3Ch2o9"
+        }
+      }
+    ],
+    "notes": [
+      "After cancelling, every version you already received keeps working. Only updates and repository access end.",
+      "Your own customers never need a licence for websites you build with Lagrangian Pro.",
+      "Agency and Lifetime cover up to ten named people for one price: you choose the number of seats at checkout and assign them in Polar.",
+      "Checkout, invoices and VAT are handled by Polar as merchant of record."
+    ],
+    "custom": {
+      "label": "11 people or more",
+      "email": "info@sweber.dev"
+    }
+  }
 }
