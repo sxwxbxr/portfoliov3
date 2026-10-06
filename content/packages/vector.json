@@ -3,7 +3,7 @@
   "name": "Vector",
   "tagline": "Self-hosted webhooks for Node.js and TypeScript: Standard Webhooks signatures, retries, a delivery log and SSRF protection, in your own PostgreSQL.",
   "seoTitle": "Vector – self-hosted webhooks for Node.js, a Svix alternative with Standard Webhooks signatures",
-  "description": "Sooner or later every SaaS product has to send webhooks to its customers. Doing it properly means signing every request, retrying for hours with backoff when a receiver is down, keeping a log your support team can read, refusing URLs that point into your own network and rotating secrets without downtime. Hosted services such as Svix or Hookdeck do this for you, from several hundred dollars a month, and every event and customer URL passes through their infrastructure.\n\nVector is the same building block as a library. It signs with the [Standard Webhooks](https://www.standardwebhooks.com) format that Svix uses, so receivers can verify with any Standard Webhooks or Svix library, retries eight times over about 27 hours, logs every message, delivery and attempt, and keeps all of it in your own PostgreSQL. It has no dependencies and runs on Node.js, Bun, Deno and in serverless functions.\n\nVector Pro adds an embeddable portal for your customers, a typed event catalog and operations tooling. It is not on sale yet: [join the waitlist](mailto:info@sweber.dev?subject=Vector%20Pro%20waitlist) to hear when it is.",
+  "description": "Sooner or later every SaaS product has to send webhooks to its customers. Doing it properly means signing every request, retrying for hours with backoff when a receiver is down, keeping a log your support team can read, refusing URLs that point into your own network and rotating secrets without downtime. Hosted services such as Svix or Hookdeck do this for you, from several hundred dollars a month, and every event and customer URL passes through their infrastructure.\n\nVector is the same building block as a library. It signs with the [Standard Webhooks](https://www.standardwebhooks.com) format that Svix uses, so receivers can verify with any Standard Webhooks or Svix library, retries eight times over about 27 hours, logs every message, delivery and attempt, and keeps all of it in your own PostgreSQL. It has no dependencies and runs on Node.js, Bun, Deno and in serverless functions.\n\nVector Pro adds an embeddable portal for your customers, a typed event catalog and operations tooling. It is installed from a private GitHub Packages registry, licensed per person, with no licence key and no phone-home.",
   "status": "beta",
   "tags": [
     "Webhooks",
@@ -99,7 +99,7 @@
   ],
   "pro": {
     "name": "Vector Pro",
-    "availability": "coming-soon",
+    "availability": "available",
     "packages": [
       {
         "name": "@weber-development/vector-portal",
@@ -127,7 +127,11 @@
         "monthly": 29,
         "yearly": 290,
         "seats": 1,
-        "support": false
+        "support": false,
+        "checkout": {
+          "monthly": "https://buy.polar.sh/polar_cl_sDiPLyAxeLV4L6ULmx4XDzHf61GUqfVMedwlG0hpbuD",
+          "yearly": "https://buy.polar.sh/polar_cl_g6R7VOhTvHPxG6GezCg98Q7g3s1vTOKpoxy5S0PXA0X"
+        }
       },
       {
         "id": "agency",
@@ -137,7 +141,11 @@
         "yearly": 890,
         "seats": 10,
         "support": true,
-        "highlighted": true
+        "highlighted": true,
+        "checkout": {
+          "monthly": "https://buy.polar.sh/polar_cl_g0iENFMWkczDK6qG8qtRBT2Itpt5GrySpCazM4U0V9p",
+          "yearly": "https://buy.polar.sh/polar_cl_qt8dpcidCgeX6ArXEjOQ18XV6On9pgKIx1psf1SeFGE"
+        }
       },
       {
         "id": "lifetime",
@@ -145,7 +153,10 @@
         "description": "Pay once for up to ten people and keep updates and repository access.",
         "oneTime": 2990,
         "seats": 10,
-        "support": true
+        "support": true,
+        "checkout": {
+          "oneTime": "https://buy.polar.sh/polar_cl_hLF8PtPeb3QE6kcFKBDuPfYZdqO9ksgZVsVLD1gm0qu"
+        }
       }
     ],
     "notes": [
