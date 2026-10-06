@@ -9,6 +9,7 @@ import { ConsentLogSection } from "@/components/packages/demo/ConsentLogSection"
 import { CookieTableSection } from "@/components/packages/demo/CookieTableSection"
 import { GtmCheckSection } from "@/components/packages/demo/GtmCheckSection"
 import { MonitoringSection } from "@/components/packages/demo/MonitoringSection"
+import { ScriptTagDemo } from "@/components/packages/demo/ScriptTagDemo"
 import { ScannerSection } from "@/components/packages/demo/ScannerSection"
 import { ServiceCatalog } from "@/components/packages/demo/ServiceCatalog"
 import { ThemeDemo } from "@/components/packages/demo/ThemeDemo"
@@ -77,6 +78,16 @@ export default function PermitoDemoPage() {
 
       <Block id="core" label={t.core.label} title={t.core.title} sub={t.core.sub} lede={<p>{t.core.lede}</p>}>
         <CoreDemo />
+      </Block>
+
+      <Block
+        id="script-tag"
+        label={t.scriptTag.label}
+        title={t.scriptTag.title}
+        sub={t.scriptTag.sub}
+        lede={<p>{t.scriptTag.lede}</p>}
+      >
+        <ScriptTagDemo />
       </Block>
 
       <Block id="themes" label={t.themes.label} title={t.themes.title} sub={t.themes.sub} lede={<p>{t.themes.lede}</p>}>
