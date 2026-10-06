@@ -16,8 +16,8 @@ for (const path of pages) {
   page.on("requestfailed", (r) => errs.push(`requestfailed: ${r.url().slice(0, 150)}`))
   page.on("response", (r) => { if (r.status() >= 400) errs.push(`http ${r.status()}: ${r.url().slice(0, 150)}`) })
   try {
-    await page.goto(ORIGIN + path, { waitUntil: "networkidle", timeout: 45000 })
-    await page.waitForTimeout(1500)
+    await page.goto(ORIGIN + path, { waitUntil: "domcontentloaded", timeout: 30000 })
+    await page.waitForTimeout(3000)
     // click through the demo's visible buttons once (no navigation, no checkout)
     if (path.endsWith("/demo")) {
       const btns = page.locator("main button:visible")
@@ -27,7 +27,7 @@ for (const path of pages) {
     }
     await page.screenshot({ path: `shots/${path.replace(/\W+/g, "_") || "home"}.png` })
   } catch (e) { errs.push(`goto: ${String(e).slice(0, 200)}`) }
-  console.log(`${errs.length ? "FAIL" : "ok  "} ${path}${errs.length ? "\n   " + [...new Set(errs)].join("\n   ") : ""}`)
+  console.log(`${new Date().toISOString().slice(11,19)} ${errs.length ? "FAIL" : "ok  "} ${path}${errs.length ? "\n   " + [...new Set(errs)].join("\n   ") : ""}`)
   if (errs.length) problems.push(path)
   await ctx.close()
 }
