@@ -16,14 +16,18 @@ export function WatermarkDemo() {
   const [generator, setGenerator] = useState("Chat model (example)")
   const [check, setCheck] = useState("")
   const [copied, setCopied] = useState(false)
+  const [paragraphs, setParagraphs] = useState(true)
   // Fixed per page view, so the output does not change on every keystroke.
   const [createdAt, setCreatedAt] = useState("")
   useEffect(() => setCreatedAt(new Date().toISOString().slice(0, 19) + "Z"), [])
-  const ids = { input: useId(), generator: useId(), output: useId(), check: useId() }
+  const ids = { input: useId(), generator: useId(), output: useId(), check: useId(), paragraphs: useId() }
 
   const marked = useMemo(
-    () => (mod && text ? mod.watermarkText(text, { generator: generator.trim() || undefined, createdAt }) : ""),
-    [mod, text, generator, createdAt],
+    () =>
+      mod && text
+        ? mod.watermarkText(text, { generator: generator.trim() || undefined, createdAt }, { paragraphs })
+        : "",
+    [mod, text, generator, createdAt, paragraphs],
   )
   const found = useMemo(() => (mod && check ? mod.readTextWatermark(check) : null), [mod, check])
 
@@ -54,6 +58,15 @@ export function WatermarkDemo() {
             value={generator}
             onChange={(e) => setGenerator(e.target.value)}
           />
+        </label>
+        <label htmlFor={ids.paragraphs} className="inline-flex items-center gap-2 text-sm text-fg-muted">
+          <input
+            id={ids.paragraphs}
+            type="checkbox"
+            checked={paragraphs}
+            onChange={(e) => setParagraphs(e.target.checked)}
+          />
+          {t.paragraphs}
         </label>
         <div className="flex flex-col gap-1.5">
           <label htmlFor={ids.output} className="annotate">

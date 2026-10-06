@@ -5,7 +5,9 @@ import { Check, Copy, Lock } from "lucide-react"
 import { Block } from "@/components/site/Block"
 import { CodeBlock } from "@/components/packages/demo/CodeBlock"
 import {
+  bindLicense,
   coversRelease,
+  createActivationRequest,
   createEntitlements,
   decodeLicense,
   definePlans,
@@ -305,6 +307,100 @@ function ProSimulator({ keys }: { keys: KeyPair }) {
           </div>
         </div>
       </div>
+    </div>
+  )
+}
+
+const DEVICE_LIMIT = 2
+const DEVICE_NAMES = ["Laptop A", "Laptop B", "Laptop C"]
+
+/** Simulates /activate of the Pro license server: bindLicense plus a device limit per license. */
+function ActivationSimulator({ keys }: { keys: KeyPair }) {
+  const [license, setLicense] = useState("")
+  const [machines, setMachines] = useState<string[]>([])
+  const [active, setActive] = useState<Record<string, string>>({})
+  const [message, setMessage] = useState("")
+  const [request, setRequest] = useState("")
+  const a = t.activation
+
+  useEffect(() => {
+    let cancelled = false
+    setActive({})
+    setMessage("")
+    setRequest("")
+    Promise.all([
+      signLicense({ product: PRODUCT, plan: "pro", customer: { email: "kunde@example.ch" } }, keys.privateKey),
+      ...DEVICE_NAMES.map((name) => machineId("demo", name)),
+    ]).then(([signed, ...ids]) => {
+      if (cancelled) return
+      setLicense(signed)
+      setMachines(ids)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [keys])
+
+  async function activate(index: number) {
+    const machine = machines[index]
+    if (!machine || !license) return
+    if (!active[machine] && Object.keys(active).length >= DEVICE_LIMIT) {
+      setMessage(a.limit(DEVICE_LIMIT))
+      return
+    }
+    const result = await bindLicense(license, machine, keys.privateKey, { product: PRODUCT })
+    if (!result.ok) {
+      setMessage(result.reason)
+      return
+    }
+    setActive((current) => ({ ...current, [machine]: DEVICE_NAMES[index] ?? machine }))
+    setMessage(a.activated(DEVICE_NAMES[index] ?? ""))
+  }
+
+  function deactivate(machine: string) {
+    setActive((current) => {
+      const { [machine]: _gone, ...rest } = current
+      return rest
+    })
+    setMessage(a.freed)
+  }
+
+  async function offline(index: number) {
+    const machine = machines[index]
+    if (machine && license) setRequest(createActivationRequest({ license, machine, label: DEVICE_NAMES[index] }))
+  }
+
+  return (
+    <div className="flex flex-col gap-6">
+      <p className="text-sm text-fg">{a.limitInfo(DEVICE_LIMIT)}</p>
+      <div className="grid gap-3 md:grid-cols-3">
+        {DEVICE_NAMES.map((name, index) => {
+          const machine = machines[index]
+          const on = Boolean(machine && active[machine])
+          return (
+            <div key={name} className="well flex flex-col gap-3 px-4 py-3">
+              <p className="text-sm font-medium text-fg">{name}</p>
+              <p className="font-mono text-xs text-fg-muted break-all">{machine ?? "…"}</p>
+              <div className="flex flex-wrap gap-2">
+                <button type="button" className={btn} disabled={!machine || on} onClick={() => void activate(index)}>
+                  {a.activate}
+                </button>
+                <button type="button" className={btn} disabled={!on} onClick={() => machine && deactivate(machine)}>
+                  {a.deactivate}
+                </button>
+                <button type="button" className={btn} disabled={!machine} onClick={() => void offline(index)}>
+                  {a.offline}
+                </button>
+              </div>
+              <p className="text-xs text-fg-muted">{on ? a.on : a.off}</p>
+            </div>
+          )
+        })}
+      </div>
+      <p className="text-sm text-fg" role="status" aria-live="polite">
+        {message || a.hint}
+      </p>
+      {request && <CodeBlock title={a.request} code={request} />}
     </div>
   )
 }
@@ -672,6 +768,10 @@ export function LicenseLab() {
 
       <Block label={t.pro.label} title={t.pro.title} sub={t.pro.sub} lede={<p>{t.pro.lede}</p>}>
         {keys && <ProSimulator keys={keys} />}
+      </Block>
+
+      <Block label={t.activation.label} title={t.activation.title} sub={t.activation.sub} lede={<p>{t.activation.lede}</p>}>
+        {keys && <ActivationSimulator keys={keys} />}
       </Block>
     </>
   )

@@ -1,0 +1,66 @@
+name: Gebündeltes Deployment
+
+# Vercel baut nicht mehr bei jedem Push (git.deploymentEnabled=false in vercel.json).
+# Stattdessen löst dieser Workflow alle 2 Stunden einen einzigen Production-Deploy aus,
+# aber nur, wenn main seit dem letzten Deploy neue Commits hat.
+# Cron läuft in UTC: 05-21 Uhr UTC = 07-23 Uhr Zürich im Sommer, 06-22 Uhr im Winter.
+on:
+  schedule:
+    - cron: "0 5-21/2 * * *"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Auch ohne neue Commits deployen"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deploy-batched
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Prüfen, ob main sich geändert hat
+        id: changed
+        env:
+          FORCE: ${{ inputs.force }}
+        run: |
+          head=$(git rev-parse HEAD)
+          git fetch --tags --force origin
+          last=$(git rev-parse -q --verify refs/tags/last-deployed || true)
+          echo "sha=$head" >> "$GITHUB_OUTPUT"
+          if [ "$FORCE" = "true" ] || [ "$head" != "$last" ]; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+            echo "Deploy nötig (letzter: ${last:-keiner}, jetzt: $head)"
+          else
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+            echo "Keine neuen Commits seit dem letzten Deploy, übersprungen."
+          fi
+
+      - name: Vercel Deploy Hook auslösen
+        if: steps.changed.outputs.deploy == 'true'
+        env:
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "::error::Secret VERCEL_DEPLOY_HOOK_URL fehlt (Repo-Settings > Secrets > Actions)."
+            exit 1
+          fi
+          curl --fail --silent --show-error -X POST "$HOOK"
+
+      - name: Deploy-Stand markieren
+        if: steps.changed.outputs.deploy == 'true'
+        run: |
+          git tag -f last-deployed "${{ steps.changed.outputs.sha }}"
+          git push -f origin refs/tags/last-deployed

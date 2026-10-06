@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft, ChevronRight, Download } from "lucide-react"
 import PageLayout from "@/components/PageLayout"
@@ -8,9 +9,15 @@ import { CookieTableTabs } from "@/components/packages/demo/CookieTableTabs"
 import { LiveCheck } from "@/components/packages/demo/surjection/LiveCheck"
 import { OutputFrame } from "@/components/packages/demo/surjection/OutputFrame"
 import { getSurjectionDemo } from "@/lib/demo/surjection-server"
-import { SURJECTION_CHECK_COMMAND, SURJECTION_PRO_COMMANDS } from "@/lib/demo/snippets"
+import { SURJECTION_BADGE_COMMAND, SURJECTION_CHECK_COMMAND, SURJECTION_PRO_COMMANDS } from "@/lib/demo/snippets"
 import { pkgPath, pkgUrl } from "@/lib/packages/urls"
 import { copy } from "@/lib/copy"
+
+const BADGES = [
+  { slug: "backerei-muster", project: "Bäckerei Muster", width: 137, alt: "accessibility: 1 issue" },
+  { slug: "praxis-dr-keller", project: "Praxis Dr. Keller", width: 143, alt: "accessibility: 2 issues" },
+  { slug: "velo-huber", project: "Velo Huber", width: 187, alt: "accessibility: no issues found" },
+]
 
 export const revalidate = 60
 
@@ -146,7 +153,21 @@ export default function SurjectionDemoPage() {
       </Block>
 
       <Block id="history" label={t.history.label} title={t.history.title} sub={t.history.sub} lede={<p>{t.history.lede}</p>}>
-        {demo.dashboard ? <OutputFrame html={demo.dashboard} title={t.history.frameTitle} height={480} /> : <Missing />}
+        <div className="flex flex-col gap-6">
+          {demo.dashboard ? <OutputFrame html={demo.dashboard} title={t.history.frameTitle} height={480} /> : <Missing />}
+          <div className="flex flex-col gap-3">
+            <p className="annotate">{t.history.badgesLabel}</p>
+            <ul className="flex flex-col gap-2">
+              {BADGES.map((b) => (
+                <li key={b.slug} className="flex flex-wrap items-center gap-3 text-sm text-fg">
+                  <span className="w-36">{b.project}</span>
+                  <Image src={`/demos/surjection/badges/${b.slug}.svg`} alt={b.alt} width={b.width} height={20} unoptimized />
+                </li>
+              ))}
+            </ul>
+            <CodeBlock code={SURJECTION_BADGE_COMMAND} label="Badge" />
+          </div>
+        </div>
       </Block>
 
       <Block

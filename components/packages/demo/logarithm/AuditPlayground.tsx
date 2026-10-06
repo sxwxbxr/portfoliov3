@@ -62,11 +62,15 @@ const PROJECT_TARGET = { type: "project", id: "prj_7f3a" }
 const NOUNS: Record<string, Record<string, string>> = {
   en: { api_key: "API key" },
   de: { project: "Projekt", member: "Mitglied", api_key: "API-Schlüssel", user: "Benutzer" },
+  fr: { project: "le projet", member: "le membre", api_key: "la clé API", user: "l’utilisateur" },
+  it: { project: "il progetto", member: "il membro", api_key: "la chiave API", user: "l’utente" },
 }
 
 const FIELD_LABELS: Record<string, Record<string, string>> = {
   en: { name: "Name", plan: "Plan", visibility: "Visibility", smtpPassword: "SMTP password", role: "Role" },
   de: { name: "Name", plan: "Abo", visibility: "Sichtbarkeit", smtpPassword: "SMTP-Passwort", role: "Rolle" },
+  fr: { name: "Nom", plan: "Abonnement", visibility: "Visibilité", smtpPassword: "Mot de passe SMTP", role: "Rôle" },
+  it: { name: "Nome", plan: "Abbonamento", visibility: "Visibilità", smtpPassword: "Password SMTP", role: "Ruolo" },
 }
 
 const ACTIONS: Record<string, { value: string; label: string }[]> = {
@@ -82,7 +86,26 @@ const ACTIONS: Record<string, { value: string; label: string }[]> = {
     { value: "api_key.*", label: "API-Schlüssel" },
     { value: "user.*", label: "Anmeldungen" },
   ],
+  fr: [
+    { value: "project.*", label: "Projet" },
+    { value: "member.*", label: "Membres" },
+    { value: "api_key.*", label: "Clés API" },
+    { value: "user.*", label: "Connexions" },
+  ],
+  it: [
+    { value: "project.*", label: "Progetto" },
+    { value: "member.*", label: "Membri" },
+    { value: "api_key.*", label: "Chiavi API" },
+    { value: "user.*", label: "Accessi" },
+  ],
 }
+
+const LANGUAGES = {
+  en: { name: "English", locale: "en-GB" },
+  de: { name: "Deutsch", locale: "de-CH" },
+  fr: { name: "Français", locale: "fr-CH" },
+  it: { name: "Italiano", locale: "it-CH" },
+} as const
 
 /** Builds a fresh log with a short, plausible history. */
 async function seededLog() {
@@ -128,7 +151,7 @@ export function AuditPlayground() {
   const [members, setMembers] = useState(INITIAL_MEMBERS)
   const [inviteEmail, setInviteEmail] = useState("")
   const [keySuffix, setKeySuffix] = useState("9c1e")
-  const [locale, setLocale] = useState<"en" | "de">("en")
+  const [locale, setLocale] = useState<keyof typeof LANGUAGES>("en")
   const [last, setLast] = useState<AuditEvent | null>(null)
   const [version, setVersion] = useState(0)
   const [note, setNote] = useState("")
@@ -380,7 +403,7 @@ export function AuditPlayground() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h3 className="text-base font-medium text-fg">{t.activity}</h3>
           <div role="group" aria-label={t.language} className="flex gap-2">
-            {(["en", "de"] as const).map((l) => (
+            {(Object.keys(LANGUAGES) as (keyof typeof LANGUAGES)[]).map((l) => (
               <button
                 key={l}
                 type="button"
@@ -388,7 +411,7 @@ export function AuditPlayground() {
                 onClick={() => setLocale(l)}
                 className={small}
               >
-                {l === "en" ? "English" : "Deutsch"}
+                {LANGUAGES[l].name}
               </button>
             ))}
           </div>
@@ -401,7 +424,7 @@ export function AuditPlayground() {
               key={`feed-${seed}-${locale}`}
               fetchPage={(q) => log.query(q)}
               refreshKey={version}
-              locale={locale === "de" ? "de-CH" : "en-GB"}
+              locale={LANGUAGES[locale].locale}
               nouns={NOUNS[locale]}
               limit={3}
               theme="dark"
@@ -417,7 +440,7 @@ export function AuditPlayground() {
               key={`${seed}-${locale}`}
               fetchPage={(q) => log.query(q)}
               refreshKey={version}
-              locale={locale === "de" ? "de-CH" : "en-GB"}
+              locale={LANGUAGES[locale].locale}
               nouns={NOUNS[locale]}
               actions={ACTIONS[locale]}
               fieldLabels={FIELD_LABELS[locale]}

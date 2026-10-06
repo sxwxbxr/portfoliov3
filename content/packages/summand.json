@@ -56,7 +56,8 @@
       "Validate whole folders: JSON, CSV, JUnit and HTML reports, duplicate detection and a hash-chained audit log",
       "Watch an inbox folder: every new invoice is checked once it is fully written and sorted into valid, invalid and duplicate",
       "Export valid purchase invoices as a DATEV booking batch (EXTF 700, SKR03 or SKR04) for your tax advisor",
-      "Fetch invoices straight from a mailbox over IMAP or Microsoft 365 and drop the XML and PDF attachments into the inbox folder"
+      "Fetch invoices straight from a mailbox over IMAP or Microsoft 365 and drop the XML and PDF attachments into the inbox folder",
+      "Write a real A4 PDF of every invoice, PDF/A-3b with the original XML attached, so XRechnung and ZUGFeRD CII invoices stay valid ZUGFeRD files"
     ]
   },
   "comparison": [
@@ -106,11 +107,11 @@
       },
       {
         "name": "@weber-development/summand-view",
-        "description": "Renders an invoice as readable, printable HTML in German or English, with the validation report. What your users look at before they approve an invoice."
+        "description": "Renders an invoice as readable, printable HTML in German or English, or as an A4 PDF/A-3b with the validation report and the original XML attached. What your users look at before they approve an invoice."
       },
       {
         "name": "@weber-development/summand-inbox",
-        "description": "Validates folders of invoices from the command line or your code, watches an inbox folder, or fetches invoices straight from a mailbox (IMAP or Microsoft 365), and sorts each new invoice into valid, invalid and duplicate: JSON, CSV, JUnit and HTML reports, duplicate detection across runs, an audit log with a SHA-256 per file and a DATEV booking batch export."
+        "description": "Validates folders of invoices from the command line or your code, watches an inbox folder, or fetches invoices straight from a mailbox (IMAP or Microsoft 365), and sorts each new invoice into valid, invalid and duplicate: JSON, CSV, JUnit and HTML reports, duplicate detection across runs, an audit log with a SHA-256 per file and a DATEV booking batch export, and a PDF for every valid invoice."
       }
     ],
     "waitlistUrl": "mailto:info@sweber.dev?subject=Summand%20Pro%20waitlist"
