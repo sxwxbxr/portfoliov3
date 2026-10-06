@@ -697,6 +697,7 @@ export const copy = {
       jump: "On this page",
       jumpLinks: [
         { href: "#core", label: "Core" },
+        { href: "#script-tag", label: "Script tag" },
         { href: "#themes", label: "Themes" },
         { href: "#catalog", label: "Catalog" },
         { href: "#cookie-table", label: "Cookie table" },
@@ -711,7 +712,7 @@ export const copy = {
         label: "Core",
         title: "Core (free, MIT)",
         sub: "Banner, dialog and gates.",
-        lede: "The banner, the settings dialog and the gates belong to the free core, @permitojs/react. Decide in the banner, then watch the gate and the video below react. The decision is kept in memory only and is gone on reload.",
+        lede: "The banner, the settings dialog and the gates belong to the free core, @permitojs/react. Decide in the banner, then watch the gate and the video below react. The decision is kept in memory only and is gone on reload. It expires after 365 days (maxAgeDays), and the result shows whether your browser sends the Global Privacy Control signal.",
         openPreferences: "Open preference center",
         restart: "Restart demo",
         statsAllowed: "Statistics: allowed. An analytics script could load now.",
@@ -725,9 +726,23 @@ export const copy = {
         resultLoading: "Reading stored decision",
         granted: "true",
         declined: "false",
+        expiresLabel: "expiresAt",
+        gpcLabel: "globalPrivacyControl",
         mockHost: "client.example",
         mockHeading: "Page content",
         mockBody: "This mock page stands in for a client site. The consent UI is drawn on top of it.",
+      },
+
+      scriptTag: {
+        label: "Script tag",
+        title: "Without React (free, MIT)",
+        sub: "One script tag, same banner.",
+        lede: "Since 0.3.0 the banner and the settings dialog also run without React: as a script tag for WordPress, Webflow or plain HTML, or via createConsentUI from @permitojs/core/ui. The frame below runs that framework-free code. The decision is kept in memory only and is gone on reload.",
+        openPreferences: "Open preference center",
+        restart: "Restart demo",
+        previewLabel: "Rendered by createConsentUI, without React.",
+        snippetLabel: "The same banner on any website",
+        resultPending: "No decision yet. Choose in the banner.",
       },
 
       themes: {

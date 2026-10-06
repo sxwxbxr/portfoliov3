@@ -21,11 +21,11 @@ importers:
         specifier: ^1.0.2
         version: 1.1.0
       '@permitojs/core':
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^0.3.0
+        version: 0.3.0
       '@permitojs/react':
-        specifier: ^0.2.0
-        version: 0.2.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+        specifier: ^0.3.0
+        version: 0.3.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
       '@radix-ui/react-accordion':
         specifier: 1.2.2
         version: 1.2.2(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
@@ -116,6 +116,9 @@ importers:
       '@sweberdev/inverse-react':
         specifier: ^0.3.0
         version: 0.3.0(react@19.1.2)
+      '@sweberdev/lagrangian':
+        specifier: ^0.1.0
+        version: 0.1.0
       '@vercel/analytics':
         specifier: ^1.5.0
         version: 1.5.0(next@15.2.6(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(react@19.1.2)
@@ -127,13 +130,13 @@ importers:
         version: 2.0.0(next@15.2.6(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(react@19.1.2)
       '@weber-development/permito-catalog':
         specifier: ^0.4.1
-        version: 0.4.1(@permitojs/core@0.2.0)
+        version: 0.4.1(@permitojs/core@0.3.0)
       '@weber-development/permito-cookie-table':
         specifier: ^0.4.1
-        version: 0.4.1(@permitojs/core@0.2.0)(@permitojs/react@0.2.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(@weber-development/permito-catalog@0.4.1(@permitojs/core@0.2.0))(react@19.1.2)
+        version: 0.4.1(@permitojs/core@0.3.0)(@permitojs/react@0.3.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(@weber-development/permito-catalog@0.4.1(@permitojs/core@0.3.0))(react@19.1.2)
       '@weber-development/permito-themes':
         specifier: ^0.4.1
-        version: 0.4.1(@permitojs/core@0.2.0)(@permitojs/react@0.2.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(react@19.1.2)
+        version: 0.4.1(@permitojs/core@0.3.0)(@permitojs/react@0.3.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(react@19.1.2)
       autoprefixer:
         specifier: ^10.4.20
         version: 10.4.20(postcss@8.5.0)
@@ -1091,11 +1094,11 @@ packages:
     resolution: {integrity: sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA==}
     engines: {node: '>=12.4.0'}
 
-  '@permitojs/core@0.2.0':
-    resolution: {integrity: sha512-/RYh1du2/rEVcQ9FupfvG292BFYiIwpGoJaLzBDrRP6mJDQgivTpdpr8pMOQ+gj4dj9el+7R6TuoZDIwfSNjIw==}
+  '@permitojs/core@0.3.0':
+    resolution: {integrity: sha512-aSIYr2LM9DEYknH6N8HEiWOXwJJkrWUwQUmfBJ5FI++VHYDKA44R9WHiyMC3NbHXwK64YWCKGVICMvN7uFjLMw==}
 
-  '@permitojs/react@0.2.0':
-    resolution: {integrity: sha512-9k0OrYSGjs6dGLEiK1CzIoaqjTTc1hX0qZEiwW5clzMKeHt5lKjVUojiusvmU5CP7+E5IyCS4csnG1ox+reYzw==}
+  '@permitojs/react@0.3.0':
+    resolution: {integrity: sha512-rTHBBS0ARVVKeJsRgqrR1RrqRr4U/zAbuHPkPMbeZngP0fvfnj28kzXPjx4R1v/NVMo0mOeD/wpzzSyRbxV2Yg==}
     peerDependencies:
       react: '>=18.2.0'
       react-dom: '>=18.2.0'
@@ -2021,6 +2024,9 @@ packages:
     resolution: {integrity: sha512-5NX5aT6TG7kw4OR/2jlz2h8Fp7A4t/MCGOgQa7GtfWLlQLyMEEnf2EP0g4W40USXTHYf15y5YzKKMz3vuFlb2g==}
     hasBin: true
 
+  '@sweberdev/lagrangian@0.1.0':
+    resolution: {integrity: sha512-4MxWQZ9uipJO6bdLbj/8WL7O7wVAfQIkR+p2Kc1msFTamm5ZhcOtSvV1q+uWNOJtkPzmfKArqQmCou0DTyWMhA==}
+
   '@tailwindcss/node@4.1.9':
     resolution: {integrity: sha512-ZFsgw6lbtcZKYPWvf6zAuCVSuer7UQ2Z5P8BETHcpA4x/3NwOjAIXmRnYfG77F14f9bPeuR4GaNz3ji1JkQMeQ==}
 
@@ -2437,6 +2443,13 @@ packages:
       '@permitojs/react': ^0.1.0 || ^0.2.0 || ^0.3.0
       '@weber-development/permito-catalog': <1
       react: '>=18.2.0'
+    peerDependenciesMeta:
+      '@permitojs/react':
+        optional: true
+      '@weber-development/permito-catalog':
+        optional: true
+      react:
+        optional: true
 
   '@weber-development/permito-themes@0.4.1':
     resolution: {integrity: sha512-KDftJJGqCG5P1ecHUZ+UR+NvbIbTXrybfwncxInHgF26i2FEvgwRgSiwWznj52QMbiRKRtW/qgoaRRponHtNJA==, tarball: https://npm.pkg.github.com/download/@weber-development/permito-themes/0.4.1/434b4bf1896a023340cecd5e51f9a09c51bf6aac}
@@ -5135,11 +5148,11 @@ snapshots:
 
   '@nolyfill/is-core-module@1.0.39': {}
 
-  '@permitojs/core@0.2.0': {}
+  '@permitojs/core@0.3.0': {}
 
-  '@permitojs/react@0.2.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2)':
+  '@permitojs/react@0.3.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2)':
     dependencies:
-      '@permitojs/core': 0.2.0
+      '@permitojs/core': 0.3.0
       react: 19.1.2
       react-dom: 19.1.2(react@19.1.2)
 
@@ -6061,6 +6074,8 @@ snapshots:
 
   '@sweberdev/inverse@0.3.0': {}
 
+  '@sweberdev/lagrangian@0.1.0': {}
+
   '@tailwindcss/node@4.1.9':
     dependencies:
       '@ampproject/remapping': 2.3.0
@@ -6398,23 +6413,24 @@ snapshots:
       next: 15.2.6(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
       react: 19.1.2
 
-  '@weber-development/permito-catalog@0.4.1(@permitojs/core@0.2.0)':
+  '@weber-development/permito-catalog@0.4.1(@permitojs/core@0.3.0)':
     dependencies:
-      '@permitojs/core': 0.2.0
+      '@permitojs/core': 0.3.0
       jiti: 2.7.0
 
-  '@weber-development/permito-cookie-table@0.4.1(@permitojs/core@0.2.0)(@permitojs/react@0.2.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(@weber-development/permito-catalog@0.4.1(@permitojs/core@0.2.0))(react@19.1.2)':
+  '@weber-development/permito-cookie-table@0.4.1(@permitojs/core@0.3.0)(@permitojs/react@0.3.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(@weber-development/permito-catalog@0.4.1(@permitojs/core@0.3.0))(react@19.1.2)':
     dependencies:
-      '@permitojs/core': 0.2.0
-      '@permitojs/react': 0.2.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
-      '@weber-development/permito-catalog': 0.4.1(@permitojs/core@0.2.0)
+      '@permitojs/core': 0.3.0
       jiti: 2.7.0
+    optionalDependencies:
+      '@permitojs/react': 0.3.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      '@weber-development/permito-catalog': 0.4.1(@permitojs/core@0.3.0)
       react: 19.1.2
 
-  '@weber-development/permito-themes@0.4.1(@permitojs/core@0.2.0)(@permitojs/react@0.2.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(react@19.1.2)':
+  '@weber-development/permito-themes@0.4.1(@permitojs/core@0.3.0)(@permitojs/react@0.3.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(react@19.1.2)':
     dependencies:
-      '@permitojs/core': 0.2.0
-      '@permitojs/react': 0.2.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      '@permitojs/core': 0.3.0
+      '@permitojs/react': 0.3.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
       react: 19.1.2
 
   acorn-jsx@5.3.2(acorn@8.15.0):
@@ -7018,8 +7034,8 @@ snapshots:
       '@typescript-eslint/parser': 8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2)
       eslint: 9.33.0(jiti@2.7.0)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0)(eslint@9.33.0(jiti@2.7.0))
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint-import-resolver-typescript@3.10.1)(eslint@9.33.0(jiti@2.7.0))
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint@9.33.0(jiti@2.7.0)))(eslint@9.33.0(jiti@2.7.0))
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint@9.33.0(jiti@2.7.0)))(eslint@9.33.0(jiti@2.7.0)))(eslint@9.33.0(jiti@2.7.0))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.33.0(jiti@2.7.0))
       eslint-plugin-react: 7.37.5(eslint@9.33.0(jiti@2.7.0))
       eslint-plugin-react-hooks: 5.2.0(eslint@9.33.0(jiti@2.7.0))
@@ -7038,7 +7054,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0)(eslint@9.33.0(jiti@2.7.0)):
+  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint@9.33.0(jiti@2.7.0)))(eslint@9.33.0(jiti@2.7.0)):
     dependencies:
       '@nolyfill/is-core-module': 1.0.39
       debug: 4.4.1
@@ -7049,22 +7065,22 @@ snapshots:
       tinyglobby: 0.2.14
       unrs-resolver: 1.11.1
     optionalDependencies:
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint-import-resolver-typescript@3.10.1)(eslint@9.33.0(jiti@2.7.0))
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint@9.33.0(jiti@2.7.0)))(eslint@9.33.0(jiti@2.7.0)))(eslint@9.33.0(jiti@2.7.0))
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.1(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.33.0(jiti@2.7.0)):
+  eslint-module-utils@2.12.1(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint@9.33.0(jiti@2.7.0)))(eslint@9.33.0(jiti@2.7.0)))(eslint@9.33.0(jiti@2.7.0)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2)
       eslint: 9.33.0(jiti@2.7.0)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0)(eslint@9.33.0(jiti@2.7.0))
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint@9.33.0(jiti@2.7.0)))(eslint@9.33.0(jiti@2.7.0))
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint-import-resolver-typescript@3.10.1)(eslint@9.33.0(jiti@2.7.0)):
+  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint@9.33.0(jiti@2.7.0)))(eslint@9.33.0(jiti@2.7.0)))(eslint@9.33.0(jiti@2.7.0)):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.9
@@ -7075,7 +7091,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.33.0(jiti@2.7.0)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.1(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.33.0(jiti@2.7.0))
+      eslint-module-utils: 2.12.1(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint@9.33.0(jiti@2.7.0)))(eslint@9.33.0(jiti@2.7.0)))(eslint@9.33.0(jiti@2.7.0))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
