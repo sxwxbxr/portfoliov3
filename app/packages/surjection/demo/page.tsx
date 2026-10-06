@@ -9,7 +9,7 @@ import { CookieTableTabs } from "@/components/packages/demo/CookieTableTabs"
 import { LiveCheck } from "@/components/packages/demo/surjection/LiveCheck"
 import { OutputFrame } from "@/components/packages/demo/surjection/OutputFrame"
 import { getSurjectionDemo } from "@/lib/demo/surjection-server"
-import { SURJECTION_BADGE_COMMAND, SURJECTION_CHECK_COMMAND, SURJECTION_PRO_COMMANDS } from "@/lib/demo/snippets"
+import { SURJECTION_BADGE_COMMAND, SURJECTION_MONITOR_COMMAND, SURJECTION_CHECK_COMMAND, SURJECTION_PRO_COMMANDS } from "@/lib/demo/snippets"
 import { pkgPath, pkgUrl } from "@/lib/packages/urls"
 import { copy } from "@/lib/copy"
 
@@ -167,6 +167,14 @@ export default function SurjectionDemoPage() {
             </ul>
             <CodeBlock code={SURJECTION_BADGE_COMMAND} label="Badge" />
           </div>
+          {demo.regressions && (
+            <div className="flex flex-col gap-3">
+              <p className="annotate">{t.history.monitorLabel}</p>
+              <p className="text-sm leading-relaxed text-fg-muted">{t.history.monitorLede}</p>
+              <CodeBlock code={SURJECTION_MONITOR_COMMAND} label="Monitoring" />
+              <CodeBlock code={demo.regressions} label="monitoring.md" />
+            </div>
+          )}
         </div>
       </Block>
 

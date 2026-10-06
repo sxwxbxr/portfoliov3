@@ -45,14 +45,15 @@
       "surjection init sets up a config file and a GitHub Actions workflow in one command",
       "Keyboard check: finds focus traps and missing focus indicators by pressing Tab through each page",
       "Checks pages behind a login with a saved Playwright session",
+      "Screenshots of every affected element, saved next to the results",
       "Markdown report for pull requests and job summaries, in German, Swiss German, French, Italian and English",
       "Accessibility statement generator (DE, DE-CH, FR, IT, EN) as Markdown and HTML",
       "Accessible React building blocks: skip link, visually hidden text, live announcements, reduced motion"
     ],
     "pro": [
-      "Client reports in your agency's branding, as HTML and PDF",
+      "Client reports in your agency's branding, as HTML and PDF, with a screenshot of every affected element as evidence",
       "Fix list as CSV for Excel: one row per element, with status and note columns for your developers",
-      "History across all client projects, so you can show progress over time, with a status badge per project",
+      "History across all client projects, so you can show progress over time, with a status badge per project and a nightly check that tells you what got worse",
       "Guided manual checklist for the criteria automated tests cannot cover"
     ]
   },
@@ -118,7 +119,7 @@
       },
       {
         "name": "@weber-development/surjection-history",
-        "description": "Records every run per project and renders a dashboard with status, change and trend, plus an SVG status badge per project."
+        "description": "Records every run per project and renders a dashboard with status, change and trend, plus an SVG status badge per project and a regression check for scheduled monitoring."
       },
       {
         "name": "@weber-development/surjection-checklist",

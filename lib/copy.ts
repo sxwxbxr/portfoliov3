@@ -1073,7 +1073,7 @@ export const copy = {
         label: "Report",
         title: "Client report (Pro)",
         sub: "In your branding.",
-        lede: "surjection-report turns the check, the history and the manual checklist into a report for the client, with the logo and colour of the agency, here the made-up Pixel & Co. It is available as HTML and PDF in German, Swiss German, French, Italian and English.",
+        lede: "surjection-report turns the check, the screenshots of the affected elements, the history and the manual checklist into a report for the client, with the logo and colour of the agency, here the made-up Pixel & Co. It is available as HTML and PDF in German, Swiss German, French, Italian and English.",
         tabsLabel: "Report language",
         frameTitle: (lang: string) => `Example report, ${lang}`,
         pdf: "Download the PDF (German)",
@@ -1087,6 +1087,8 @@ export const copy = {
         lede: "surjection-history records each run per project and renders one dashboard for all clients: the latest status, the change since the last run and a trend line. These three projects were checked three times each, from August to October.",
         frameTitle: "Example dashboard",
         badgesLabel: "Status badges for READMEs and client portals",
+        monitorLabel: "Monitoring: what got worse since the last run",
+        monitorLede: "Run it on a schedule. The command exits with 1 when new issues reach the chosen impact, so the failed job mails you. In the example one client got two new critical issues:",
       },
 
       checklist: {
