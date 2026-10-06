@@ -10,7 +10,8 @@ import {
 import { type PresetName, presets } from "./presets";
 
 /**
- * Brings `data-sigmoid` markup to browsers without native scroll timelines.
+ * Brings `data-sigmoid` markup to browsers without native scroll timelines,
+ * and starts linked animations (`data-sigmoid-follow`) in every browser.
  *
  * With `sigmoid.css` loaded, modern browsers animate `data-sigmoid` elements
  * without any JavaScript, so `init()` does nothing there. Elsewhere it reads
@@ -20,11 +21,38 @@ import { type PresetName, presets } from "./presets";
  * the JavaScript fallback. Returns a function that stops everything.
  */
 export function init(root: ParentNode = document, options: { force?: boolean } = {}): () => void {
-  if (typeof document === "undefined" || (supportsScrollTimeline() && !options.force)) {
-    return () => {};
-  }
+  if (typeof document === "undefined") return () => {};
   const controllers: Controller[] = [];
   const fallback = !!options.force;
+
+  // Linked animations run through JavaScript everywhere, because CSS would need
+  // a timeline-scope on a shared ancestor. The browser still drives them natively.
+  for (const el of Array.from(root.querySelectorAll("[data-sigmoid-follow]"))) {
+    const name = el.getAttribute("data-sigmoid-follow") ?? "";
+    const subject = root.querySelector(`[data-sigmoid-timeline="${name}"]`);
+    if (!subject) continue;
+    const style = getComputedStyle(el);
+    const preset = el.getAttribute("data-sigmoid-preset") ?? "fade-in";
+    controllers.push(
+      reveal(el, {
+        keyframes: (preset in presets ? preset : "fade-in") as PresetName,
+        subject,
+        range: style.getPropertyValue("--sigmoid-range").trim() || "cover 0% cover 40%",
+        easing: style.getPropertyValue("--sigmoid-easing").trim() || undefined,
+        shift:
+          (Number.parseFloat(style.getPropertyValue("--sigmoid-index")) || 0) *
+          (Number.parseFloat(style.getPropertyValue("--sigmoid-stagger")) || 8),
+        axis: subject.getAttribute("data-sigmoid-axis") === "inline" ? "inline" : "block",
+        fallback,
+      }),
+    );
+  }
+
+  if (supportsScrollTimeline() && !options.force) {
+    return () => {
+      for (const c of controllers) c.cancel();
+    };
+  }
   for (const el of Array.from(root.querySelectorAll("[data-sigmoid]"))) {
     const name = el.getAttribute("data-sigmoid") ?? "";
     const style = getComputedStyle(el);

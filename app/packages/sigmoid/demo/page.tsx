@@ -10,6 +10,7 @@ import { ParallaxScene } from "@/components/packages/demo/sigmoid/ParallaxScene"
 import { RevealGallery } from "@/components/packages/demo/sigmoid/RevealGallery"
 import { SigmoidStatus } from "@/components/packages/demo/sigmoid/SigmoidStatus"
 import { StoryDemo } from "@/components/packages/demo/sigmoid/StoryDemo"
+import { LinkedDemo } from "@/components/packages/demo/sigmoid/LinkedDemo"
 import { HorizontalGallery, SplitHeadline } from "@/components/packages/demo/sigmoid/WordsAndRows"
 import { TrackStats } from "@/components/packages/demo/sigmoid/TrackStats"
 import { InstallCommand } from "@/components/packages/InstallCommand"
@@ -56,6 +57,18 @@ reveal(".card", { axis: "inline", keyframes: "scale-in" })
 // A number, no script
 // <span data-sigmoid="count" style="--sigmoid-count: ${t.words.counterValue}"
 //       role="img" aria-label="${t.words.counterValue}"></span>`
+
+const LINKED_CODE = `import { reveal } from "@sweberdev/sigmoid"
+
+reveal(".caption", {
+  subject: document.querySelector("#stage"),
+  keyframes: "fade-up",
+  range: "cover 5% cover 30%",
+})
+
+// or in markup, started by init():
+// <div id="stage" data-sigmoid-timeline="stage">…</div>
+// <p data-sigmoid-follow="stage" data-sigmoid-preset="fade-up">…</p>`
 
 const STORY_CODE = `import { story } from "@sweberdev/sigmoid"
 
@@ -183,6 +196,15 @@ export default function SigmoidDemoPage() {
           </p>
           <div className="max-w-xl">
             <CodeBlock title={t.words.codeHeading} code={WORDS_CODE} />
+          </div>
+        </div>
+      </Block>
+
+      <Block id="linked" label={t.linked.label} title={t.linked.title} sub={t.linked.sub} lede={<p>{t.linked.lede}</p>}>
+        <div className="flex flex-col gap-10">
+          <LinkedDemo />
+          <div className="max-w-xl">
+            <CodeBlock title={t.linked.codeHeading} code={LINKED_CODE} />
           </div>
         </div>
       </Block>
