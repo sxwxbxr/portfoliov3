@@ -52,7 +52,8 @@
     "pro": [
       "Notice and label wording in all 24 official EU languages",
       "CI scanner that fails the build when AI images, audio, video or text lack a label or marking, or a chat lacks its notice; verifies C2PA manifests in images, audio and video (signature, hashes, file content, signer) and checks single-page apps in a browser",
-      "AI register with a transparency report for clients (including the key dates that apply), a public \"How we use AI\" page, import from a spreadsheet (CSV) and warnings before the Article 50 deadlines"
+      "AI register with a transparency report for clients (including the key dates that apply), a public \"How we use AI\" page, import from a spreadsheet (CSV) and warnings before the Article 50 deadlines",
+      "C2PA signing with your own certificate: sign generated PNG, JPEG, WebP, WAV and MP4/MOV/M4A files with Content Credentials, as API and CLI"
     ]
   },
   "comparison": [
@@ -107,6 +108,10 @@
       {
         "name": "@weber-development/witness-report",
         "description": "Turns an AI register into a transparency report for your client and a public \"How we use AI\" page, with scan results, notice evidence and the key dates that apply."
+      },
+      {
+        "name": "@weber-development/witness-sign",
+        "description": "Signs AI-generated images, audio and video with C2PA Content Credentials, using your own signing certificate."
       }
     ],
     "waitlistUrl": "mailto:info@sweber.dev?subject=Witness%20Pro%20waitlist"
@@ -177,7 +182,7 @@
     },
     {
       "q": "Does Witness sign images with C2PA?",
-      "a": "No. Witness writes IPTC/XMP metadata, which needs no certificate. Images that already carry a C2PA manifest from the generator are left unchanged so the signature stays valid."
+      "a": "The free kit writes IPTC/XMP metadata, which needs no certificate, and leaves files that already carry a C2PA manifest unchanged so the signature stays valid. Witness Pro adds witness-sign, which signs PNG, JPEG, WebP, WAV and MP4/MOV/M4A files with C2PA Content Credentials using your own signing certificate. Readers only show the signer as trusted if the certificate chains to the C2PA trust list, and Witness does not issue certificates."
     },
     {
       "q": "Can the text watermark be removed?",
