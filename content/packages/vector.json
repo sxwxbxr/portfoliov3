@@ -52,12 +52,13 @@
       "vector CLI: generate secrets and key pairs, sign, verify, send test events and receive webhooks locally",
       "No dependencies; runs on Node.js, Bun, Deno and edge runtimes",
       "transform hook: change the body per endpoint, add headers or skip a delivery, without touching the stored message",
-      "Rate limit per endpoint (requests per second, by option, function or endpoint metadata) that delays instead of failing, and egress through a proxy dispatcher for a fixed IP"
+      "Rate limit per endpoint (requests per second, by option, function or endpoint metadata) that delays instead of failing, and egress through a proxy dispatcher for a fixed IP",
+      "hold hook: pause deliveries to an endpoint without using up retries, the building block for circuit breakers and maintenance windows"
     ],
     "pro": [
       "Embeddable customer portal: a tenant-scoped REST handler and React components for endpoints, secrets, a searchable message log (id, payload text, status, endpoint), retries, test events and an event catalog with examples and schemas; light, dark and shadcn/ui themes",
       "Typed event catalog with Standard Schema validation, generated Markdown docs, AsyncAPI 3 and TypeScript types, with a CLI",
-      "Operations: alerts to Slack, email or a webhook, bulk recovery after outages, health reports, Prometheus metrics and data retention",
+      "Operations: alerts to Slack, email or a webhook, a circuit breaker per endpoint, weekly reports per tenant, bulk recovery after outages, health reports, Prometheus metrics and data retention",
       "Inbound webhooks: verify Stripe, GitHub, Shopify, Svix/Standard Webhooks and HMAC-signed requests, store each event once and forward it to your services with retries and a log",
       "Chat formats: Slack, Microsoft Teams, Discord and Google Chat messages written from templates per event type, escaped against mentions and cut to each service's limits, plus pick, omit and redact of fields per endpoint"
     ]
@@ -89,7 +90,7 @@
       "pro": true
     },
     {
-      "feature": "Alerts, bulk recovery, metrics and retention",
+      "feature": "Alerts, circuit breaker, weekly tenant reports, bulk recovery, metrics and retention",
       "free": false,
       "pro": true
     },
