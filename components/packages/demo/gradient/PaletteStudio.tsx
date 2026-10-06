@@ -398,7 +398,7 @@ function PairCheck() {
   return (
     <Block id="pair" label={p.label} title={p.title} sub={p.sub} lede={<p>{p.lede}</p>}>
       <div className="grid gap-8 lg:grid-cols-2">
-        <div className="flex flex-col gap-6">
+        <div className="flex min-w-0 flex-col gap-6">
           <ColorField label={p.text} value={text} onChange={setText} />
           <ColorField label={p.background} value={background} onChange={setBackground} />
           {result && (
@@ -412,7 +412,7 @@ function PairCheck() {
           )}
         </div>
         {result && (
-          <div className="well flex flex-col gap-4 px-5 py-4" role="status">
+          <div className="well flex min-w-0 flex-col gap-4 px-5 py-4" role="status">
             <p className="font-mono text-3xl text-fg">{result.ratio}:1</p>
             <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-1.5 text-sm">
               <dt className="text-fg-muted">{p.body}</dt>
@@ -528,7 +528,7 @@ function BlendSection() {
   return (
     <Block id="blend" label={b.label} title={b.title} sub={b.sub} lede={<p>{b.lede}</p>}>
       <div className="grid gap-8 lg:grid-cols-2">
-        <div className="flex flex-col gap-6">
+        <div className="flex min-w-0 flex-col gap-6">
           <ColorField label={b.from} value={from} onChange={setFrom} />
           <ColorField label={b.to} value={to} onChange={setTo} />
           <ColorField label={b.text} value={text} onChange={setText} />
