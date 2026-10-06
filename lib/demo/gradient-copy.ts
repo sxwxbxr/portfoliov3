@@ -159,6 +159,18 @@ export const gradientDemo = {
     none: "No colorful color found. Choose a brand color by hand.",
     error: "This image could not be read.",
   },
+  config: {
+    label: "Config",
+    title: "One file, every output",
+    sub: "Build locally, verify in CI.",
+    lede:
+      "Keep your colors in gradient.config.json and generate all files with one command. The file below follows the colors, options and your picks from above; the list shows what gradient build would write. In CI, gradient build --verify fails when a file is out of date.",
+    json: "gradient.config.json",
+    files: "gradient build writes",
+    lines: (n: number) => `${n} lines`,
+    action: "GitHub Action for pull requests",
+    cli: "Same with the CLI",
+  },
   pair: {
     label: "Pair",
     title: "Check any two colors",
