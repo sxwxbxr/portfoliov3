@@ -39,4 +39,6 @@ export const getSummandDemo = cache(() => ({
   cli: read("inbox-en.txt"),
   report: read("inbox-report-en.html"),
   audit: prettyJsonLines(read("audit-en.jsonl")),
+  watch: read("watch-en.txt"),
+  datev: read("datev-en.txt"),
 }))
