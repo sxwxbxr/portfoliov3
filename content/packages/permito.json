@@ -42,7 +42,8 @@
       "Monitoring many client sites: one scan run over a sites file, with a weekly GitHub Action template that opens one issue per site and comments only on new differences",
       "Catalog changes per project: after an update, lists what changed for your own services and exits with 1 when the cookie table needs to be regenerated",
       "Consent statistics from the log: acceptance rates per category and service for a period, as a German or English report for clients, without personal data",
-      "Evidence export of the consent log as NDJSON or CSV for a period, with a manifest, SHA-256 and an optional HMAC signature, plus a check that shows whether file or manifest were changed afterwards"
+      "Evidence export of the consent log as NDJSON or CSV for a period, with a manifest, SHA-256 and an optional HMAC signature, plus a check that shows whether file or manifest were changed afterwards",
+      "Audit report in German or English as Markdown and HTML: configuration, site scan, catalog freshness and the evidence manifest in one document, with missing parts marked as not checked"
     ]
   },
   "comparison": [
@@ -63,6 +64,7 @@
     { "feature": "Catalog changes per project", "free": false, "pro": true },
     { "feature": "Consent statistics and client reports", "free": false, "pro": true },
     { "feature": "Signed evidence export of the consent log", "free": false, "pro": true },
+    { "feature": "Audit report (Markdown/HTML, DE/EN)", "free": false, "pro": true },
     { "feature": "Licence", "free": "MIT", "pro": "Per person" },
     { "feature": "Support", "free": "GitHub issues", "pro": "Agency and Lifetime" }
   ],
