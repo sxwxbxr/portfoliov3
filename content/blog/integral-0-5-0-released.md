@@ -8,7 +8,7 @@ packages: [integral]
 tags: [Integral, Licensing, Key rotation, Webhooks, release]
 ---
 
-Integral Pro 0.5.0 is out for subscribers. The free packages `@sweberdev/integral` and `@sweberdev/integral-react` stay at 0.3.0; verifying with a list of public keys has been possible there since 0.1.0.
+Integral Pro 0.5.0 is out for subscribers. The free packages `@sweberdev/integral` and `@sweberdev/integral-react` stay at 0.3.0; `verifyLicense` already accepts a list of public keys there.
 
 ## Why
 
