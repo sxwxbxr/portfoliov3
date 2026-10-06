@@ -59,7 +59,11 @@
       "Device activations with a limit per license (3 per seat by default), deactivation and offline activation requests",
       "React license activation view with automatic renewal and upgrade prompts, English and German",
       "License status banner that warns before a trial, license or update period ends",
-      "Activation view that binds each license to the customer's device and frees the place on removal"
+      "Activation view that binds each license to the customer's device and frees the place on removal",
+      "Floating licenses: seats shared between running apps, with heartbeat and automatic expiry",
+      "Usage metering per license, metric and period, refused above the limit in the license",
+      "Audit trail of every license change, exported as JSON or CSV",
+      "Admin API and React admin view: search, revoke, issue again, free devices and seats"
     ]
   },
   "comparison": [
@@ -76,6 +80,10 @@
     { "feature": "Revocation list served and applied automatically", "free": false, "pro": true },
     { "feature": "Device limit per license with activate and deactivate", "free": false, "pro": true },
     { "feature": "React license activation, status banner and upgrade prompt", "free": false, "pro": true },
+    { "feature": "Floating seats with heartbeat", "free": false, "pro": true },
+    { "feature": "Usage metering with limits", "free": false, "pro": true },
+    { "feature": "Audit trail and CSV export", "free": false, "pro": true },
+    { "feature": "Admin API and admin view", "free": false, "pro": true },
     { "feature": "Licence", "free": "MIT", "pro": "Per person" },
     { "feature": "Support", "free": "GitHub issues", "pro": "Agency and Lifetime" }
   ],
