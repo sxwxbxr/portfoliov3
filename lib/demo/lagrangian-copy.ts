@@ -15,6 +15,7 @@ export const lagrangianDemo = {
     { href: "#throw", label: "Throw" },
     { href: "#world", label: "World" },
     { href: "#pendulum", label: "Double pendulum" },
+    { href: "#pro", label: "Pro" },
   ],
   docs: "Read the docs",
   reduced:
@@ -90,10 +91,22 @@ export const lagrangianDemo = {
     canvasLabel: "Two double pendulums drawn with their trails",
     codeHeading: "The equations",
   },
+  pro: {
+    label: "Pro",
+    title: "Finished pieces on the same physics.",
+    sub: "Bottom sheet, swipe stack, sortable lists, jelly, ropes and sounds.",
+    lede:
+      "Lagrangian Pro turns the physics into interface parts you would otherwise build yourself: a sheet that lands where the throw would carry it, cards that tilt around your finger, lists that make room as you drag, and objects that squash, swing and clack. Each is a few lines. Here is what they look like in code.",
+    sheetHeading: "Bottom sheet",
+    swipeHeading: "Swipe stack",
+    sortHeading: "Sortable list in React",
+    effectsHeading: "Jelly, rope and sound",
+    cta: "See Pro and prices",
+  },
   closing: {
     label: "Get it",
     title: "About 7 kB of physics.",
-    sub: "Free and open source under the MIT licence.",
+    sub: "The core is free and open source under the MIT licence.",
     lede:
       "Springs, throws, dragging and the world work with any framework. React hooks are in @sweberdev/lagrangian-react. The docs explain every option and the maths behind it.",
   },

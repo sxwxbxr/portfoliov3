@@ -72,6 +72,52 @@ for (const el of box.querySelectorAll(".ball")) {
 world.bindPointer() // grab and throw
 world.gravity = { x: 0, y: 1.62 } // the Moon`
 
+const SHEET_CODE = `import { sheet } from "@weber-development/lagrangian-pro"
+
+const filters = sheet(element, {
+  detents: [0.4, 1], // 40 % and full height
+  backdrop: shade,
+  onChange: (index) => console.log(index), // -1 is closed
+})
+
+openButton.onclick = () => filters.open()`
+
+const SWIPE_CODE = `import { swipeStack } from "@weber-development/lagrangian-pro"
+
+const stack = swipeStack(cards, {
+  directions: ["left", "right"],
+  onSwipe: (card, direction) => save(card.dataset.id, direction),
+})
+
+likeButton.onclick = () => stack.swipe("right")
+undoButton.onclick = () => stack.undo()`
+
+const SORT_CODE = `import { arrayMove, useSortable } from "@weber-development/lagrangian-pro-react"
+
+const list = useSortable<HTMLUListElement>({
+  onReorder: (from, to) => setItems((x) => arrayMove(x, from, to)),
+})
+
+return (
+  <ul ref={list.ref}>
+    {items.map((item) => <li key={item.id}>{item.title}</li>)}
+  </ul>
+)`
+
+const EFFECTS_CODE = `import { impactSound, jelly, rope } from "@weber-development/lagrangian-pro"
+
+// Squash and stretch from the ball's real velocity
+const drag = draggable(ball)
+jelly(ball.querySelector(".skin"), { source: drag })
+
+// A cable you can grab and swing
+rope({ from: { x: 160, y: 0 }, length: 240, onFrame: (r) => path.setAttribute("d", r.path()) })
+  .start()
+  .bindPointer(svg)
+
+// Impact sounds for the world
+new World({ bounds: box, onCollide: impactSound({ material: "wood" }).collide })`
+
 export default function LagrangianDemoPage() {
   const btn = "control inline-flex items-center gap-1 py-2.5 pr-4 pl-5 text-sm"
 
@@ -139,6 +185,31 @@ export default function LagrangianDemoPage() {
           <DoublePendulum />
           <div className="max-w-2xl">
             <CodeBlock title={t.pendulum.codeHeading} code={PENDULUM_CODE} />
+          </div>
+        </div>
+      </Block>
+
+      <Block id="pro" label={t.pro.label} title={t.pro.title} sub={t.pro.sub} lede={<p>{t.pro.lede}</p>}>
+        <div className="flex flex-col gap-10">
+          <div className="grid gap-6 lg:grid-cols-2">
+            <div className="min-w-0">
+              <CodeBlock title={t.pro.sheetHeading} code={SHEET_CODE} />
+            </div>
+            <div className="min-w-0">
+              <CodeBlock title={t.pro.swipeHeading} code={SWIPE_CODE} />
+            </div>
+            <div className="min-w-0">
+              <CodeBlock title={t.pro.sortHeading} code={SORT_CODE} />
+            </div>
+            <div className="min-w-0">
+              <CodeBlock title={t.pro.effectsHeading} code={EFFECTS_CODE} />
+            </div>
+          </div>
+          <div>
+            <Link href={pkgPath("/lagrangian")} className={btn + " control-primary"}>
+              {t.pro.cta}
+              <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
+            </Link>
           </div>
         </div>
       </Block>
