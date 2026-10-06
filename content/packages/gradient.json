@@ -12,6 +12,7 @@
     "WCAG 2.2",
     "Color blindness",
     "Dark mode",
+    "shadcn/ui",
     "Tailwind CSS",
     "Design tokens"
   ],
@@ -39,12 +40,14 @@
   },
   "features": {
     "free": [
+      "shadcn/ui theme from one color: all semantic variables for light and dark mode with the contrast promises intact",
       "Eleven steps from one color, with fixed contrast per step: 500 ≥ 3:1, 600 ≥ 4.5:1, 800 ≥ 7:1 on the page",
       "Dark mode with the same step numbers and the same promises, so one set of classes works in both modes",
       "OKLCH throughout, with gamut mapping that never moves lightness",
       "A neutral grey tinted with your brand hue, and a readable text color for every step",
       "Status colors on request: success, warning, danger and info that match your brand and keep the same contrast promises",
       "Color vision check: simulates protanopia, deuteranopia and tritanopia and flags colors that look alike",
+      "Chart colors, up to eight, that stay apart with protanopia, deuteranopia and tritanopia",
       "Export as Tailwind CSS v4 theme, Tailwind v3 config, CSS variables (also with light-dark()), Sass, TypeScript, W3C design tokens or JSON",
       "Contrast checks for CI, also when you pin your exact brand color",
       "Check any two colors with gradient check: WCAG 2 levels, APCA, and the closest color that passes",
@@ -75,6 +78,10 @@
     {
       "q": "Does Gradient support APCA?",
       "a": "gradient check and checkPair() show the APCA value (Lc) next to the WCAG 2 ratio. Pass and fail follow WCAG 2.2, because that is the standard the European Accessibility Act refers to; APCA is part of the WCAG 3 draft and shown for information."
+    },
+    {
+      "q": "How do I use Gradient with shadcn/ui?",
+      "a": "Run npx @sweberdev/gradient \"#e30613\" --format shadcn --out app/globals.css and replace the theme section of your globals.css. The file has the variables for :root and .dark and the @theme inline mapping for Tailwind v4. Text on background reaches 7:1, buttons and badges 4.5:1, form field borders 3:1."
     }
   ],
   "publishedAt": "2026-10-05"

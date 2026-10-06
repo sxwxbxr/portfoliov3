@@ -13,6 +13,7 @@ import {
   type Deficiency,
   fixContrast,
   createPalette,
+  createSeries,
   type Mode,
   type Palette,
   parseColor,
@@ -22,6 +23,7 @@ import {
   toCss,
   toHex,
   toScss,
+  toShadcn,
   toTailwind,
   toTailwindV3,
   toTokens,
@@ -267,7 +269,7 @@ function ScaleRows({ palette, pinned, vision }: { palette: Palette; pinned: bool
   )
 }
 
-function CopyButton({ text }: { text: string }) {
+function CopyButton({ text, label }: { text: string; label?: string }) {
   const [copied, setCopied] = useState(false)
   return (
     <button
@@ -284,7 +286,7 @@ function CopyButton({ text }: { text: string }) {
       className="control control-ghost inline-flex h-9 items-center gap-1.5 self-start px-3 text-xs text-fg-muted hover:text-fg"
     >
       {copied ? <Check className="h-3.5 w-3.5" aria-hidden="true" /> : <Copy className="h-3.5 w-3.5" aria-hidden="true" />}
-      <span aria-live="polite">{copied ? t.export.copied : t.export.copy}</span>
+      <span aria-live="polite">{copied ? t.export.copied : (label ?? t.export.copy)}</span>
     </button>
   )
 }
@@ -358,6 +360,70 @@ function PairCheck() {
   )
 }
 
+function SeriesSection({ brand, vision }: { brand: string; vision: Vision }) {
+  const s = t.series
+  const [count, setCount] = useState(5)
+  const countId = useId()
+  const series = useMemo(() => createSeries(brand, { count }), [brand, count])
+  const heights = [72, 48, 88, 36, 60, 80, 44, 66]
+  return (
+    <Block id="series" label={s.label} title={s.title} sub={s.sub} lede={<p>{s.lede}</p>}>
+      <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-2">
+          <label htmlFor={countId} className="annotate">
+            {s.count}
+          </label>
+          <select
+            id={countId}
+            value={count}
+            onChange={(e) => setCount(Number(e.target.value))}
+            className="well h-11 w-full max-w-xs px-3 text-sm text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
+          >
+            {[3, 4, 5, 6, 7, 8].map((n) => (
+              <option key={n} value={n}>
+                {n}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="grid gap-6 lg:grid-cols-2">
+          {(["light", "dark"] as const).map((mode) => (
+            <div key={mode} className="flex min-w-0 flex-col gap-2">
+              <p className="annotate">{mode === "light" ? t.scales.light : t.scales.dark}</p>
+              <div
+                className={`flex flex-col gap-4 rounded-xl border border-edge p-5 ${mode === "light" ? "bg-white" : "bg-black"}`}
+                data-mode={mode}
+              >
+                <div className="flex h-24 items-end gap-2" role="img" aria-label={s.chartLabel(mode)}>
+                  {series[mode].map((hex, i) => (
+                    <div
+                      key={`${hex}-${i}`}
+                      className="flex-1 rounded-t-sm"
+                      style={{ background: see(hex, vision), height: `${heights[i]}%` }}
+                    />
+                  ))}
+                </div>
+                <ul className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-[11px]" style={{ color: mode === "light" ? "#404040" : "#d4d4d4" }}>
+                  {series[mode].map((hex, i) => (
+                    <li key={`${hex}-${i}`} className="inline-flex items-center gap-1.5">
+                      <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full" style={{ background: see(hex, vision) }} />
+                      {i + 1} {hex}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))}
+        </div>
+        <p className="text-sm text-fg-muted" role="status">
+          {s.distance(series.distance)} {series.distance >= 0.08 ? s.good : s.label2}
+        </p>
+        <CodeBlock title={s.cli} code={`npx @sweberdev/gradient series ${shellQuote(brand)} --count ${count}`} />
+      </div>
+    </Block>
+  )
+}
+
 function shellQuote(value: string) {
   return `"${value.replace(/"/g, '\\"')}"`
 }
@@ -369,6 +435,7 @@ export function PaletteStudio() {
   const [pin, setPin] = useState(false)
   const [status, setStatus] = useState(true)
   const [vision, setVision] = useState<Vision>("normal")
+  const [shareUrl, setShareUrl] = useState("")
   const pinId = useId()
   const statusId = useId()
   const visionId = useId()
@@ -383,6 +450,38 @@ export function PaletteStudio() {
     if (useAccent) colors.accent = deferredAccent
     return createPalette(colors, { pin, status })
   }, [deferredBrand, deferredAccent, useAccent, pin, status])
+  // Palettes can be shared: the colors live in the address.
+  useEffect(() => {
+    try {
+      const q = new URLSearchParams(window.location.search)
+      const b = q.get("brand")
+      if (b && isColor(b)) setBrand(b)
+      const a = q.get("accent")
+      if (a === "none") setUseAccent(false)
+      else if (a && isColor(a)) setAccent(a)
+      if (q.get("pin") === "1") setPin(true)
+      if (q.get("status") === "0") setStatus(false)
+    } catch {
+      // No address to read, the defaults stay.
+    }
+  }, [])
+  useEffect(() => {
+    if (!isColor(brand) || (useAccent && !isColor(accent))) return
+    // Wait until typing or dragging pauses, then put the colors in the address.
+    const timer = setTimeout(() => {
+      try {
+        const q = new URLSearchParams({ brand, accent: useAccent ? accent : "none" })
+        if (pin) q.set("pin", "1")
+        if (!status) q.set("status", "0")
+        const url = `${window.location.pathname}?${q.toString()}`
+        window.history.replaceState(null, "", url)
+        setShareUrl(`${window.location.origin}${url}`)
+      } catch {
+        // History is not available, sharing stays off.
+      }
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [brand, accent, useAccent, pin, status])
   // Keep showing the last valid palette while someone is typing a color.
   const last = useRef<Palette | null>(null)
   useEffect(() => {
@@ -417,6 +516,7 @@ export function PaletteStudio() {
       lightDark: toCss(shown, { dark: "light-dark" }),
       tailwind3: `${v3.css}\n// tailwind.config.js → theme.extend.colors\n${JSON.stringify(v3.colors, null, 2)}\n`,
       tokens: `${JSON.stringify(toTokens(shown), null, 2)}\n`,
+      shadcn: toShadcn(shown),
       scss: toScss(shown),
       ts: toTypeScript(shown),
     }
@@ -433,7 +533,7 @@ export function PaletteStudio() {
     .filter(Boolean)
     .join(" ")
 
-  const tabs = (["tailwind", "css", "lightDark", "tailwind3", "scss", "ts", "tokens"] as const).map((id) => ({
+  const tabs = (["tailwind", "shadcn", "css", "lightDark", "tailwind3", "scss", "ts", "tokens"] as const).map((id) => ({
     id,
     label: t.export[id],
     content: (
@@ -484,6 +584,12 @@ export function PaletteStudio() {
                 {t.controls.status}
               </label>
             </div>
+            {shareUrl && (
+              <div className="flex flex-col gap-2 pt-2">
+                <CopyButton text={shareUrl} label={t.controls.share} />
+                <p className="text-sm text-fg-muted">{t.controls.shareHint}</p>
+              </div>
+            )}
             <div className="flex flex-col gap-2 pt-2">
               <label htmlFor={visionId} className="annotate">
                 {t.vision.label}
@@ -539,6 +645,8 @@ export function PaletteStudio() {
           )}
         </div>
       </Block>
+
+      <SeriesSection brand={shown.scales[0]?.source ?? brand} vision={vision} />
 
       <PairCheck />
 
