@@ -1117,6 +1117,17 @@ export const copy = {
     licenseLink: "Read the licence terms",
     // Install / links
     backToOverview: "All packages",
+    // Shown on a package or bundle page after a Polar checkout (?checkout=success)
+    checkoutSuccess: {
+      title: (name: string) => `Thank you for buying ${name}`,
+      portal: "Open the Polar customer portal and sign in with the e-mail address you used at checkout. Polar sends you a sign-in code.",
+      portalLink: "Open the customer portal",
+      seats: "Agency and Lifetime: access goes to seats. Assign a seat to every person who needs access, including yourself. Each person accepts the e-mail invitation. Freelancer licences skip this step.",
+      github: "Connect your GitHub account in the portal. GitHub then sends you an invitation to the private Pro repository; accept it.",
+      install: "Install the Pro packages from GitHub Packages with a read-only token.",
+      docsLink: "Installation guide",
+      help: "No invitation after a few minutes? Write to",
+    },
     // Bundles of several Pro add-ons (/bundles/<slug>)
     bundle: {
       badge: "Bundle",
