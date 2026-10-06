@@ -3,9 +3,7 @@
 import { useSearchParams } from "next/navigation"
 import { Check } from "lucide-react"
 import { copy } from "@/lib/copy"
-
-/** Polar's customer portal, where buyers assign seats and connect GitHub. */
-export const POLAR_PORTAL_URL = "https://polar.sh/sweberdev/portal"
+import { POLAR_PORTAL_URL } from "@/lib/packages/polar"
 
 /**
  * Shown after a Polar checkout, which returns to the package page with
