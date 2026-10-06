@@ -1,6 +1,6 @@
 ---
 title: "Validating XRechnung and ZUGFeRD without Java: how the KoSIT validator works, and how to do it in TypeScript"
-excerpt: "E-invoices must be valid before you send or book them. What the official validator actually does in two steps, why a JSON schema check is not enough, and how to run both steps in Node.js, in CI and in the browser."
+excerpt: "E-invoices must be valid before you send or book them. What the official validator actually does in two steps, why a schema check alone is not enough, and how to run both steps in Node.js, in CI and in the browser."
 date: 2026-10-06
 author: Seya Weber
 type: tutorial
