@@ -97,5 +97,5 @@ export const SURJECTION_PRO_COMMANDS = `npx surjection-history record --results 
 npx surjection-checklist apply --checklist checklist.json --results a11y.json
 npx surjection-report --results a11y.json --brand brand.json \\
   --checklist checklist.json --history-dir .surjection-history \\
-  --locale de --out bericht.pdf
+  --locale de --out bericht.pdf   # or bericht.docx for Word
 npx surjection-report --results a11y.json --locale de --out massnahmen.csv`
