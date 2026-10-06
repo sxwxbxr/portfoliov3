@@ -9,7 +9,7 @@ import { useTheme } from "next-themes"
  * not depend on the package. Same code as on npm, bundled into one file.
  */
 
-export const WITNESS_URL = "/demos/witness/witness-0.2.0.min.js"
+export const WITNESS_URL = "/demos/witness/witness-0.3.0.min.js"
 
 export type DisclosureKind =
   | "chatbot"
@@ -40,6 +40,8 @@ export interface ImageMarking {
   generator: string | null
   witness: boolean
   c2pa: boolean
+  /** What the C2PA manifest says, read but not validated. */
+  c2paManifest?: { aiGenerated: boolean; generator?: string; active: { claimGenerator?: string } }
 }
 
 export interface TextWatermark {
@@ -54,7 +56,7 @@ export interface WitnessModule {
   readImageMarking(bytes: Uint8Array): ImageMarking
   markFile(bytes: Uint8Array, marking: Marking): MarkResult
   readMarking(bytes: Uint8Array): ImageMarking
-  watermarkText(text: string, data: TextWatermark): string
+  watermarkText(text: string, data: TextWatermark, options?: { paragraphs?: boolean }): string
   readTextWatermark(text: string): TextWatermark | null
   stripTextWatermark(text: string): string
   iptcSourceType(sourceType: string): string

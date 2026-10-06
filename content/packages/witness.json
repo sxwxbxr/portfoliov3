@@ -42,7 +42,8 @@
       "<witness-label>: badge for AI-generated, AI-edited or deepfake content with a details popover, inline or as an image overlay",
       "Image marking: IPTC digital source type in XMP for PNG, JPEG and WebP, in the browser or on the server; C2PA files are left untouched",
       "Audio and video marking: the same XMP in MP3, WAV, MP4, MOV and M4A files, without re-encoding",
-      "Invisible text watermark that survives copy and paste and can be read back",
+      "Reads C2PA Content Credentials in images, audio and video: which tool made the file and whether it declares AI (read, not validated)",
+      "Invisible text watermark that survives copy and paste and can be read back, optionally on every paragraph",
       "Vercel AI SDK middleware for generateText, streamText and generateImage",
       "schema.org JSON-LD, meta tags and Next.js metadata for AI content",
       "witness CLI: mark images, audio and video in a build step and inspect files",
@@ -50,8 +51,8 @@
     ],
     "pro": [
       "Notice and label wording in all 24 official EU languages",
-      "CI scanner that fails the build when AI images, audio, video or text lack a label or marking, or a chat lacks its notice",
-      "AI register with a transparency report for clients and a public \"How we use AI\" page"
+      "CI scanner that fails the build when AI images, audio, video or text lack a label or marking, or a chat lacks its notice; also checks content whose C2PA manifest declares AI",
+      "AI register with a transparency report for clients (including the key dates that apply) and a public \"How we use AI\" page"
     ]
   },
   "comparison": [
@@ -105,7 +106,7 @@
       },
       {
         "name": "@weber-development/witness-report",
-        "description": "Turns an AI register into a transparency report for your client and a public \"How we use AI\" page, with scan results and notice evidence."
+        "description": "Turns an AI register into a transparency report for your client and a public \"How we use AI\" page, with scan results, notice evidence and the key dates that apply."
       }
     ],
     "waitlistUrl": "mailto:info@sweber.dev?subject=Witness%20Pro%20waitlist"

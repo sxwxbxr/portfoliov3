@@ -8,6 +8,7 @@ import { type ImageMarking, toDataUrl, useWitness } from "./runtime"
 const t = witnessDemoCopy.images
 const SAMPLE = "/demos/witness/lagoon.jpg"
 const SAMPLE_AUDIO = "/demos/witness/voice.mp3"
+const SAMPLE_C2PA = "/demos/witness/content-credentials.jpg"
 const KINDS = ["generated", "edited"] as const
 type Kind = (typeof KINDS)[number]
 
@@ -104,6 +105,14 @@ export function ImageDemo() {
           >
             {t.sampleAudio}
           </button>
+          <button
+            type="button"
+            className="control px-4 py-2 text-sm"
+            onClick={() => loadSample(SAMPLE_C2PA)}
+            disabled={!mod}
+          >
+            {t.sampleC2pa}
+          </button>
           {!mod && <span className="text-sm text-fg-muted">{witnessDemoCopy.loading}</span>}
         </div>
         <label htmlFor={ids.kind} className="flex flex-col gap-1.5">
@@ -189,6 +198,11 @@ function rows(before: ImageMarking, after: ImageMarking | null, sizeBefore: numb
     { label: t.rows.source, before: before.sourceType ?? "–", after: after?.sourceType ?? "–" },
     { label: t.rows.generator, before: before.generator ?? "–", after: after?.generator ?? "–" },
     { label: t.rows.c2pa, before: yes(before.c2pa), after: yes(after?.c2pa) },
+    {
+      label: t.rows.c2paBy,
+      before: before.c2paManifest?.active.claimGenerator ?? "–",
+      after: after?.c2paManifest?.active.claimGenerator ?? "–",
+    },
     { label: t.rows.size, before: size(sizeBefore), after: after ? size(sizeAfter) : "–" },
   ]
 }
