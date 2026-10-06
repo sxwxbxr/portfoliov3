@@ -75,7 +75,7 @@ export const sigmoidDemo = {
     lede:
       "These counters are not animations. track() reports how far each card has travelled through the window, and a few lines of code turn that into a number. The same works for video frames, canvas drawings or a chart.",
     stats: [
-      { value: 3100, unit: "bytes", label: "for reveal and init, min+gzip" },
+      { value: 3200, unit: "bytes", label: "for reveal and init, min+gzip" },
       { value: 62, unit: "tests", label: "for the core, React, Vue and Svelte, plus a check in three browsers" },
       { value: 10, unit: "presets", label: "from fade-in to flip-up" },
     ],

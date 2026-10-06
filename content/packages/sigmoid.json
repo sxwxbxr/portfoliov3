@@ -92,6 +92,12 @@
   "publishedAt": "2026-10-05",
   "releases": [
     {
+      "version": "0.8.0",
+      "date": "2026-10-06",
+      "title": "Sigmoid 0.8.0: right-to-left, zoom and other edge cases",
+      "url": "https://packages.sweber.dev/blog/sigmoid-0-8-0-released"
+    },
+    {
       "version": "0.7.0",
       "date": "2026-10-06",
       "title": "Sigmoid 0.7.0: a faster fallback, a benchmark and a stable API",
