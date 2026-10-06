@@ -55,7 +55,8 @@
       "Tamper evidence: an HMAC hash chain per tenant, signed checkpoints with trusted RFC 3161 timestamps, and a verifier that names changed, removed or reordered events",
       "Retention periods per customer with archiving to S3 or Cloudflare R2 and legal holds, GDPR and Swiss FADP erasure and access requests, each run recorded in the log and reportable as CSV or print page for auditors",
       "Streamed CSV, NDJSON and JSON export for your customers, and a signed evidence pack for auditors with events, integrity report, checkpoints and retention report as one ZIP",
-      "Forwarding to signed webhooks, Splunk, Datadog, Elasticsearch, OpenSearch and Loki, with retries and a dead-letter queue"
+      "Forwarding to signed webhooks, Splunk, Datadog, Elasticsearch, OpenSearch and Loki, with retries and a dead-letter queue",
+      "Alerts to Slack and Teams, and anomaly detection that learns what is normal for each tenant"
     ]
   },
   "comparison": [
