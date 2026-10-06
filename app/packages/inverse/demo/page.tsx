@@ -5,6 +5,7 @@ import PageLayout from "@/components/PageLayout"
 import { Block } from "@/components/site/Block"
 import { CheckPlayground } from "@/components/packages/demo/inverse/CheckPlayground"
 import { DeadlineCalc } from "@/components/packages/demo/inverse/DeadlineCalc"
+import { PlainHtmlDemo } from "@/components/packages/demo/inverse/PlainHtmlDemo"
 import { ShopDemo } from "@/components/packages/demo/inverse/ShopDemo"
 import { inverseDemoCopy } from "@/lib/demo/inverse-copy"
 import { pkgPath, pkgUrl } from "@/lib/packages/urls"
@@ -68,6 +69,10 @@ export default function InverseDemoPage() {
 
       <Block id="shop" label={t.shop.label} title={t.shop.title} sub={t.shop.sub} lede={<p>{t.shop.lede}</p>}>
         <ShopDemo />
+      </Block>
+
+      <Block id="plain" label={t.plain.label} title={t.plain.title} sub={t.plain.sub} lede={<p>{t.plain.lede}</p>}>
+        <PlainHtmlDemo />
       </Block>
 
       <Block id="check" label={t.check.label} title={t.check.title} sub={t.check.sub} lede={<p>{t.check.lede}</p>}>

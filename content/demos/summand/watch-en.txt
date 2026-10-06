@@ -1,0 +1,10 @@
+$ npx summand-inbox watch incoming --move --audit-log audit.jsonl
+Watching incoming for .xml and .pdf files. Stop with Ctrl+C.
+ok   lieferant-471102.pdf  -> valid/lieferant-471102.pdf
+ok   mustermann-18383.xml  -> valid/mustermann-18383.xml
+ok   mustermann-18383_cii.xml  duplicate of mustermann-18383.xml  -> duplicate/mustermann-18383_cii.xml
+FAIL mustermann-18383_resent.xml  1 error(s), 1 warning(s)  duplicate of mustermann-18383.xml  -> duplicate/mustermann-18383_resent.xml
+ERR  scan-0815.pdf  The PDF contains no embedded invoice XML. A ZUGFeRD / Factur-X invoice must embed the XML (for example factur-x.xml); a plain PDF is not an e-invoice.  -> invalid/scan-0815.pdf
+ok   stadtwerke-2026-10.xml  -> valid/stadtwerke-2026-10.xml
+^C
+Stopped. 6 file(s): 4 valid, 1 invalid, 1 unreadable, 2 duplicate(s), 1 warning(s)

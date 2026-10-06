@@ -1,12 +1,14 @@
-// Vendored copy of the browser-side part of @sweberdev/logarithm 0.1 (src/{types,id,diff,query,
+// Vendored copy of the browser-side part of @sweberdev/logarithm 0.3 (src/{types,id,diff,query,
 // log,memory,describe}.ts, unchanged), so the demo runs the same code as the npm package. The
-// Postgres and SQLite stores are left out: the demo keeps events in memory.
+// Postgres, MySQL and SQLite stores are left out: the demo keeps events in memory.
 export type {
   AuditActor,
   AuditChange,
   AuditContext,
   AuditEvent,
   AuditEventInput,
+  AuditGroupCount,
+  AuditGroupBy,
   AuditPage,
   AuditQuery,
   AuditStore,

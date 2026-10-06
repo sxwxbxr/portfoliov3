@@ -2,7 +2,13 @@
 
 import { useCallback, useEffect, useId, useState } from "react"
 import { CodeBlock } from "@/components/packages/demo/CodeBlock"
-import { type AuditActor, type AuditEvent, createAuditLog, memoryStore } from "@/lib/demo/logarithm"
+import {
+  type AuditActor,
+  type AuditEvent,
+  type AuditGroupCount,
+  createAuditLog,
+  memoryStore,
+} from "@/lib/demo/logarithm"
 import { logarithmDemo } from "@/lib/demo/logarithm-copy"
 import { ActivityFeed } from "./ActivityFeed"
 import { AuditLog } from "./AuditLog"
@@ -198,6 +204,10 @@ export function AuditPlayground() {
     setKeySuffix(next)
   }
 
+  const failSignIn = async () => {
+    await record({ action: "user.sign_in_failed", metadata: { reason: "wrong_password" } })
+  }
+
   const reset = () => {
     setProject(INITIAL_PROJECT)
     setDraft(INITIAL_PROJECT)
@@ -354,6 +364,13 @@ export function AuditPlayground() {
           </button>
         </div>
 
+        <div className="flex flex-col gap-2">
+          <button type="button" onClick={failSignIn} className={small + " self-start"}>
+            {t.failSignIn}
+          </button>
+          <p className="text-sm text-fg-muted">{t.failSignInHint}</p>
+        </div>
+
         <button type="button" onClick={reset} className={small + " self-start"}>
           {t.reset}
         </button>
@@ -392,6 +409,8 @@ export function AuditPlayground() {
           )}
         </div>
 
+        {log && <CountsPanel log={log} actor={actor} refreshKey={version} />}
+
         <div className="logarithm-demo min-w-0">
           {log && (
             <AuditLog
@@ -415,6 +434,58 @@ export function AuditPlayground() {
           </div>
         )}
       </div>
+    </div>
+  )
+}
+
+type DemoLog = Awaited<ReturnType<typeof seededLog>>
+
+/** Failed sign-ins per actor and hour before Logarithm Pro's `detectAnomalies()` alerts (its default). */
+const FAILED_SIGN_IN_THRESHOLD = 5
+
+/** `audit.count()` as a dashboard would use it, plus the check behind the Pro anomaly alert. */
+function CountsPanel({ log, actor, refreshKey }: { log: DemoLog; actor: AuditActor; refreshKey: number }) {
+  const [total, setTotal] = useState<number | null>(null)
+  const [byAction, setByAction] = useState<AuditGroupCount[]>([])
+  const [failed, setFailed] = useState(0)
+
+  useEffect(() => {
+    let cancelled = false
+    const hourAgo = new Date(Date.now() - 60 * 60_000)
+    void Promise.all([
+      log.count(),
+      log.count({ groupBy: "action" }),
+      log.count({ action: "user.sign_in_failed", actorId: actor.id, from: hourAgo }),
+    ]).then(([all, groups, fails]) => {
+      if (cancelled) return
+      setTotal(all)
+      setByAction(groups.slice(0, 5))
+      setFailed(fails)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [log, actor.id, refreshKey])
+
+  const alert = failed >= FAILED_SIGN_IN_THRESHOLD
+
+  return (
+    <div className="flex min-w-0 flex-col gap-3 rounded-md border border-edge-soft p-4">
+      <p className="text-sm text-fg-muted">{t.countsHint}</p>
+      <p className="text-sm text-fg">
+        {t.countsTotal}: <span className="font-mono">{total ?? "…"}</span>
+      </p>
+      <ul className="flex flex-col gap-1 text-sm">
+        {byAction.map((g) => (
+          <li key={g.key} className="flex justify-between gap-4">
+            <code className="truncate font-mono text-fg">{g.key}</code>
+            <span className="font-mono text-fg-muted">{g.count}</span>
+          </li>
+        ))}
+      </ul>
+      <p className={"text-sm " + (alert ? "text-signal" : "text-fg-muted")} aria-live="polite">
+        {alert ? t.anomaly(actor.name ?? actor.id, failed) : t.noAnomaly(failed, FAILED_SIGN_IN_THRESHOLD)}
+      </p>
     </div>
   )
 }

@@ -1,3 +1,4 @@
+import { Suspense } from "react"
 import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
@@ -7,6 +8,7 @@ import { Block } from "@/components/site/Block"
 import { ProseMarkdown } from "@/components/ProseMarkdown"
 import { JsonLd } from "@/components/JsonLd"
 import { PricingBlock } from "@/components/packages/PricingBlock"
+import { CheckoutSuccess } from "@/components/packages/CheckoutSuccess"
 import { bundlePackages, getBundle, getBundles, type Bundle } from "@/lib/packages/bundles"
 import { pkgPath, pkgUrl } from "@/lib/packages/urls"
 import { copy } from "@/lib/copy"
@@ -80,6 +82,10 @@ export default async function BundlePage({ params }: Props) {
             <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
             {copy.packages.backToOverview}
           </Link>
+          <Suspense fallback={null}>
+            <CheckoutSuccess name={bundle.name} />
+          </Suspense>
+
           <div className="flex flex-col items-start gap-5">
             <span className="tab text-xs text-fg-muted">{s.badge}</span>
             <h1 className="display text-balance">

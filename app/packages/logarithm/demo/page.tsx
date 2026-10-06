@@ -18,6 +18,10 @@ await audit.with({ tenantId: org.id, actor: { id: user.id, name: user.name } }).
   after: updated,
 })`
 
+const COUNT = `// app/dashboard/page.tsx
+const logins = await audit.count({ action: "user.signed_in", groupBy: "day" })
+// [{ key: "2026-10-05", count: 412 }, { key: "2026-10-06", count: 388 }]`
+
 const ROUTE = `// app/api/audit/route.ts
 import { createAuditHandler } from "@sweberdev/logarithm"
 
@@ -80,10 +84,11 @@ export default function LogarithmDemoPage() {
       </Block>
 
       <Block label={t.code.label} title={t.code.title} sub={t.code.sub} lede={<p>{t.code.lede}</p>}>
-        <div className="grid min-w-0 gap-6 lg:grid-cols-3">
+        <div className="grid min-w-0 gap-6 lg:grid-cols-2">
           <CodeBlock code={RECORD} label="Record an event" />
           <CodeBlock code={ROUTE} label="API route" />
           <CodeBlock code={VIEW} label="Activity page" />
+          <CodeBlock code={COUNT} label="Dashboard counts" />
         </div>
       </Block>
 

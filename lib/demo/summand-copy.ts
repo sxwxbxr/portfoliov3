@@ -86,7 +86,7 @@ export const summandDemoCopy = {
     label: "Pro",
     title: "Read, show and process invoices in bulk",
     sub: "Summand Pro.",
-    lede: "Summand Pro turns invoices into typed data, renders them for people and validates whole inboxes. Below is real output of summand-view and summand-inbox for the sample invoices.",
+    lede: "Summand Pro turns invoices into typed data, renders them for people, watches your inbox folder and hands valid invoices to DATEV. Below is real output of summand-view and summand-inbox for the sample invoices.",
     view: "summand-view: the invoice with errors as readable HTML, with its validation report",
     viewTitle: "Invoice view rendered by summand-view",
     viewDe: "The ZUGFeRD sample in German",
@@ -96,6 +96,8 @@ export const summandDemoCopy = {
     reportTitle: "Batch report rendered by summand-inbox",
     audit: "Two lines of the audit log: each line carries the SHA-256 of the file and a chain value over the line before",
     read: "summand-read: one typed object for UBL and CII",
+    watch: "summand-inbox watch: checks each file as it arrives and sorts it into valid/, invalid/ and duplicate/",
+    datev: "DATEV export of the valid invoices: one booking per VAT rate, ready for your tax advisor to import",
     cta: "Pricing and licences",
   },
 
