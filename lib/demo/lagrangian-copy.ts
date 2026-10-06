@@ -106,7 +106,7 @@ export const lagrangianDemo = {
   },
   closing: {
     label: "Get it",
-    title: "About 7 kB of physics.",
+    title: "About 8 kB of physics.",
     sub: "The core is free and open source under the MIT licence.",
     lede:
       "Springs, throws, dragging and the world work with any framework. React hooks are in @sweberdev/lagrangian-react. The docs explain every option and the maths behind it.",
