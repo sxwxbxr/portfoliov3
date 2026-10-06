@@ -41,6 +41,7 @@ export const sigmoidDemo = {
     plotLabel: (name: string) => `Plot of the ${name} curve from 0 to 1`,
     stops: (n: number) => `${n} stops`,
     rest: (ms: number) => `at rest after ${ms} ms`,
+    editorLink: "Open the curve editor",
     cssHeading: "CSS",
     jsHeading: "JavaScript",
   },
@@ -112,4 +113,43 @@ export const sigmoidDemo = {
     sub: "Free for every project.",
     lede: "Install the package, add the stylesheet, and mark your first element. The docs cover the API, the curves, React and reduced motion.",
   },
+}
+
+/** Copy of the curve editor page (/sigmoid/curves). */
+export const sigmoidCurves = {
+  seoTitle: "Sigmoid curve editor: spring, S-curve and Bézier easing as CSS linear()",
+  description:
+    "Tune a spring, an S-curve or a Bézier easing, drag the handles, and copy it as CSS, Tailwind, JavaScript or for Motion and GSAP. Share the curve by link.",
+  title: "Curve editor",
+  titleSub: "Tune an easing. Copy it as CSS.",
+  overview: "Sigmoid overview",
+  intro:
+    "Springs and S-curves cannot be written as a cubic-bezier(). Sigmoid solves them and turns them into a short CSS linear() value that runs natively in the browser. Pick a curve, tune it, and take the code with you. Every setting is in the address, so a curve is one link.",
+  editor: {
+    label: "Editor",
+    title: "Move it until it feels right.",
+    sub: "Spring, S-curve or Bézier.",
+    lede: "Press play to run the curve as a plain CSS transition. For a Bézier curve, drag the two handles in the plot.",
+  },
+  kinds: { spring: "Spring", logistic: "S-curve", bezier: "Bézier" },
+  kindLabel: "Curve",
+  bounce: "Bounce",
+  duration: "Duration",
+  steepness: "Steepness",
+  dragHint: "Drag the handles in the plot or use the sliders.",
+  play: "Play",
+  share: "Copy link",
+  reset: "Reset",
+  copy: "Copy",
+  copied: "Copied",
+  outputLabel: "Output format",
+  plotLabel: (name: string) => `Plot of the ${name} curve from 0 to 1`,
+  tabs: { css: "CSS", variable: "CSS variable", tailwind: "Tailwind v4", js: "JavaScript", libs: "Motion and GSAP" },
+  closing: {
+    label: "Get started",
+    title: "The same curves in your code.",
+    sub: "MIT licensed, free for every project.",
+    lede: "Install the package and use the curve as a function, as CSS, with Motion or GSAP, or with the Tailwind theme.",
+  },
+  demo: "Open the live demo",
 }
