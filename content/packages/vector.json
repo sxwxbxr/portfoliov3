@@ -51,7 +51,8 @@
       "Long-running worker, or process() from a cron job with deliverNow for serverless",
       "vector CLI: generate secrets and key pairs, sign, verify, send test events and receive webhooks locally",
       "No dependencies; runs on Node.js, Bun, Deno and edge runtimes",
-      "transform hook: change the body per endpoint, add headers or skip a delivery, without touching the stored message"
+      "transform hook: change the body per endpoint, add headers or skip a delivery, without touching the stored message",
+      "Rate limit per endpoint (requests per second, by option, function or endpoint metadata) that delays instead of failing, and egress through a proxy dispatcher for a fixed IP"
     ],
     "pro": [
       "Embeddable customer portal: a tenant-scoped REST handler and React components for endpoints, secrets, a searchable message log (id, payload text, status, endpoint), retries, test events and an event catalog with examples and schemas; light, dark and shadcn/ui themes",
@@ -99,6 +100,11 @@
     },
     {
       "feature": "Per-endpoint body changes (transform hook)",
+      "free": true,
+      "pro": true
+    },
+    {
+      "feature": "Rate limit per endpoint and egress proxy",
       "free": true,
       "pro": true
     },
@@ -216,6 +222,10 @@
     {
       "q": "Does it work on serverless platforms?",
       "a": "Yes. Instead of the long-running worker you call process() from a cron job, for example a Vercel cron route every minute, and send with deliverNow: true so the first attempt does not wait for the next run. Retries are picked up by the following cron runs."
+    },
+    {
+      "q": "Can I send webhooks from a fixed IP address?",
+      "a": "Yes. Run an egress proxy with a static IP and pass an undici dispatcher such as ProxyAgent to Vector's dispatcher option; on Node.js 24 and later NODE_USE_ENV_PROXY=1 with HTTPS_PROXY works without code. Vector still checks the host name against private networks before each request."
     }
   ],
   "publishedAt": "2026-10-05"
