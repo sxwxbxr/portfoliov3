@@ -43,6 +43,8 @@
       "Baseline for existing sites: CI fails only on new issues, not on the whole backlog",
       "CLI for whole sites: sitemap, desktop or mobile viewport, JUnit XML for GitLab, Azure DevOps and Jenkins",
       "surjection init sets up a config file and a GitHub Actions workflow in one command",
+      "Keyboard check: finds focus traps and missing focus indicators by pressing Tab through each page",
+      "Checks pages behind a login with a saved Playwright session",
       "Markdown report for pull requests and job summaries, in German, Swiss German, French, Italian and English",
       "Accessibility statement generator (DE, DE-CH, FR, IT, EN) as Markdown and HTML",
       "Accessible React building blocks: skip link, visually hidden text, live announcements, reduced motion"
@@ -50,7 +52,7 @@
     "pro": [
       "Client reports in your agency's branding, as HTML and PDF",
       "Fix list as CSV for Excel: one row per element, with status and note columns for your developers",
-      "History across all client projects, so you can show progress over time",
+      "History across all client projects, so you can show progress over time, with a status badge per project",
       "Guided manual checklist for the criteria automated tests cannot cover"
     ]
   },
@@ -116,7 +118,7 @@
       },
       {
         "name": "@weber-development/surjection-history",
-        "description": "Records every run per project and renders a dashboard with status, change and trend."
+        "description": "Records every run per project and renders a dashboard with status, change and trend, plus an SVG status badge per project."
       },
       {
         "name": "@weber-development/surjection-checklist",
