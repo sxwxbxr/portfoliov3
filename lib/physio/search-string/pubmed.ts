@@ -2,13 +2,18 @@
  * Optional hit counts from PubMed (NCBI E-utilities, called straight from the
  * browser, CORS is open). Only the finished search string is sent, never the
  * question. Without an API key NCBI allows three requests per second; this
- * client keeps at least 350 ms between two requests and stops at the first
- * rate-limit answer. Counts are cached per string for the page's lifetime.
+ * client keeps at least 400 ms between two requests. E-utilities drop single
+ * requests now and then (5xx or a reset connection without CORS headers, which
+ * the browser reports as a network error), so a failed request is retried
+ * twice with a pause before the count reports an error. Counts are cached per
+ * string for the page's lifetime.
  */
 
 const EUTILS = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
 export const PUBMED_TOOL = "physio-sweber-dev"
-export const MIN_SPACING_MS = 350
+export const MIN_SPACING_MS = 400
+/** Pauses before the 2nd and 3rd attempt of a request that failed with "network" or "rate". */
+export const RETRY_DELAYS_MS = [1500, 4000]
 
 /** Link for "In PubMed öffnen". */
 export function pubmedSearchUrl(query: string): string {
@@ -30,6 +35,7 @@ export class PubMedError extends Error {
 export interface PubMedCounterOptions {
   fetch?: typeof fetch
   spacingMs?: number
+  retryDelaysMs?: number[]
   /** Injectable for tests. */
   sleep?: (ms: number, signal?: AbortSignal) => Promise<void>
   now?: () => number
@@ -59,6 +65,7 @@ export interface PubMedCounter {
 export function createPubMedCounter(options: PubMedCounterOptions = {}): PubMedCounter {
   const doFetch = options.fetch ?? ((...a: Parameters<typeof fetch>) => globalThis.fetch(...a))
   const spacing = options.spacingMs ?? MIN_SPACING_MS
+  const retryDelays = options.retryDelaysMs ?? RETRY_DELAYS_MS
   const sleep = options.sleep ?? defaultSleep
   const now = options.now ?? (() => Date.now())
   const cache = new Map<string, number>()
@@ -103,6 +110,18 @@ export function createPubMedCounter(options: PubMedCounterOptions = {}): PubMedC
     return n
   }
 
+  async function requestWithRetry(query: string, signal?: AbortSignal): Promise<number> {
+    for (let attempt = 0; ; attempt++) {
+      try {
+        return await request(query, signal)
+      } catch (e) {
+        const transient = e instanceof PubMedError && (e.code === "network" || e.code === "rate")
+        if (!transient || attempt >= retryDelays.length) throw e
+        await sleep(retryDelays[attempt], signal)
+      }
+    }
+  }
+
   return {
     cached: (q) => cache.get(q),
     count(query, signal) {
@@ -111,7 +130,7 @@ export function createPubMedCounter(options: PubMedCounterOptions = {}): PubMedC
       const run = chain.then(async () => {
         const again = cache.get(query)
         if (again !== undefined) return again
-        const n = await request(query, signal)
+        const n = await requestWithRetry(query, signal)
         cache.set(query, n)
         return n
       })
