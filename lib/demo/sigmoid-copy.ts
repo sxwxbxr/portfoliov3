@@ -16,6 +16,7 @@ export const sigmoidDemo = {
     { href: "#parallax", label: "Parallax and scrub" },
     { href: "#numbers", label: "Numbers" },
     { href: "#story", label: "Scroll story" },
+    { href: "#text", label: "Text and rows" },
     { href: "#zero-js", label: "Zero JavaScript" },
   ],
   docs: "Read the docs",
@@ -73,8 +74,8 @@ export const sigmoidDemo = {
     lede:
       "These counters are not animations. track() reports how far each card has travelled through the window, and a few lines of code turn that into a number. The same works for video frames, canvas drawings or a chart.",
     stats: [
-      { value: 2400, unit: "bytes", label: "for reveal and init, min+gzip" },
-      { value: 40, unit: "tests", label: "for the range maths, curves and React" },
+      { value: 2800, unit: "bytes", label: "for reveal and init, min+gzip" },
+      { value: 52, unit: "tests", label: "for the core, React and Vue, plus a Chromium check" },
       { value: 10, unit: "presets", label: "from fade-in to flip-up" },
     ],
     codeHeading: "track()",
@@ -92,6 +93,26 @@ export const sigmoidDemo = {
     ],
     stepLabel: (i: number, n: number) => `Step ${i} of ${n}`,
     codeHeading: "story()",
+  },
+  words: {
+    label: "Text and rows",
+    title: "Words, rows and numbers.",
+    sub: "New in 0.5: splitText(), the inline axis and counters.",
+    lede:
+      "The headline is split into words with splitText(). One reveal() with the whole headline as its subject lets every word arrive one after another. Below it, a row of cards in a horizontal scroll container is revealed on the inline axis, and a number counts up with one attribute and no script.",
+    headline: "Scroll motion without the JavaScript tax.",
+    galleryLabel: "Cards in a horizontal scroll container",
+    cards: [
+      { title: "Native timelines", text: "The browser drives the animation." },
+      { title: "A small fallback", text: "Same range maths, one listener." },
+      { title: "Springs as CSS", text: "linear() from a solved spring." },
+      { title: "Reduced motion", text: "Content shown, nothing moves." },
+      { title: "Scroll containers", text: "Panels and carousels work too." },
+      { title: "Three frameworks", text: "React, Vue and plain CSS." },
+    ],
+    counterLabel: "tests run on every change, no JavaScript on this number",
+    counterValue: 52,
+    codeHeading: "splitText() and the inline axis",
   },
   zeroJs: {
     label: "Zero JavaScript",

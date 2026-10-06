@@ -38,13 +38,26 @@ export interface RevealOptions extends MotionOptions {
   stagger?: number;
   /** Percent the whole range starts later, e.g. `index * 8` for one element of a list. */
   shift?: number;
+  /** `"inline"` for horizontal scrolling, e.g. a carousel. Default `"block"`. */
+  axis?: Axis;
+  /**
+   * The element whose way through the window drives all targets, instead of
+   * each target on its own. Use it for the words of a headline: see
+   * {@link splitText}.
+   */
+  subject?: Element;
 }
 
 export interface ScrubOptions extends MotionOptions {
   /** Scroll container. Default: the page. */
   source?: Element;
   /** Default `"block"`. */
-  axis?: "block" | "inline";
+  axis?: Axis;
+  /**
+   * Part of the scroll distance the animation runs over, in percent:
+   * `[20, 80]` starts at 20% and ends at 80%. Default `[0, 100]`.
+   */
+  range?: [number, number];
 }
 
 export interface ParallaxOptions extends MotionOptions {
@@ -119,39 +132,62 @@ function removeDriver(drive: Driver) {
   }
 }
 
+export type Axis = "block" | "inline";
+
 /** The nearest scroll container, like `view()` picks it. `null` is the page. */
-function scrollBox(el: Element): HTMLElement | null {
+function scrollBox(el: Element, axis: Axis): HTMLElement | null {
   for (let n = el.parentElement; n && n !== document.body; n = n.parentElement) {
     if (n === document.documentElement) break;
-    if (/auto|scroll|hidden|overlay/.test(getComputedStyle(n).overflowY)) return n;
+    const style = getComputedStyle(n);
+    if (/auto|scroll|hidden|overlay/.test(axis === "block" ? style.overflowY : style.overflowX)) {
+      return n;
+    }
   }
   return null;
 }
 
-/** Layout top in the document, unaffected by transforms and scrolling. */
-function layoutTop(el: HTMLElement) {
-  let top = 0;
+/** Layout offset in the document, unaffected by transforms and scrolling. */
+function layoutPos(el: HTMLElement, axis: Axis) {
+  let pos = 0;
   for (let n: HTMLElement | null = el; n; n = n.offsetParent as HTMLElement | null) {
-    top += n.offsetTop;
+    pos += axis === "block" ? n.offsetTop : n.offsetLeft;
   }
-  return top;
+  return pos;
 }
 
 /**
- * Position relative to the top of its scroller's visible area, without the
+ * Position relative to the start of its scroller's visible area, without the
  * element's own transform, so parallax cannot feed back.
  */
-function measure(el: Element, box: HTMLElement | null) {
-  const viewport = box ? box.clientHeight : innerHeight;
+function measure(el: Element, box: HTMLElement | null, axis: Axis) {
+  const block = axis === "block";
+  const viewport = box
+    ? block
+      ? box.clientHeight
+      : box.clientWidth
+    : block
+      ? innerHeight
+      : innerWidth;
   if (el instanceof HTMLElement) {
+    const page = block ? scrollY : scrollX;
     const top = box
-      ? layoutTop(el) - layoutTop(box) - box.clientTop - box.scrollTop
-      : layoutTop(el) - scrollY;
-    return { top, height: el.offsetHeight, viewport };
+      ? layoutPos(el, axis) -
+        layoutPos(box, axis) -
+        (block ? box.clientTop + box.scrollTop : box.clientLeft + box.scrollLeft)
+      : layoutPos(el, axis) - page;
+    return { top, height: block ? el.offsetHeight : el.offsetWidth, viewport };
   }
   const rect = el.getBoundingClientRect();
-  const offset = box ? box.getBoundingClientRect().top + box.clientTop : 0;
-  return { top: rect.top - offset, height: rect.height, viewport };
+  const offset = box
+    ? block
+      ? box.getBoundingClientRect().top + box.clientTop
+      : box.getBoundingClientRect().left + box.clientLeft
+    : 0;
+  return {
+    top: (block ? rect.top : rect.left) - offset,
+    height: block ? rect.height : rect.width,
+    viewport,
+  };
 }
 
 function controller(animations: Animation[], native: boolean, stop?: () => void): Controller {
@@ -172,7 +208,7 @@ function run(
   defaultEasing: string,
   timeline: (el: Element) => AnimationTimeline,
   progress: (el: Element, index: number) => number,
-  rangeAt?: (index: number) => Range,
+  nativeRange?: (index: number) => { rangeStart: string; rangeEnd: string },
 ): Controller {
   const elements = resolve(targets);
   if (!elements.length) return controller([], false);
@@ -189,7 +225,7 @@ function run(
         fill: "both",
         easing: css,
         timeline: timeline(el),
-        ...(rangeAt ? rangeOptions(rangeAt(i)) : {}),
+        ...(nativeRange ? nativeRange(i) : {}),
       } as KeyframeAnimationOptions);
     });
     return controller(animations, true);
@@ -226,11 +262,12 @@ function shiftRange(r: Range, shift: number): Range {
   };
 }
 
-function viewDriver(rangeAt: (index: number) => Range) {
+function viewDriver(rangeAt: (index: number) => Range, axis: Axis = "block", subject?: Element) {
   const boxes = new Map<Element, HTMLElement | null>();
   return (el: Element, index: number) => {
-    if (!boxes.has(el)) boxes.set(el, scrollBox(el));
-    const { top, height, viewport } = measure(el, boxes.get(el) ?? null);
+    const target = subject ?? el;
+    if (!boxes.has(target)) boxes.set(target, scrollBox(target, axis));
+    const { top, height, viewport } = measure(target, boxes.get(target) ?? null, axis);
     return viewProgress(rangeAt(index), top, height, viewport);
   };
 }
@@ -249,14 +286,15 @@ export function reveal(targets: Targets, options: RevealOptions = {}): Controlle
     typeof options.keyframes === "object"
       ? options.keyframes
       : presets[options.keyframes ?? "fade-up"];
+  const axis = options.axis ?? "block";
   return run(
     targets,
     keyframes,
     options,
     "cubic-bezier(0.16, 1, 0.3, 1)",
-    (el) => new ViewTimeline({ subject: el, axis: "block" }),
-    viewDriver(rangeAt),
-    rangeAt,
+    (el) => new ViewTimeline({ subject: options.subject ?? el, axis }),
+    viewDriver(rangeAt, axis, options.subject),
+    (i) => rangeOptions(rangeAt(i)),
   );
 }
 
@@ -274,7 +312,7 @@ export function parallax(targets: Targets, options: ParallaxOptions = {}): Contr
     "linear",
     (el) => new ViewTimeline({ subject: el, axis: "block" }),
     viewDriver(() => range),
-    () => range,
+    () => rangeOptions(range),
   );
 }
 
@@ -288,6 +326,7 @@ export function scrub(
   options: ScrubOptions = {},
 ): Controller {
   const axis = options.axis ?? "block";
+  const [from, to] = options.range ?? [0, 100];
   return run(
     targets,
     keyframes,
@@ -299,8 +338,10 @@ export function scrub(
       const max =
         axis === "block" ? el.scrollHeight - el.clientHeight : el.scrollWidth - el.clientWidth;
       const pos = axis === "block" ? el.scrollTop : Math.abs(el.scrollLeft);
-      return max > 0 ? pos / max : 0;
+      const all = max > 0 ? pos / max : 0;
+      return to > from ? Math.min(Math.max((all * 100 - from) / (to - from), 0), 1) : 0;
     },
+    options.range ? () => ({ rangeStart: `${from}%`, rangeEnd: `${to}%` }) : undefined,
   );
 }
 
@@ -320,6 +361,8 @@ export function progress(targets: Targets, options: ScrubOptions = {}): Controll
 export interface TrackOptions {
   /** CSS `animation-range` the progress runs over. Default `"cover"`. */
   range?: string;
+  /** `"inline"` for horizontal scrolling. Default `"block"`. */
+  axis?: Axis;
 }
 
 /**
@@ -337,7 +380,7 @@ export function track(
   const elements = resolve(targets);
   if (!elements.length) return controller([], false);
   const range = parseRange(options.range ?? "cover");
-  const read = viewDriver(() => range);
+  const read = viewDriver(() => range, options.axis);
   const last = elements.map(() => Number.NaN);
   const drive = () => {
     elements.forEach((el, i) => {
@@ -362,6 +405,8 @@ export interface StoryOptions {
    * section taller than the window, the time its sticky content stays pinned.
    */
   range?: string;
+  /** `"inline"` for a horizontal story. Default `"block"`. */
+  axis?: Axis;
 }
 
 /**
@@ -388,6 +433,71 @@ export function story(targets: Targets, options: StoryOptions): Controller {
       el.setAttribute("data-sigmoid-step", String(step));
       options.onStep?.(step, el);
     },
-    { range: options.range ?? "contain" },
+    { range: options.range ?? "contain", axis: options.axis },
   );
+}
+
+export interface SplitText {
+  /** The words or characters, in reading order. */
+  elements: HTMLElement[];
+  /** The text element itself: use it as the `subject` of a reveal. */
+  parent: HTMLElement;
+  /** Puts the original text back. */
+  revert(): void;
+}
+
+const hidden =
+  "position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap";
+
+/**
+ * Splits the text of an element into words or characters, so they can arrive
+ * one after another. Plain text only: markup inside the element is replaced.
+ * Screen readers still get the original text, the pieces are hidden from them.
+ *
+ * @example
+ * const { elements, parent } = splitText("h1");
+ * reveal(elements, { subject: parent, stagger: 6 });
+ */
+export function splitText(
+  target: Element | string,
+  options: { by?: "words" | "chars" } = {},
+): SplitText {
+  const el = (typeof target === "string" ? document.querySelector(target) : target) as HTMLElement;
+  const text = el?.textContent?.replace(/\s+/g, " ").trim() ?? "";
+  if (!el || !text) return { elements: [], parent: el, revert() {} };
+  const original = el.innerHTML;
+  const chars = options.by === "chars";
+  const elements: HTMLElement[] = [];
+  const piece = (value: string) => {
+    const span = document.createElement("span");
+    span.textContent = value;
+    span.style.display = "inline-block";
+    span.style.setProperty("--sigmoid-index", String(elements.length));
+    elements.push(span);
+    return span;
+  };
+  const visible = document.createElement("span");
+  visible.setAttribute("aria-hidden", "true");
+  for (const [i, word] of text.split(" ").entries()) {
+    if (i) visible.append(" ");
+    if (!chars) {
+      visible.append(piece(word));
+      continue;
+    }
+    const group = document.createElement("span");
+    group.style.display = "inline-block";
+    for (const c of Array.from(word)) group.append(piece(c));
+    visible.append(group);
+  }
+  const reader = document.createElement("span");
+  reader.style.cssText = hidden;
+  reader.textContent = text;
+  el.replaceChildren(reader, visible);
+  return {
+    elements,
+    parent: el,
+    revert() {
+      el.innerHTML = original;
+    },
+  };
 }
