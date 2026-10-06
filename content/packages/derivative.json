@@ -50,8 +50,8 @@
     ],
     "pro": [
       "Read statistics without cookies or visitor IDs: opens, reads and link clicks per release, plus a \"Was this helpful?\" vote under each release, with an HTML report, CSV export and storage in a file, Postgres or SQLite",
-      "Audience segments and languages: entries only for certain plans or roles, scheduled releases, and a feed per language translated with DeepL, an OpenAI-compatible model or Anthropic, with a cache so only changed texts cost anything",
-      "Announcements: a subscriber list with double opt-in and e-mail digests sent through Resend, Postmark, Amazon SES or any SMTP server (one-click unsubscribe, consent evidence), plus posts to Slack, Teams, Discord, Mattermost, Google Chat, Mastodon and Bluesky"
+      "Audience segments and languages: entries only for certain plans or roles, scheduled releases, and a feed per language translated with DeepL, an OpenAI-compatible model or Anthropic, with a cache so only changed texts cost anything; entries can also follow your feature flags (Unleash, LaunchDarkly)",
+      "Announcements: a subscriber list with double opt-in and e-mail digests sent through Resend, Postmark, Amazon SES or any SMTP server (one-click unsubscribe, consent evidence), plus posts to Slack, Teams, Discord, Mattermost, Google Chat, Mastodon, Bluesky and LinkedIn"
     ]
   },
   "comparison": [
@@ -71,12 +71,12 @@
       "pro": true
     },
     {
-      "feature": "Audience segments, scheduled releases, translated feeds",
+      "feature": "Audience segments, feature-flag audiences, scheduled releases, translated feeds",
       "free": false,
       "pro": true
     },
     {
-      "feature": "Subscriber list, e-mail sending, chat, Mastodon and Bluesky announcements",
+      "feature": "Subscriber list, e-mail sending, chat, Mastodon, Bluesky and LinkedIn announcements",
       "free": false,
       "pro": true
     },
@@ -101,11 +101,11 @@
       },
       {
         "name": "@weber-development/derivative-segments",
-        "description": "Shows entries only to the plans or roles they are meant for, publishes releases on a schedule and translates the feed into more languages with DeepL, an OpenAI-compatible model or Anthropic."
+        "description": "Shows entries only to the plans or roles they are meant for, publishes releases on a schedule and translates the feed into more languages with DeepL, an OpenAI-compatible model or Anthropic. Entries can follow your Unleash or LaunchDarkly feature flags."
       },
       {
         "name": "@weber-development/derivative-announce",
-        "description": "Keeps a subscriber list with double opt-in, sends new releases as an e-mail digest through Resend, Postmark, Amazon SES or your own SMTP server, and posts them to Slack, Teams, Discord, Mattermost, Google Chat, Mastodon and Bluesky."
+        "description": "Keeps a subscriber list with double opt-in, sends new releases as an e-mail digest through Resend, Postmark, Amazon SES or your own SMTP server, and posts them to Slack, Teams, Discord, Mattermost, Google Chat, Mastodon, Bluesky and LinkedIn."
       }
     ],
     "waitlistUrl": "mailto:info@sweber.dev?subject=Derivative%20Pro%20waitlist"
