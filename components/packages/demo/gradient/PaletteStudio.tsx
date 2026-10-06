@@ -6,6 +6,7 @@ import { Block } from "@/components/site/Block"
 import { CodeBlock } from "@/components/packages/demo/CodeBlock"
 import { CookieTableTabs } from "@/components/packages/demo/CookieTableTabs"
 import {
+  auditCss,
   checkDistinguishable,
   checkPair,
   checkPalette,
@@ -288,6 +289,92 @@ function CopyButton({ text, label }: { text: string; label?: string }) {
       {copied ? <Check className="h-3.5 w-3.5" aria-hidden="true" /> : <Copy className="h-3.5 w-3.5" aria-hidden="true" />}
       <span aria-live="polite">{copied ? t.export.copied : (label ?? t.export.copy)}</span>
     </button>
+  )
+}
+
+function AuditSection() {
+  const a = t.audit
+  const [css, setCss] = useState(a.sample)
+  const id = useId()
+  const deferred = useDeferredValue(css)
+  const result = useMemo(() => auditCss(deferred), [deferred])
+  const failed = result.checks.filter((c) => !c.pass)
+  // One line per scale and mode, with the failing pairs below it.
+  const rows = useMemo(() => {
+    const map = new Map<string, { scale: string; mode: string; total: number; failed: typeof failed }>()
+    for (const c of result.checks) {
+      const key = `${c.scale}-${c.mode}`
+      const row = map.get(key) ?? { scale: c.scale, mode: c.mode, total: 0, failed: [] }
+      row.total += 1
+      if (!c.pass) row.failed.push(c)
+      map.set(key, row)
+    }
+    return [...map.values()]
+  }, [result])
+  return (
+    <Block id="audit" label={a.label} title={a.title} sub={a.sub} lede={<p>{a.lede}</p>}>
+      <div className="grid gap-8 lg:grid-cols-2">
+        <div className="flex min-w-0 flex-col gap-2">
+          <label htmlFor={id} className="annotate">
+            {a.input}
+          </label>
+          <textarea
+            id={id}
+            value={css}
+            onChange={(e) => setCss(e.target.value)}
+            spellCheck={false}
+            rows={14}
+            className="well w-full min-w-0 resize-y p-3 font-mono text-xs text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
+          />
+          <button
+            type="button"
+            onClick={() => setCss("")}
+            className="control control-ghost inline-flex h-9 items-center self-start px-3 text-xs text-fg-muted hover:text-fg"
+          >
+            {a.clear}
+          </button>
+        </div>
+        <div className="well flex min-w-0 flex-col gap-3 px-5 py-4" role="status">
+          {result.scales.length === 0 ? (
+            <p className="text-sm text-fg-muted">{a.empty}</p>
+          ) : (
+            <>
+              <p className="text-sm text-fg">{failed.length === 0 ? a.allPass : a.someFail(failed.length)}</p>
+              <ul className="flex flex-col gap-2 text-sm">
+                {rows.map((row) => (
+                  <li key={`${row.scale}-${row.mode}`} className="flex flex-col gap-1">
+                    <span className="font-mono text-fg">
+                      {row.scale} {row.mode}: {row.total - row.failed.length}/{row.total}
+                    </span>
+                    {row.failed.map((c) => (
+                      <span key={`${c.foreground}-${c.background}`} className="pl-4 font-mono text-xs text-fg-muted">
+                        {a.fail(c.foreground, c.background, c.ratio, c.required)}
+                        {c.fix && (
+                          <>
+                            {" "}
+                            {a.try}{" "}
+                            <span
+                              aria-hidden="true"
+                              className="inline-block h-2.5 w-2.5 rounded-full align-middle"
+                              style={{ background: c.fix }}
+                            />{" "}
+                            {c.fix}
+                          </>
+                        )}
+                      </span>
+                    ))}
+                  </li>
+                ))}
+              </ul>
+              {result.skipped.length > 0 && <p className="text-xs text-fg-muted">{a.skipped(result.skipped.length)}</p>}
+            </>
+          )}
+        </div>
+      </div>
+      <div className="pt-8">
+        <CodeBlock title={a.cli} code="npx @sweberdev/gradient audit app/globals.css" />
+      </div>
+    </Block>
   )
 }
 
@@ -647,6 +734,8 @@ export function PaletteStudio() {
       </Block>
 
       <SeriesSection brand={shown.scales[0]?.source ?? brand} vision={vision} />
+
+      <AuditSection />
 
       <PairCheck />
 

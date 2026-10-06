@@ -84,6 +84,37 @@ export const gradientDemo = {
     failed: (scale: string, mode: string, fg: string, bg: string, ratio: number, need: number) =>
       `${scale} ${mode}: ${fg} on ${bg} is ${ratio}:1, needs ${need}:1`,
   },
+  audit: {
+    label: "Audit",
+    title: "Check the colors you already have",
+    sub: "Paste a stylesheet.",
+    lede:
+      "Gradient reads custom properties that end in a step number, like --color-brand-600 or --blue-500, from :root, a dark class or a dark media query, and checks the pairs the step numbers promise. For every failing step it suggests one color that fixes all of its pairs.",
+    input: "Your CSS",
+    clear: "Clear",
+    empty: "No color steps found. Use variables like --color-brand-600 or --blue-500.",
+    allPass: "Every pair passes.",
+    someFail: (n: number) => `${n} ${n === 1 ? "pair fails" : "pairs fail"}.`,
+    fail: (fg: string, bg: string, ratio: number, need: number) => `${fg} on ${bg} is ${ratio}:1, needs ${need}:1.`,
+    try: "Try",
+    skipped: (n: number) => `${n} variable${n === 1 ? "" : "s"} skipped because ${n === 1 ? "it is" : "they are"} not plain colors.`,
+    cli: "Same check with the CLI",
+    sample: `:root {
+  --color-brand-50: #fff1f2;
+  --color-brand-500: #f43f5e;
+  --color-brand-600: #e11d48;
+  --color-brand-on-600: #ffffff;
+  --color-sun-50: #fffbeb;
+  --color-sun-500: #facc15;
+  --color-sun-600: #ca8a04;
+  --color-sun-700: #a16207;
+}
+.dark {
+  --color-brand-50: #1a0b0e;
+  --color-brand-500: #f43f5e;
+  --color-brand-600: #fb7185;
+}`,
+  },
   series: {
     label: "Charts",
     title: "Chart colors that stay apart",
