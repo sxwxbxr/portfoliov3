@@ -34,6 +34,9 @@ const LOCALES: { value: Locale; label: string }[] = [
   { value: "en", label: "English" },
   { value: "fr", label: "Français" },
   { value: "it", label: "Italiano" },
+  { value: "nl", label: "Nederlands" },
+  { value: "es", label: "Español" },
+  { value: "pl", label: "Polski" },
 ]
 
 const SHOP_TEXT: Record<Locale, { nav: string[]; hero: string; products: string[]; sub: string }> = {
@@ -60,6 +63,24 @@ const SHOP_TEXT: Record<Locale, { nav: string[]; hero: string; products: string[
     hero: "Pronti per l'autunno",
     products: ["Giacca Alpin", "Scarpone Cresta", "Abbonamento Gear-Box"],
     sub: "Il suo ordine A-1001 è stato consegnato venerdì.",
+  },
+  nl: {
+    nav: ["Uitrusting", "Abonnement", "Account"],
+    hero: "Klaar voor de herfst",
+    products: ["Regenjas Alpin", "Wandelschoen Graat", "Gear-Box abonnement"],
+    sub: "Uw bestelling A-1001 is vrijdag geleverd.",
+  },
+  es: {
+    nav: ["Equipo", "Suscripción", "Cuenta"],
+    hero: "Listos para el otoño",
+    products: ["Chaqueta impermeable Alpin", "Bota de montaña Cresta", "Suscripción Gear-Box"],
+    sub: "Su pedido A-1001 se entregó el viernes.",
+  },
+  pl: {
+    nav: ["Sprzęt", "Subskrypcja", "Konto"],
+    hero: "Gotowi na jesień",
+    products: ["Kurtka przeciwdeszczowa Alpin", "But trekkingowy Grań", "Subskrypcja Gear-Box"],
+    sub: "Państwa zamówienie A-1001 zostało dostarczone w piątek.",
   },
 }
 

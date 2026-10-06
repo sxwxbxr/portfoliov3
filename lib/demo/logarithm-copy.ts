@@ -43,7 +43,15 @@ export const logarithmDemo = {
     language: "Language of the view",
     feedHint: "<ActivityFeed>: the latest entries as a dashboard widget.",
     lastEvent: "Last recorded event, as stored",
-    lastEventHint: "This is the row Logarithm writes to Postgres or SQLite.",
+    lastEventHint: "This is the row Logarithm writes to Postgres, MySQL or SQLite.",
+    failSignIn: "Simulate a failed sign-in",
+    failSignInHint: "Click it five times to see what Logarithm Pro's anomaly alert would catch.",
+    countsHint: "audit.count(): totals and breakdowns for dashboards, counted in the database.",
+    countsTotal: "Events in total",
+    noAnomaly: (failed: number, threshold: number) =>
+      `Failed sign-ins of this person in the last hour: ${failed} of ${threshold}. No alert.`,
+    anomaly: (name: string, failed: number) =>
+      `Pro alert: ${name} failed to sign in ${failed} times within an hour. detectAnomalies() would post this to Slack or Teams.`,
   },
   code: {
     label: "In your app",
@@ -55,6 +63,6 @@ export const logarithmDemo = {
     label: "Pro",
     title: "When auditors ask",
     sub: "Logarithm Pro has the answers.",
-    lede: "Tamper evidence with an HMAC hash chain, retention periods with archiving, GDPR and Swiss FADP erasure and access requests, CSV export for your customers and forwarding to Splunk, Datadog or signed webhooks.",
+    lede: "Slack and Teams alerts with anomaly detection for unusual exports, deletions and failed sign-ins, tamper evidence with an HMAC hash chain, retention periods with archiving, GDPR and Swiss FADP erasure and access requests, CSV export for your customers and forwarding to Splunk, Datadog or signed webhooks.",
   },
 }

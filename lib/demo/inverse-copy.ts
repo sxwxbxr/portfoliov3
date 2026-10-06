@@ -14,6 +14,7 @@ export const inverseDemoCopy = {
   jump: "On this page",
   jumpLinks: [
     { href: "#shop", label: "Shop" },
+    { href: "#plain", label: "Without React" },
     { href: "#check", label: "Page check" },
     { href: "#deadlines", label: "Deadlines" },
   ],
@@ -31,6 +32,18 @@ export const inverseDemoCopy = {
     serverEmpty: "onDeclaration(record) is called with this record.",
     endsNote: "The demo works out the end date with contractEndDate(): one month's notice, term until 31 December.",
     reset: "Start over",
+  },
+
+  plain: {
+    label: "Without React",
+    title: "WordPress, Shopify, plain HTML",
+    sub: "One script tag.",
+    lede: "Most shops and company sites do not run React. The same two-step form comes as a framework-free module and as one script from jsDelivr or unpkg that mounts every marked element. This sample page uses it in Dutch, Spanish, Polish or German; the withdrawal labels follow the wording of the EU directive in each language.",
+    language: "Language",
+    reset: "Start over",
+    snippetTitle: "All the markup the page needs",
+    inbox: "Customer's inbox",
+    inboxEmpty: "The acknowledgement e-mail appears here after you confirm.",
   },
 
   check: {
