@@ -146,4 +146,22 @@ export const integralDemo = {
     checkToday: (ok: boolean) => (ok ? "License valid today" : "License no longer valid"),
     proLink: "Integral Pro documentation",
   },
+  activation: {
+    label: "Devices",
+    title: "Activate a license on devices",
+    sub: "A device limit per license, also offline.",
+    lede:
+      "The customer buys once and activates the license on their own devices. Each activation signs a copy of the license that only works on that device. Integral Pro counts the devices per license (here: two) and frees a place when a device is removed. Computers without internet send an activation request as a file instead.",
+    limitInfo: (n: number) => `This license may be active on ${n} devices.`,
+    activate: "Activate",
+    deactivate: "Remove",
+    offline: "Offline request",
+    on: "Active on this device",
+    off: "Not activated",
+    hint: "Pick a device to activate the license on it.",
+    activated: (name: string) => `${name}: the license is now bound to this device.`,
+    freed: "The device was removed and its place is free again.",
+    limit: (n: number) => `Device limit reached (${n}). Remove another device first.`,
+    request: "Activation request (send it to the vendor as a file)",
+  },
 }
