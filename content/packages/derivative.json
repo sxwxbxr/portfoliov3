@@ -40,7 +40,7 @@
     "free": [
       "Reads Changesets (default and GitHub formats), Keep a Changelog, conventional-changelog, conventional commits with tags and GitHub Releases",
       "derivative build writes changelog.json, an Atom feed, a JSON Feed and a standalone changelog page; derivative init sets it all up in one step",
-      "<derivative-widget>: popover or inline, unread badge, about 6 kB gzipped, no dependencies",
+      "<derivative-widget>: popover or inline, unread badge, optional search field, about 6 kB gzipped, no dependencies",
       "Announcement toast for the newest titled release, shown once per reader, and a filter for the entry types users see",
       "Accessible: labelled dialog, focus handling, Escape to close, reduced motion respected",
       "Labels and dates in English, German, French and Italian; dark mode and CSS custom properties",
@@ -50,7 +50,7 @@
     "pro": [
       "Read statistics without cookies or visitor IDs: opens, reads and link clicks per release, with an HTML report, CSV export and storage in a file, Postgres or SQLite",
       "Audience segments: entries only for certain plans or roles, via rules or a [for: pro] marker, and scheduled releases",
-      "Announcements: an e-mail digest in your branding and posts to Slack, Teams, Discord, Mattermost, Google Chat, Mastodon and Bluesky"
+      "Announcements: a subscriber list with double opt-in and e-mail digests sent through Resend or Postmark (one-click unsubscribe, consent evidence), plus posts to Slack, Teams, Discord, Mattermost, Google Chat, Mastodon and Bluesky"
     ]
   },
   "comparison": [
@@ -75,7 +75,7 @@
       "pro": true
     },
     {
-      "feature": "E-mail digest, chat, Mastodon and Bluesky announcements",
+      "feature": "Subscriber list, e-mail sending, chat, Mastodon and Bluesky announcements",
       "free": false,
       "pro": true
     },
@@ -104,7 +104,7 @@
       },
       {
         "name": "@weber-development/derivative-announce",
-        "description": "Sends new releases as an e-mail digest and to Slack, Teams, Discord, Mattermost and Google Chat."
+        "description": "Keeps a subscriber list with double opt-in, sends new releases as an e-mail digest through Resend or Postmark, and posts them to Slack, Teams, Discord, Mattermost, Google Chat, Mastodon and Bluesky."
       }
     ],
     "waitlistUrl": "mailto:info@sweber.dev?subject=Derivative%20Pro%20waitlist"

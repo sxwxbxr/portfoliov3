@@ -33,6 +33,8 @@ export const derivativeDemoCopy = {
     typesUser: "New and fixed only",
     announce: "Announcement toast",
     announceNote: "Shows the newest titled release once, next to the button.",
+    search: "Search field",
+    searchNote: "Filters the releases as you type, across version, title and entries.",
     hint: "Your app goes here. The widget is one element and about 6 kB gzipped, with no requests other than the feed itself.",
     reset: "Show as new again",
     resetNote: "Forgets what you have seen, like a first visit.",
