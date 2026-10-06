@@ -43,6 +43,7 @@
       "Baseline for existing sites: CI fails only on new issues, not on the whole backlog",
       "CLI for whole sites: sitemap, desktop or mobile viewport, JUnit XML for GitLab, Azure DevOps and Jenkins",
       "surjection init sets up a config file and a GitHub Actions workflow in one command",
+      "Layout check: reflow at 320 px (1.4.10) and text spacing (1.4.12), which axe-core cannot decide",
       "Keyboard check: finds focus traps and missing focus indicators by pressing Tab through each page",
       "Checks pages behind a login with a saved Playwright session",
       "Screenshots of every affected element, saved next to the results",
@@ -54,7 +55,7 @@
       "Client reports in your agency's branding, as HTML and PDF, with a screenshot of every affected element as evidence",
       "Fix list as CSV for Excel: one row per element, with status and note columns for your developers",
       "History across all client projects, so you can show progress over time, with a status badge per project and a nightly check that tells you what got worse",
-      "Guided manual checklist for the criteria automated tests cannot cover"
+      "Guided manual checklist for the criteria automated tests cannot cover, in German, Swiss German, English, French and Italian"
     ]
   },
   "comparison": [
@@ -123,7 +124,7 @@
       },
       {
         "name": "@weber-development/surjection-checklist",
-        "description": "The 55 WCAG 2.2 A/AA criteria with instructions for manual testing, a browser editor and export to the statement."
+        "description": "The 55 WCAG 2.2 A/AA criteria with instructions for manual testing in five languages, a browser editor and export to the statement."
       }
     ],
     "demoUrl": "/surjection/demo",

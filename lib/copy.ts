@@ -1095,8 +1095,9 @@ export const copy = {
         label: "Checklist",
         title: "Manual checklist (Pro)",
         sub: "Try it below.",
-        lede: "surjection-checklist guides the part no tool can check. The full checklist has all 55 WCAG 2.2 A and AA criteria; this editor shows ten of them. The contrast criterion is already marked as failed by the automated check. Set the others and download the result as JSON.",
+        lede: "surjection-checklist guides the part no tool can check. The full checklist has all 55 WCAG 2.2 A and AA criteria; this editor shows ten of them, here in English, French and Italian (German and Swiss German are included too). The contrast criterion is already marked as failed by the automated check. Set the others and download the result as JSON.",
         frameTitle: "Example checklist editor",
+        tabsLabel: "Checklist language",
       },
 
       closing: {

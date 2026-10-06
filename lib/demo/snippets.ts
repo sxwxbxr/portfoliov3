@@ -79,7 +79,7 @@ export const { POST } = createConsentLogRoute(log, {
 })`
 
 export const SURJECTION_CHECK_COMMAND = `npx surjection check https://baeckerei-muster.example/ \\
-  --project "Bäckerei Muster" --viewport mobile --keyboard \\
+  --project "Bäckerei Muster" --viewport mobile --keyboard --layout \\
   --screenshots a11y-shots --out-md a11y.md --out-json a11y.json --out-junit a11y.xml
 
 ✗ https://baeckerei-muster.example/ (6 issues)
