@@ -106,11 +106,11 @@ export const siteCopy = {
   landing: {
     metaTitle: "Physio Tools: Browser-Tools für das Physiotherapie-Studium",
     metaDescription:
-      "Kleine Browser-Tools für das Physiotherapie-Studium. Der Suchstring-Generator baut aus deiner PICO-Frage oder deinem Fall einen PubMed-Suchstring mit Schlagworten (MeSH) und Stichworten.",
+      "Kleine Browser-Tools für das Physiotherapie-Studium. Der Suchstring-Generator baut aus deinem Fall einen Suchstring für PubMed, Cochrane Library, CINAHL und Embase, mit Schlagworten (MeSH) und Stichworten.",
     eyebrow: "Für das Physiotherapie-Studium",
-    title: "Aus deiner PICO-Frage",
-    titleSub: "wird ein PubMed-Suchstring.",
-    lede: "Der Suchstring-Generator zerlegt deine Fragestellung in Suchkomponenten, schlägt MeSH-Schlagworte und Stichworte vor und setzt Klammern, Field Tags und Trunkierung. Du siehst jeden Schritt und korrigierst, bevor du kopierst.",
+    title: "Fall rein,",
+    titleSub: "Suchstring raus.",
+    lede: "Der Suchstring-Generator zerlegt deinen Fall in Suchkomponenten, schlägt Schlagworte (MeSH) und Stichworte vor und schreibt den String für PubMed, die Cochrane Library, CINAHL und Embase. Anpassen und prüfen kannst du jeden Teil, bevor du kopierst.",
     ctaDemo: "Demo ausprobieren",
     ctaPlans: "Abo ansehen",
     ctaNote: "Die Demo braucht kein Konto.",
@@ -135,9 +135,10 @@ export const siteCopy = {
       highlights: {
         suchstring: [
           "Versteht deutsche und englische Fragen, auch den ganzen Fall samt Aufgabenblatt.",
+          "Schreibt den String für PubMed, Cochrane Library, CINAHL und Embase, je in der Syntax der Datenbank.",
           "Kennt rund 17'000 MeSH-Schlagworte, etwa die Hälfte davon mit deutschen Bezeichnungen.",
-          "Zeigt zu jeder Komponente Schlagworte und Stichworte, die du entfernen, ergänzen oder verschieben kannst.",
           "Zählt auf Wunsch die Treffer in PubMed und prüft eigene Strings auf typische Fehler.",
+          "Geführter Modus: acht Schritte durch deinen Fall, von PICO bis zum Arbeitsblatt.",
         ] as string[],
       } as Record<string, string[]>,
       moreTitle: "Weitere Tools",
@@ -148,23 +149,23 @@ export const siteCopy = {
 
     how: {
       heading: "So funktioniert der Suchstring-Generator",
-      sub: "Vier Schritte, und du bleibst bei jedem am Steuer.",
+      sub: "Vier Schritte, und bei jedem entscheidest du.",
       items: [
         {
-          title: "Frage eingeben",
-          text: "Als Satz auf Deutsch oder Englisch, mit P, I, C und O einzeln, oder gleich der ganze Fall samt Aufgabenblatt.",
+          title: "Fall eingeben",
+          text: "Als Satz auf Deutsch oder Englisch, als PICO oder gleich der ganze Fall samt Aufgabenblatt. Dann wählst du die Datenbanken.",
         },
         {
-          title: "Komponenten prüfen",
-          text: "Das Tool zeigt, was es erkannt hat, und sagt dir, wo es ein Wort wie «Schultertraining» zerlegt hat. Du entfernst, verschiebst oder ergänzt Begriffe, bis es zu deiner Frage passt.",
+          title: "String kopieren",
+          text: "Das Ergebnis zeigt den String, die erkannten Komponenten nach P, I, C und O und Hinweise zur Auswertung. Für PubMed zählt das Tool auf Wunsch die Treffer.",
         },
         {
-          title: "Filter setzen",
-          text: "Sprache, Erscheinungsjahr und Studientyp. Alter und Geschlecht aus dem Fall schlägt das Tool vor, einschalten musst du sie selbst. Alles ist optional.",
+          title: "Anpassen",
+          text: "Komponenten, PICO-Felder, Filter, MeSH-Wörterbuch: alles optional, jede Änderung steht sofort im String. Für die Cochrane Library und CINAHL sagt dir das Tool, welche Filter du dort selbst einstellst.",
         },
         {
-          title: "Kopieren und gegenprüfen",
-          text: "Kopiere den String oder lade ihn als Datei herunter. Schau dir die Trefferliste in PubMed an, bevor du ihn in einer Arbeit verwendest.",
+          title: "Gegenprüfen",
+          text: "Schau dir die Trefferliste an, bevor du den String in einer Arbeit verwendest. Der geführte Modus geht den Weg mit dir Schritt für Schritt durch, bis zum Arbeitsblatt.",
         },
       ],
     },
@@ -174,11 +175,11 @@ export const siteCopy = {
       items: [
         {
           title: "Läuft in deinem Browser",
-          text: "Deine Fragestellung bleibt auf deinem Gerät. Das Tool lädt nur Teile des MeSH-Wörterbuchs nach, und die Trefferzählung in PubMed startest du selbst; sie schickt nur den fertigen String.",
+          text: "Dein Fall bleibt auf deinem Gerät. Das Tool lädt nur Teile des MeSH-Wörterbuchs nach, und die Trefferzählung in PubMed startest du selbst; sie schickt nur den fertigen String.",
         },
         {
           title: "Regelbasiert, ohne KI",
-          text: "Feste Regeln, das MeSH-Wörterbuch und eine eigene Begriffstabelle statt eines Sprachmodells. Das Tool erfindet keine Begriffe, und das Ergebnis bleibt ein Entwurf, den du prüfst.",
+          text: "Feste Regeln, das MeSH-Wörterbuch und eine eigene Begriffstabelle statt eines Sprachmodells. Das Tool erfindet keine Begriffe und keine Syntax: Was es für eine Datenbank nicht sicher weiss, sagt es dir. Das Ergebnis bleibt ein Entwurf, den du prüfst.",
         },
         {
           title: "Aus der Schweiz",

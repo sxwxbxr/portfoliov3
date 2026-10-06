@@ -2332,3 +2332,80 @@ describe("CINAHL and Embase: exports", () => {
     assert.equal(off.format, "single-line")
   })
 })
+
+import { tokenize, type TokenKind } from "../../lib/physio/search-string/highlight"
+
+describe("syntax highlighting tokens", () => {
+  const kinds = (q: string, db: Parameters<typeof tokenize>[1], kind: TokenKind) =>
+    tokenize(q, db)
+      .filter((t) => t.kind === kind)
+      .map((t) => t.text)
+
+  it("covers the input without gaps for every database", () => {
+    const samples: Array<[string, Parameters<typeof tokenize>[1]]> = [
+      [MUELLER_CINAHL, "cinahl"],
+      [MUELLER_EMBASE, "embase"],
+      ['"low back pain"[Mesh] AND (stretch*[tiab] OR "x y"[tiab])', "pubmed"],
+      ['[mh "Low Back Pain"] AND "x":ti,ab,kw NEAR/3 y* #1', "cochrane"],
+      ['S1 AND (MH "x+" ) N5 "unterminated', "cinahl"],
+    ]
+    for (const [q, db] of samples) {
+      const tokens = tokenize(q, db)
+      assert.equal(tokens.map((t) => t.text).join(""), q)
+      let pos = 0
+      for (const t of tokens) {
+        assert.equal(t.start, pos)
+        pos = t.end
+      }
+    }
+  })
+
+  it("reads CINAHL: headings, field codes, phrases, truncation, proximity, line references", () => {
+    const q = '(MH "Low Back Pain+") OR MM "Pain" OR TI ("back exercise*" OR lumbago) OR AB stretch* AND "a" N5 "b" AND S1'
+    assert.deepEqual(kinds(q, "cinahl", "heading"), ['(MH "Low Back Pain+")', 'MM "Pain"'])
+    assert.deepEqual(kinds(q, "cinahl", "field"), ["TI", "AB"])
+    assert.deepEqual(kinds(q, "cinahl", "operator"), ["OR", "OR", "OR", "OR", "AND", "N5", "AND"])
+    assert.deepEqual(kinds(q, "cinahl", "truncation"), ["*", "*"])
+    assert.deepEqual(kinds(q, "cinahl", "ref"), ["S1"])
+    assert.ok(kinds(q, "cinahl", "phrase").includes('"back exercise'))
+    // A word that only starts with a field code stays a word.
+    assert.deepEqual(kinds("TIMING OR Safe", "cinahl", "field"), [])
+  })
+
+  it("reads Embase: headings, field tags, limits, proximity, truncation, line references", () => {
+    const q = "'low back pain'/exp OR 'pain'/de OR cancer/mj OR (back NEXT/1 exercise*):ti,ab,kw AND [english]/lim AND [2016-2026]/py AND #1 NEAR/3 #2"
+    assert.deepEqual(kinds(q, "embase", "heading"), ["'low back pain'/exp", "'pain'/de", "cancer/mj"])
+    assert.deepEqual(kinds(q, "embase", "field"), [":ti,ab,kw"])
+    assert.deepEqual(kinds(q, "embase", "limit"), ["[english]/lim", "[2016-2026]/py"])
+    assert.ok(kinds(q, "embase", "operator").includes("NEXT/1"))
+    assert.ok(kinds(q, "embase", "operator").includes("NEAR/3"))
+    assert.deepEqual(kinds(q, "embase", "truncation"), ["*"])
+    assert.deepEqual(kinds(q, "embase", "ref"), ["#1", "#2"])
+    assert.deepEqual(kinds("'a b':ti,ab,kw", "embase", "phrase"), ["'a b'"])
+  })
+
+  it("keeps the PubMed and Cochrane reading: no truncation or limit kinds, MeSH tags as headings", () => {
+    const pm = '"low back pain"[Mesh] OR stretch*[tiab] AND "x"[tiab:~3]'
+    assert.deepEqual(kinds(pm, "pubmed", "heading"), ["[Mesh]"])
+    assert.deepEqual(kinds(pm, "pubmed", "field"), ["[tiab]", "[tiab:~3]"])
+    assert.deepEqual(kinds(pm, "pubmed", "truncation"), [])
+    const cc = '[mh "Low Back Pain"] AND "x":ti,ab,kw OR y* NEAR/3 z AND #1'
+    assert.deepEqual(kinds(cc, "cochrane", "heading"), ['[mh "Low Back Pain"]'])
+    assert.deepEqual(kinds(cc, "cochrane", "field"), [":ti,ab,kw"])
+    assert.deepEqual(kinds(cc, "cochrane", "ref"), ["#1"])
+    assert.deepEqual(kinds(cc, "cochrane", "truncation"), [])
+  })
+
+  it("marks only top-level AND as a line break", () => {
+    for (const [q, db] of [
+      [MUELLER_CINAHL, "cinahl"],
+      [MUELLER_EMBASE, "embase"],
+    ] as const) {
+      const breaks = tokenize(q, db).filter((t) => t.breakBefore)
+      assert.equal(breaks.length, 3)
+      assert.ok(breaks.every((t) => t.text === "AND"))
+    }
+    assert.equal(tokenize("a AND b", "pubmed").filter((t) => t.breakBefore).length, 1)
+    assert.equal(tokenize("(a AND b)", "pubmed").filter((t) => t.breakBefore).length, 0)
+  })
+})

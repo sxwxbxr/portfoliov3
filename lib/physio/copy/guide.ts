@@ -11,13 +11,13 @@ export const guideCopy = {
 
   toggle: {
     label: "Geführter Modus",
-    hintOff: "Spielt deinen Fall Schritt für Schritt durch.",
+    hintOff: "Führt dich in acht Schritten durch deinen Fall.",
     hintOn: "Läuft. Du arbeitest normal im Tool weiter.",
   },
 
   invite: {
     title: "Neu hier? Spiel deinen Fall Schritt für Schritt durch.",
-    body: "Der geführte Modus begleitet dich vom Fall bis zum Arbeitsblatt: PICO, Ein- und Ausschlusskriterien, Suchkomponenten, Suchstring und Treffer. Er bezieht sich auf deinen Fall und lässt dich im Tool normal weiterarbeiten.",
+    body: "Acht Schritte vom Fall bis zum Arbeitsblatt: PICO, Ein- und Ausschlusskriterien, Suchkomponenten, Begriffe, Suchstring, Treffer. Die Hinweise beziehen sich auf deinen Fall, und du arbeitest dabei normal im Tool.",
     start: "Anleitung starten",
     later: "Nicht jetzt",
   },
@@ -40,11 +40,11 @@ export const guideCopy = {
     jumpTo: (i: number, title: string) => `Schritt ${i}: ${title}`,
     progress: "Fortschritt",
     announce: (i: number, n: number, title: string) => `Schritt ${i} von ${n}: ${title}`,
-    noObservations: "Sobald das Tool deinen Fall ausgewertet hat, erscheinen hier Beobachtungen dazu.",
+    noObservations: "Sobald der Fall ausgewertet ist, stehen hier Beobachtungen dazu.",
     privacy:
-      "Alles hier bleibt auf deinem Gerät: Dein Fall, deine Angaben und das Arbeitsblatt verlassen den Browser nicht. Gemerkt werden nur der aktuelle Schritt und ob die Anleitung an ist.",
+      "Fall, Angaben und Arbeitsblatt bleiben in deinem Browser. Gemerkt werden nur der aktuelle Schritt und ob die Anleitung an ist.",
     demoNotice:
-      "Du bist in der Demo: Der geführte Modus läuft hier mit den mitgelieferten Beispielfällen. Mit dem Abo spielst du deinen eigenen Fall, deine eigene Fragestellung und deinen eigenen String durch.",
+      "Demo: Der geführte Modus läuft hier mit den Beispielfällen. Mit dem Abo spielst du deinen eigenen Fall und deinen eigenen String durch.",
     demoLink: "Mit dem Abo freischalten",
   },
 
@@ -60,8 +60,8 @@ export const guideCopy = {
           "Lies den Fall zuerst selbst und markiere, was für die Suche zählt: Wer ist die Person, was fehlt ihr, was soll sich ändern?",
           "Das Tool liest mit und zeigt dir im Ergebnis, was es erkannt hat. Stimmt etwas nicht, ändere den Text oder korrigiere die Komponenten später.",
         ],
-        actionDemo: "Der Fall von Herrn Müller ist geladen. Lies ihn und vergleiche ihn mit der Liste. Bei «Beispiel laden» wählst du einen anderen Fall.",
-        actionFull: "Füge deinen Fall (oder das ganze Aufgabenblatt) bei «Deine Fragestellung» ein und klick auf «Suchstring erstellen».",
+        actionDemo: "Der Fall von Herrn Müller ist geladen. Lies ihn und vergleiche ihn mit der Liste. Unter «Beispiel» wählst du einen anderen Fall.",
+        actionFull: "Füge deinen Fall (oder das ganze Aufgabenblatt) bei «Fall oder Fragestellung» ein und klick auf «Suchstring erstellen».",
       },
       pico: {
         title: "PICO formulieren",
@@ -75,9 +75,9 @@ export const guideCopy = {
         title: "Ein- und Ausschlusskriterien",
         body: [
           "Kriterien legen vorher fest, welche Studien du behältst und welche nicht. Jedes braucht eine kurze Begründung.",
-          "Einige kannst du schon in der Suche als Filter setzen, zum Beispiel Studientyp, Sprache und Zeitraum. Die meisten wendest du erst beim Screening an, wenn du Titel und Abstracts liest.",
+          "Einige setzt du schon in der Suche als Filter, zum Beispiel Studientyp, Sprache und Zeitraum. Die meisten wendest du erst beim Screening an, wenn du Titel und Abstracts liest. In der Cochrane Library und in CINAHL stellst du die Filter in der Datenbank ein, das Tool listet sie dir auf.",
         ],
-        action: "Behalte, ändere oder streiche jedes Kriterium. Die Filter stellst du unter «Anpassen» im Bereich «Filter» ein.",
+        action: "Behalte, ändere oder streiche jedes Kriterium. Die Filter setzt du unter «Anpassen» bei «Filter».",
       },
       components: {
         title: "Suchkomponenten festlegen",
@@ -90,8 +90,8 @@ export const guideCopy = {
       terms: {
         title: "Stichworte und Schlagworte",
         body: [
-          "Zu jeder Komponente gehören zwei Arten von Begriffen: Stichworte sind freie Wörter, die die Datenbank in Titel und Abstract sucht. Schlagworte sind die offiziellen MeSH-Begriffe, mit denen Studien verschlagwortet sind.",
-          "Denk auf Deutsch, übersetze ins Englische und prüfe die Schlagworte im MeSH-Wörterbuch. Die Tabelle zeigt dir das im Format der Übung.",
+          "Zu jeder Komponente gehören zwei Arten von Begriffen: Stichworte sind freie Wörter, die die Datenbank in Titel und Abstract sucht. Schlagworte sind die Begriffe aus dem Thesaurus der Datenbank, in PubMed MeSH.",
+          "Denk auf Deutsch, übersetze ins Englische und prüfe die Schlagworte im MeSH-Wörterbuch. Für CINAHL und Embase sind die Schlagworte Vorschläge aus MeSH, die du im Thesaurus der Datenbank prüfst.",
         ],
         action: "Prüfe pro Komponente: Passen die englischen Stichworte? Gibt es ein Schlagwort? Trunkiere (*) nur, wo der Wortanfang eindeutig ist.",
       },
@@ -109,8 +109,8 @@ export const guideCopy = {
           "Bevor du den String verwendest, prüfst du ihn: Zähl die Treffer pro Komponente und im Ganzen und lies ein paar Titel. Passen sie zu deiner Frage?",
           "Zu wenige Treffer heissen meist: eine Komponente ist zu eng. Zu viele heissen: der String ist zu weit.",
         ],
-        actionPubmed: "Klick bei «Treffer in PubMed» auf «Treffer in PubMed zählen». Die Zahlen erscheinen danach hier.",
-        actionOther: (db: string) => `Kopiere den String in ${db}, schau die Trefferzahl an und lies die ersten Titel.`,
+        actionPubmed: "Klick im Ergebnis auf «Treffer in PubMed zählen». Die Zahlen erscheinen danach hier.",
+        actionOther: (db: string) => `Kopiere den String in ${db}, schau die Trefferzahl an und lies die ersten Titel. Eine Zählung gibt es hier nur für PubMed.`,
       },
       worksheet: {
         title: "Arbeitsblatt",
@@ -155,7 +155,7 @@ export const guideCopy = {
       noComparison: "Im Fall steht kein Vergleich. Du entscheidest selbst, womit du vergleichst (zum Beispiel übliche Behandlung oder keine Behandlung).",
       ignored: (items: string[]) => `${items.map((i) => `«${i.length > 70 ? `${i.slice(0, 69)}…` : i}»`).join(", ")}. Aufgabenanweisungen liest das Tool nicht als Fall.`,
       ignoredLabel: "Überlesen",
-      unmapped: (words: string[]) => `${words.join(", ")}. Diese Wörter kannst du unter «Nicht übernommene Wörter» auf Englisch als Stichwort übernehmen, wenn sie dir wichtig sind.`,
+      unmapped: (words: string[]) => `${words.join(", ")}. Wenn sie dir wichtig sind, übernimm sie unter «Nicht übernommene Wörter» auf Englisch als Stichwort.`,
       unmappedLabel: "Nicht übernommen",
       nothingFound: "Aus dem Text konnte das Tool keine Komponente erkennen. Schreib die Fragestellung mit Hauptwörtern oder füll die PICO-Felder aus.",
 
@@ -251,7 +251,7 @@ export const guideCopy = {
       checkOk: (n: number) => `${n.toLocaleString("de-CH")} Treffer sind ein Umfang, den du mit Titeln und Abstracts durchgehen kannst. Lies trotzdem die ersten Titel: Passen sie zu deiner Frage?`,
       checkComponents: (rows: Array<{ label: string; count: number }>) => rows.map((r) => `${r.label}: ${r.count.toLocaleString("de-CH")}`).join(" · "),
       checkComponentsLabel: "Je Komponente",
-      checkOther: (db: string) => `Du suchst in ${db}. Die Trefferzählung gibt es hier nur für PubMed. Zähl in ${db} selbst: erst den ganzen String, dann jede Komponente allein.`,
+      checkOther: (db: string) => `Für ${db} gibt es hier keine Trefferzählung. Zähl dort selbst: erst den ganzen String, dann jede Komponente allein.`,
       checkOtherSteps: "Passen die ersten Titel zu deiner Frage? Fehlen Studien, die du schon kennst? Findet jede Komponente allein etwas?",
       checkReference: "Tipp: Such eine Studie, die du schon kennst. Findet der String sie nicht, fehlt ein Begriff.",
 
@@ -331,11 +331,11 @@ export const guideCopy = {
       input: {
         title: "String bereitstellen",
         body: [
-          "Hier prüfst du einen Suchstring, den du selbst geschrieben hast, zum Beispiel aus einer Übung. Das Tool liest ihn mit und markiert typische Fehler.",
-          "Die Prüfung läuft beim Tippen mit. Sie beurteilt die Schreibweise, nicht ob die Begriffe zu deiner Frage passen.",
+          "Hier prüfst du einen Suchstring, den du selbst geschrieben hast, zum Beispiel aus einer Übung. Das Tool erkennt die Syntax (PubMed, Cochrane Library, CINAHL oder Embase) und markiert typische Fehler.",
+          "Die Prüfung beurteilt die Schreibweise, nicht ob die Begriffe zu deiner Frage passen.",
         ],
-        actionDemo: "In der Demo ist ein Beispielstring mit typischen Fehlern geladen. Du kannst ihn nicht überschreiben, aber die Korrekturen ausprobieren.",
-        actionFull: "Füge deinen Suchstring ein.",
+        actionDemo: "In der Demo ist ein Beispielstring mit typischen Fehlern geladen. Überschreiben kannst du ihn nicht, die Korrekturen aber ausprobieren.",
+        actionFull: "Füge deinen Suchstring ein und klick auf «Prüfen».",
       },
       findings: {
         title: "Befunde einzeln durchgehen",
@@ -356,7 +356,7 @@ export const guideCopy = {
       checklist: {
         title: "Checkliste für einen sauberen String",
         body: [
-          "So sieht ein sauberer String aus. Die Haken setzt das Tool, soweit es das prüfen kann. Den Rest beurteilst nur du.",
+          "So sieht ein sauberer String aus. Die Haken setzt das Tool, soweit es das prüfen kann. Den Rest beurteilst du.",
         ],
         action: "Geh die Liste durch. Alles, was offen ist, korrigierst du oben im Tool.",
       },
@@ -372,7 +372,7 @@ export const guideCopy = {
         return parts.join(", ")
       },
       clean: "Nichts gefunden: Die Schreibweise stimmt.",
-      errorsFirst: "Fehler zuerst: Sie verhindern, dass PubMed den String so versteht, wie du ihn meinst.",
+      errorsFirst: "Fehler zuerst: Sie verhindern, dass die Datenbank den String so versteht, wie du ihn meinst.",
       fixable: (n: number) => `${n} Befund${n === 1 ? "" : "e"} lassen sich automatisch korrigieren.`,
       progress: (now: number, before: number) =>
         now === 0 ? `Von ursprünglich ${before} Befunden ist keiner mehr offen.` : now < before ? `Von ursprünglich ${before} Befunden sind noch ${now} offen.` : `Es sind ${now} Befunde offen (am Anfang ${before}).`,

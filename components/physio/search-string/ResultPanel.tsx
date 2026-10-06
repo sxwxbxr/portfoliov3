@@ -128,7 +128,7 @@ function DraftNote({ builds }: { builds: BuiltQuery[] }) {
         {builds.map((b) => (
           <p key={b.databaseId} className="measure text-xs leading-relaxed text-fg-muted">
             {builds.length > 1 ? `${labelOf(b.databaseId)}: ` : ""}
-            {b.databaseId === "cochrane" ? t.legendCochrane : t.legend}
+            {{ cochrane: t.legendCochrane, cinahl: t.legendCinahl, embase: t.legendEmbase }[b.databaseId as string] ?? t.legend}
           </p>
         ))}
       </div>
@@ -155,7 +155,7 @@ function DatabaseResult({ built, multi, model, onChange }: { built: BuiltQuery; 
 
       <div className="well p-1.5">
         <div className="rounded-md p-4 md:p-5">
-          <QueryView query={built.query} label={t.stringLabelFor(name)} syntax={cochrane ? "cochrane" : "pubmed"} />
+          <QueryView query={built.query} label={t.stringLabelFor(name)} database={id} suggestedHeadings={built.vocabulary?.suggested && built.vocabulary.included} />
         </div>
       </div>
 
@@ -297,7 +297,7 @@ function ManagerView({ built, name }: { built: BuiltQuery; name: string }) {
             {l.n}
           </span>
           <div className="min-w-0">
-            <QueryView query={l.query} label={`${l.prefix ?? "#"}${l.n}`} syntax={built.databaseId === "cochrane" ? "cochrane" : "pubmed"} lineBreaks={false} />
+            <QueryView query={l.query} label={`${l.prefix ?? "#"}${l.n}`} database={built.databaseId} suggestedHeadings={l.suggested} lineBreaks={false} />
             {l.kind !== "term" && (
               <p className="annotate text-fg-muted">
                 {t.lineKinds[l.kind]}: {l.label}

@@ -281,7 +281,7 @@ export function LintPanel({ locked, exampleString, onStateChange }: Props) {
           <Disclosure id="lint-marked" level={3} nested title={t.marked} status={t.markedStatus}>
             <div className="well p-1.5">
               <div className="rounded-md p-4 md:p-5">
-                <HighlightedText text={text} findings={findings} label={t.markedHeading} />
+                <HighlightedText text={text} findings={findings} label={t.markedHeading} database={effective} />
               </div>
             </div>
           </Disclosure>
