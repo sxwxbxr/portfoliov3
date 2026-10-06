@@ -18,6 +18,84 @@ export const siteCopy = {
     menuClose: "Schliessen",
   },
 
+  /** The /tools hub, the shared tool frame, the paywall teaser and the account list. */
+  tools: {
+    meta: {
+      title: "Tools",
+      description:
+        "Alle Browser-Tools für das Physiotherapie-Studium auf einen Blick, nach Kategorie sortiert, jeweils mit freier Demo.",
+    },
+    hero: {
+      title: "Tools",
+      sub: "für dein Physiotherapie-Studium.",
+      lede: "Kleine Browser-Tools für Aufgaben, die im Studium immer wiederkommen. Die Demos sind für alle offen, die Vollversionen aller Tools sind im Abo enthalten.",
+    },
+    search: {
+      label: "Tools durchsuchen",
+      placeholder: "Name, Stichwort oder Thema",
+      clear: "Suche leeren",
+    },
+    filters: {
+      label: "Nach Kategorie filtern",
+      all: "Alle",
+    },
+    count: (n: number) => (n === 1 ? "1 Tool" : `${n} Tools`),
+    results: (n: number) => (n === 0 ? "Keine Tools gefunden." : n === 1 ? "1 Tool gefunden." : `${n} Tools gefunden.`),
+    recent: {
+      heading: "Zuletzt verwendet",
+    },
+    card: {
+      new: "Neu",
+      beta: "Beta",
+      soon: "Bald",
+      demo: "Demo",
+      open: "Öffnen",
+      openNamed: (name: string) => `${name} öffnen`,
+      demoNamed: (name: string) => `Demo von ${name} ausprobieren`,
+      paid: "Vollversion mit Abo, Demo frei",
+      paidNoDemo: "Mit Abo",
+      free: "Ohne Konto nutzbar",
+      soonNote: "Noch nicht verfügbar.",
+      tags: "Stichworte",
+    },
+    empty: {
+      title: "Nichts gefunden",
+      text: (q: string) => `Zu «${q}» gibt es noch kein Tool. Schlag es vor, dann sehe ich, was dir fehlt.`,
+      textFiltered: "In dieser Kategorie gibt es noch kein Tool. Schlag eines vor, dann sehe ich, was dir fehlt.",
+      suggest: "Tool vorschlagen",
+      reset: "Suche und Filter zurücksetzen",
+    },
+    missing: {
+      title: "Dein Tool fehlt?",
+      text: "Beschreib die Aufgabe, die dich im Studium Zeit kostet. Ich lese jeden Vorschlag. Dass jede Idee zu einem Tool wird, kann ich nicht versprechen.",
+      cta: "Tool vorschlagen",
+    },
+    frame: {
+      breadcrumb: "Brotkrumen",
+      home: "Tools",
+      viewLabel: "Ansicht",
+      demo: "Demo",
+      full: "Vollversion",
+    },
+    paywall: {
+      title: "Mit dem Abo freigeschaltet",
+      whatHeading: "Was das Tool macht",
+      demoLink: "Kostenlose Demo ausprobieren",
+      aboLink: "Abo ansehen",
+      loginLink: "Anmelden",
+      loginHint: "Schon ein Abo? Dann melde dich an.",
+      verifyHint: "Du bist angemeldet, hast aber noch kein aktives Abo.",
+    },
+    account: {
+      heading: "Deine Tools",
+      textActive: "Alle Tools sind in deinem Abo enthalten.",
+      textInactive: "Ohne aktives Abo siehst du bei der Vollversion eine Vorschau. Die Demos bleiben frei.",
+      open: "Öffnen",
+      demo: "Demo",
+      all: "Alle Tools ansehen",
+    },
+  },
+
   footer: {
     privacy: "Datenschutz",
     imprint: "Impressum",
@@ -50,10 +128,10 @@ export const siteCopy = {
 
     tools: {
       heading: "Tools",
-      sub: "Was es gibt und was gerade entsteht.",
+      sub: "Die Demos sind frei, die Vollversionen sind im Abo enthalten.",
       demo: "Demo ausprobieren",
       open: "Tool öffnen",
-      soon: "Bald",
+      new: "Neu",
       highlights: {
         suchstring: [
           "Versteht deutsche und englische Fragen, auch mit «ue» statt «ü».",
@@ -64,6 +142,7 @@ export const siteCopy = {
       moreTitle: "Weitere Tools",
       moreText: "Was als Nächstes entsteht, richtet sich nach euren Vorschlägen. Die Aufgaben, die am häufigsten genannt werden, nehme ich zuerst dran.",
       moreCta: "Aufgabe vorschlagen",
+      all: "Alle Tools ansehen",
     },
 
     how: {

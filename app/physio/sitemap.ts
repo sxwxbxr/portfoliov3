@@ -1,11 +1,12 @@
 import type { MetadataRoute } from "next"
-import { PHYSIO_TOOLS } from "@/lib/physio/tools"
+import { PHYSIO_TOOLS, isUsable } from "@/lib/physio/tools"
 import { physioUrl } from "@/lib/physio/urls"
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const tools = PHYSIO_TOOLS.filter((t) => t.status === "live")
+  const tools = PHYSIO_TOOLS.filter(isUsable)
   return [
     { url: physioUrl("/"), changeFrequency: "weekly", priority: 1 },
+    { url: physioUrl("/tools"), changeFrequency: "weekly", priority: 0.9 },
     ...tools.flatMap((t) => [
       { url: physioUrl(t.path), changeFrequency: "monthly" as const, priority: 0.9 },
       ...(t.demoPath ? [{ url: physioUrl(t.demoPath), changeFrequency: "monthly" as const, priority: 0.8 }] : []),

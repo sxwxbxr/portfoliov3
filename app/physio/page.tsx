@@ -1,9 +1,10 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { HeroPreview } from "@/components/physio/HeroPreview"
+import { ToolCard } from "@/components/physio/ToolCard"
 import { accountCopy } from "@/lib/physio/copy/account"
 import { siteCopy } from "@/lib/physio/copy/site"
-import { PHYSIO_TOOLS } from "@/lib/physio/tools"
+import { PHYSIO_TOOLS, isNewTool, landingTools } from "@/lib/physio/tools"
 import { physioPath, physioUrl } from "@/lib/physio/urls"
 
 export const revalidate = 60
@@ -40,6 +41,8 @@ function priceLines(): string[] {
 export default function PhysioLanding() {
   const firstDemo = PHYSIO_TOOLS.find((t) => t.status === "live" && t.demoPath)
   const prices = priceLines()
+  const shownTools = landingTools(3)
+  const now = new Date()
 
   return (
     <>
@@ -71,33 +74,41 @@ export default function PhysioLanding() {
         </div>
       </section>
 
-      {/* Tools: the one live tool gets the room, the rest is an honest "not yet". */}
+      {/* Tools: up to three usable tools (featured first), the rest lives on /tools. One tool gets the room. */}
       <section id="tools" className="sheet pb-16 md:pb-24" style={{ scrollMarginTop: "5rem" }}>
-        <div className="mb-8 flex flex-col gap-1">
-          <h2 className="headline">{c.tools.heading}</h2>
-          <p className="text-fg-muted">{c.tools.sub}</p>
+        <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-8">
+          <div className="flex flex-col gap-1">
+            <h2 className="headline">{c.tools.heading}</h2>
+            <p className="text-fg-muted">{c.tools.sub}</p>
+          </div>
+          <Link
+            href={physioPath("/tools")}
+            className="inline-flex min-h-11 shrink-0 items-center font-medium text-signal underline underline-offset-4"
+          >
+            {c.tools.all}
+          </Link>
         </div>
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)]">
-          {PHYSIO_TOOLS.map((tool) => (
-            <article key={tool.slug} className="cast flex min-w-0 flex-col gap-6 p-6 md:p-8">
-              <div className="flex flex-col gap-3">
-                <h3 className="flex flex-wrap items-center gap-3 text-2xl">
-                  {tool.name}
-                  {tool.status === "soon" && <span className="tab text-xs">{c.tools.soon}</span>}
-                </h3>
-                <p className="measure leading-relaxed text-fg-muted">{tool.summary}</p>
-              </div>
-              {(c.tools.highlights[tool.slug] ?? []).length > 0 && (
-                <ul className="flex flex-col gap-3 border-t border-edge-soft pt-5">
-                  {c.tools.highlights[tool.slug].map((h) => (
-                    <li key={h} className="flex gap-3 text-sm leading-relaxed text-fg">
-                      <span aria-hidden="true" className="mt-[0.55rem] size-1.5 shrink-0 rounded-[2px] bg-signal" />
-                      <span className="min-w-0">{h}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-              {tool.status === "live" && (
+        {shownTools.length === 1 ? (
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)]">
+            {shownTools.map((tool) => (
+              <article key={tool.slug} className="cast flex min-w-0 flex-col gap-6 p-6 md:p-8">
+                <div className="flex flex-col gap-3">
+                  <h3 className="flex flex-wrap items-center gap-3 text-2xl">
+                    {tool.name}
+                    {isNewTool(tool, now) && <span className="tab text-xs">{c.tools.new}</span>}
+                  </h3>
+                  <p className="measure leading-relaxed text-fg-muted">{tool.summary}</p>
+                </div>
+                {(c.tools.highlights[tool.slug] ?? []).length > 0 && (
+                  <ul className="flex flex-col gap-3 border-t border-edge-soft pt-5">
+                    {c.tools.highlights[tool.slug].map((h) => (
+                      <li key={h} className="flex gap-3 text-sm leading-relaxed text-fg">
+                        <span aria-hidden="true" className="mt-[0.55rem] size-1.5 shrink-0 rounded-[2px] bg-signal" />
+                        <span className="min-w-0">{h}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
                 <div className="flex flex-col gap-3 sm:flex-row">
                   {tool.demoPath && (
                     <Link href={physioPath(tool.demoPath)} className={`${btn} control-primary`}>
@@ -108,17 +119,24 @@ export default function PhysioLanding() {
                     {c.tools.open}
                   </Link>
                 </div>
-              )}
-            </article>
-          ))}
-          <aside className="flex min-w-0 flex-col gap-3 rounded-[var(--radius-card)] border border-dashed border-edge-mid p-6 md:p-8">
-            <h3 className="text-xl">{c.tools.moreTitle}</h3>
-            <p className="leading-relaxed text-fg-muted">{c.tools.moreText}</p>
-            <Link href={physioPath("/vorschlaege")} className="mt-auto inline-flex min-h-11 items-center font-medium text-signal underline underline-offset-4">
-              {c.tools.moreCta}
-            </Link>
-          </aside>
-        </div>
+              </article>
+            ))}
+            <MoreTools />
+          </div>
+        ) : (
+          <ul className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {shownTools.map((tool) => (
+              <li key={tool.slug} className="min-w-0">
+                <ToolCard tool={tool} isNew={isNewTool(tool, now)} />
+              </li>
+            ))}
+            {shownTools.length < 3 && (
+              <li className="min-w-0">
+                <MoreTools />
+              </li>
+            )}
+          </ul>
+        )}
       </section>
 
       {/* How it works: the four real steps of the tool, big serif numerals instead of icons. */}
@@ -193,5 +211,17 @@ export default function PhysioLanding() {
         </div>
       </section>
     </>
+  )
+}
+
+function MoreTools() {
+  return (
+    <aside className="flex h-full min-w-0 flex-col gap-3 rounded-[var(--radius-card)] border border-dashed border-edge-mid p-6 md:p-8">
+      <h3 className="text-xl">{c.tools.moreTitle}</h3>
+      <p className="leading-relaxed text-fg-muted">{c.tools.moreText}</p>
+      <Link href={physioPath("/vorschlaege")} className="mt-auto inline-flex min-h-11 items-center font-medium text-signal underline underline-offset-4">
+        {c.tools.moreCta}
+      </Link>
+    </aside>
   )
 }

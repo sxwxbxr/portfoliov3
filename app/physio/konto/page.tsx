@@ -9,13 +9,17 @@ import {
   ManageSubscription,
   ResendVerification,
 } from "@/components/physio/account/AccountActions"
+import { ToolIcon } from "@/components/physio/ToolIcon"
 import { accountCopy } from "@/lib/physio/copy/account"
+import { siteCopy } from "@/lib/physio/copy/site"
 import { getPhysioUser, hasActiveSubscription } from "@/lib/physio/session"
+import { PHYSIO_TOOLS, isUsable } from "@/lib/physio/tools"
 import { physioPath } from "@/lib/physio/urls"
 
 export const dynamic = "force-dynamic"
 
 const c = accountCopy.account
+const tc = siteCopy.tools.account
 
 export const metadata: Metadata = {
   title: c.metaTitle,
@@ -58,6 +62,38 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
           {c.checkoutSuccess}
         </p>
       )}
+
+      <Row title={tc.heading}>
+        <p className="measure text-sm leading-relaxed text-fg-muted">{active ? tc.textActive : tc.textInactive}</p>
+        <ul className="flex w-full max-w-2xl flex-col">
+          {PHYSIO_TOOLS.filter(isUsable).map((tool) => (
+            <li
+              key={tool.slug}
+              className="flex flex-col gap-3 border-t border-edge-soft py-4 first:border-t-0 first:pt-0 sm:flex-row sm:items-center sm:justify-between sm:gap-6"
+            >
+              <div className="flex min-w-0 items-center gap-3">
+                <span aria-hidden="true" className="grid size-10 shrink-0 place-items-center rounded-lg bg-(--wash) text-signal">
+                  <ToolIcon name={tool.icon} size={20} />
+                </span>
+                <span className="font-medium">{tool.name}</span>
+              </div>
+              <div className="flex gap-3">
+                <Link href={physioPath(tool.path)} className="control control-primary inline-flex min-h-11 items-center px-5 text-sm">
+                  {tc.open}
+                </Link>
+                {tool.demoPath && (
+                  <Link href={physioPath(tool.demoPath)} className="control inline-flex min-h-11 items-center px-5 text-sm">
+                    {tc.demo}
+                  </Link>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+        <Link href={physioPath("/tools")} className="inline-flex min-h-11 items-center text-sm font-medium text-signal underline underline-offset-4">
+          {tc.all}
+        </Link>
+      </Row>
 
       <Row title={c.email.heading}>
         <p className="flex flex-wrap items-center gap-3">

@@ -68,7 +68,7 @@ export function PhysioHeader() {
   }, [open])
 
   const items = [
-    { href: `${physioPath("/")}#tools`, label: c.nav.tools, active: false },
+    { href: physioPath("/tools"), label: c.nav.tools, active: here.startsWith("/tools") },
     { href: physioPath("/vorschlaege"), label: c.nav.suggestions, active: here.startsWith("/vorschlaege") },
     { href: physioPath("/abo"), label: c.nav.plans, active: here.startsWith("/abo") },
   ]
