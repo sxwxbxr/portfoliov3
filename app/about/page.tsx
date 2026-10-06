@@ -57,13 +57,14 @@ export default async function About() {
 
           <div className="flex flex-col gap-5">
             {portrait && (
-              <div className="well relative aspect-[3/4] w-full overflow-hidden">
+              <div className="well relative aspect-square w-full max-w-[320px] overflow-hidden">
+                {/* Square and capped at 320px: the photo is 640px, so it is never upscaled on 2x screens. */}
                 <Image
                   src={portrait}
                   alt={copy.about.portraitAlt}
                   fill
-                  sizes="(min-width: 768px) 420px, 100vw"
-                  className="object-cover object-top"
+                  sizes="320px"
+                  className="object-cover"
                   priority
                 />
               </div>
