@@ -157,7 +157,7 @@ export function MeshBrowser({ model, onChange }: { model: SearchModel; onChange:
           }}
           onFocus={() => setOpen(true)}
           onBlur={(e) => {
-            // Keep the list open while the pointer is inside it.
+            // Keep the list open while the pointer is inside it (incl. its scrollbar).
             if (!e.relatedTarget || !(e.relatedTarget as HTMLElement).closest?.(`[data-mesh-list="${uid}"]`)) setOpen(false)
           }}
           onKeyDown={onKeyDown}
@@ -182,8 +182,18 @@ export function MeshBrowser({ model, onChange }: { model: SearchModel; onChange:
           role="listbox"
           aria-label={t.heading}
           data-mesh-list={uid}
+          // The page scrolls with Lenis, which would take the wheel; this list scrolls itself.
+          data-lenis-prevent=""
+          // Focusable so that grabbing the scrollbar moves focus here instead of
+          // blurring the input into "nothing" (which closed the list).
+          tabIndex={-1}
+          onBlur={(e) => {
+            if (e.relatedTarget !== inputRef.current && !(e.relatedTarget as HTMLElement | null)?.closest?.(`[data-mesh-list="${uid}"]`)) setOpen(false)
+          }}
+          // After scrolling or dragging, typing and arrow keys go back to the input.
+          onMouseUp={() => inputRef.current?.focus({ preventScroll: true })}
           hidden={!showList}
-          className="well max-h-80 divide-y divide-edge-soft overflow-y-auto"
+          className="well max-h-80 divide-y divide-edge-soft overflow-y-auto overscroll-contain outline-none"
         >
           {items.map((s, i) => (
             <li
