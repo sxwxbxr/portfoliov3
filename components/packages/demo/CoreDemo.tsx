@@ -25,6 +25,8 @@ const t = copy.packages.demo.core
 const CONFIG = {
   consentVersion: "demo",
   language: "en",
+  // Since 0.2.0: the decision expires and the banner asks again.
+  maxAgeDays: 365,
   categories: [{ id: "necessary", required: true }, { id: "statistics" }, { id: "marketing" }],
   services: [
     {
@@ -61,7 +63,7 @@ function MockSite() {
 }
 
 function Result() {
-  const { ready, decision } = useConsent()
+  const { ready, decision, expiresAt, globalPrivacyControl } = useConsent()
   return (
     <div className="well flex flex-col gap-3 px-5 py-4" aria-live="polite">
       <h3 className="text-base tracking-tight">{t.resultHeading}</h3>
@@ -77,6 +79,14 @@ function Result() {
               <dd className="font-mono text-[13px] text-fg">{granted ? t.granted : t.declined}</dd>
             </div>
           ))}
+          <div className="flex gap-2">
+            <dt className="font-mono text-[13px] text-fg-muted">{t.expiresLabel}</dt>
+            <dd className="font-mono text-[13px] text-fg">{expiresAt ? expiresAt.slice(0, 10) : "–"}</dd>
+          </div>
+          <div className="flex gap-2">
+            <dt className="font-mono text-[13px] text-fg-muted">{t.gpcLabel}</dt>
+            <dd className="font-mono text-[13px] text-fg">{globalPrivacyControl ? t.granted : t.declined}</dd>
+          </div>
         </dl>
       )}
     </div>
