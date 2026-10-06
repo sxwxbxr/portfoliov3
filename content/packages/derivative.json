@@ -4,7 +4,7 @@
   "tagline": "Self-hosted changelog and \"What's new\" widget, built from your Changesets, CHANGELOG.md, commits, GitHub or GitLab Releases. No SaaS, no tracking.",
   "seoTitle": "Derivative – self-hosted changelog and What's new widget for any web app",
   "description": "Derivative turns the changelog you already keep into a \"What's new\" button for your app. It reads Changesets output, any CHANGELOG.md in the Keep a Changelog or conventional-changelog style, conventional commits with version tags, or GitHub and GitLab Releases, and writes a static changelog.json, an Atom feed and a changelog page.\n\nThe widget is a single web component of about 6 kB gzipped with an unread badge, keyboard and screen reader support, dark mode and labels in English, German, French and Italian. The feed ships with your app and the read state stays in the browser, so there is no third-party service, no cookie and nothing to add to your privacy policy. A lean alternative to hosted tools such as Beamer or Headway.",
-  "status": "beta",
+  "status": "stable",
   "tags": [
     "Changelog",
     "Release notes",
