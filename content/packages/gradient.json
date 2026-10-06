@@ -52,6 +52,8 @@
       "Contrast checks for CI, also when you pin your exact brand color",
       "Check any two colors with gradient check: WCAG 2 levels, APCA, and the closest color that passes",
       "Audit an existing stylesheet with gradient audit: finds steps that break the contrast promises and suggests one fixing color per step",
+      "Gradients between brand colors, blended in OKLCH so complementary colors do not turn grey, with a contrast check of your text on the worst stop",
+      "Dominant colors from a logo or photo, and a pick for the brand color, from raw pixels without any dependency",
       "CLI and a zero-dependency library that runs in Node.js and the browser"
     ]
   },
@@ -87,6 +89,14 @@
     {
       "q": "Can I use Gradient for colors I already have?",
       "a": "Yes. gradient audit app/globals.css reads custom properties that end in a step number (--color-brand-600, --blue-500), from :root, a dark class or media query, or light-dark(), checks the pairs the step numbers promise and suggests a color that passes. It exits with 1 on a failing pair, so it works in CI."
+    },
+    {
+      "q": "Why does a gradient between blue and yellow look grey in CSS?",
+      "a": "CSS blends in sRGB by default, and the average of two opposite colors there is a grey. gradient blend and createBlend() blend lightness, colorfulness and hue instead, so the middle stays as colorful as the ends. Current browsers can do the same with linear-gradient(in oklch, …); createBlend returns both strings."
+    },
+    {
+      "q": "Can Gradient read a color from my logo?",
+      "a": "extractColors() takes the pixels of an image (RGBA, for example ImageData.data from a canvas) and returns the dominant colors with their share; pickBrand() chooses the one that works as a brand color. There is no command line version because the command line cannot decode images, and nothing is uploaded: the demo reads the image in your browser."
     }
   ],
   "publishedAt": "2026-10-05"
