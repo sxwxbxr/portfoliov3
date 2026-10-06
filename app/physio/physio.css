@@ -1,0 +1,277 @@
+/* ══════════════════════════════════════════════════════════════════════
+   PHYSIO: the light theme of physio.sweber.dev.
+
+   The root layout is shared with the portfolio and forces `class="dark"`,
+   `color-scheme: dark` and a near-black ground. The portfolio must not change,
+   so this file re-declares the same design tokens (see app/globals.css) while a
+   physio page is on screen. Every component already reads those tokens
+   (`bg-ground`, `text-fg-muted`, `.cast`, `.control`, `.field`, ...), so the
+   tool UI picks up the light look without edits.
+
+   Scope. The tokens are set on `html:has([data-site="physio"])`, not on the
+   wrapper: the root `html` owns the overscroll background and the scrollbar,
+   and Radix portals (select menus) render under <body>, outside the wrapper.
+   The shadcn aliases (`--primary`, `--ring`, `--destructive` ...) are declared
+   on `:root` as `var(--signal)` etc. and resolve on the same element, so they
+   follow without being repeated here.
+
+   `dark:` variants. html keeps its `dark` class, so a `dark:` utility inside a
+   physio component would still fire. None are used under components/physio or
+   app/physio; keep it that way, and use tokens instead.
+
+   Direction (see the report in the PR for reasons):
+     ground   warm paper, not clinical white
+     ink      deep slate-blue, never pure black
+     accent   one deep teal: links, primary buttons, focus, MeSH tags
+     danger   one red, errors only
+   Headings are Source Serif 4 (loaded in layout.tsx), UI and body are Inter,
+   query strings are JetBrains Mono.
+
+   Contrast, worst case over ground / plate / plate-hi / well / wash:
+     fg 14.9, fg-muted 6.9, fg-subtle 5.3, signal 6.7, danger 5.9 (all :1)
+     edge 3.8, edge-mid 3.3, signal-bright 3.4 (UI boundaries and graphics)
+     white on signal 7.5, white on danger 6.5
+   ══════════════════════════════════════════════════════════════════════ */
+
+html:has([data-site="physio"]) {
+  /* !important: next-themes writes `style="color-scheme: dark"` on <html>. */
+  color-scheme: light !important;
+
+  /* Surfaces */
+  --ground:      oklch(0.982 0.006 95);   /* #faf9f5 page                    */
+  --plate:       oklch(1 0 0);            /* #ffffff cards                   */
+  --plate-hi:    oklch(0.962 0.010 95);   /* #f4f2eb hover, quiet bands      */
+  --well:        oklch(1 0 0);            /* #ffffff inputs, query panels    */
+  --wash:        oklch(0.962 0.018 195);  /* #e5f7f6 accent tint             */
+
+  /* Type */
+  --fg:          oklch(0.235 0.030 235);  /* #0f202a                         */
+  --fg-muted:    oklch(0.440 0.028 235);  /* #445560                         */
+  --fg-subtle:   oklch(0.500 0.026 235);  /* #556670, small labels, 5.3:1    */
+
+  /* Lines */
+  --edge:        oklch(0.580 0.025 235);  /* #6d7d87 input boundary          */
+  --edge-soft:   oklch(0.910 0.008 95);   /* #e3e1db card edges, rules       */
+  --edge-mid:    oklch(0.615 0.022 235);  /* #788790 control outlines        */
+
+  /* Accent */
+  --signal:        oklch(0.440 0.074 198); /* #035f61                        */
+  --signal-bright: oklch(0.600 0.090 195); /* #2b9191                        */
+  --signal-hi:     oklch(0.380 0.065 198); /* #004d4f hover                  */
+  --signal-fg:     oklch(1 0 0);
+
+  --danger:      oklch(0.500 0.170 27);   /* #b02b27                         */
+  --danger-fg:   oklch(1 0 0);
+
+  --radius:      0.5rem;
+  --radius-ctl:  0.5rem;
+  --radius-card: 0.75rem;
+
+  --shadow-card: 0 1px 2px oklch(0.25 0.03 235 / 0.06), 0 4px 14px -6px oklch(0.25 0.03 235 / 0.10);
+
+  /* Roomier container than the portfolio, which runs edge to edge. */
+  --physio-max: 76rem;
+}
+
+@layer base {
+  [data-site="physio"] {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--fg);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Headings: serif, a little heavier than the portfolio's 400. Small
+     labels that happen to be headings (h3.annotate) stay in the UI face. */
+  [data-site="physio"] :is(h1, h2, h3, h4):not(.annotate) {
+    font-family: var(--font-physio-serif), "Source Serif 4", Georgia, serif;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    line-height: 1.2;
+    color: var(--fg);
+  }
+
+  /* Links inside running text. */
+  [data-site="physio"] p a:not(.control) {
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+  [data-site="physio"] ::selection {
+    background: color-mix(in oklab, var(--signal-bright) 28%, white);
+    color: var(--fg);
+  }
+}
+
+@layer components {
+  [data-site="physio"] .sheet,
+  [data-site="physio"] .sheet-wide {
+    max-width: calc(var(--physio-max) + 2 * var(--gutter));
+    margin-inline: auto;
+  }
+
+  /* A rule on a .sheet would run through its gutters; draw it at content width instead. */
+  [data-site="physio"] .sheet.border-t {
+    border-top-color: transparent;
+    background-image: linear-gradient(var(--edge-soft), var(--edge-soft));
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: calc(100% - 2 * var(--gutter)) 1px;
+  }
+
+  /* ── Surfaces ───────────────────────────────────────────────────── */
+  /* A card has to leave the page on its own: hairline plus a very small
+     shadow. Elevation marks "this holds an input or a result". */
+  [data-site="physio"] .cast,
+  [data-site="physio"] .cast-sm {
+    border: 1px solid var(--edge-soft);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+  }
+  [data-site="physio"] .well,
+  [data-site="physio"] .well-sm {
+    border-color: var(--edge-soft);
+  }
+  [data-site="physio"] .well { border-radius: var(--radius-card); }
+  @media (hover: hover) and (pointer: fine) {
+    [data-site="physio"] .card-link:hover { background: var(--plate-hi); }
+  }
+
+  /* ── Controls ───────────────────────────────────────────────────── */
+  [data-site="physio"] .control {
+    font-weight: 500;
+    border-color: var(--edge-mid);
+    background: var(--plate);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    [data-site="physio"] .control:hover {
+      background: var(--wash);
+      border-color: var(--signal);
+      color: var(--signal-hi);
+    }
+  }
+  [data-site="physio"] .control:active,
+  [data-site="physio"] .control[aria-pressed="true"] { background: var(--wash); }
+
+  [data-site="physio"] .control-primary {
+    background: var(--signal);
+    border-color: var(--signal);
+    color: var(--signal-fg);
+    box-shadow: 0 1px 2px oklch(0.25 0.05 200 / 0.25);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    [data-site="physio"] .control-primary:hover {
+      background: var(--signal-hi);
+      border-color: var(--signal-hi);
+      color: var(--signal-fg);
+    }
+  }
+  [data-site="physio"] .control-primary:active { background: var(--signal-hi); }
+
+  [data-site="physio"] .control-ghost {
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    font-weight: 500;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    [data-site="physio"] .control-ghost:hover {
+      background: var(--plate-hi);
+      border-color: transparent;
+      color: var(--fg);
+    }
+  }
+
+  /* ── Inputs ─────────────────────────────────────────────────────── */
+  [data-site="physio"] .field {
+    background: var(--well);
+    border-color: var(--edge);
+  }
+  [data-site="physio"] .field:focus,
+  [data-site="physio"] .field:focus-visible {
+    border-color: var(--signal);
+    outline: 2px solid var(--signal);
+    outline-offset: 1px;
+  }
+  [data-site="physio"] .field[aria-invalid="true"] { border-color: var(--danger); }
+  /* Locked demo inputs: readable, but clearly not editable. */
+  [data-site="physio"] .field:read-only:not(select) { background: var(--plate-hi); }
+  [data-site="physio"] :is(input[type="checkbox"], input[type="radio"]) { accent-color: var(--signal); }
+  /* Form labels: the grey 13px meta style is too faint for something people must read to fill a field. */
+  [data-site="physio"] label.annotate {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--fg);
+  }
+
+  /* ── Type helpers ───────────────────────────────────────────────── */
+  [data-site="physio"] .display {
+    font-family: var(--font-physio-serif), "Source Serif 4", Georgia, serif;
+    font-weight: 600;
+    font-size: clamp(2rem, 1.4rem + 2.2vw, 3rem);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+  }
+  [data-site="physio"] .headline {
+    font-family: var(--font-physio-serif), "Source Serif 4", Georgia, serif;
+    font-weight: 600;
+    font-size: clamp(1.5rem, 1.25rem + 0.9vw, 1.875rem);
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+  /* The follow-up half of a two-part heading reads as the accent. */
+  [data-site="physio"] .headline-sub { color: var(--signal); }
+  [data-site="physio"] .lede { color: var(--fg-muted); font-size: 1.125rem; }
+  [data-site="physio"] .annotate { color: var(--fg-muted); }
+
+  /* Small tinted pill, real status only (Demo, Bald, verified). */
+  [data-site="physio"] .tab,
+  [data-site="physio"] .tab.text-fg-muted {
+    background: var(--wash);
+    border-color: transparent;
+    color: var(--signal);
+  }
+
+  /* ── Landing and shell pieces ───────────────────────────────────── */
+  .p-eyebrow {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--signal);
+    letter-spacing: 0;
+  }
+
+  /* Query preview: the real string, on paper. */
+  .p-doc {
+    background: var(--plate);
+    border: 1px solid var(--edge-soft);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+  }
+
+  .p-step-num {
+    font-family: var(--font-physio-serif), "Source Serif 4", Georgia, serif;
+    font-weight: 600;
+    font-size: 2.25rem;
+    line-height: 1;
+    color: var(--signal-bright);
+    font-variant-numeric: lining-nums;
+  }
+}
+
+@media (prefers-contrast: more) {
+  html:has([data-site="physio"]) {
+    --edge-soft: var(--edge);
+    --fg-muted: oklch(0.36 0.03 235);
+  }
+}
+
+@media (forced-colors: active) {
+  [data-site="physio"] .cast,
+  [data-site="physio"] .p-doc { box-shadow: none; }
+}
+
+@media print {
+  html:has([data-site="physio"]) { --ground: #fff; }
+  [data-site="physio"] header { position: static; }
+}

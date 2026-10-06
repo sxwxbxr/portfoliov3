@@ -59,6 +59,13 @@ export async function middleware(request: NextRequest) {
       return NextResponse.next()
     }
 
+    // Static files under public/physio (e.g. the MeSH index) keep their real
+    // path on this host too, so check for files before stripping /physio.
+    const hasExtension = /\.[a-z0-9]+$/i.test(pathname)
+    if (hasExtension && !PHYSIO_FILES.has(pathname)) {
+      return NextResponse.next()
+    }
+
     if (pathname === "/physio" || pathname.startsWith("/physio/")) {
       const rest = pathname.slice("/physio".length) || "/"
       return NextResponse.redirect(
@@ -75,11 +82,6 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL(`${pathname}${search}`, `${proto}//${mainHost}`), 308)
     }
 
-    const hasExtension = /\.[a-z0-9]+$/i.test(pathname)
-    if (hasExtension && !PHYSIO_FILES.has(pathname)) {
-      return NextResponse.next()
-    }
-
     const url = request.nextUrl.clone()
     url.pathname = `/physio${pathname === "/" ? "" : pathname}`
     return NextResponse.rewrite(url)
@@ -88,7 +90,8 @@ export async function middleware(request: NextRequest) {
   if (
     PHYSIO_ORIGIN &&
     MAIN_HOSTS.has(host) &&
-    (pathname === "/physio" || pathname.startsWith("/physio/"))
+    (pathname === "/physio" || pathname.startsWith("/physio/")) &&
+    !/\.[a-z0-9]+$/i.test(pathname)
   ) {
     const rest = pathname.slice("/physio".length)
     return NextResponse.redirect(`${PHYSIO_ORIGIN}${rest}${search}`, 308)

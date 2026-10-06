@@ -11,7 +11,7 @@ import { FieldError, FormAlert, PasswordField, TextField } from "./fields"
 
 const c = accountCopy
 const MIN = 10
-const linkCls = "text-fg underline underline-offset-4 hover:no-underline"
+const linkCls = "font-medium text-signal underline underline-offset-4 hover:no-underline"
 
 function Submit({ busy, idle, working }: { busy: boolean; idle: string; working: string }) {
   return (

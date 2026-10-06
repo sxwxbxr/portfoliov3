@@ -14,6 +14,8 @@ export const siteCopy = {
     plans: "Abo",
     login: "Anmelden",
     account: "Konto",
+    menuOpen: "Menü",
+    menuClose: "Schliessen",
   },
 
   footer: {
@@ -27,11 +29,24 @@ export const siteCopy = {
     metaTitle: "Physio Tools: Browser-Tools für das Physiotherapie-Studium",
     metaDescription:
       "Kleine Browser-Tools für das Physiotherapie-Studium. Der Suchstring-Generator baut aus deiner PICO-Frage einen PubMed-Suchstring mit MeSH-Terms und Stichworten.",
-    title: "Physio Tools",
-    titleSub: "für dein Studium",
-    lede: "Kleine Browser-Tools für das Physiotherapie-Studium. Das erste ist der Suchstring-Generator: Er baut aus deiner PICO-Frage einen PubMed-Suchstring. Was als Nächstes kommt, hängt davon ab, was ihr vorschlagt.",
+    eyebrow: "Für das Physiotherapie-Studium",
+    title: "Aus deiner PICO-Frage",
+    titleSub: "wird ein PubMed-Suchstring.",
+    lede: "Der Suchstring-Generator zerlegt deine Fragestellung in Suchkomponenten, schlägt MeSH-Schlagworte und Stichworte vor und setzt Klammern, Field Tags und Trunkierung. Du siehst jeden Schritt und korrigierst, bevor du kopierst.",
     ctaDemo: "Demo ausprobieren",
     ctaPlans: "Abo ansehen",
+    ctaNote: "Die Demo braucht kein Konto.",
+
+    preview: {
+      /** Id of the example in lib/physio/search-string/examples.json that the hero renders with the real engine. */
+      exampleId: "parkinson",
+      caption: "Echtes Ergebnis des Tools für diese Frage. Ein Entwurf, den du vor der Verwendung prüfst.",
+      questionLabel: "Deine Frage",
+      componentsLabel: "Erkannte Suchkomponenten",
+      stringLabel: "Suchstring für PubMed",
+      legendMesh: "Schlagwort (MeSH)",
+      legendTiab: "Stichwort in Titel und Abstract",
+    },
 
     tools: {
       heading: "Tools",
@@ -39,31 +54,68 @@ export const siteCopy = {
       demo: "Demo ausprobieren",
       open: "Tool öffnen",
       soon: "Bald",
+      highlights: {
+        suchstring: [
+          "Versteht deutsche und englische Fragen, auch mit «ue» statt «ü».",
+          "Zeigt zu jeder Komponente Schlagworte und Stichworte, die du entfernen, ergänzen oder verschieben kannst.",
+          "Prüft eigene Strings auf typische Fehler und korrigiert vieles mit einem Klick.",
+        ] as string[],
+      } as Record<string, string[]>,
       moreTitle: "Weitere Tools",
       moreText: "Was als Nächstes entsteht, richtet sich nach euren Vorschlägen. Die Aufgaben, die am häufigsten genannt werden, nehme ich zuerst dran.",
+      moreCta: "Aufgabe vorschlagen",
     },
 
     how: {
-      heading: "So läuft es ab",
+      heading: "So funktioniert der Suchstring-Generator",
+      sub: "Vier Schritte, und du bleibst bei jedem am Steuer.",
       items: [
         {
-          title: "Erst ausprobieren",
-          text: "Jedes Tool mit Demo kannst du ohne Konto testen, mit festen Beispielen.",
+          title: "Frage eingeben",
+          text: "Als Satz auf Deutsch oder Englisch, oder mit P, I, C und O einzeln. Eine Aufgabe aus dem Unterricht geht auch.",
         },
         {
-          title: "Dann freischalten",
-          text: "Für eigene Eingaben brauchst du ein Konto und das Abo. Ein Abo, alle Tools, auch die, die später dazukommen.",
+          title: "Komponenten prüfen",
+          text: "Das Tool zeigt, was es erkannt hat. Du entfernst, verschiebst oder ergänzt Begriffe, bis es zu deiner Frage passt.",
         },
         {
-          title: "Jederzeit kündigen",
-          text: "Du kündigst selbst im Kundenportal von Polar. Dein Zugang bleibt bis zum Ende der bezahlten Periode.",
+          title: "Filter setzen",
+          text: "Sprache, Erscheinungsjahr und Studientyp. Alles ist optional.",
+        },
+        {
+          title: "Kopieren und gegenprüfen",
+          text: "Kopiere den String oder lade ihn als Datei herunter. Schau dir die Trefferliste in PubMed an, bevor du ihn in einer Arbeit verwendest.",
+        },
+      ],
+    },
+
+    trust: {
+      heading: "Worauf du dich verlassen kannst",
+      items: [
+        {
+          title: "Läuft in deinem Browser",
+          text: "Deine Fragestellung wird weder an einen Server gesendet noch gespeichert.",
+        },
+        {
+          title: "Regelbasiert, ohne KI",
+          text: "Feste Regeln und eine Begriffstabelle statt eines Sprachmodells. Das Tool erfindet keine Begriffe, und das Ergebnis bleibt ein Entwurf, den du prüfst.",
+        },
+        {
+          title: "Aus der Schweiz",
+          text: "Ein unabhängiges Projekt von Seya Weber aus St. Gallen. Vorschläge landen direkt bei mir.",
         },
       ],
     },
 
     pricing: {
-      heading: "Abo und Preis",
-      text: "Monatlich oder jährlich, bezahlt über Polar.sh. Die aktuellen Preise stehen auf der Abo-Seite.",
+      heading: "Ein Abo, alle Tools",
+      text: "Die Demos sind für alle offen. Für eigene Eingaben brauchst du ein Konto und das Abo, auch für Tools, die später dazukommen.",
+      priceFallback: "Monatlich oder jährlich, bezahlt über Polar.sh. Die aktuellen Preise stehen auf der Abo-Seite.",
+      points: [
+        "Erst ausprobieren, dann freischalten.",
+        "Du kündigst selbst im Kundenportal von Polar.",
+        "Dein Zugang bleibt bis zum Ende der bezahlten Periode.",
+      ],
       cta: "Zur Abo-Seite",
     },
 

@@ -131,7 +131,7 @@ export default async function PlansPage() {
           <List heading={c.includes.heading} items={c.includes.items} />
           <List heading={c.billing.heading} items={c.billing.items} />
         </div>
-        <div className="flex flex-col gap-4">{action}</div>
+        <div className="order-first flex flex-col gap-4 md:order-none">{action}</div>
       </div>
     </div>
   )

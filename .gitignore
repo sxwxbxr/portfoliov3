@@ -38,3 +38,6 @@ next-env.d.ts
 # and a CV belongs behind a request rather than on a raw.githubusercontent URL.
 # See docs/CV_DELIVERY.md.
 applicationDocuments/
+
+# local build caches (large downloads, e.g. MeSH XML, Wikidata)
+/.cache/

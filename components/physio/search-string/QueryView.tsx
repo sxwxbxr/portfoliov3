@@ -4,7 +4,7 @@ import type { LintFinding, LintSeverity } from "@/lib/physio/search-string/types
 /**
  * Syntax colouring for a PubMed string. Colour carries no meaning alone:
  * MeSH tags are outlined, operators are small caps, top-level AND starts a new line.
- * The palette stays inside the site tokens (white, greys, one red for errors).
+ * The palette stays inside the site tokens (ink, greys, the teal accent for MeSH, one red for errors).
  */
 
 const TOKEN_RE = /("[^"]*")(\[[^\]]*\])?|\b(AND|OR|NOT)\b|([()])|([^\s()"[\]]+)(\[[^\]]*\])|([^\s()"[\]]+)|(\s+)|([\s\S])/g
@@ -15,7 +15,7 @@ function isMeshTag(tag: string): boolean {
 
 function Tag({ tag }: { tag: string }) {
   return isMeshTag(tag) ? (
-    <span className="mx-px rounded-[3px] border border-edge-mid px-1 text-fg">{tag}</span>
+    <span className="mx-px rounded-[3px] border border-edge-mid bg-(--wash) px-1 text-(--signal-hi)">{tag}</span>
   ) : (
     <span className="text-fg-muted">{tag}</span>
   )
