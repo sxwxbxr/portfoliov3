@@ -29,6 +29,13 @@
 }
 @keyframes sigmoid-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
+/* data-sigmoid="count": a number that counts up, e.g. style="--sigmoid-count: 1200".
+   Integers only. Without scroll timelines it shows the end value. */
+@property --sigmoid-n { syntax: "<integer>"; inherits: false; initial-value: 0; }
+@keyframes sigmoid-count { from { --sigmoid-n: 0; } to { --sigmoid-n: var(--sigmoid-count, 0); } }
+[data-sigmoid="count"] { counter-reset: sigmoid-n var(--sigmoid-count, 0); }
+[data-sigmoid="count"]::after { content: counter(sigmoid-n); }
+
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     [data-sigmoid] {
@@ -52,6 +59,12 @@
   [data-sigmoid="clip-up"] { --sigmoid-keyframes: sigmoid-clip-up; }
   [data-sigmoid="rotate-in"] { --sigmoid-keyframes: sigmoid-rotate-in; }
   [data-sigmoid="flip-up"] { --sigmoid-keyframes: sigmoid-flip-up; }
+    [data-sigmoid][data-sigmoid-axis="inline"] { animation-timeline: view(inline); }
+    [data-sigmoid="count"] {
+      --sigmoid-keyframes: sigmoid-count;
+      counter-reset: sigmoid-n var(--sigmoid-n);
+      --sigmoid-range: entry 0% cover 50%;
+    }
     [data-sigmoid="parallax"] {
       --sigmoid-keyframes: sigmoid-parallax;
       animation-timing-function: linear;

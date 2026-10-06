@@ -10,6 +10,7 @@ import { ParallaxScene } from "@/components/packages/demo/sigmoid/ParallaxScene"
 import { RevealGallery } from "@/components/packages/demo/sigmoid/RevealGallery"
 import { SigmoidStatus } from "@/components/packages/demo/sigmoid/SigmoidStatus"
 import { StoryDemo } from "@/components/packages/demo/sigmoid/StoryDemo"
+import { HorizontalGallery, SplitHeadline } from "@/components/packages/demo/sigmoid/WordsAndRows"
 import { TrackStats } from "@/components/packages/demo/sigmoid/TrackStats"
 import { InstallCommand } from "@/components/packages/InstallCommand"
 import { sigmoidDemo as t } from "@/lib/demo/sigmoid-copy"
@@ -43,6 +44,18 @@ const TRACK_CODE = `import { track } from "@sweberdev/sigmoid"
 track(".stat", (p, el) => {
   el.textContent = Math.round(2400 * p).toLocaleString()
 }, { range: "entry 0% cover 50%" })`
+
+const WORDS_CODE = `import { reveal, splitText } from "@sweberdev/sigmoid"
+
+const { elements, parent } = splitText("h1")
+reveal(elements, { subject: parent, keyframes: "fade-up", stagger: 6 })
+
+// A horizontal scroll container: follow the inline axis
+reveal(".card", { axis: "inline", keyframes: "scale-in" })
+
+// A number, no script
+// <span data-sigmoid="count" style="--sigmoid-count: ${t.words.counterValue}"
+//       role="img" aria-label="${t.words.counterValue}"></span>`
 
 const STORY_CODE = `import { story } from "@sweberdev/sigmoid"
 
@@ -150,6 +163,26 @@ export default function SigmoidDemoPage() {
           <StoryDemo />
           <div className="max-w-xl">
             <CodeBlock title={t.story.codeHeading} code={STORY_CODE} />
+          </div>
+        </div>
+      </Block>
+
+      <Block id="text" label={t.words.label} title={t.words.title} sub={t.words.sub} lede={<p>{t.words.lede}</p>}>
+        <div className="flex flex-col gap-12">
+          <SplitHeadline />
+          <HorizontalGallery />
+          <p className="flex items-baseline gap-3">
+            <span
+              data-sigmoid="count"
+              role="img"
+              aria-label={String(t.words.counterValue)}
+              style={{ "--sigmoid-count": t.words.counterValue } as CSSProperties}
+              className="font-mono text-5xl tracking-tight text-fg"
+            />
+            <span className="text-sm text-fg-muted">{t.words.counterLabel}</span>
+          </p>
+          <div className="max-w-xl">
+            <CodeBlock title={t.words.codeHeading} code={WORDS_CODE} />
           </div>
         </div>
       </Block>
