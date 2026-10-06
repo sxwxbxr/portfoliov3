@@ -61,6 +61,7 @@ export const copy = {
     privacy: "Privacy",
     imprint: "Imprint",
     packages: "Packages",
+    physio: "Physio Tools",
     login: "Login",
     nxrthstack: "Nxrthstack",
     github: "GitHub",
