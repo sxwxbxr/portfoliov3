@@ -137,7 +137,7 @@ export const vectorDemoCopy = {
     label: "Pro",
     title: "The portal, the catalog and the night shift",
     sub: "Vector Pro.",
-    lede: "The free package sends, retries and logs. Vector Pro adds the parts you would otherwise build next: an embeddable portal where your customers manage their own endpoints, a typed event catalog that validates payloads and generates docs, and operations tooling for alerts, recovery after outages, metrics and retention. Vector Pro is not on sale yet; the snippets show how it plugs in.",
+    lede: "The free package sends, retries and logs. Vector Pro adds the parts you would otherwise build next: an embeddable portal where your customers manage their own endpoints, a typed event catalog that validates payloads and generates docs, and operations tooling for alerts, recovery after outages, metrics and retention. The snippets show how it plugs in.",
     portal: "Customer portal: one route handler, scoped to the tenant",
     portalUi: "And the React components on your settings page",
     portalNote:
