@@ -76,7 +76,7 @@
   "faq": [
     {
       "q": "What do I get after checkout?",
-      "a": "Polar gives your GitHub account read access to the Pro repositories of every package in the bundle. The Pro packages then install from GitHub Packages with a read-only token, exactly as with a single Pro licence."
+      "a": "Polar sends you a link to its customer portal. Connect your GitHub account there, and Polar invites it to the Pro repositories of every package in the bundle. With Agency and Lifetime, access goes to seats: first assign a seat to every person, including yourself, in the customer portal. Each person accepts the e-mail invitation and connects their GitHub account. The Pro packages then install from GitHub Packages with a read-only token, exactly as with a single Pro licence."
     },
     {
       "q": "I already pay for one Pro add-on. Can I switch?",
