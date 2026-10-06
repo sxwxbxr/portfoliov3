@@ -52,7 +52,7 @@
     "pro": [
       "Notice and label wording in all 24 official EU languages",
       "CI scanner that fails the build when AI images, audio, video or text lack a label or marking, or a chat lacks its notice; verifies C2PA manifests in images, audio and video (signature, hashes, file content, signer) and checks single-page apps in a browser",
-      "AI register with a transparency report for clients (including the key dates that apply), a public \"How we use AI\" page, import from a spreadsheet (CSV) and warnings before the Article 50 deadlines",
+      "AI register with a transparency report for clients (including the key dates that apply), a public \"How we use AI\" page, import from a spreadsheet (CSV), warnings before the Article 50 deadlines, drafts for AI use the register misses (from the scan) and a change log",
       "C2PA signing with your own certificate: sign generated PNG, JPEG, WebP, WAV and MP4/MOV/M4A files with Content Credentials, as API and CLI"
     ]
   },
