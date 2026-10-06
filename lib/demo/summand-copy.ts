@@ -36,6 +36,7 @@ export const summandDemoCopy = {
     drop: "Drop an XML or PDF invoice here, or",
     choose: "choose a file",
     xrechnung: "Always apply the XRechnung rules",
+    german: "Messages in German",
     running: "Validating…",
     valid: "Valid",
     invalid: "Invalid",
