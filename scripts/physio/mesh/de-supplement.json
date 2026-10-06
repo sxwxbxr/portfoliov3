@@ -1,0 +1,921 @@
+{
+ "D017116 Low Back Pain": [
+  "Kreuzweh"
+ ],
+ "D001416 Back Pain": [
+  "Rückenweh"
+ ],
+ "D019547 Neck Pain": [
+  "Halswirbelsäulenschmerzen",
+  "HWS-Schmerzen"
+ ],
+ "D007405 Intervertebral Disc Displacement": [
+  "Bandscheibenhernie"
+ ],
+ "D055959 Intervertebral Disc Degeneration": [
+  "Bandscheibendegeneration",
+  "Bandscheibenverschleiss",
+  "Bandscheibenverschleiß"
+ ],
+ "D013130 Spinal Stenosis": [
+  "Wirbelkanalstenose",
+  "Lumbale Spinalstenose"
+ ],
+ "D012600 Scoliosis": [
+  "Wirbelsäulenverkrümmung"
+ ],
+ "D014911 Whiplash Injuries": [
+  "HWS-Schleudertrauma",
+  "Peitschenschlagverletzung"
+ ],
+ "D001172 Arthritis, Rheumatoid": [
+  "Rheuma",
+  "chronische Polyarthritis",
+  "Gelenkrheuma"
+ ],
+ "D013167 Spondylitis, Ankylosing": [
+  "Bechterew"
+ ],
+ "D019534 Shoulder Impingement Syndrome": [
+  "Schulterimpingement",
+  "subakromiales Impingement",
+  "Impingement-Syndrom der Schulter"
+ ],
+ "D000070636 Rotator Cuff Injuries": [
+  "Rotatorenmanschettenläsion",
+  "Rotatorenmanschettenverletzung"
+ ],
+ "D013716 Tennis Elbow": [
+  "Epicondylitis lateralis",
+  "laterale Epikondylitis"
+ ],
+ "D052256 Tendinopathy": [
+  "Sehnenerkrankung"
+ ],
+ "D016512 Ankle Injuries": [
+  "Sprunggelenkverletzung"
+ ],
+ "D013180 Sprains and Strains": [
+  "Verstauchung",
+  "Zerrung",
+  "Distorsion",
+  "Bänderriss",
+  "Muskelzerrung"
+ ],
+ "D000070598 Anterior Cruciate Ligament Injuries": [
+  "vordere Kreuzbandruptur"
+ ],
+ "D000070600 Tibial Meniscus Injuries": [
+  "Meniskusläsion",
+  "Meniskusriss",
+  "Meniskusverletzung"
+ ],
+ "D008592 Menisci, Tibial": [
+  "Meniskus"
+ ],
+ "D006620 Hip Fractures": [
+  "Hüftfraktur",
+  "proximale Femurfraktur"
+ ],
+ "D019644 Arthroplasty, Replacement, Hip": [
+  "Hüftprothese",
+  "Hüft-TEP",
+  "Hüftgelenkersatz",
+  "Hüftendoprothese",
+  "Hüftgelenksersatz"
+ ],
+ "D019645 Arthroplasty, Replacement, Knee": [
+  "Kniegelenkersatz",
+  "Knieendoprothese"
+ ],
+ "D006429 Hemiplegia": [
+  "Hemiparese",
+  "Halbseitenlähmung",
+  "Hemiplegie"
+ ],
+ "D013119 Spinal Cord Injuries": [
+  "Querschnittlähmung",
+  "Rückenmarksverletzung",
+  "Querschnittslähmung",
+  "Rückenmarkverletzung"
+ ],
+ "D000070642 Brain Injuries, Traumatic": [
+  "Schädelhirntrauma",
+  "traumatische Hirnverletzung"
+ ],
+ "D003327 Coronary Disease": [
+  "koronare Herzkrankheit",
+  "KHK"
+ ],
+ "D006973 Hypertension": [
+  "Hypertonie"
+ ],
+ "D009765 Obesity": [
+  "Übergewicht und Adipositas"
+ ],
+ "D003920 Diabetes Mellitus": [
+  "Diabetes"
+ ],
+ "D003924 Diabetes Mellitus, Type 2": [
+  "Diabetes Typ 2"
+ ],
+ "D009369 Neoplasms": [
+  "Krebs",
+  "Tumoren",
+  "Krebserkrankung",
+  "Krebserkrankungen",
+  "Neubildung",
+  "Krebsleiden"
+ ],
+ "D001943 Breast Neoplasms": [
+  "Brustkrebs",
+  "Mammakarzinom"
+ ],
+ "D003863 Depression": [
+  "Depressionen",
+  "depressive Störung"
+ ],
+ "D012893 Sleep Wake Disorders": [
+  "Schlafstörung",
+  "Schlafstörungen",
+  "Schlafprobleme"
+ ],
+ "D013315 Stress, Psychological": [
+  "Stress"
+ ],
+ "D010146 Pain": [
+  "Schmerzen"
+ ],
+ "D010149 Pain, Postoperative": [
+  "postoperativer Schmerz",
+  "postoperative Schmerzen",
+  "Schmerzen nach Operation"
+ ],
+ "D013705 Temporomandibular Joint Disorders": [
+  "Kiefergelenkserkrankung",
+  "Kiefergelenkstörung",
+  "CMD",
+  "Craniomandibuläre Dysfunktion",
+  "kraniomandibuläre Dysfunktion"
+ ],
+ "D014717 Vertigo": [
+  "Schwindel"
+ ],
+ "D014549 Urinary Incontinence": [
+  "Inkontinenz"
+ ],
+ "D059952 Pelvic Floor Disorders": [
+  "Beckenbodenstörung",
+  "Beckenbodenschwäche",
+  "Beckenbodendysfunktion"
+ ],
+ "D049590 Postpartum Period": [
+  "nach der Geburt"
+ ],
+ "D055948 Sarcopenia": [
+  "Muskelschwund",
+  "Muskelabbau"
+ ],
+ "D000073496 Frailty": [
+  "Gebrechlichkeitssyndrom"
+ ],
+ "D004856 Postural Balance": [
+  "Standsicherheit"
+ ],
+ "D005684 Gait": [
+  "Gangbild",
+  "Gangart"
+ ],
+ "D016138 Walking": [
+  "Gehtraining"
+ ],
+ "D018908 Muscle Weakness": [
+  "Muskelschwäche",
+  "Muskelschwund"
+ ],
+ "D009209 Myofascial Pain Syndromes": [
+  "Triggerpunkte",
+  "myofasziale Schmerzen",
+  "Myofasziales Syndrom"
+ ],
+ "D007593 Joint Instability": [
+  "Instabilität"
+ ],
+ "D003286 Contracture": [
+  "Gelenkkontraktur"
+ ],
+ "D005081 Exercise Therapy": [
+  "Gymnastik",
+  "Krankengymnastik",
+  "Heilgymnastik"
+ ],
+ "D015444 Exercise": [
+  "Training",
+  "Bewegung",
+  "körperliche Aktivität"
+ ],
+ "D010809 Physical Fitness": [
+  "körperliche Fitness",
+  "körperliche Leistungsfähigkeit"
+ ],
+ "D000072696 High-Intensity Interval Training": [
+  "HIIT",
+  "hochintensives Intervalltraining",
+  "Intervalltraining"
+ ],
+ "D059385 Plyometric Exercise": [
+  "plyometrisches Training",
+  "Sprungtraining"
+ ],
+ "D014732 Vibration": [
+  "Vibrationstraining"
+ ],
+ "D026201 Musculoskeletal Manipulations": [
+  "Mobilisation",
+  "Gelenkmobilisation"
+ ],
+ "D020393 Manipulation, Spinal": [
+  "Wirbelsäulenmanipulation",
+  "Spinale Manipulation"
+ ],
+ "D015670 Acupuncture Therapy": [
+  "Akupunktur"
+ ],
+ "D004599 Electric Stimulation Therapy": [
+  "Elektrotherapie",
+  "Elektrostimulation",
+  "Reizstromtherapie"
+ ],
+ "D014464 Ultrasonic Therapy": [
+  "Ultraschallbehandlung"
+ ],
+ "D028022 Low-Level Light Therapy": [
+  "Lasertherapie",
+  "Low-Level-Lasertherapie",
+  "Soft-Laser",
+  "Lichttherapie"
+ ],
+ "D017679 Cryotherapy": [
+  "Kältetherapie",
+  "Kälteanwendung",
+  "Eisanwendung"
+ ],
+ "D006358 Hot Temperature": [
+  "Wärmetherapie",
+  "Wärmeanwendung",
+  "Thermotherapie"
+ ],
+ "D001452 Balneology": [
+  "Bädertherapie"
+ ],
+ "D000074059 Extracorporeal Shockwave Therapy": [
+  "Stosswellentherapie",
+  "Stoßwellentherapie"
+ ],
+ "D055909 Magnetic Field Therapy": [
+  "Magnetfeldtherapie"
+ ],
+ "D014143 Traction": [
+  "Traktion"
+ ],
+ "D009989 Orthotic Devices": [
+  "Orthesen",
+  "Einlagen",
+  "orthopädische Hilfsmittel"
+ ],
+ "D061826 Foot Orthoses": [
+  "Fussorthesen",
+  "Fußorthesen",
+  "Schuheinlagen",
+  "Fusseinlagen",
+  "Fußeinlagen"
+ ],
+ "D001915 Braces": [
+  "Bandage",
+  "Orthese"
+ ],
+ "D013165 Splints": [
+  "Schienen"
+ ],
+ "D010353 Patient Education as Topic": [
+  "Patientenschulung",
+  "Patientenaufklärung",
+  "Patientenberatung",
+  "Patienteninformation"
+ ],
+ "D000073278 Self-Management": [
+  "Selbstmanagement",
+  "Selbstmanagementprogramm"
+ ],
+ "D015928 Cognitive Behavioral Therapy": [
+  "Verhaltenstherapie"
+ ],
+ "D012064 Relaxation Therapy": [
+  "Entspannung"
+ ],
+ "D012046 Rehabilitation": [
+  "Reha",
+  "Rehabilitationsmassnahmen",
+  "Rehabilitationsmaßnahmen"
+ ],
+ "D000069350 Telerehabilitation": [
+  "Tele-Reha"
+ ],
+ "D013070 Speech Therapy": [
+  "Logopädie",
+  "Sprachtherapie"
+ ],
+ "D059825 Physical Therapists": [
+  "Physiotherapeuten"
+ ],
+ "D026741 Physical Therapy Modalities": [
+  "Physiotherapeutische Massnahmen",
+  "Physiotherapeutische Maßnahmen"
+ ],
+ "D000072038 Cardiac Rehabilitation": [
+  "Herzrehabilitation",
+  "kardiale Rehabilitation"
+ ],
+ "D001945 Breathing Exercises": [
+  "Atemtherapie",
+  "Atemübungen",
+  "Atemgymnastik",
+  "Atemphysiotherapie"
+ ],
+ "D004434 Early Ambulation": [
+  "Frühmobilisation",
+  "Frühmobilisierung"
+ ],
+ "D000076251 Wearable Electronic Devices": [
+  "tragbare Geräte",
+  "Aktivitätstracker"
+ ],
+ "D000071939 Stroke Rehabilitation": [
+  "Schlaganfallrehabilitation",
+  "Schlaganfall-Rehabilitation",
+  "Rehabilitation nach Schlaganfall"
+ ],
+ "D010147 Pain Measurement": [
+  "Schmerzmessung",
+  "Schmerzerfassung",
+  "Schmerzbeurteilung"
+ ],
+ "D004185 Disability Evaluation": [
+  "Beurteilung der Behinderung",
+  "Behinderungseinschätzung",
+  "Funktionsbeurteilung"
+ ],
+ "D000203 Activities of Daily Living": [
+  "Alltagsaktivitäten",
+  "Alltagsfunktion",
+  "Alltagsbewältigung"
+ ],
+ "D017060 Patient Satisfaction": [
+  "Patientenzufriedenheit"
+ ],
+ "D016896 Treatment Outcome": [
+  "Behandlungsergebnis",
+  "Behandlungserfolg",
+  "Therapieerfolg",
+  "Therapieergebnis",
+  "Behandlungsresultat"
+ ],
+ "D005500 Follow-Up Studies": [
+  "Verlaufsstudie",
+  "Nachbeobachtung",
+  "Follow-up"
+ ],
+ "D062707 Return to Work": [
+  "Arbeitsrückkehr",
+  "berufliche Wiedereingliederung"
+ ],
+ "D018582 Sick Leave": [
+  "Krankenstand",
+  "Krankheitsbedingte Abwesenheit",
+  "Krankheitsabsenz",
+  "Arbeitsabsenz"
+ ],
+ "D000041 Absenteeism": [
+  "Arbeitsabwesenheit",
+  "Absenz"
+ ],
+ "D014938 Work Capacity Evaluation": [
+  "Arbeitsfähigkeitsbeurteilung",
+  "Arbeitsfähigkeitsprüfung",
+  "Arbeitsfähigkeitsabklärung"
+ ],
+ "D011795 Surveys and Questionnaires": [
+  "Fragebögen",
+  "Umfrage"
+ ],
+ "D057566 Self Report": [
+  "Selbstbericht",
+  "Selbstauskunft",
+  "Selbsteinschätzung"
+ ],
+ "D012680 Sensitivity and Specificity": [
+  "Sensitivität",
+  "Spezifität"
+ ],
+ "D000071066 Patient Reported Outcome Measures": [
+  "PROMs",
+  "patientenberichtete Outcomes"
+ ],
+ "D009026 Mortality": [
+  "Sterblichkeit"
+ ],
+ "D007902 Length of Stay": [
+  "Spitalaufenthalt"
+ ],
+ "D003365 Costs and Cost Analysis": [
+  "Kosten",
+  "Kostenermittlung"
+ ],
+ "D003362 Cost-Benefit Analysis": [
+  "Kosten-Nutzwert-Analyse"
+ ],
+ "D000368 Aged": [
+  "über 65-Jährige",
+  "ältere Patienten"
+ ],
+ "D008875 Middle Aged": [
+  "mittleren Alters",
+  "Mittelalte",
+  "Erwachsene mittleren Alters",
+  "mittleres Lebensalter",
+  "Personen mittleren Alters",
+  "Menschen mittleren Alters"
+ ],
+ "D000328 Adult": [
+  "erwachsene Personen"
+ ],
+ "D000293 Adolescent": [
+  "Jugendliche",
+  "Jugendlicher",
+  "Adoleszenten"
+ ],
+ "D002675 Child, Preschool": [
+  "Vorschulkinder",
+  "Kleinkinder",
+  "Kindergartenkinder",
+  "Kinder im Vorschulalter"
+ ],
+ "D007223 Infant": [
+  "Säuglinge",
+  "Babys"
+ ],
+ "D007231 Infant, Newborn": [
+  "Neugeborene"
+ ],
+ "D000369 Aged, 80 and over": [
+  "Hochbetagte",
+  "über 80-Jährige",
+  "Hochaltrige"
+ ],
+ "D037841 Pregnant Women": [
+  "schwangere Frauen"
+ ],
+ "D056352 Athletes": [
+  "Spitzensportler"
+ ],
+ "D013334 Students": [
+  "Studenten"
+ ],
+ "D017028 Caregivers": [
+  "pflegende Angehörige",
+  "Angehörige",
+  "Pflegepersonen",
+  "Betreuungspersonen"
+ ],
+ "D010361 Patients": [
+  "Patienten",
+  "Patientinnen"
+ ],
+ "D006282 Health Personnel": [
+  "Gesundheitsfachpersonen",
+  "Gesundheitspersonal",
+  "medizinisches Fachpersonal"
+ ],
+ "D016272 Occupational Health": [
+  "Arbeitsmedizin",
+  "Arbeitsgesundheit",
+  "betriebliche Gesundheit"
+ ],
+ "D057185 Sedentary Behavior": [
+  "sitzendes Verhalten",
+  "sitzende Lebensweise",
+  "sedentäres Verhalten"
+ ],
+ "D006233 Disabled Persons": [
+  "Menschen mit Behinderung",
+  "Personen mit Behinderung"
+ ],
+ "D017132 Workplace": [
+  "Arbeitsumgebung",
+  "Büroarbeitsplatz"
+ ],
+ "D016449 Randomized Controlled Trial": [
+  "randomisierte kontrollierte Studie",
+  "randomisiert kontrollierte Studie",
+  "RCT",
+  "randomisierte Studie",
+  "randomisierte klinische Studie",
+  "randomisiert-kontrollierte Studie"
+ ],
+ "D000078182 Systematic Review": [
+  "systematisches Review",
+  "systematische Literaturübersicht",
+  "systematischer Review",
+  "systematische Review"
+ ],
+ "D017418 Meta-Analysis": [
+  "Metaanalyse",
+  "Meta-Analyse"
+ ],
+ "D015331 Cohort Studies": [
+  "Kohortenstudien"
+ ],
+ "D016022 Case-Control Studies": [
+  "Fall-Kontroll-Studien"
+ ],
+ "D003430 Cross-Sectional Studies": [
+  "Querschnittstudien"
+ ],
+ "D036301 Qualitative Research": [
+  "qualitative Studie",
+  "qualitative Studien"
+ ],
+ "D016430 Clinical Trial": [
+  "klinische Studie",
+  "klinische Studien"
+ ],
+ "D017065 Practice Guideline": [
+  "Leitlinie",
+  "Leitlinien",
+  "Guideline",
+  "Behandlungsleitlinie"
+ ],
+ "D016454 Review": [
+  "Übersichtsarbeit",
+  "Literaturübersicht",
+  "Übersichtsartikel"
+ ],
+ "D055317 Evidence-Based Practice": [
+  "evidenzbasierte Medizin",
+  "evidenzbasiertes Arbeiten"
+ ],
+ "D002363 Case Reports": [
+  "Fallstudie",
+  "Fallbeschreibung",
+  "Kasuistik"
+ ],
+ "D010865 Pilot Projects": [
+  "Pilotstudie",
+  "Machbarkeitsstudie"
+ ],
+ "D004311 Double-Blind Method": [
+  "Doppelblindverfahren",
+  "doppelblind",
+  "Doppelblind"
+ ],
+ "D011446 Prospective Studies": [
+  "prospektive Studien"
+ ],
+ "D012189 Retrospective Studies": [
+  "retrospektive Studie",
+  "retrospektive Studien"
+ ],
+ "D007407 Interviews as Topic": [
+  "Interviews"
+ ],
+ "D017144 Focus Groups": [
+  "Fokusgruppen"
+ ],
+ "D064888 Observational Study": [
+  "Beobachtungsstudie",
+  "Beobachtungsstudien"
+ ],
+ "D018848 Controlled Clinical Trial": [
+  "kontrollierte klinische Studie"
+ ],
+ "D000099094 Network Meta-Analysis": [
+  "Netzwerk-Metaanalyse",
+  "Netzwerkmetaanalyse"
+ ],
+ "D000842 Ankle": [
+  "Fussgelenk",
+  "Fußgelenk",
+  "Knöchel"
+ ],
+ "D000843 Ankle Joint": [
+  "oberes Sprunggelenk",
+  "Sprunggelenk"
+ ],
+ "D009333 Neck": [
+  "Nacken"
+ ],
+ "D008159 Lumbar Vertebrae": [
+  "Lendenwirbelsäule",
+  "LWS",
+  "lumbale Wirbelsäule"
+ ],
+ "D002574 Cervical Vertebrae": [
+  "Halswirbelsäule",
+  "HWS",
+  "zervikale Wirbelsäule"
+ ],
+ "D013904 Thoracic Vertebrae": [
+  "Brustwirbelsäule",
+  "BWS",
+  "thorakale Wirbelsäule"
+ ],
+ "D013131 Spine": [
+  "Wirbelsäule",
+  "Rückgrat"
+ ],
+ "D018482 Muscle, Skeletal": [
+  "Muskel",
+  "Muskulatur"
+ ],
+ "D013710 Tendons": [
+  "Sehnen"
+ ],
+ "D008022 Ligaments": [
+  "Ligamente"
+ ],
+ "D002358 Cartilage, Articular": [
+  "Gelenkknorpel",
+  "Knorpel"
+ ],
+ "D000009 Abdominal Muscles": [
+  "Bauchmuskeln",
+  "Bauchmuskel"
+ ],
+ "D052097 Quadriceps Muscle": [
+  "Oberschenkelstrecker",
+  "Quadrizepsmuskel"
+ ],
+ "D000070633 Hamstring Muscles": [
+  "Hamstrings",
+  "hintere Oberschenkelmuskulatur"
+ ],
+ "D013704 Temporomandibular Joint": [
+  "Kiefergelenke"
+ ],
+ "D012446 Sacroiliac Joint": [
+  "ISG"
+ ],
+ "D005205 Fascia": [
+  "Faszien"
+ ],
+ "D000894 Anti-Inflammatory Agents, Non-Steroidal": [
+  "NSAR",
+  "Entzündungshemmer"
+ ],
+ "D000701 Analgesics, Opioid": [
+  "Opioid-Analgetika",
+  "Opiate"
+ ],
+ "D005938 Glucocorticoids": [
+  "Kortikosteroide",
+  "Kortison",
+  "Cortison"
+ ],
+ "D009125 Muscle Relaxants, Central": [
+  "Muskelrelaxantien",
+  "Muskelrelaxanzien",
+  "Muskelentspanner"
+ ],
+ "D001905 Botulinum Toxins": [
+  "Botox",
+  "Botulinumtoxine"
+ ],
+ "D019587 Dietary Supplements": [
+  "Supplemente",
+  "Nahrungsergänzungen"
+ ],
+ "D007270 Injections, Intra-Articular": [
+  "intraartikuläre Injektion",
+  "intraartikuläre Injektionen",
+  "Gelenkinjektion",
+  "Gelenkspritze"
+ ],
+ "D000779 Anesthetics, Local": [
+  "Lokalanästhesie"
+ ],
+ "D006801 Humans": [
+  "Humane"
+ ],
+ "D000818 Animals": [
+  "Tiere"
+ ],
+ "D006760 Hospitalization": [
+  "Hospitalisation",
+  "Spitaleintritt",
+  "Krankenhausaufenthalt",
+  "Spitalaufenthalt"
+ ],
+ "D006304 Health Status": [
+  "Gesundheitszustand"
+ ],
+ "D015203 Reproducibility of Results": [
+  "Reliabilität",
+  "Reproduzierbarkeit der Ergebnisse"
+ ],
+ "D012016 Reference Values": [
+  "Referenzwerte",
+  "Normwerte"
+ ],
+ "D011184 Postoperative Period": [
+  "postoperative Phase",
+  "postoperativ",
+  "Nachbehandlung"
+ ],
+ "D011182 Postoperative Care": [
+  "postoperative Betreuung",
+  "postoperative Nachsorge",
+  "postoperative Behandlung"
+ ],
+ "D000082622 Preoperative Exercise": [
+  "Prähabilitation",
+  "präoperatives Training"
+ ],
+ "D000066530 Neurological Rehabilitation": [
+  "neurologische Rehabilitation",
+  "Neuroreha"
+ ],
+ "D000098483 Constraint-Induced Movement Therapy": [
+  "CIMT"
+ ],
+ "D018910 Video Games": [
+  "Videospiele",
+  "Computerspiele",
+  "Exergaming"
+ ],
+ "D009048 Motor Skills": [
+  "motorische Fähigkeiten",
+  "motorische Fertigkeiten",
+  "Feinmotorik"
+ ],
+ "D011434 Proprioception": [
+  "Tiefensensibilität"
+ ],
+ "D018763 Muscle Fatigue": [
+  "Muskuläre Ermüdung"
+ ],
+ "D009122 Muscle Hypertonia": [
+  "Muskelhypertonus",
+  "Hypertonus",
+  "Muskelverspannung",
+  "Verspannung"
+ ],
+ "D009334 Neck Muscles": [
+  "Nackenmuskulatur",
+  "Nackenmuskeln"
+ ],
+ "D064131 Back Muscles": [
+  "Rückenmuskeln"
+ ],
+ "D064170 Paraspinal Muscles": [
+  "paraspinale Muskulatur",
+  "autochthone Rückenmuskulatur"
+ ],
+ "D011187 Posture": [
+  "Haltung"
+ ],
+ "D007738 Kyphosis": [
+  "Kyphose"
+ ],
+ "D013168 Spondylolisthesis": [
+  "Wirbelgleiten"
+ ],
+ "D011843 Radiculopathy": [
+  "Nervenwurzelreizung",
+  "radikuläres Syndrom"
+ ],
+ "D010523 Peripheral Nervous System Diseases": [
+  "periphere Neuropathie",
+  "Polyneuropathie",
+  "periphere Nervenerkrankung"
+ ],
+ "D003929 Diabetic Neuropathies": [
+  "diabetische Neuropathie"
+ ],
+ "D008175 Lung Neoplasms": [
+  "Lungenkrebs",
+  "Lungenkarzinom",
+  "Bronchialkarzinom"
+ ],
+ "D011471 Prostatic Neoplasms": [
+  "Prostatakrebs",
+  "Prostatakarzinom"
+ ],
+ "D000086382 COVID-19": [
+  "Corona",
+  "COVID",
+  "Coronavirus-Krankheit"
+ ],
+ "D000094024 Post-Acute COVID-19 Syndrome": [
+  "Post-COVID",
+  "Post-COVID-Syndrom"
+ ],
+ "D012216 Rheumatic Diseases": [
+  "rheumatische Erkrankungen",
+  "Rheumatologie",
+  "rheumatische Erkrankung"
+ ],
+ "D009140 Musculoskeletal Diseases": [
+  "Erkrankungen des Bewegungsapparates",
+  "Muskuloskelettale Erkrankungen",
+  "Bewegungsapparat",
+  "muskuloskelettale Beschwerden"
+ ],
+ "D059352 Musculoskeletal Pain": [
+  "muskuloskelettale Schmerzen",
+  "Schmerzen des Bewegungsapparates"
+ ],
+ "D058443 Catastrophization": [
+  "Katastrophisieren"
+ ],
+ "D000092442 Kinesiophobia": [
+  "Kinesiophobie",
+  "Bewegungsangst"
+ ],
+ "D000074822 Treatment Adherence and Compliance": [
+  "Therapietreue",
+  "Compliance",
+  "Therapieadhärenz",
+  "Therapie-Adhärenz"
+ ],
+ "D011314 Preventive Health Services": [
+  "Prävention",
+  "Vorsorge",
+  "Prophylaxe"
+ ],
+ "D011322 Primary Prevention": [
+  "Primärprävention"
+ ],
+ "D055502 Secondary Prevention": [
+  "Sekundärprävention"
+ ],
+ "D011320 Primary Health Care": [
+  "Primärversorgung",
+  "Hausarztmedizin"
+ ],
+ "D000553 Ambulatory Care": [
+  "ambulante Versorgung"
+ ],
+ "D003695 Delivery of Health Care": [
+  "Gesundheitswesen"
+ ],
+ "D058996 Quality Improvement": [
+  "Qualitätsverbesserung",
+  "Qualitätsentwicklung"
+ ],
+ "D012307 Risk Factors": [
+  "Risikofaktoren"
+ ],
+ "D011379 Prognosis": [
+  "Verlaufsprognose"
+ ],
+ "D010808 Physical Examination": [
+  "physische Untersuchung"
+ ],
+ "D008279 Magnetic Resonance Imaging": [
+  "Kernspin",
+  "MRI"
+ ],
+ "D014057 Tomography, X-Ray Computed": [
+  "CT"
+ ],
+ "D014463 Ultrasonography": [
+  "Ultraschall"
+ ],
+ "D004576 Electromyography": [
+  "EMG"
+ ],
+ "D000076142 Virtual Reality": [
+  "VR"
+ ],
+ "D063731 Mobile Applications": [
+  "Apps",
+  "mobile Anwendung",
+  "Gesundheits-Apps"
+ ],
+ "D005260 Female": [
+  "Frauen",
+  "weibliche Personen",
+  "weibliche Patienten"
+ ],
+ "D008297 Male": [
+  "Männer",
+  "männliche Personen",
+  "männliche Patienten"
+ ],
+ "D003697 Delphi Technique": [
+  "Delphi-Technik"
+ ],
+ "D026241 Exercise Movement Techniques": [
+  "Pilates"
+ ]
+}

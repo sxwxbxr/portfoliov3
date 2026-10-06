@@ -106,6 +106,27 @@ const nextConfig = {
           },
         ],
       },
+      {
+        // The Suchstring-Generator offers an opt-in hit count: the browser sends the finished
+        // search string (never the question) to PubMed's E-utilities. Only these pages may.
+        // The prefix covers the physio.* host (rewritten from /tools/...) and /physio/... locally.
+        source: "/:prefix(physio)?/tools/suchstring/:path*",
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com",
+              "style-src 'self' 'unsafe-inline'",
+              "img-src 'self' data: https:",
+              "connect-src 'self' https://api.github.com https://va.vercel-scripts.com https://vitals.vercel-insights.com https://eutils.ncbi.nlm.nih.gov",
+              "font-src 'self' https://fonts.gstatic.com",
+              "frame-src https://www.youtube-nocookie.com",
+              "frame-ancestors 'none'",
+            ].join("; "),
+          },
+        ],
+      },
     ]
   },
 }

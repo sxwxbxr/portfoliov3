@@ -9,10 +9,11 @@ comment above the `localFont` calls in `app/layout.tsx` for why.
 | `Inter-Variable-latin.woff2` | Inter | 100–900 | https://fonts.google.com/specimen/Inter |
 | `SpaceGrotesk-Variable-latin.woff2` | Space Grotesk | 300–700 | https://fonts.google.com/specimen/Space+Grotesk |
 | `JetBrainsMono-Variable-latin.woff2` | JetBrains Mono | 100–800 | https://fonts.google.com/specimen/JetBrains+Mono |
+| `SourceSerif4-Variable-latin.woff2` | Source Serif 4 (headings on physio.sweber.dev, loaded in `app/physio/layout.tsx`) | 500–700 | https://fonts.google.com/specimen/Source+Serif+4 |
 
 ## Licence
 
-All three are licensed under the **SIL Open Font License 1.1**, which permits
+All of them are licensed under the **SIL Open Font License 1.1**, which permits
 redistribution and self-hosting, including as part of a larger work, provided
 the fonts are not sold on their own and the licence travels with them.
 
@@ -22,6 +23,8 @@ the fonts are not sold on their own and the licence travels with them.
   <https://github.com/floriankarsten/space-grotesk>
 - JetBrains Mono — Copyright (c) 2020 The JetBrains Mono Project Authors
   <https://github.com/JetBrains/JetBrainsMono>
+- Source Serif 4 — Copyright 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'
+  <https://github.com/adobe-fonts/source-serif>
 
 Full licence text: <https://openfontlicense.org/open-font-license-official-text/>
 
@@ -36,6 +39,7 @@ umlauts), and download it:
 https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap
 https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap
 https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100..800&display=swap
+https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500..700&display=swap
 ```
 
 Without a browser user-agent Google serves ttf instead of woff2.

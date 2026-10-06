@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 import { PACKAGES_ORIGIN } from "@/lib/packages/urls"
+import { PHYSIO_ORIGIN } from "@/lib/physio/urls"
 
 /** Hosts that redirect /packages/* to the canonical subdomain. */
 const MAIN_HOSTS = new Set(["sweber.dev", "www.sweber.dev"])
@@ -43,9 +44,58 @@ const PORTFOLIO_SEGMENTS = new Set([
   "skills",
 ])
 
+/** Machine-readable physio routes with a file extension (see PACKAGE_FILES). */
+const PHYSIO_FILES = new Set(["/sitemap.xml"])
+
 export async function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl
   const host = (request.headers.get("host") ?? "").toLowerCase()
+
+  // physio.sweber.dev (and physio.localhost:3000 for local testing). Same
+  // scheme as the packages host below; the physio pages use German paths, so
+  // the portfolio segments never collide with them.
+  if (host.startsWith("physio.")) {
+    if (pathname.startsWith("/_next") || pathname.startsWith("/api")) {
+      return NextResponse.next()
+    }
+
+    // Static files under public/physio (e.g. the MeSH index) keep their real
+    // path on this host too, so check for files before stripping /physio.
+    const hasExtension = /\.[a-z0-9]+$/i.test(pathname)
+    if (hasExtension && !PHYSIO_FILES.has(pathname)) {
+      return NextResponse.next()
+    }
+
+    if (pathname === "/physio" || pathname.startsWith("/physio/")) {
+      const rest = pathname.slice("/physio".length) || "/"
+      return NextResponse.redirect(
+        new URL(`${rest}${search}`, `${request.nextUrl.protocol}//${host}`),
+        308
+      )
+    }
+
+    const first = pathname.split("/")[1] ?? ""
+    if (PORTFOLIO_SEGMENTS.has(first)) {
+      const mainHost =
+        host === "physio.sweber.dev" ? "www.sweber.dev" : host.replace(/^physio\./, "")
+      const proto = request.nextUrl.protocol
+      return NextResponse.redirect(new URL(`${pathname}${search}`, `${proto}//${mainHost}`), 308)
+    }
+
+    const url = request.nextUrl.clone()
+    url.pathname = `/physio${pathname === "/" ? "" : pathname}`
+    return NextResponse.rewrite(url)
+  }
+
+  if (
+    PHYSIO_ORIGIN &&
+    MAIN_HOSTS.has(host) &&
+    (pathname === "/physio" || pathname.startsWith("/physio/")) &&
+    !/\.[a-z0-9]+$/i.test(pathname)
+  ) {
+    const rest = pathname.slice("/physio".length)
+    return NextResponse.redirect(`${PHYSIO_ORIGIN}${rest}${search}`, 308)
+  }
 
   // packages.sweber.dev (and packages.localhost:3000 for local testing).
   if (host.startsWith("packages.")) {

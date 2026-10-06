@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next"
 import { pkgUrl } from "@/lib/packages/urls"
+import { physioUrl } from "@/lib/physio/urls"
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -7,6 +8,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: ["https://sweber.dev/sitemap.xml", pkgUrl("/sitemap.xml")],
+    sitemap: ["https://sweber.dev/sitemap.xml", pkgUrl("/sitemap.xml"), physioUrl("/sitemap.xml")],
   }
 }

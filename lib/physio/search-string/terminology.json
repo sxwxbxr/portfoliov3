@@ -1,0 +1,579 @@
+{
+  "version": "0.1.0",
+  "reviewed": false,
+  "concepts": [
+    {
+      "id": "low-back-pain",
+      "label": "Unterer Rückenschmerz (LWS)",
+      "category": "population",
+      "broader": "back-pain",
+      "aliasesDe": ["Kreuzschmerzen", "Kreuzschmerz", "unterer Rückenschmerz", "untere Rückenschmerzen", "Rückenschmerzen im unteren Rücken", "LWS", "LWS Beschwerden", "LWS Schmerzen", "LWS Syndrom", "Lumbalgie", "lumbale Rückenschmerzen", "Lendenwirbelsäule", "Hexenschuss", "chronische Kreuzschmerzen", "unspezifische Kreuzschmerzen", "unspezifische Rückenschmerzen", "chronische LWS Schmerzen", "unterer Rücken", "lumbale Beschwerden"],
+      "aliasesEn": ["low back pain", "lower back pain", "lumbar pain", "lumbago", "LBP", "chronic low back pain", "nonspecific low back pain", "non specific low back pain"],
+      "mesh": ["Low Back Pain"],
+      "freeText": ["low back pain", "lower back pain", "lumbar pain", "lumbago", "low backache", "LBP"]
+    },
+    {
+      "id": "back-pain",
+      "label": "Rückenschmerzen",
+      "category": "population",
+      "aliasesDe": ["Rückenschmerzen", "Rückenschmerz", "Rückenbeschwerden", "Dorsalgie", "chronische Rückenschmerzen", "wiederkehrende Rückenschmerzen", "rezidivierende Rückenschmerzen", "chronischer Rückenschmerz"],
+      "aliasesEn": ["back pain", "backache", "dorsalgia", "chronic back pain", "recurrent back pain"],
+      "mesh": ["Back Pain"],
+      "freeText": ["back pain", "backache", "dorsalgia"]
+    },
+    {
+      "id": "neck-pain",
+      "label": "Nackenschmerzen",
+      "category": "population",
+      "aliasesDe": ["Nackenschmerzen", "Nackenschmerz", "Nackenbeschwerden", "HWS Beschwerden", "HWS Syndrom", "Zervikalgie", "chronische Nackenschmerzen"],
+      "aliasesEn": ["neck pain", "cervical pain", "cervicalgia", "neckache", "chronic neck pain"],
+      "mesh": ["Neck Pain"],
+      "freeText": ["neck pain", "cervical pain", "cervicalgia", "neckache"]
+    },
+    {
+      "id": "shoulder-pain",
+      "label": "Schulterschmerzen",
+      "category": "population",
+      "aliasesDe": ["Schulterschmerzen", "Schulterschmerz", "Schulterbeschwerden", "Schulter Schmerzen"],
+      "aliasesEn": ["shoulder pain", "painful shoulder"],
+      "mesh": ["Shoulder Pain"],
+      "freeText": ["shoulder pain", "painful shoulder"]
+    },
+    {
+      "id": "knee-osteoarthritis",
+      "label": "Kniearthrose (Gonarthrose)",
+      "category": "population",
+      "aliasesDe": ["Kniearthrose", "Gonarthrose", "Arthrose im Knie", "Kniegelenksarthrose", "Kniegelenkarthrose", "Arthrose des Knies", "Knie Arthrose"],
+      "aliasesEn": ["knee osteoarthritis", "osteoarthritis of the knee", "knee OA", "gonarthrosis"],
+      "mesh": ["Osteoarthritis, Knee"],
+      "freeText": ["knee osteoarthritis", "osteoarthritis of the knee", "knee OA", "gonarthrosis"]
+    },
+    {
+      "id": "hip-osteoarthritis",
+      "label": "Hüftarthrose (Coxarthrose)",
+      "category": "population",
+      "aliasesDe": ["Hüftarthrose", "Coxarthrose", "Koxarthrose", "Hüftgelenksarthrose", "Hüftgelenkarthrose", "Arthrose der Hüfte", "Arthrose im Hüftgelenk"],
+      "aliasesEn": ["hip osteoarthritis", "osteoarthritis of the hip", "hip OA", "coxarthrosis"],
+      "mesh": ["Osteoarthritis, Hip"],
+      "freeText": ["hip osteoarthritis", "osteoarthritis of the hip", "hip OA", "coxarthrosis"]
+    },
+    {
+      "id": "acl-injury",
+      "label": "Vorderer Kreuzbandriss (VKB)",
+      "category": "population",
+      "aliasesDe": ["Kreuzbandriss", "Kreuzbandruptur", "vordere Kreuzbandverletzung", "vorderer Kreuzbandriss", "VKB Ruptur", "VKB", "Kreuzbandverletzung", "ACL", "Kreuzbandplastik", "VKB Rekonstruktion"],
+      "aliasesEn": ["anterior cruciate ligament injury", "anterior cruciate ligament injuries", "ACL injury", "ACL rupture", "ACL reconstruction", "cruciate ligament rupture", "ACL tear"],
+      "mesh": ["Anterior Cruciate Ligament Injuries"],
+      "freeText": ["anterior cruciate ligament injur*", "ACL injur*", "ACL rupture", "ACL reconstruction", "cruciate ligament rupture"]
+    },
+    {
+      "id": "ankle-sprain",
+      "label": "Sprunggelenksverletzung (Supinationstrauma)",
+      "category": "population",
+      "aliasesDe": ["Sprunggelenksverletzung", "Supinationstrauma", "Umknicktrauma", "Bänderriss im Sprunggelenk", "Sprunggelenksdistorsion", "Distorsion des Sprunggelenks", "Knöchelverletzung", "Sprunggelenksverstauchung", "Knöchelverstauchung", "Sprunggelenkdistorsion"],
+      "aliasesEn": ["ankle sprain", "ankle sprains", "sprained ankle", "ankle injury", "ankle injuries", "lateral ankle sprain"],
+      "mesh": ["Ankle Injuries"],
+      "freeText": ["ankle sprain*", "sprained ankle", "ankle injur*", "lateral ankle sprain*"]
+    },
+    {
+      "id": "stroke",
+      "label": "Schlaganfall",
+      "category": "population",
+      "aliasesDe": ["Schlaganfall", "Schlaganfälle", "Apoplex", "Hirninfarkt", "Hirnschlag", "Insult", "zerebrovaskulärer Insult", "Hirnblutung"],
+      "aliasesEn": ["stroke", "cerebrovascular accident", "poststroke", "post stroke"],
+      "mesh": ["Stroke"],
+      "freeText": ["stroke", "cerebrovascular accident*", "post-stroke", "poststroke"]
+    },
+    {
+      "id": "parkinson",
+      "label": "Morbus Parkinson",
+      "category": "population",
+      "aliasesDe": ["Parkinson", "Morbus Parkinson", "Parkinson Krankheit", "Parkinsonsyndrom", "Parkinson Syndrom"],
+      "aliasesEn": ["Parkinson disease", "Parkinsons disease", "Parkinson's disease", "parkinsonism"],
+      "mesh": ["Parkinson Disease"],
+      "freeText": ["parkinson disease", "parkinson's disease", "parkinsonism"]
+    },
+    {
+      "id": "multiple-sclerosis",
+      "label": "Multiple Sklerose",
+      "category": "population",
+      "aliasesDe": ["Multiple Sklerose", "MS", "Encephalomyelitis disseminata", "Enzephalomyelitis disseminata"],
+      "aliasesEn": ["multiple sclerosis"],
+      "mesh": ["Multiple Sclerosis"],
+      "freeText": ["multiple sclerosis"]
+    },
+    {
+      "id": "copd",
+      "label": "COPD",
+      "category": "population",
+      "aliasesDe": ["COPD", "chronisch obstruktive Lungenerkrankung", "chronisch obstruktive Bronchitis"],
+      "aliasesEn": ["COPD", "chronic obstructive pulmonary disease", "chronic obstructive lung disease"],
+      "mesh": ["Pulmonary Disease, Chronic Obstructive"],
+      "freeText": ["chronic obstructive pulmonary disease", "COPD", "chronic obstructive lung disease"]
+    },
+    {
+      "id": "chronic-pain",
+      "label": "Chronische Schmerzen",
+      "category": "population",
+      "aliasesDe": ["chronische Schmerzen", "chronischer Schmerz", "Schmerzchronifizierung", "Chronifizierung", "persistierende Schmerzen", "anhaltende Schmerzen"],
+      "aliasesEn": ["chronic pain", "persistent pain", "long term pain"],
+      "mesh": ["Chronic Pain"],
+      "freeText": ["chronic pain", "persistent pain"]
+    },
+    {
+      "id": "fibromyalgia",
+      "label": "Fibromyalgie",
+      "category": "population",
+      "aliasesDe": ["Fibromyalgie", "Fibromyalgiesyndrom", "Fibromyalgie Syndrom"],
+      "aliasesEn": ["fibromyalgia", "fibromyalgia syndrome"],
+      "mesh": ["Fibromyalgia"],
+      "freeText": ["fibromyalgia"]
+    },
+    {
+      "id": "osteoporosis",
+      "label": "Osteoporose",
+      "category": "population",
+      "aliasesDe": ["Osteoporose", "Knochenschwund", "Knochendichteverlust", "osteoporotisch"],
+      "aliasesEn": ["osteoporosis", "osteoporotic", "bone loss"],
+      "mesh": ["Osteoporosis"],
+      "freeText": ["osteoporosis", "osteoporotic", "bone loss"]
+    },
+    {
+      "id": "tendinopathy",
+      "label": "Tendinopathie",
+      "category": "population",
+      "aliasesDe": ["Tendinopathie", "Tendinopathien", "Sehnenentzündung", "Tendinitis", "Tendinose", "Sehnenschmerz", "Sehnenschmerzen", "Sehnenbeschwerden"],
+      "aliasesEn": ["tendinopathy", "tendinopathies", "tendinitis", "tendinosis", "tendon pain"],
+      "mesh": ["Tendinopathy"],
+      "freeText": ["tendinopath*", "tendinitis", "tendinosis", "tendon pain"]
+    },
+    {
+      "id": "sciatica",
+      "label": "Ischias (Sciatica)",
+      "category": "population",
+      "aliasesDe": ["Ischias", "Ischialgie", "Lumboischialgie", "Ischiasbeschwerden"],
+      "aliasesEn": ["sciatica", "sciatic pain"],
+      "mesh": ["Sciatica"],
+      "freeText": ["sciatica", "sciatic pain"]
+    },
+    {
+      "id": "plantar-fasciitis",
+      "label": "Plantarfasziitis",
+      "category": "population",
+      "aliasesDe": ["Plantarfasziitis", "Fersensporn", "Plantarfasziopathie", "Fersenschmerz", "Fersenschmerzen"],
+      "aliasesEn": ["plantar fasciitis", "plantar heel pain", "heel spur"],
+      "mesh": ["Fasciitis, Plantar"],
+      "freeText": ["plantar fasciitis", "plantar heel pain", "heel pain"]
+    },
+    {
+      "id": "knee-arthroplasty",
+      "label": "Knie-Totalprothese (TKA)",
+      "category": "population",
+      "aliasesDe": ["Knie TEP", "Knie Totalprothese", "Knieprothese", "Kniegelenksersatz", "künstliches Kniegelenk", "TKA"],
+      "aliasesEn": ["total knee arthroplasty", "total knee replacement", "knee arthroplasty", "TKA"],
+      "mesh": ["Arthroplasty, Replacement, Knee"],
+      "freeText": ["total knee arthroplasty", "total knee replacement", "knee arthroplasty", "knee replacement"]
+    },
+    {
+      "id": "office-workers",
+      "label": "Büroangestellte",
+      "category": "population",
+      "aliasesDe": ["Büroangestellte", "Büroangestellter", "Büroangestellten", "Büroarbeiter", "Büroarbeiterin", "Bürokaufmann", "Bürokauffrau", "Büroarbeit", "Bürojob", "Büroberuf", "Bildschirmarbeit", "Bildschirmarbeiter", "Schreibtischarbeit", "Schreibtischarbeiter", "sitzende Tätigkeit", "sitzende Berufe", "Büro", "Büroumfeld"],
+      "aliasesEn": ["office workers", "office worker", "desk workers", "desk worker", "sedentary workers", "sedentary worker", "white collar workers", "computer workers", "clerical workers"],
+      "mesh": [],
+      "freeText": ["office worker*", "desk worker*", "sedentary worker*", "white-collar worker*", "computer worker*", "clerical worker*"]
+    },
+    {
+      "id": "older-adults",
+      "label": "Ältere Menschen",
+      "category": "population",
+      "aliasesDe": ["ältere Menschen", "ältere Erwachsene", "ältere Personen", "Senioren", "Seniorinnen", "Betagte", "Hochbetagte", "geriatrische Patienten", "Ältere"],
+      "aliasesEn": ["older adults", "older adult", "older people", "elderly", "aged", "seniors", "geriatric patients"],
+      "mesh": ["Aged"],
+      "freeText": ["older adult*", "older people", "elderly", "senior*"]
+    },
+    {
+      "id": "athletes",
+      "label": "Sportlerinnen und Sportler",
+      "category": "population",
+      "aliasesDe": ["Sportler", "Sportlerin", "Sportlerinnen", "Athleten", "Athletinnen", "Leistungssportler", "Leistungssport", "Fussballer", "Sportverletzte"],
+      "aliasesEn": ["athletes", "athlete", "sportspeople", "sports players", "soccer players", "football players"],
+      "mesh": ["Athletes"],
+      "freeText": ["athlete*", "sportsperson*", "sports player*"]
+    },
+    {
+      "id": "children",
+      "label": "Kinder",
+      "category": "population",
+      "aliasesDe": ["Kinder", "Kind", "Kindern", "Kindesalter", "pädiatrisch", "Schulkinder", "kindliche"],
+      "aliasesEn": ["children", "child", "pediatric", "paediatric", "school children", "schoolchildren"],
+      "mesh": ["Child"],
+      "freeText": ["children", "child", "pediatric*", "paediatric*", "schoolchild*"]
+    },
+    {
+      "id": "workplace",
+      "label": "Arbeitsplatz",
+      "category": "setting",
+      "aliasesDe": ["Arbeitsplatz", "am Arbeitsplatz", "Arbeitsumfeld"],
+      "aliasesEn": ["workplace", "work place", "occupational setting", "at work"],
+      "mesh": ["Workplace"],
+      "freeText": ["workplace", "work place", "occupational setting"]
+    },
+    {
+      "id": "primary-care",
+      "label": "Grundversorgung (Hausarztpraxis)",
+      "category": "setting",
+      "aliasesDe": ["Grundversorgung", "Hausarztpraxis", "Hausarzt", "ambulante Grundversorgung"],
+      "aliasesEn": ["primary care", "primary health care", "general practice"],
+      "mesh": ["Primary Health Care"],
+      "freeText": ["primary care", "primary health care", "general practice"]
+    },
+    {
+      "id": "exercise-therapy",
+      "label": "Bewegungs- und Übungstherapie",
+      "category": "intervention",
+      "aliasesDe": ["Bewegungstherapie", "Übungstherapie", "Therapieübungen", "therapeutische Übungen", "Trainingstherapie", "medizinische Trainingstherapie", "Heimprogramm", "Übungsprogramm", "Bewegungsprogramm", "Bewegungsintervention", "Trainingsprogramm", "Training", "Bewegung", "Sporttherapie"],
+      "aliasesEn": ["exercise therapy", "therapeutic exercise", "exercise program", "exercise programme", "exercise intervention", "exercise", "exercises", "training programme", "training program", "physical exercise"],
+      "mesh": ["Exercise Therapy"],
+      "freeText": ["exercise therapy", "therapeutic exercise*", "exercise program*", "exercise intervention*"]
+    },
+    {
+      "id": "back-exercise",
+      "label": "Rückentraining / Rumpfstabilisation",
+      "category": "intervention",
+      "broader": "exercise-therapy",
+      "aliasesDe": ["Rückentraining", "Rückenschule", "Rumpfstabilisation", "Rumpfstabilisierung", "Rumpftraining", "Core Training", "Core Stabilisation", "Kräftigung des Rückens", "Rückengymnastik", "Stabilisationstraining", "Rückenübungen"],
+      "aliasesEn": ["back exercise", "back exercises", "back training", "back school", "core stability", "core stabilization", "core stabilisation", "trunk stabilization", "core training", "lumbar stabilization"],
+      "mesh": ["Exercise Therapy"],
+      "freeText": ["back exercise*", "back training", "back school", "core stability", "core stabilization exercise*", "core stabilisation exercise*", "trunk stabilization", "lumbar stabilization exercise*"]
+    },
+    {
+      "id": "resistance-training",
+      "label": "Krafttraining",
+      "category": "intervention",
+      "aliasesDe": ["Krafttraining", "Kraftübungen", "Kräftigung", "Kräftigungstraining", "Kräftigungsübungen", "Muskelaufbau", "Widerstandstraining", "Gewichtstraining", "Hypertrophietraining"],
+      "aliasesEn": ["resistance training", "strength training", "strengthening exercise", "strengthening exercises", "weight training", "muscle strengthening", "resistance exercise"],
+      "mesh": ["Resistance Training"],
+      "freeText": ["resistance training", "strength training", "strengthening exercise*", "weight training", "muscle strengthening"]
+    },
+    {
+      "id": "aerobic-training",
+      "label": "Ausdauertraining (aerob)",
+      "category": "intervention",
+      "aliasesDe": ["Ausdauertraining", "aerobes Training", "Ausdauer", "Kardiotraining", "Herz Kreislauf Training", "Ausdauersport", "Laufen", "Walking", "Ergometertraining"],
+      "aliasesEn": ["aerobic exercise", "aerobic training", "endurance training", "cardiovascular exercise", "cardio training", "cardiorespiratory training", "walking program"],
+      "mesh": ["Exercise"],
+      "freeText": ["aerobic exercise*", "aerobic training", "endurance training", "cardiovascular exercise*", "cardiorespiratory training"]
+    },
+    {
+      "id": "manual-therapy",
+      "label": "Manuelle Therapie",
+      "category": "intervention",
+      "aliasesDe": ["manuelle Therapie", "Manualtherapie", "Manipulation", "Wirbelsäulenmanipulation", "Chiropraktik", "Osteopathie", "Handgriffe", "Manipulationstherapie", "HVLA"],
+      "aliasesEn": ["manual therapy", "spinal manipulation", "manipulative therapy", "chiropractic", "osteopathic manipulation", "manipulation"],
+      "mesh": ["Musculoskeletal Manipulations"],
+      "freeText": ["manual therapy", "spinal manipulation", "manipulative therapy", "chiropractic"]
+    },
+    {
+      "id": "mobilisation",
+      "label": "Mobilisation",
+      "category": "intervention",
+      "aliasesDe": ["Mobilisation", "Gelenkmobilisation", "Mobilisationstechniken", "Mobilisieren", "Gelenkmobilisierung", "Mulligan"],
+      "aliasesEn": ["mobilization", "mobilisation", "joint mobilization", "joint mobilisation", "mobilization techniques"],
+      "mesh": [],
+      "freeText": ["joint mobilization", "joint mobilisation", "manual mobilization", "manual mobilisation", "mobilization technique*", "mobilisation technique*"]
+    },
+    {
+      "id": "massage",
+      "label": "Massage",
+      "category": "intervention",
+      "aliasesDe": ["Massage", "Massagetherapie", "Weichteiltechniken", "Triggerpunktmassage", "klassische Massage", "Triggerpunktbehandlung"],
+      "aliasesEn": ["massage", "massage therapy", "soft tissue massage", "trigger point therapy"],
+      "mesh": ["Massage"],
+      "freeText": ["massage", "massage therapy", "soft tissue massage"]
+    },
+    {
+      "id": "stretching",
+      "label": "Dehnen (Stretching)",
+      "category": "intervention",
+      "aliasesDe": ["Dehnen", "Dehnung", "Dehnübungen", "Stretching", "Dehntraining", "Dehnungsübungen", "Dehnprogramm"],
+      "aliasesEn": ["stretching", "stretching exercise", "stretching exercises", "muscle stretching", "static stretching"],
+      "mesh": ["Muscle Stretching Exercises"],
+      "freeText": ["stretching", "stretching exercise*", "muscle stretching"]
+    },
+    {
+      "id": "tens",
+      "label": "TENS (transkutane Elektrostimulation)",
+      "category": "intervention",
+      "aliasesDe": ["TENS", "transkutane elektrische Nervenstimulation", "Elektrotherapie", "Reizstrom", "Elektrostimulation", "Schmerzstromtherapie"],
+      "aliasesEn": ["TENS", "transcutaneous electrical nerve stimulation", "transcutaneous electric nerve stimulation", "electrotherapy", "electrical stimulation"],
+      "mesh": ["Transcutaneous Electric Nerve Stimulation"],
+      "freeText": ["TENS", "transcutaneous electrical nerve stimulation", "transcutaneous electric nerve stimulation"]
+    },
+    {
+      "id": "dry-needling",
+      "label": "Dry Needling (Trockennadeln)",
+      "category": "intervention",
+      "aliasesDe": ["Dry Needling", "Trockennadeln", "Dry Needling Technik", "Triggerpunkt Nadelung"],
+      "aliasesEn": ["dry needling", "trigger point needling"],
+      "mesh": ["Dry Needling"],
+      "freeText": ["dry needling", "trigger point needling"]
+    },
+    {
+      "id": "kinesio-taping",
+      "label": "Kinesio-Taping",
+      "category": "intervention",
+      "aliasesDe": ["Kinesio Taping", "Kinesiotaping", "Taping", "Tapeverband", "Kinesio Tape", "Tape"],
+      "aliasesEn": ["kinesio taping", "kinesiotaping", "kinesio tape", "kinesiology tape", "kinesiology taping", "athletic tape", "taping"],
+      "mesh": ["Athletic Tape"],
+      "freeText": ["kinesio taping", "kinesiotaping", "kinesio tape", "kinesiology tap*"]
+    },
+    {
+      "id": "pain-education",
+      "label": "Schmerzedukation",
+      "category": "intervention",
+      "aliasesDe": ["Schmerzedukation", "Schmerzaufklärung", "Schmerzneurowissenschaft", "Pain Education", "Schmerzberatung", "Schmerzschulung", "Aufklärung über Schmerzen"],
+      "aliasesEn": ["pain education", "pain neuroscience education", "explain pain", "pain science education"],
+      "mesh": [],
+      "freeText": ["pain education", "pain neuroscience education", "explain pain"]
+    },
+    {
+      "id": "cognitive-functional-therapy",
+      "label": "Cognitive Functional Therapy (CFT)",
+      "category": "intervention",
+      "aliasesDe": ["kognitive funktionelle Therapie", "Cognitive Functional Therapy", "CFT"],
+      "aliasesEn": ["cognitive functional therapy", "CFT"],
+      "mesh": [],
+      "freeText": ["cognitive functional therapy"]
+    },
+    {
+      "id": "balance-training",
+      "label": "Gleichgewichtstraining",
+      "category": "intervention",
+      "aliasesDe": ["Gleichgewichtstraining", "Balancetraining", "Gleichgewicht", "Balanceübungen", "Gleichgewichtsübungen", "Gleichgewichtsschulung", "Gleichgewichtsfähigkeit", "Gleichgewichtsschulungen"],
+      "aliasesEn": ["balance training", "balance exercise", "balance exercises", "postural control training", "balance"],
+      "mesh": ["Postural Balance"],
+      "freeText": ["balance training", "balance exercise*", "postural control training"]
+    },
+    {
+      "id": "gait-training",
+      "label": "Gangtraining",
+      "category": "intervention",
+      "aliasesDe": ["Gangtraining", "Gangschulung", "Gangschule", "Laufbandtraining", "Gehtraining", "Gangrehabilitation"],
+      "aliasesEn": ["gait training", "gait rehabilitation", "treadmill training", "walking training"],
+      "mesh": [],
+      "freeText": ["gait training", "gait rehabilitation", "treadmill training", "walking training"]
+    },
+    {
+      "id": "hydrotherapy",
+      "label": "Hydrotherapie / Aquatherapie",
+      "category": "intervention",
+      "aliasesDe": ["Hydrotherapie", "Aquatherapie", "Wassertherapie", "Aquafitness", "Bewegungsbad", "Wassergymnastik", "Aquatraining", "Aqua Jogging", "Bäder"],
+      "aliasesEn": ["hydrotherapy", "aquatic therapy", "aquatic exercise", "water based exercise", "pool therapy", "water exercise"],
+      "mesh": ["Hydrotherapy"],
+      "freeText": ["hydrotherapy", "aquatic therapy", "aquatic exercise*", "water-based exercise*", "pool therapy"]
+    },
+    {
+      "id": "ergonomics",
+      "label": "Ergonomie",
+      "category": "intervention",
+      "aliasesDe": ["Ergonomie", "ergonomisch", "ergonomische Anpassung", "Arbeitsplatzanpassung", "Arbeitsplatzergonomie", "Arbeitsplatzgestaltung", "Steharbeitsplatz", "ergonomische Massnahmen", "Arbeitsplatzberatung"],
+      "aliasesEn": ["ergonomics", "ergonomic", "workstation modification", "workplace adaptation", "ergonomic intervention", "sit stand desk"],
+      "mesh": ["Ergonomics"],
+      "freeText": ["ergonomic*", "workstation modification*", "workplace adaptation"]
+    },
+    {
+      "id": "physiotherapy",
+      "label": "Physiotherapie",
+      "category": "intervention",
+      "aliasesDe": ["Physiotherapie", "Physiotherapeutische Behandlung", "Physiotherapeut", "Physiotherapeutin", "Physiotherapeuten", "Physikalische Therapie", "physiotherapeutisch", "Physio"],
+      "aliasesEn": ["physiotherapy", "physical therapy", "physiotherapist", "physical therapist", "physiotherapeutic"],
+      "mesh": ["Physical Therapy Modalities"],
+      "freeText": ["physiotherap*", "physical therap*"]
+    },
+    {
+      "id": "yoga",
+      "label": "Yoga",
+      "category": "intervention",
+      "aliasesDe": ["Yoga", "Yogatherapie", "Yoga Übungen"],
+      "aliasesEn": ["yoga", "yoga therapy"],
+      "mesh": ["Yoga"],
+      "freeText": ["yoga"]
+    },
+    {
+      "id": "analgesics",
+      "label": "Schmerzmittel (Analgetika)",
+      "category": "comparison",
+      "aliasesDe": ["Schmerzmittel", "Schmerzmedikation", "Analgetika", "Analgetikum", "Schmerztabletten", "NSAR", "Medikamente gegen Schmerzen", "medikamentöse Schmerztherapie", "Schmerzmedikamente"],
+      "aliasesEn": ["analgesics", "analgesic", "painkillers", "painkiller", "pain medication", "pain killers", "NSAID", "NSAIDs", "nonsteroidal anti inflammatory drugs"],
+      "mesh": ["Analgesics"],
+      "freeText": ["analgesic*", "painkiller*", "pain medication*", "nonsteroidal anti-inflammatory drug*", "NSAID*"]
+    },
+    {
+      "id": "usual-care",
+      "label": "Übliche Behandlung / keine Intervention",
+      "category": "comparison",
+      "aliasesDe": ["übliche Behandlung", "übliche Versorgung", "Standardbehandlung", "Standardtherapie", "Standardversorgung", "Routineversorgung", "keine Intervention", "keine Behandlung", "Warteliste", "Wartelisten Kontrolle", "Kontrollgruppe", "Usual Care", "ohne Intervention", "ohne Behandlung"],
+      "aliasesEn": ["usual care", "standard care", "routine care", "no intervention", "no treatment", "waiting list", "wait list", "waitlist", "control group"],
+      "mesh": [],
+      "freeText": ["usual care", "standard care", "routine care", "no intervention", "waiting list", "wait list"]
+    },
+    {
+      "id": "placebo",
+      "label": "Placebo / Scheinbehandlung",
+      "category": "comparison",
+      "aliasesDe": ["Placebo", "Scheinbehandlung", "Sham", "Scheinintervention", "Scheintherapie", "Placebobehandlung"],
+      "aliasesEn": ["placebo", "sham", "sham treatment", "sham intervention", "sham control"],
+      "mesh": ["Placebos"],
+      "freeText": ["placebo*", "sham"]
+    },
+    {
+      "id": "pain-intensity",
+      "label": "Schmerzintensität",
+      "category": "outcome",
+      "redundantIf": ["low-back-pain", "back-pain", "neck-pain", "shoulder-pain", "chronic-pain", "fibromyalgia", "sciatica", "plantar-fasciitis", "tendinopathy"],
+      "aliasesDe": ["Schmerzintensität", "Schmerzstärke", "Schmerzen", "Schmerz", "Schmerzreduktion", "Schmerzlinderung", "Schmerzniveau", "Schmerzskala", "Schmerzscore", "Schmerzverminderung", "Schmerzempfinden", "Schmerzbelastung"],
+      "aliasesEn": ["pain intensity", "pain severity", "pain", "pain reduction", "pain relief", "pain level", "visual analogue scale", "visual analog scale", "numeric rating scale"],
+      "mesh": ["Pain Measurement"],
+      "freeText": ["pain intensity", "pain severity", "pain level*", "visual analogue scale", "numeric rating scale"]
+    },
+    {
+      "id": "function-disability",
+      "label": "Funktion / Beeinträchtigung (Disability)",
+      "category": "outcome",
+      "aliasesDe": ["Funktion", "Funktionsfähigkeit", "Funktionseinschränkung", "Funktionsverbesserung", "Beeinträchtigung", "Behinderung", "Disability", "Alltagsfunktion", "Alltagsaktivitäten", "Aktivitäten des täglichen Lebens", "Alltagsbewältigung", "körperliche Funktion", "Selbständigkeit"],
+      "aliasesEn": ["function", "physical function", "functional status", "functional disability", "disability", "functional limitation", "activities of daily living", "ADL"],
+      "mesh": ["Disability Evaluation"],
+      "freeText": ["disabilit*", "physical function*", "functional status", "functional limitation*"]
+    },
+    {
+      "id": "work-ability",
+      "label": "Arbeitsfähigkeit / Wiedereingliederung",
+      "category": "outcome",
+      "aliasesDe": ["Arbeitsfähigkeit", "Arbeitsunfähigkeit", "arbeitsfähig", "Arbeitsproduktivität", "Produktivität", "Krankschreibung", "Krankschreibungen", "Krankheitsbedingte Absenzen", "Absenzen", "Wiedereingliederung", "Rückkehr an den Arbeitsplatz", "Rückkehr zur Arbeit", "Krankentage", "Arbeitsausfall", "Fehlzeiten", "Krankmeldung", "Arbeitsleistung", "Präsentismus", "Leistungsfähigkeit im Beruf", "Krankheitsausfall", "Krankheitsausfälle", "Arbeitsausfälle", "arbeitsunfähig", "krankgeschrieben", "Krankheitsabsenzen"],
+      "aliasesEn": ["work ability", "ability to work", "work capacity", "work disability", "return to work", "sick leave", "sickness absence", "absenteeism", "productivity", "work productivity", "presenteeism"],
+      "mesh": ["Work Capacity Evaluation", "Return to Work", "Sick Leave", "Absenteeism"],
+      "freeText": ["work ability", "ability to work", "work capacity", "work disability", "return to work", "sick leave", "sickness absence", "absenteeism", "work productivity", "presenteeism"]
+    },
+    {
+      "id": "quality-of-life",
+      "label": "Lebensqualität",
+      "category": "outcome",
+      "aliasesDe": ["Lebensqualität", "gesundheitsbezogene Lebensqualität", "Wohlbefinden", "Lebensqualitaet"],
+      "aliasesEn": ["quality of life", "health related quality of life", "HRQoL", "QoL", "wellbeing", "well being"],
+      "mesh": ["Quality of Life"],
+      "freeText": ["quality of life", "health-related quality of life", "HRQoL", "QoL"]
+    },
+    {
+      "id": "range-of-motion",
+      "label": "Beweglichkeit (Range of Motion)",
+      "category": "outcome",
+      "aliasesDe": ["Beweglichkeit", "Bewegungsumfang", "Bewegungsausmass", "Gelenkbeweglichkeit", "Bewegungsausmaß", "Bewegungsradius", "Flexibilität", "Mobilität der Gelenke"],
+      "aliasesEn": ["range of motion", "ROM", "joint mobility", "joint flexibility", "flexibility"],
+      "mesh": ["Range of Motion, Articular"],
+      "freeText": ["range of motion", "joint mobility", "joint flexibility"]
+    },
+    {
+      "id": "muscle-strength",
+      "label": "Muskelkraft",
+      "category": "outcome",
+      "aliasesDe": ["Muskelkraft", "Maximalkraft", "Muskelstärke", "Kraftfähigkeit", "Kraftzuwachs", "Kraft", "Kraftverlust", "Griffkraft", "Kraftausdauer"],
+      "aliasesEn": ["muscle strength", "muscular strength", "muscle force", "strength", "grip strength"],
+      "mesh": ["Muscle Strength"],
+      "freeText": ["muscle strength", "muscular strength", "muscle force"]
+    },
+    {
+      "id": "falls",
+      "label": "Stürze",
+      "category": "outcome",
+      "aliasesDe": ["Stürze", "Sturz", "Sturzprophylaxe", "Sturzprävention", "Sturzrisiko", "Fallrisiko", "Sturzereignisse", "Sturzhäufigkeit", "Sturzgefahr"],
+      "aliasesEn": ["falls", "fall prevention", "fall risk", "risk of falling", "fallers"],
+      "mesh": ["Accidental Falls"],
+      "freeText": ["falls", "fall prevention", "fall risk", "faller*"]
+    },
+    {
+      "id": "recurrence",
+      "label": "Rezidiv / Rückfall",
+      "category": "outcome",
+      "aliasesDe": ["Rezidiv", "Rezidive", "Rückfall", "Rückfälle", "Rezidivrate", "Wiederauftreten", "Wiederverletzung", "Re Verletzung", "Reverletzung", "Rezidivprophylaxe", "Rückfallprophylaxe"],
+      "aliasesEn": ["recurrence", "recurrent", "relapse", "relapses", "re injury", "reinjury"],
+      "mesh": ["Recurrence"],
+      "freeText": ["recurrence", "recurrent", "relapse*", "re-injury"]
+    },
+    {
+      "id": "surgery",
+      "label": "Operation (chirurgischer Eingriff)",
+      "category": "intervention",
+      "aliasesDe": ["Operation", "Operationen", "operativer Eingriff", "operative Behandlung", "operative Therapie", "chirurgischer Eingriff", "chirurgische Behandlung", "Operation am Knie", "Knieoperation"],
+      "aliasesEn": ["surgery", "surgical procedure", "surgical procedures", "surgical treatment", "operative treatment"],
+      "mesh": ["Surgical Procedures, Operative"],
+      "freeText": ["surgery", "surgical procedure*", "surgical treatment", "operative treatment", "surgical intervention"]
+    },
+    {
+      "id": "pulmonary-rehabilitation",
+      "label": "Lungenrehabilitation",
+      "category": "intervention",
+      "aliasesDe": ["Lungenrehabilitation", "pulmonale Rehabilitation", "Lungensport", "Rehabilitation der Lunge", "Lungenreha"],
+      "aliasesEn": ["pulmonary rehabilitation", "respiratory rehabilitation", "lung rehabilitation"],
+      "mesh": [],
+      "freeText": ["pulmonary rehabilitation", "respiratory rehabilitation", "lung rehabilitation"]
+    },
+    {
+      "id": "breathing-exercises",
+      "label": "Atemtherapie / Atemübungen",
+      "category": "intervention",
+      "aliasesDe": ["Atemtherapie", "Atemübungen", "Atemtraining", "Atemgymnastik", "Atemphysiotherapie"],
+      "aliasesEn": ["breathing exercises", "breathing exercise", "breathing training", "respiratory physiotherapy"],
+      "mesh": ["Breathing Exercises"],
+      "freeText": ["breathing exercise*", "breathing training", "respiratory muscle training", "respiratory physiotherapy"]
+    },
+    {
+      "id": "return-to-sport",
+      "label": "Rückkehr zum Sport",
+      "category": "outcome",
+      "aliasesDe": ["Rückkehr zum Sport", "Rückkehr in den Sport", "Wiederaufnahme des Sports", "Wiedereinstieg in den Sport", "Return to Sport", "Return to Play", "Sportrückkehr"],
+      "aliasesEn": ["return to sport", "return to sports", "return to play", "return to competition"],
+      "mesh": ["Return to Sport"],
+      "freeText": ["return to sport*", "return to play", "return to competition"]
+    },
+    {
+      "id": "gait-speed",
+      "label": "Gehgeschwindigkeit",
+      "category": "outcome",
+      "aliasesDe": ["Gehgeschwindigkeit", "Ganggeschwindigkeit", "Gehtempo", "Schrittgeschwindigkeit"],
+      "aliasesEn": ["walking speed", "gait speed", "gait velocity"],
+      "mesh": ["Walking Speed"],
+      "freeText": ["walking speed", "gait speed", "gait velocity"]
+    },
+    {
+      "id": "rct",
+      "label": "Randomisierte kontrollierte Studie (RCT)",
+      "category": "studytype",
+      "pt": "randomized controlled trial",
+      "aliasesDe": ["randomisierte kontrollierte Studie", "randomisierte kontrollierte Studien", "randomisiert kontrollierte Studien", "RCT", "RCTs", "randomisierte Studie", "randomisierte Studien"],
+      "aliasesEn": ["randomized controlled trial", "randomised controlled trial", "randomized controlled trials", "randomised controlled trials", "RCT", "RCTs"],
+      "mesh": [],
+      "freeText": ["randomized controlled trial", "randomised controlled trial"]
+    },
+    {
+      "id": "systematic-review",
+      "label": "Systematische Übersichtsarbeit",
+      "category": "studytype",
+      "pt": "systematic review",
+      "aliasesDe": ["systematische Übersichtsarbeit", "systematische Übersichtsarbeiten", "systematisches Review", "systematische Reviews", "systematic review"],
+      "aliasesEn": ["systematic review", "systematic reviews"],
+      "mesh": [],
+      "freeText": ["systematic review"]
+    },
+    {
+      "id": "meta-analysis",
+      "label": "Metaanalyse",
+      "category": "studytype",
+      "pt": "meta-analysis",
+      "aliasesDe": ["Metaanalyse", "Metaanalysen", "Meta Analyse", "Meta Analysen"],
+      "aliasesEn": ["meta analysis", "meta analyses", "metaanalysis"],
+      "mesh": [],
+      "freeText": ["meta-analysis"]
+    }
+  ]
+}

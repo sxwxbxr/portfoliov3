@@ -14,7 +14,9 @@
     "db:export": "npx tsx scripts/export-db.ts",
     "db:import": "npx tsx scripts/import-db.ts",
     "db:studio": "drizzle-kit studio",
-    "check:contrast": "node scripts/check-contrast.mjs"
+    "check:contrast": "node scripts/check-contrast.mjs",
+    "physio:mesh": "npx tsx scripts/physio/mesh/build-index.ts",
+    "test:physio": "npx tsx --test scripts/physio/search-string.test.ts scripts/physio/mesh-index.test.ts"
   },
   "dependencies": {
     "@dotlottie/player-component": "^2.7.12",

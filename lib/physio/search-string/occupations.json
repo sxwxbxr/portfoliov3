@@ -1,0 +1,359 @@
+[
+  {
+    "id": "occ-teachers",
+    "label": "Lehrpersonen",
+    "category": "population",
+    "aliasesDe": [
+      "Lehrer",
+      "Lehrerin",
+      "Lehrerinnen",
+      "Lehrpersonen",
+      "Lehrperson",
+      "Lehrkraft",
+      "Lehrkräfte",
+      "Primarlehrer",
+      "Primarlehrerin"
+    ],
+    "aliasesEn": [
+      "teacher",
+      "teachers",
+      "school teachers"
+    ],
+    "mesh": [],
+    "freeText": [
+      "teacher*",
+      "school teacher*",
+      "teaching staff"
+    ]
+  },
+  {
+    "id": "occ-construction-workers",
+    "label": "Bauarbeiter",
+    "category": "population",
+    "aliasesDe": [
+      "Bauarbeiter",
+      "Bauarbeiterin",
+      "Bauarbeitern",
+      "Maurer",
+      "Baustellenarbeiter",
+      "Bauarbeit",
+      "Baugewerbe"
+    ],
+    "aliasesEn": [
+      "construction worker",
+      "construction workers",
+      "bricklayer"
+    ],
+    "mesh": [],
+    "freeText": [
+      "construction worker*",
+      "building worker*",
+      "bricklayer*"
+    ]
+  },
+  {
+    "id": "occ-manual-workers",
+    "label": "Handwerkerinnen und Handwerker",
+    "category": "population",
+    "aliasesDe": [
+      "Handwerker",
+      "Handwerkerin",
+      "Handwerkern",
+      "Schwerarbeiter",
+      "körperlich arbeitende",
+      "körperliche Arbeit",
+      "körperlich schwere Arbeit",
+      "manuelle Arbeit",
+      "Handarbeit"
+    ],
+    "aliasesEn": [
+      "manual worker",
+      "manual workers",
+      "blue-collar worker",
+      "heavy physical work"
+    ],
+    "mesh": [],
+    "freeText": [
+      "manual worker*",
+      "manual labor*",
+      "blue-collar worker*",
+      "heavy physical work"
+    ]
+  },
+  {
+    "id": "occ-drivers",
+    "label": "Berufsfahrerinnen und Berufsfahrer",
+    "category": "population",
+    "aliasesDe": [
+      "Chauffeur",
+      "Chauffeure",
+      "Berufschauffeur",
+      "Lastwagenfahrer",
+      "LKW Fahrer",
+      "Busfahrer",
+      "Taxifahrer",
+      "Berufsfahrer",
+      "Berufsfahrerin",
+      "Fahrer"
+    ],
+    "aliasesEn": [
+      "driver",
+      "drivers",
+      "truck driver",
+      "professional driver"
+    ],
+    "mesh": [],
+    "freeText": [
+      "driver*",
+      "truck driver*",
+      "professional driver*"
+    ]
+  },
+  {
+    "id": "occ-cleaners",
+    "label": "Reinigungspersonal",
+    "category": "population",
+    "aliasesDe": [
+      "Reinigungskraft",
+      "Reinigungskräfte",
+      "Reinigungspersonal",
+      "Raumpflegerin",
+      "Raumpfleger",
+      "Hauswart",
+      "Hauswartin"
+    ],
+    "aliasesEn": [
+      "cleaner",
+      "cleaners",
+      "janitor",
+      "cleaning staff"
+    ],
+    "mesh": [],
+    "freeText": [
+      "cleaner*",
+      "janitor*",
+      "cleaning staff"
+    ]
+  },
+  {
+    "id": "occ-hairdressers",
+    "label": "Coiffeusen und Coiffeure",
+    "category": "population",
+    "aliasesDe": [
+      "Coiffeur",
+      "Coiffeuse",
+      "Coiffeure",
+      "Friseur",
+      "Friseurin",
+      "Friseure"
+    ],
+    "aliasesEn": [
+      "hairdresser",
+      "hairdressers",
+      "hairstylist"
+    ],
+    "mesh": [],
+    "freeText": [
+      "hairdresser*",
+      "hairstylist*"
+    ]
+  },
+  {
+    "id": "occ-it-workers",
+    "label": "Informatikerinnen und Informatiker",
+    "category": "population",
+    "aliasesDe": [
+      "Informatiker",
+      "Informatikerin",
+      "Programmierer",
+      "Programmiererin",
+      "Softwareentwickler",
+      "Softwareentwicklerin",
+      "IT Fachkraft",
+      "IT Mitarbeiter"
+    ],
+    "aliasesEn": [
+      "software developer",
+      "software developers",
+      "computer programmer",
+      "IT worker",
+      "IT workers"
+    ],
+    "mesh": [],
+    "freeText": [
+      "software developer*",
+      "computer programmer*",
+      "IT worker*",
+      "computer worker*"
+    ]
+  },
+  {
+    "id": "occ-cooks",
+    "label": "Köchinnen und Köche",
+    "category": "population",
+    "aliasesDe": [
+      "Koch",
+      "Köchin",
+      "Köche",
+      "Küchenpersonal",
+      "Gastronomie",
+      "Servicepersonal"
+    ],
+    "aliasesEn": [
+      "cook",
+      "cooks",
+      "chef",
+      "chefs",
+      "kitchen staff"
+    ],
+    "mesh": [],
+    "freeText": [
+      "cook*",
+      "chef*",
+      "kitchen staff",
+      "restaurant worker*"
+    ]
+  },
+  {
+    "id": "occ-craftspeople",
+    "label": "Handwerksberufe (Schreiner, Mechaniker)",
+    "category": "population",
+    "aliasesDe": [
+      "Schreiner",
+      "Schreinerin",
+      "Zimmermann",
+      "Schlosser",
+      "Mechaniker",
+      "Mechanikerin",
+      "Automechaniker",
+      "Maler",
+      "Malerin",
+      "Gipser"
+    ],
+    "aliasesEn": [
+      "carpenter",
+      "carpenters",
+      "mechanic",
+      "mechanics",
+      "skilled trades"
+    ],
+    "mesh": [],
+    "freeText": [
+      "carpenter*",
+      "mechanic*",
+      "skilled trade*"
+    ]
+  },
+  {
+    "id": "occ-warehouse-workers",
+    "label": "Lager und Logistik",
+    "category": "population",
+    "aliasesDe": [
+      "Lagerist",
+      "Lageristin",
+      "Logistiker",
+      "Logistikerin",
+      "Lagermitarbeiter",
+      "Logistik"
+    ],
+    "aliasesEn": [
+      "warehouse worker",
+      "warehouse workers",
+      "logistics worker"
+    ],
+    "mesh": [],
+    "freeText": [
+      "warehouse worker*",
+      "logistics worker*"
+    ]
+  },
+  {
+    "id": "occ-retail-workers",
+    "label": "Detailhandel und Verkauf",
+    "category": "population",
+    "aliasesDe": [
+      "Kassierin",
+      "Kassierer",
+      "Verkäufer",
+      "Verkäuferin",
+      "Detailhandel",
+      "Detailhandelsfachfrau",
+      "Detailhandelsfachmann"
+    ],
+    "aliasesEn": [
+      "cashier",
+      "cashiers",
+      "retail worker",
+      "sales worker"
+    ],
+    "mesh": [],
+    "freeText": [
+      "cashier*",
+      "retail worker*",
+      "sales worker*"
+    ]
+  },
+  {
+    "id": "occ-shift-workers",
+    "label": "Schichtarbeit",
+    "category": "population",
+    "aliasesDe": [
+      "Schichtarbeit",
+      "Schichtarbeiter",
+      "Schichtarbeiterin",
+      "Schichtdienst",
+      "Nachtarbeit"
+    ],
+    "aliasesEn": [
+      "shift work",
+      "shift worker",
+      "shift workers",
+      "night work"
+    ],
+    "mesh": [],
+    "freeText": [
+      "shift work*",
+      "night work*"
+    ]
+  },
+  {
+    "id": "occ-musicians",
+    "label": "Musikerinnen und Musiker",
+    "category": "population",
+    "aliasesDe": [
+      "Musiker",
+      "Musikerin",
+      "Musikerinnen",
+      "Orchestermusiker",
+      "Orchestermusikerin"
+    ],
+    "aliasesEn": [
+      "musician",
+      "musicians",
+      "orchestra musician"
+    ],
+    "mesh": [],
+    "freeText": [
+      "musician*",
+      "orchestra musician*"
+    ]
+  },
+  {
+    "id": "occ-dentists",
+    "label": "Zahnärztinnen und Zahnärzte",
+    "category": "population",
+    "aliasesDe": [
+      "Zahnarzt",
+      "Zahnärztin",
+      "Zahnärzte"
+    ],
+    "aliasesEn": [
+      "dentist",
+      "dentists"
+    ],
+    "mesh": [],
+    "freeText": [
+      "dentist*"
+    ]
+  }
+]

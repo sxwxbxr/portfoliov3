@@ -10,6 +10,7 @@ const navItems = [
   { href: "/admin/experience", label: "Experience", icon: "briefcase" },
   { href: "/admin/blog", label: "Blog", icon: "pen", disabled: !BLOG_ENABLED },
   { href: "/admin/news", label: "News (packages)", icon: "pen" },
+  { href: "/admin/physio-suggestions", label: "Physio suggestions", icon: "pen" },
   {
     href: "/admin/case-studies",
     label: "Case Studies",
