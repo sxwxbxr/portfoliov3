@@ -45,9 +45,10 @@
       "surjection init sets up a config file and a GitHub Actions workflow in one command",
       "Layout check: reflow at 320 px (1.4.10) and text spacing (1.4.12), which axe-core cannot decide",
       "Keyboard check: finds focus traps, missing focus indicators and a jumping focus order by pressing Tab through each page",
-      "Checks pages behind a login with a saved Playwright session",
+      "Checks pages behind a login with a saved Playwright session, in light or dark colour scheme and with reduced motion",
       "States: opened menus, dialogs and forms are checked after a few click steps, each as its own page in reports and baseline",
       "Screenshots of every affected element, saved next to the results",
+      "SARIF 2.1.0 and JUnit output, plus a JSON schema for the config file with completion in your editor",
       "Markdown report for pull requests and job summaries, in German, Swiss German, French, Italian and English",
       "Accessibility statement generator (DE, DE-CH, FR, IT, EN) as Markdown and HTML",
       "Accessible React building blocks: skip link, visually hidden text, live announcements, reduced motion"
@@ -55,7 +56,7 @@
     "pro": [
       "Client reports in your agency's branding, as HTML, PDF and editable Word document, with a screenshot of every affected element as evidence",
       "Fix list as CSV for Excel: one row per element, with status and note columns for your developers",
-      "History across all client projects, so you can show progress over time, with a status badge per project and a nightly check that tells you what got worse",
+      "History across all client projects, so you can show progress over time, with a status badge per project and a nightly check that tells you what got worse, by webhook (Slack, Teams, Discord) or mail",
       "Guided manual checklist for the criteria automated tests cannot cover, in German, Swiss German, English, French and Italian"
     ]
   },
