@@ -4,7 +4,7 @@
   "tagline": "Self-hosted cookie banner, preference center and consent gates for React, Next.js and any site via a script tag. No network calls, no tracking, no dark patterns.",
   "seoTitle": "Permito – self-hosted cookie consent for React & Next.js",
   "description": "Permito is a consent toolkit you ship inside your own app instead of loading from a third-party server. Optional categories are opt-in, \"Reject all\" carries the same weight as \"Accept all\", and nothing that needs consent loads before it is given.\n\nIt is built for agencies in Switzerland, Germany and Austria: German, Swiss German, English, French and Italian are included, Google Consent Mode v2 is wired in, and the Next.js helpers read consent on the server so gated content never flashes.",
-  "status": "beta",
+  "status": "stable",
   "tags": [
     "React",
     "Next.js",
