@@ -54,6 +54,8 @@
       "Audit an existing stylesheet with gradient audit: finds steps that break the contrast promises and suggests one fixing color per step",
       "Gradients between brand colors, blended in OKLCH so complementary colors do not turn grey, with a contrast check of your text on the worst stop",
       "Dominant colors from a logo or photo, and a pick for the brand color, from raw pixels without any dependency",
+      "One gradient.config.json for every output: gradient build writes all files, gradient build --verify fails in CI when one is out of date, with a JSON schema for editor completion",
+      "GitHub Action that checks pull requests for out-of-date color files and contrast problems and keeps one comment with the result",
       "CLI and a zero-dependency library that runs in Node.js and the browser"
     ]
   },
@@ -97,6 +99,10 @@
     {
       "q": "Can Gradient read a color from my logo?",
       "a": "extractColors() takes the pixels of an image (RGBA, for example ImageData.data from a canvas) and returns the dominant colors with their share; pickBrand() chooses the one that works as a brand color. There is no command line version because the command line cannot decode images, and nothing is uploaded: the demo reads the image in your browser."
+    },
+    {
+      "q": "How do I keep generated color files up to date in CI?",
+      "a": "Put your colors in gradient.config.json (gradient init writes a starter file) and run gradient build --verify in CI. It writes nothing and exits with 1 when a file is missing or differs, a contrast promise fails or an audited stylesheet fails. The GitHub Action Weber-Development/gradient@v0 does the same on pull requests and comments the result."
     }
   ],
   "publishedAt": "2026-10-05"

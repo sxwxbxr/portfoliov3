@@ -22,6 +22,8 @@ import {
   type Mode,
   type Palette,
   parseColor,
+  parseConfig,
+  renderConfig,
   STATUS_NAMES,
   simulate,
   STEPS,
@@ -655,6 +657,78 @@ function ImageSection({ onUse }: { onUse: (hex: string) => void }) {
   )
 }
 
+const ACTION_YAML = `name: Colors
+on: pull_request
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  gradient:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Weber-Development/gradient@v0`
+
+function ConfigSection({
+  colors,
+  status,
+  pin,
+}: {
+  colors: Record<string, string>
+  status: boolean
+  pin: boolean
+}) {
+  const c = t.config
+  const result = useMemo(() => {
+    const config = parseConfig({
+      colors,
+      ...(status || pin ? { palette: { ...(status ? { status: true } : {}), ...(pin ? { pin: true } : {}) } } : {}),
+      outputs: [
+        { file: "app/globals.css", format: "shadcn" },
+        { file: "src/colors.ts", format: "ts" },
+        { file: "app/chart.css", format: "series", count: 5 },
+      ],
+    })
+    return { config, rendered: renderConfig(config) }
+  }, [colors, status, pin])
+  const json = JSON.stringify(
+    {
+      $schema: "https://unpkg.com/@sweberdev/gradient/gradient.config.schema.json",
+      ...result.config,
+    },
+    null,
+    2,
+  )
+  return (
+    <Block id="config" label={c.label} title={c.title} sub={c.sub} lede={<p>{c.lede}</p>}>
+      <div className="flex flex-col gap-8">
+        <div className="grid gap-8 lg:grid-cols-2">
+          <div className="flex min-w-0 flex-col gap-2">
+            <p className="annotate">{c.json}</p>
+            <div className="max-h-[24rem] overflow-y-auto">
+              <CodeBlock code={json} label={c.json} />
+            </div>
+          </div>
+          <div className="well flex flex-col gap-3 px-5 py-4">
+            <p className="annotate">{c.files}</p>
+            <ul className="flex flex-col gap-1.5 font-mono text-sm text-fg">
+              {result.rendered.outputs.map((o) => (
+                <li key={o.file}>
+                  {o.file} <span className="text-fg-muted">{c.lines(o.content.trimEnd().split("\n").length)}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <CodeBlock title={c.cli} code={"npx @sweberdev/gradient build\nnpx @sweberdev/gradient build --verify"} />
+        <CodeBlock title={c.action} code={ACTION_YAML} />
+      </div>
+    </Block>
+  )
+}
+
 function shellQuote(value: string) {
   return `"${value.replace(/"/g, '\\"')}"`
 }
@@ -886,6 +960,8 @@ export function PaletteStudio() {
       <ImageSection onUse={setBrand} />
 
       <PairCheck />
+
+      <ConfigSection colors={shown.scales.filter((sc) => sc.name === "brand" || sc.name === "accent").reduce<Record<string, string>>((acc, sc) => ({ ...acc, [sc.name]: sc.source }), {})} status={status} pin={pin} />
 
       <Block id="export" label={t.export.label} title={t.export.title} sub={t.export.sub}>
         <div className="flex flex-col gap-8">
