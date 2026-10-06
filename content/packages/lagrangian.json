@@ -1,9 +1,9 @@
 {
   "slug": "lagrangian",
   "name": "Lagrangian",
-  "tagline": "Animation with real physics: springs that keep their momentum when interrupted, throws with friction onto snap points, and a small 2D world with gravity, collisions, joints and rolling. About 10 kB.",
+  "tagline": "Animation with real physics: springs that keep their momentum when interrupted, throws with friction onto snap points, and a small 2D world with gravity, collisions, joints and rolling. About 12 kB.",
   "seoTitle": "Lagrangian – physics-based animation: interruptible springs, inertia, gravity and collisions",
-  "description": "Most web animation is a curve over a fixed duration. Click twice and the element stops dead and starts again; throw it and it ignores how fast you threw. Lagrangian animates with physics instead. Its springs are the exact solution of the damped oscillator, so they know their position and velocity at every moment and simply continue when the target changes, at any frame rate.\n\nDrag an element and Lagrangian measures how fast you let go, lets it glide with friction like iOS scrolling, rubber-bands past the edges and lands exactly on the nearest snap point. For playful interfaces there is a small 2D world: round and rectangular bodies with gravity, restitution and Coulomb friction, so they bounce, slide and roll, plus springs, hinges, rods and motors between bodies, sensors for drop zones and a pointer joint for grabbing and throwing. When the user asks for reduced motion, automatic motion jumps to its end.",
+  "description": "Most web animation is a curve over a fixed duration. Click twice and the element stops dead and starts again; throw it and it ignores how fast you threw. Lagrangian animates with physics instead. Its springs are the exact solution of the damped oscillator, so they know their position and velocity at every moment and simply continue when the target changes, at any frame rate.\n\nDrag an element and Lagrangian measures how fast you let go, lets it glide with friction like iOS scrolling, rubber-bands past the edges and lands exactly on the nearest snap point. For playful interfaces there is a small 2D world: round, rectangular and polygonal bodies with gravity, restitution and Coulomb friction, so they bounce, slide and roll, plus springs, hinges, rods and motors between bodies, sensors for drop zones and a pointer joint for grabbing and throwing. When the user asks for reduced motion, automatic motion jumps to its end.",
   "status": "beta",
   "tags": [
     "Animation",
@@ -19,7 +19,9 @@
   "install": "pnpm add @sweberdev/lagrangian",
   "npm": [
     "@sweberdev/lagrangian",
-    "@sweberdev/lagrangian-react"
+    "@sweberdev/lagrangian-react",
+    "@sweberdev/lagrangian-vue",
+    "@sweberdev/lagrangian-svelte"
   ],
   "code": {
     "title": "app/drawer.tsx",
@@ -45,13 +47,13 @@
       "draggable(): velocity from a least-squares fit, friction like iOS scrolling, rubber-banding past the bounds",
       "Snap points the throw lands on exactly, by adjusting the glide instead of jumping",
       "scroller(): a scroll area with inertia, rubber-banding, snap points, wheel and keyboard on the same values as your own animations",
-      "A 2D world: gravity, air drag, collisions between circles and rotating boxes with restitution, Coulomb friction and rolling",
+      "A 2D world: gravity, air drag, collisions between circles, rotating boxes and convex polygons with restitution, Coulomb friction and rolling",
       "Springs between bodies, hinges, rods and motors for pendulums, chains and wheels, a pointer joint to grab and throw, every body sleeps on its own when it rests",
       "Sensors that report bodies entering and leaving a zone, for drop targets and triggers",
       "rk4() and system() for your own equations of motion",
       "Reduced motion respected: automatic motion jumps to where it would rest",
-      "React hooks: useSpringProps, useSpring, useDraggable, useWorld, useBody",
-      "About 10 kB min+gzip for everything and tree-shakeable down to 2 kB, checked in CI"
+      "React hooks: useSpringProps, useSpring, useDraggable, useWorld, useBody, plus adapters for Vue and Svelte",
+      "About 12 kB min+gzip for everything and tree-shakeable down to 2 kB, checked in CI"
     ],
     "pro": [
       "Bottom sheet with detents: lands where the throw would carry it, rubber-bands at the top, closes on a flick, Escape or a tap on the backdrop",
@@ -82,11 +84,11 @@
     },
     {
       "q": "Why not Motion or GSAP?",
-      "a": "Both are excellent and do far more, such as layout animations and timelines. Lagrangian focuses on the physics: exact springs, throws that land on snap points and a world with collisions and rolling, in about 10 kB."
+      "a": "Both are excellent and do far more, such as layout animations and timelines. Lagrangian focuses on the physics: exact springs, throws that land on snap points and a world with collisions and rolling, in about 12 kB."
     },
     {
       "q": "Is it a game physics engine?",
-      "a": "No. Bodies are circles and rotating boxes with hinges, rods and motors, which keeps the engine small. It is meant for playful interfaces. For arbitrary polygons and thousands of bodies use Matter.js or Rapier."
+      "a": "No. Bodies are circles, rotating boxes and convex polygons with hinges, rods and motors, which keeps the engine small. It is meant for playful interfaces. For concave shapes and thousands of bodies use Matter.js or Rapier."
     },
     {
       "q": "What happens with reduced motion?",
