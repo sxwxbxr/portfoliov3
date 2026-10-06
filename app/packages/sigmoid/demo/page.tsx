@@ -9,6 +9,7 @@ import { CurveLab } from "@/components/packages/demo/sigmoid/CurveLab"
 import { ParallaxScene } from "@/components/packages/demo/sigmoid/ParallaxScene"
 import { RevealGallery } from "@/components/packages/demo/sigmoid/RevealGallery"
 import { SigmoidStatus } from "@/components/packages/demo/sigmoid/SigmoidStatus"
+import { StoryDemo } from "@/components/packages/demo/sigmoid/StoryDemo"
 import { TrackStats } from "@/components/packages/demo/sigmoid/TrackStats"
 import { InstallCommand } from "@/components/packages/InstallCommand"
 import { sigmoidDemo as t } from "@/lib/demo/sigmoid-copy"
@@ -40,8 +41,18 @@ scrub(".ring", [
 const TRACK_CODE = `import { track } from "@sweberdev/sigmoid"
 
 track(".stat", (p, el) => {
-  el.textContent = Math.round(2200 * p).toLocaleString()
+  el.textContent = Math.round(2400 * p).toLocaleString()
 }, { range: "entry 0% cover 50%" })`
+
+const STORY_CODE = `import { story } from "@sweberdev/sigmoid"
+
+// <section id="how" style="height: 260vh">
+//   <div style="position: sticky; top: 0">…</div>
+// </section>
+story("#how", {
+  steps: 3,
+  onStep: (i) => show(i),
+})`
 
 /** The lines of the zero-JavaScript section, rendered and shown as code. */
 const LINES = [
@@ -124,6 +135,15 @@ export default function SigmoidDemoPage() {
           <TrackStats />
           <div className="max-w-xl">
             <CodeBlock title={t.track.codeHeading} code={TRACK_CODE} />
+          </div>
+        </div>
+      </Block>
+
+      <Block id="story" label={t.story.label} title={t.story.title} sub={t.story.sub} lede={<p>{t.story.lede}</p>}>
+        <div className="flex flex-col gap-10">
+          <StoryDemo />
+          <div className="max-w-xl">
+            <CodeBlock title={t.story.codeHeading} code={STORY_CODE} />
           </div>
         </div>
       </Block>

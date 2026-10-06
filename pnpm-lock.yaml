@@ -108,8 +108,8 @@ importers:
         specifier: 1.1.6
         version: 1.1.6(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
       '@sweberdev/gradient':
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^0.3.0
+        version: 0.3.0
       '@sweberdev/inverse':
         specifier: ^0.4.0
         version: 0.4.0
@@ -2011,8 +2011,8 @@ packages:
   '@swc/helpers@0.5.15':
     resolution: {integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==}
 
-  '@sweberdev/gradient@0.2.0':
-    resolution: {integrity: sha512-JBmqBoHK3cVmYX0N9gqN1tplasXcaUxD62f0tElSz8gREMt5y3L8VkdHEgjjuBPIRHwAkXKdkh4Qc39ANdjkyg==}
+  '@sweberdev/gradient@0.3.0':
+    resolution: {integrity: sha512-0/n5z9rdchN5nMRJbuhNSsOD9qbkhoTShA2bX7Ccs6DKi/2zVQRg9fZDd1LqnwgU2SY8+yxWh2LEI++jI0dRQA==}
     hasBin: true
 
   '@sweberdev/inverse-react@0.4.0':
@@ -6065,7 +6065,7 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@sweberdev/gradient@0.2.0': {}
+  '@sweberdev/gradient@0.3.0': {}
 
   '@sweberdev/inverse-react@0.4.0(react@19.1.2)':
     dependencies:
