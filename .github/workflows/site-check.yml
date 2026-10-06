@@ -1,0 +1,24 @@
+name: Live-Seite prüfen
+
+# Crawlt packages.sweber.dev (Sitemap, interne und externe Links, Checkout-Links)
+# und meldet kaputte Seiten. Nur manuell, braucht keine Secrets.
+on:
+  workflow_dispatch:
+    inputs:
+      origin:
+        description: "Basis-URL"
+        default: "https://packages.sweber.dev"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/site-check.mjs "${{ inputs.origin }}"
