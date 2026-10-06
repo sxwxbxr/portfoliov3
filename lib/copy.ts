@@ -62,7 +62,6 @@ export const copy = {
     imprint: "Imprint",
     packages: "Packages",
     login: "Login",
-    nxrthstack: "Nxrthstack",
     github: "GitHub",
     linkedin: "LinkedIn",
   },

@@ -10,10 +10,7 @@ import { copy } from "@/lib/copy"
 import { MAIN_ORIGIN, PACKAGES_ENTRY } from "@/lib/packages/urls"
 import { useOnPackagesHost } from "@/lib/packages/useOnPackagesHost"
 
-/**
- * Browse destinations, all visible. Nxrthstack is a different website rather
- * than a section of this one, so it stays in the footer and the mobile menu.
- */
+/** Browse destinations, all visible. */
 const navLinks = [
   { name: copy.nav.work, href: "/projects" },
   { name: copy.nav.about, href: "/about" },

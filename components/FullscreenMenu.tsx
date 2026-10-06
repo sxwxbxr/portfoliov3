@@ -30,11 +30,6 @@ const subLinks = [
   { name: copy.nav.career, href: "/career" },
   BLOG_ENABLED && { name: copy.nav.blog, href: "/blog" },
   { name: copy.nav.skills, href: "/about#skills" },
-  {
-    name: copy.nav.nxrthstack,
-    href: "https://nxrthstack.sweber.dev",
-    external: true,
-  },
 ].filter(Boolean) as {
   name: string
   href: string

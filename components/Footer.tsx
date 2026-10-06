@@ -47,11 +47,6 @@ export function Footer({ settings }: { settings: SiteSettings }) {
       ...(settings.linkedinUrl
         ? [{ name: copy.nav.linkedin, href: settings.linkedinUrl, external: true }]
         : []),
-      {
-        name: copy.nav.nxrthstack,
-        href: "https://nxrthstack.sweber.dev",
-        external: true,
-      },
       { name: copy.nav.privacy, href: "/privacy", external: false },
       { name: copy.nav.imprint, href: "/imprint", external: false },
     ],
