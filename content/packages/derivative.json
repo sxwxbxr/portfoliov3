@@ -18,7 +18,8 @@
   "install": "pnpm add @sweberdev/derivative",
   "npm": [
     "@sweberdev/derivative",
-    "@sweberdev/derivative-react"
+    "@sweberdev/derivative-react",
+    "@sweberdev/derivative-vue"
   ],
   "code": {
     "title": "header.html",
@@ -45,11 +46,11 @@
       "Accessible: labelled dialog, focus handling, Escape to close, reduced motion respected",
       "Labels and dates in English, German, French and Italian; dark mode and CSS custom properties",
       "Highlights: a title, summary and image for the releases that matter",
-      "React bindings: <WhatsNew>, useChangelog and an unstyled <ChangelogList>"
+      "Bindings for React (<WhatsNew>, useChangelog, an unstyled <ChangelogList>) and Vue 3 (<WhatsNew>, useChangelog); Svelte, Astro and plain HTML use the element directly"
     ],
     "pro": [
-      "Read statistics without cookies or visitor IDs: opens, reads and link clicks per release, with an HTML report, CSV export and storage in a file, Postgres or SQLite",
-      "Audience segments: entries only for certain plans or roles, via rules or a [for: pro] marker, and scheduled releases",
+      "Read statistics without cookies or visitor IDs: opens, reads and link clicks per release, plus a \"Was this helpful?\" vote under each release, with an HTML report, CSV export and storage in a file, Postgres or SQLite",
+      "Audience segments and languages: entries only for certain plans or roles, scheduled releases, and a feed per language translated with DeepL, an OpenAI-compatible model or Anthropic, with a cache so only changed texts cost anything",
       "Announcements: a subscriber list with double opt-in and e-mail digests sent through Resend or Postmark (one-click unsubscribe, consent evidence), plus posts to Slack, Teams, Discord, Mattermost, Google Chat, Mastodon and Bluesky"
     ]
   },
@@ -60,17 +61,17 @@
       "pro": true
     },
     {
-      "feature": "Widget, React bindings and highlights",
+      "feature": "Widget, React and Vue bindings, highlights",
       "free": true,
       "pro": true
     },
     {
-      "feature": "Read statistics, report and CSV export",
+      "feature": "Read statistics, helpful votes, report and CSV export",
       "free": false,
       "pro": true
     },
     {
-      "feature": "Audience segments and scheduled releases",
+      "feature": "Audience segments, scheduled releases, translated feeds",
       "free": false,
       "pro": true
     },
@@ -96,11 +97,11 @@
     "packages": [
       {
         "name": "@weber-development/derivative-insights",
-        "description": "Counts opens, reads and link clicks per release on your own endpoint, without cookies or visitor IDs, and renders a report."
+        "description": "Counts opens, reads and link clicks per release on your own endpoint, adds a helpful / not helpful vote under each release, without cookies or visitor IDs, and renders a report."
       },
       {
         "name": "@weber-development/derivative-segments",
-        "description": "Shows entries only to the plans or roles they are meant for and publishes releases on a schedule."
+        "description": "Shows entries only to the plans or roles they are meant for, publishes releases on a schedule and translates the feed into more languages with DeepL, an OpenAI-compatible model or Anthropic."
       },
       {
         "name": "@weber-development/derivative-announce",
@@ -179,7 +180,7 @@
     },
     {
       "q": "Does it work without React?",
-      "a": "Yes. The widget is a standard web component that works in any framework or plain HTML. The React package is an optional wrapper."
+      "a": "Yes. The widget is a standard web component, so it works in plain HTML and in any framework. There are ready-made bindings for React and Vue 3, and Svelte and Astro need no wrapper (the docs show how)."
     },
     {
       "q": "Can I use the open-source part on its own?",
