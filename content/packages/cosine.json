@@ -45,6 +45,8 @@
       "Synonym lists stored in the index, so \"login\" also finds \"sign in\", even before the model has loaded",
       "Incremental builds in the CLI: --incremental embeds only new and changed sections",
       "Facets: result counts per section of the site, for search pages with filters",
+      "Search syntax for visitors: \"exact phrases\" and -excluded words, also in the semantic ranking",
+      "Boosting: rank sections of the site higher or lower, stored in the index",
       "Compact int8 vectors: about 400 bytes per section",
       "Accessible <cosine-search> web component (ARIA combobox) in English, German, French and Italian",
       "React component and hooks, English or multilingual models, model self-hosting for GDPR and FADP"
@@ -52,6 +54,7 @@
     "pro": [
       "Vite plugin: the index builds itself in Vite, Astro, VitePress, SvelteKit and Nuxt, and in dev",
       "Embedding cache: a rebuild embeds only the sections that changed",
+      "Next.js integration: the index is built from the prerendered pages after next build, kept in .next/cache so CI rebuilds embed only what changed",
       "Search insights without tracking: queries without results, results nobody opened, as HTML, Markdown or CSV",
       "Insights trends: new and resolved gaps, rising queries and a weekly chart, compared with the period before"
     ]
@@ -197,6 +200,12 @@
   ],
   "publishedAt": "2026-10-05",
   "releases": [
+    {
+      "version": "0.6.0",
+      "date": "2026-10-06",
+      "title": "Search syntax, boosting and Next.js",
+      "url": "https://packages.sweber.dev/blog/cosine-0-6-0-released"
+    },
     {
       "version": "0.5.0",
       "date": "2026-10-06",
