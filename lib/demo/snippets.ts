@@ -88,7 +88,8 @@ export const SURJECTION_CHECK_COMMAND = `npx surjection check https://baeckerei-
 
 export const SURJECTION_MONITOR_COMMAND = `npx surjection check --config surjection.config.json --out-json a11y.json
 npx surjection-history record --results a11y.json
-npx surjection-history regressions --fail-on serious --out-md monitoring.md`
+npx surjection-history regressions --fail-on serious --out-md monitoring.md \\
+  --webhook "$MONITORING_WEBHOOK" --mail-to team@agency.ch --mail-from monitoring@agency.ch`
 
 export const SURJECTION_BADGE_COMMAND = `npx surjection-history badge --out-dir badges
 # badges/backerei-muster.svg, badges/praxis-dr-keller.svg, badges/velo-huber.svg`
