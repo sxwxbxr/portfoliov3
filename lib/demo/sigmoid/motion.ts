@@ -99,10 +99,13 @@ function schedule() {
   if (!frame) frame = requestAnimationFrame(tick);
 }
 
+// Capture also hears scroll events of containers, which do not bubble.
+const listen = { passive: true, capture: true };
+
 function addDriver(drive: Driver) {
   if (!drivers.size) {
-    addEventListener("scroll", schedule, { passive: true });
-    addEventListener("resize", schedule, { passive: true });
+    addEventListener("scroll", schedule, listen);
+    addEventListener("resize", schedule, listen);
   }
   drivers.add(drive);
   drive();
@@ -111,24 +114,44 @@ function addDriver(drive: Driver) {
 function removeDriver(drive: Driver) {
   drivers.delete(drive);
   if (!drivers.size) {
-    removeEventListener("scroll", schedule);
-    removeEventListener("resize", schedule);
+    removeEventListener("scroll", schedule, listen);
+    removeEventListener("resize", schedule, listen);
   }
 }
 
-/** Layout position without the element's own transform, so parallax cannot feed back. */
-function measure(el: Element) {
+/** The nearest scroll container, like `view()` picks it. `null` is the page. */
+function scrollBox(el: Element): HTMLElement | null {
+  for (let n = el.parentElement; n && n !== document.body; n = n.parentElement) {
+    if (n === document.documentElement) break;
+    if (/auto|scroll|hidden|overlay/.test(getComputedStyle(n).overflowY)) return n;
+  }
+  return null;
+}
+
+/** Layout top in the document, unaffected by transforms and scrolling. */
+function layoutTop(el: HTMLElement) {
+  let top = 0;
+  for (let n: HTMLElement | null = el; n; n = n.offsetParent as HTMLElement | null) {
+    top += n.offsetTop;
+  }
+  return top;
+}
+
+/**
+ * Position relative to the top of its scroller's visible area, without the
+ * element's own transform, so parallax cannot feed back.
+ */
+function measure(el: Element, box: HTMLElement | null) {
+  const viewport = box ? box.clientHeight : innerHeight;
   if (el instanceof HTMLElement) {
-    let top = 0;
-    let node: HTMLElement | null = el;
-    while (node) {
-      top += node.offsetTop;
-      node = node.offsetParent as HTMLElement | null;
-    }
-    return { top: top - scrollY, height: el.offsetHeight };
+    const top = box
+      ? layoutTop(el) - layoutTop(box) - box.clientTop - box.scrollTop
+      : layoutTop(el) - scrollY;
+    return { top, height: el.offsetHeight, viewport };
   }
   const rect = el.getBoundingClientRect();
-  return { top: rect.top, height: rect.height };
+  const offset = box ? box.getBoundingClientRect().top + box.clientTop : 0;
+  return { top: rect.top - offset, height: rect.height, viewport };
 }
 
 function controller(animations: Animation[], native: boolean, stop?: () => void): Controller {
@@ -204,9 +227,11 @@ function shiftRange(r: Range, shift: number): Range {
 }
 
 function viewDriver(rangeAt: (index: number) => Range) {
+  const boxes = new Map<Element, HTMLElement | null>();
   return (el: Element, index: number) => {
-    const { top, height } = measure(el);
-    return viewProgress(rangeAt(index), top, height, innerHeight);
+    if (!boxes.has(el)) boxes.set(el, scrollBox(el));
+    const { top, height, viewport } = measure(el, boxes.get(el) ?? null);
+    return viewProgress(rangeAt(index), top, height, viewport);
   };
 }
 
@@ -325,4 +350,44 @@ export function track(
   };
   addDriver(drive);
   return controller([], false, () => removeDriver(drive));
+}
+
+export interface StoryOptions {
+  /** Number of steps the section is split into. */
+  steps: number;
+  /** Called when the active step changes. */
+  onStep?: (step: number, element: Element) => void;
+  /**
+   * CSS `animation-range` the steps run over. Default `"contain"`: for a
+   * section taller than the window, the time its sticky content stays pinned.
+   */
+  range?: string;
+}
+
+/**
+ * Splits a tall section into steps for scroll stories: pin the content with
+ * `position: sticky` and Sigmoid tells you which step is active. Sets
+ * `data-sigmoid-step` and `--sigmoid-progress` on the section, so CSS alone
+ * can react, and calls `onStep` on every change.
+ *
+ * @example story("#how", { steps: 3, onStep: (i) => show(i) })
+ */
+export function story(targets: Targets, options: StoryOptions): Controller {
+  const n = Math.max(1, Math.floor(options.steps));
+  const active = new Map<Element, number>();
+  return track(
+    targets,
+    (p, el) => {
+      (el as HTMLElement).style?.setProperty(
+        "--sigmoid-progress",
+        String(Math.round(p * 1e4) / 1e4),
+      );
+      const step = Math.min(Math.floor(p * n), n - 1);
+      if (active.get(el) === step) return;
+      active.set(el, step);
+      el.setAttribute("data-sigmoid-step", String(step));
+      options.onStep?.(step, el);
+    },
+    { range: options.range ?? "contain" },
+  );
 }

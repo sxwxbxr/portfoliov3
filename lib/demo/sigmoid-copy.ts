@@ -3,7 +3,7 @@
 export const sigmoidDemo = {
   seoTitle: "Sigmoid live demo: scroll-driven animations, springs and the S-curve",
   description:
-    "Tune a spring and watch it turn into CSS linear(), scroll through eight reveal presets on native CSS scroll timelines, and compare them with the JavaScript fallback.",
+    "Tune a spring and watch it turn into CSS linear(), scroll through ten reveal presets on native CSS scroll timelines, and compare them with the JavaScript fallback.",
   title: "Sigmoid",
   titleSub: "Live demo. Scroll, tune, compare.",
   overview: "Sigmoid overview",
@@ -15,6 +15,7 @@ export const sigmoidDemo = {
     { href: "#reveal", label: "Reveal" },
     { href: "#parallax", label: "Parallax and scrub" },
     { href: "#numbers", label: "Numbers" },
+    { href: "#story", label: "Scroll story" },
     { href: "#zero-js", label: "Zero JavaScript" },
   ],
   docs: "Read the docs",
@@ -45,7 +46,7 @@ export const sigmoidDemo = {
   },
   reveal: {
     label: "Reveal",
-    title: "Eight presets, one function.",
+    title: "Ten presets, one function.",
     sub: "Scroll down slowly and watch them arrive.",
     lede:
       "Each card is revealed with reveal() over the range entry 0% to cover 40%: the animation starts when the card enters the window and ends when it has covered 40% of its way through. Change the curve or force the JavaScript fallback to compare: both paths compute the same progress.",
@@ -71,11 +72,25 @@ export const sigmoidDemo = {
     lede:
       "These counters are not animations. track() reports how far each card has travelled through the window, and a few lines of code turn that into a number. The same works for video frames, canvas drawings or a chart.",
     stats: [
-      { value: 2200, unit: "bytes", label: "for reveal and init, min+gzip" },
-      { value: 36, unit: "tests", label: "for the range maths, curves and React" },
-      { value: 8, unit: "presets", label: "from fade-in to clip-up" },
+      { value: 2400, unit: "bytes", label: "for reveal and init, min+gzip" },
+      { value: 40, unit: "tests", label: "for the range maths, curves and React" },
+      { value: 10, unit: "presets", label: "from fade-in to flip-up" },
     ],
     codeHeading: "track()",
+  },
+  story: {
+    label: "Scroll story",
+    title: "Pinned, in steps.",
+    sub: "New in 0.3: story() for sections that stay while you scroll.",
+    lede:
+      "The figure below is pinned with position: sticky, plain CSS. story() splits the scroll through the section into three steps and reports the active one. It also sets data-sigmoid-step and --sigmoid-progress on the section, so CSS alone can react.",
+    steps: [
+      { title: "Pin with CSS", text: "position: sticky keeps the content in place. No scroll hijacking." },
+      { title: "Count the steps", text: "story() maps the contain range of the section to step 0, 1 and 2." },
+      { title: "React to them", text: "A callback, a React hook or a data attribute: pick what fits." },
+    ],
+    stepLabel: (i: number, n: number) => `Step ${i} of ${n}`,
+    codeHeading: "story()",
   },
   zeroJs: {
     label: "Zero JavaScript",
