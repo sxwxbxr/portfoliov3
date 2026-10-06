@@ -28,9 +28,10 @@
       "Gate scripts, iframes and components with ConsentScript, ConsentIframe and ConsentGate",
       "Server-safe Next.js helpers, so gated content never flashes on load",
       "Google Consent Mode v2 with a configurable category mapping, plus consent bridges for Microsoft UET, Microsoft Clarity and Matomo",
-      "German, Swiss German, English, French and Italian built in; keyboard and screen-reader accessible",
+      "German, Swiss German, English, French, Italian, Spanish, Dutch, Polish and Portuguese built in (the last four not yet reviewed by native speakers); keyboard and screen-reader accessible",
       "Decisions expire after a number of days you choose, Global Privacy Control is honoured on request, and a choice applies in every open tab at once",
-      "Drop-in script tag for WordPress, static sites and CMS templates, with the same banner and preference dialog, no React needed"
+      "Drop-in script tag for WordPress, static sites and CMS templates, with the same banner and preference dialog, no React needed",
+      "Starting points for 15 common services (YouTube, Google Analytics 4, Meta Pixel, HubSpot and more) with provider and privacy policy URL, without cookie claims, and a size check that keeps the bundle in bounds"
     ],
     "pro": [
       "Service catalog with 71 providers, each entry sourced from the provider's own documentation with a retrieval date",
@@ -51,7 +52,7 @@
     { "feature": "Consent gates for scripts, iframes and components", "free": true, "pro": true },
     { "feature": "Google Consent Mode v2", "free": true, "pro": true },
     { "feature": "Microsoft UET, Clarity and Matomo bridges", "free": true, "pro": true },
-    { "feature": "DE, DE-CH, EN, FR, IT translations", "free": true, "pro": true },
+    { "feature": "DE, DE-CH, EN, FR, IT, ES, NL, PL, PT translations", "free": true, "pro": true },
     { "feature": "Consent expiry, Global Privacy Control, tab sync", "free": true, "pro": true },
     { "feature": "Script tag for sites without React", "free": true, "pro": true },
     { "feature": "Service catalog", "free": false, "pro": true },
@@ -161,6 +162,12 @@
   "videos": [],
   "articles": [],
   "releases": [
+    {
+      "version": "0.5.0",
+      "date": "2026-10-06",
+      "title": "Permito 0.5.0: four more languages and service templates",
+      "url": "https://www.npmjs.com/package/@permitojs/core/v/0.5.0"
+    },
     {
       "version": "0.4.0",
       "date": "2026-10-06",
