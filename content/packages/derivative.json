@@ -46,6 +46,7 @@
       "Accessible: labelled dialog, focus handling, Escape to close, reduced motion respected, a correct heading outline, and axe and real-Chromium checks (contrast, RTL, phone width) in the test suite",
       "Labels and dates in English, German, French and Italian; dark mode, right-to-left pages, a dozen CSS custom properties and styleable parts",
       "Highlights: a title, summary and image for the releases that matter",
+      "A frozen API with a written stability promise, deprecation policy and upgrade guide, checked by tests and by installing the packed release into example projects",
       "Bindings for React (<WhatsNew>, useChangelog, an unstyled <ChangelogList>) and Vue 3 (<WhatsNew>, useChangelog); Svelte, Astro and plain HTML use the element directly"
     ],
     "pro": [
