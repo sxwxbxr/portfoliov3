@@ -80,11 +80,15 @@ export const { POST } = createConsentLogRoute(log, {
 
 export const SURJECTION_CHECK_COMMAND = `npx surjection check https://baeckerei-muster.example/ \\
   --project "Bäckerei Muster" --viewport mobile --keyboard \\
-  --out-md a11y.md --out-json a11y.json --out-junit a11y.xml
+  --screenshots a11y-shots --out-md a11y.md --out-json a11y.json --out-junit a11y.xml
 
 ✗ https://baeckerei-muster.example/ (6 issues)
 
 6 accessibility issue(s) on 1 page(s).`
+
+export const SURJECTION_MONITOR_COMMAND = `npx surjection check --config surjection.config.json --out-json a11y.json
+npx surjection-history record --results a11y.json
+npx surjection-history regressions --fail-on serious --out-md monitoring.md`
 
 export const SURJECTION_BADGE_COMMAND = `npx surjection-history badge --out-dir badges
 # badges/backerei-muster.svg, badges/praxis-dr-keller.svg, badges/velo-huber.svg`

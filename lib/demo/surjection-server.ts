@@ -27,5 +27,6 @@ export const getSurjectionDemo = cache(() => ({
   dashboard: read("dashboard-en.html"),
   editor: read("editor-en.html"),
   markdown: read("run1-en.md"),
+  regressions: read("regressions-en.md"),
   statement: read("statement-de-CH.md"),
 }))
