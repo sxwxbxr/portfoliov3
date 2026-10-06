@@ -55,7 +55,8 @@
       "Show invoices as readable, printable HTML in German or English, with the validation report",
       "Validate whole folders: JSON, CSV, JUnit and HTML reports, duplicate detection and a hash-chained audit log",
       "Watch an inbox folder: every new invoice is checked once it is fully written and sorted into valid, invalid and duplicate",
-      "Export valid purchase invoices as a DATEV booking batch (EXTF 700, SKR03 or SKR04) for your tax advisor"
+      "Export valid purchase invoices as a DATEV booking batch (EXTF 700, SKR03 or SKR04) for your tax advisor",
+      "Fetch invoices straight from a mailbox over IMAP or Microsoft 365 and drop the XML and PDF attachments into the inbox folder"
     ]
   },
   "comparison": [
@@ -109,7 +110,7 @@
       },
       {
         "name": "@weber-development/summand-inbox",
-        "description": "Validates folders of invoices from the command line or your code, or watches an inbox folder and sorts each new invoice into valid, invalid and duplicate: JSON, CSV, JUnit and HTML reports, duplicate detection across runs, an audit log with a SHA-256 per file and a DATEV booking batch export."
+        "description": "Validates folders of invoices from the command line or your code, watches an inbox folder, or fetches invoices straight from a mailbox (IMAP or Microsoft 365), and sorts each new invoice into valid, invalid and duplicate: JSON, CSV, JUnit and HTML reports, duplicate detection across runs, an audit log with a SHA-256 per file and a DATEV booking batch export."
       }
     ],
     "waitlistUrl": "mailto:info@sweber.dev?subject=Summand%20Pro%20waitlist"
@@ -126,7 +127,10 @@
         "yearly": 190,
         "seats": 1,
         "support": false,
-        "checkout": {}
+        "checkout": {
+          "monthly": "https://buy.polar.sh/polar_cl_PcGb0a2SppqyQudAJiDzIMwvVWefB1G5x3sgV2qMZgN",
+          "yearly": "https://buy.polar.sh/polar_cl_QCSuLjjqxbuEgp68ywtMVOV4V5qIXsytDBujG4gebd3"
+        }
       },
       {
         "id": "agency",
@@ -137,7 +141,10 @@
         "seats": 10,
         "support": true,
         "highlighted": true,
-        "checkout": {}
+        "checkout": {
+          "monthly": "https://buy.polar.sh/polar_cl_W3SraUlikh7QVxhKGR955masAK3xmuDSIfN8U1WtugT",
+          "yearly": "https://buy.polar.sh/polar_cl_qkF1aJMO7dXBsphHOInKFQN5t75xYEPO6msBF0ajihc"
+        }
       },
       {
         "id": "lifetime",
@@ -146,7 +153,9 @@
         "oneTime": 1990,
         "seats": 10,
         "support": true,
-        "checkout": {}
+        "checkout": {
+          "oneTime": "https://buy.polar.sh/polar_cl_89L24mrq9080ZDfvGHQQe409FASpvmkgWEVKA0TEVPQ"
+        }
       }
     ],
     "notes": [
