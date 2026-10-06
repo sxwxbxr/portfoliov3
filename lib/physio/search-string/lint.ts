@@ -9,8 +9,11 @@
  * operators, left-to-right evaluation, at least four characters before a
  * wildcard, quotes or a field tag for phrases with a wildcard.
  */
+import { applyEdits, genericLevel, levenshtein, wrapOrRuns } from "./lint-shared"
+import { detectLintDatabase, lintCochrane } from "./lint-cochrane"
+import { convertLineToPubmed } from "./convert"
 import { PUBMED_MIN_STEM, stemLength } from "./profiles"
-import type { Edit, LintFinding, LintFix, LintSeverity, Range } from "./types"
+import type { Edit, LintDatabase, LintFinding, LintFix, LintSeverity, Range } from "./types"
 
 /* ── Vocabulary ─────────────────────────────────────────────────── */
 
@@ -26,21 +29,6 @@ const SIMPLE_TAGS = [
 const KNOWN_TAGS = new Set<string>(SIMPLE_TAGS)
 const MESH_TAGS = new Set(["mh", "mesh", "majr", "mesh terms", "mesh major topic"])
 const NOEXP_RE = /^(mesh|mh|majr|mesh terms):noexp$/
-
-const GENERIC_WARN = new Set([
-  "therapy", "therapies", "treatment", "treatments", "training", "exercise", "exercises", "pain", "patient", "patients",
-  "effect", "effects", "intervention", "interventions", "health", "care", "function", "study", "studies", "outcome",
-  "outcomes", "disease", "disorder", "syndrome", "rehabilitation",
-])
-const GENERIC_INFO = new Set(["adult", "adults", "human", "humans", "people", "person", "persons", "male", "female", "men", "women"])
-
-/** Is a single search word so general that it matches most of the literature? */
-export function genericLevel(word: string): "warning" | "info" | null {
-  const w = word.replace(/\*/g, "").trim().toLowerCase()
-  if (GENERIC_WARN.has(w)) return "warning"
-  if (GENERIC_INFO.has(w)) return "info"
-  return null
-}
 
 const QUOTE_CHARS = new Set(['"', "„", "“", "”", "«", "»", "‟"])
 const isQuote = (c: string) => QUOTE_CHARS.has(c)
@@ -300,16 +288,9 @@ function readOperand(ctx: Ctx): Operand {
 
 /* ── Checks ─────────────────────────────────────────────────────── */
 
-const SEVERITY_ORDER: Record<LintSeverity, number> = { error: 0, warning: 1, info: 2 }
+export { applyEdits, genericLevel }
 
-function levenshtein(a: string, b: string): number {
-  const dp = Array.from({ length: a.length + 1 }, (_, i) => [i, ...new Array(b.length).fill(0)])
-  for (let j = 0; j <= b.length; j++) dp[0][j] = j
-  for (let i = 1; i <= a.length; i++)
-    for (let j = 1; j <= b.length; j++)
-      dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1))
-  return dp[a.length][b.length]
-}
+const SEVERITY_ORDER: Record<LintSeverity, number> = { error: 0, warning: 1, info: 2 }
 
 function closestTag(tag: string): string | null {
   let best: string | null = null
@@ -523,35 +504,6 @@ function checkLevel(items: Item[], ctx: Ctx, closedGroup: boolean, groupRange: R
   }
 }
 
-/** Puts parentheses around every run of OR-joined operands (the usual AND-of-ORs shape). */
-function wrapOrRuns(items: Item[]): LintFix | undefined {
-  const edits: Edit[] = []
-  let run: Item[] = []
-  let pending: OpItem["op"] | null = null
-  const flush = () => {
-    if (run.length > 1) {
-      edits.push({ start: run[0].s, end: run[0].s, text: "(" }, { start: run[run.length - 1].e, end: run[run.length - 1].e, text: ")" })
-    }
-    run = []
-  }
-  for (const it of items) {
-    if (it.kind === "op") {
-      pending = it.op
-      continue
-    }
-    if (it.kind === "range") continue
-    if (run.length === 0) run = [it]
-    else if (pending === "OR") run.push(it)
-    else {
-      flush()
-      run = [it]
-    }
-    pending = null
-  }
-  flush()
-  return edits.length ? { label: "Klammern um die OR-Gruppen setzen", edits } : undefined
-}
-
 interface Aggregates {
   typographic: Array<{ pos: number; ch: string }>
   untagged: Operand[]
@@ -568,7 +520,52 @@ function walk(items: Item[], ctx: Ctx, agg: Aggregates, closed: boolean, range: 
 
 /* ── Public API ─────────────────────────────────────────────────── */
 
-export function lintQuery(src: string): LintFinding[] {
+export interface LintOptions {
+  /** Which syntax to check. Default "auto": detected from the field syntax ([mh …] and :ti,ab,kw mean Cochrane). */
+  database?: LintDatabase
+}
+
+/** Flat list of the terms of a PubMed string, with their tags and positions. For the converter. */
+export function parsePubmedLine(src: string): { operands: Operand[]; ops: OpItem[]; strays: number } {
+  const ctx: Ctx = { src, toks: lex(src), pos: 0, findings: [], operands: [], strays: [], lowerOps: [] }
+  const top = parseLevel(ctx, 0)
+  const ops: OpItem[] = []
+  const collect = (items: Item[]) => {
+    for (const it of items) {
+      if (it.kind === "op") ops.push(it)
+      else if (it.kind === "group") collect(it.items)
+    }
+  }
+  collect(top.items)
+  return { operands: ctx.operands, ops, strays: ctx.strays.length }
+}
+export type { Operand as PubmedOperand, OpItem as PubmedOp }
+
+export function lintQuery(src: string, opts: LintOptions = {}): LintFinding[] {
+  const chosen = opts.database ?? "auto"
+  const target = chosen === "auto" ? detectLintDatabase(src) : chosen
+  if (target === "cochrane") return lintCochrane(src)
+  const findings = lintPubmed(src)
+  if (chosen === "pubmed" && src.trim() && detectLintDatabase(src) === "cochrane") {
+    const m = /\[\s*mh\s*[\s^"“”„«»‟/][^\]]*\]|[\w)"*?]:(?:ti|ab|kw)\b[,\w]*/i.exec(src)
+    if (m) {
+      const converted = convertLineToPubmed(src)
+      findings.unshift({
+        code: "cochrane-syntax",
+        severity: "error",
+        message: `«${m[0].length > 30 ? m[0].slice(0, 29) + "…" : m[0]}» ist Cochrane-Syntax. PubMed schreibt Schlagworte mit [Mesh] und Stichworte mit [tiab].${
+          converted.unsafe.length ? ` Nicht sicher umwandelbar: ${converted.unsafe.length}.` : ""
+        }`,
+        start: m.index,
+        end: m.index + m[0].length,
+        fix: converted.changed ? { label: "In PubMed-Syntax umwandeln", edits: [{ start: 0, end: src.length, text: converted.text }] } : undefined,
+      })
+    }
+  }
+  return findings
+}
+
+function lintPubmed(src: string): LintFinding[] {
   if (!src.trim()) return []
   const ctx: Ctx = { src, toks: lex(src), pos: 0, findings: [], operands: [], strays: [], lowerOps: [] }
   const agg: Aggregates = { typographic: [], untagged: [], truncPhrase: [] }
@@ -659,14 +656,6 @@ export function lintQuery(src: string): LintFinding[] {
   )
 }
 
-/** Applies edits (computed against the original text) from the back to the front. */
-export function applyEdits(src: string, edits: Edit[]): string {
-  const sorted = edits.map((e, i) => ({ ...e, i })).sort((a, b) => b.start - a.start || b.i - a.i)
-  let out = src
-  for (const e of sorted) out = out.slice(0, e.start) + e.text + out.slice(e.end)
-  return out
-}
-
 export function applyFix(src: string, fix: LintFix): string {
   return applyEdits(src, fix.edits)
 }
@@ -675,11 +664,11 @@ export function applyFix(src: string, fix: LintFix): string {
  * Applies fixes one finding at a time and lints again after each, until no
  * fixable finding is left (or `maxPasses`). Returns the new text and the labels applied.
  */
-export function autoFix(src: string, maxPasses = 12): { text: string; applied: string[] } {
+export function autoFix(src: string, maxPasses = 12, opts: LintOptions = {}): { text: string; applied: string[] } {
   let text = src
   const applied: string[] = []
   for (let pass = 0; pass < maxPasses; pass++) {
-    const next = lintQuery(text).find((f) => f.fix)
+    const next = lintQuery(text, opts).find((f) => f.fix)
     if (!next || !next.fix) break
     const after = applyFix(text, next.fix)
     if (after === text) break

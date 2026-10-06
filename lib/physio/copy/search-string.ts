@@ -7,17 +7,17 @@ import type { Block, LintSeverity, NoticeSeverity } from "@/lib/physio/search-st
 
 export const ssCopy = {
   name: "Suchstring-Generator",
-  metaTitle: "Suchstring-Generator für PubMed",
+  metaTitle: "Suchstring-Generator für PubMed und Cochrane Library",
   metaDescription:
-    "Baut aus deiner PICO-Frage oder deinem Patientenfall einen PubMed-Suchstring mit Schlagworten (MeSH), Stichworten, Klammern und Trunkierung. Regelbasiert, ohne KI. Deine Fragestellung bleibt auf deinem Gerät.",
+    "Baut aus deiner PICO-Frage oder deinem Patientenfall einen Suchstring für PubMed und die Cochrane Library mit Schlagworten (MeSH), Stichworten, Klammern und Trunkierung. Regelbasiert, ohne KI. Sprache und Zeitraum stellst du in der Cochrane Library selbst ein. Deine Fragestellung bleibt auf deinem Gerät.",
 
   hero: {
     title: "Suchstring-Generator",
-    sub: "Von der PICO-Frage zum PubMed-Suchstring.",
-    lede: "Schreib deine Fragestellung rein, oder gleich den ganzen Fall. Das Tool erkennt die Suchkomponenten, schlägt Schlagworte (MeSH) und Stichworte vor und baut daraus einen String mit Klammern, Field Tags und Trunkierung. Du gehst drüber und korrigierst, bevor du kopierst.",
+    sub: "Von der PICO-Frage zum Suchstring für PubMed und die Cochrane Library.",
+    lede: "Schreib deine Fragestellung rein, oder gleich den ganzen Fall. Das Tool erkennt die Suchkomponenten, schlägt Schlagworte (MeSH) und Stichworte vor und baut daraus einen String mit Klammern, Field Tags und Trunkierung, für PubMed, für die Cochrane Library oder für beide. Du gehst drüber und korrigierst, bevor du kopierst.",
     demoBadge: "Demo",
     demoLede:
-      "In der Demo arbeitest du mit festen Beispielen, darunter dem ganzen Fall von Herrn Müller. Komponenten und Begriffe kannst du bearbeiten, im MeSH-Wörterbuch stöbern, Treffer in PubMed zählen, den String kopieren und den Prüfmodus am Beispielstring testen.",
+      "In der Demo arbeitest du mit festen Beispielen, darunter dem ganzen Fall von Herrn Müller. Komponenten und Begriffe kannst du bearbeiten, im MeSH-Wörterbuch stöbern, den String für PubMed und die Cochrane Library kopieren, Treffer in PubMed zählen und den Prüfmodus am Beispielstring testen.",
   },
 
   privacy:
@@ -30,8 +30,8 @@ export const ssCopy = {
   },
   glossary: [
     { term: "Suchkomponente", text: "ein Baustein deiner Frage, zum Beispiel «Rückenschmerzen». Im String ist das eine Klammer, in der die Begriffe mit OR verknüpft sind." },
-    { term: "Stichwort", text: "ein Freitext-Begriff, den PubMed in Titel und Abstract sucht ([tiab])." },
-    { term: "Schlagwort", text: "ein MeSH-Term aus dem kontrollierten Vokabular von PubMed ([Mesh])." },
+    { term: "Stichwort", text: "ein Freitext-Begriff, den PubMed in Titel und Abstract sucht ([tiab]). In der Cochrane Library schreibst du ihn mit :ti,ab,kw." },
+    { term: "Schlagwort", text: "ein MeSH-Term aus dem kontrollierten Vokabular von PubMed ([Mesh]). In der Cochrane Library schreibst du ihn als [mh …]." },
   ],
 
   draftNote: {
@@ -208,9 +208,18 @@ export const ssCopy = {
 
   database: {
     heading: "Datenbank und Filter",
-    hint: "In dieser Version gibt es nur PubMed. Weitere Datenbanken kommen später.",
+    hint: "Wähle PubMed, die Cochrane Library oder beide. Zu jeder gewählten Datenbank bekommst du einen eigenen String. CINAHL und Embase kommen später.",
     legend: "Datenbank",
     soon: "bald",
+    atLeastOne: "Mindestens eine Datenbank bleibt gewählt.",
+    dbHints: {
+      pubmed: "[Mesh], [tiab], alle Filter im String.",
+      cochrane: "[mh …], :ti,ab,kw. Sprache, Zeitraum und Studientyp stellst du dort selbst ein.",
+      cinahl: "Kommt später.",
+      embase: "Kommt später.",
+    } as Record<string, string>,
+    cochraneFilters:
+      "Für die Cochrane Library stehen Sprache, Zeitraum, Studientyp und «nur Menschen» nicht im String, weil sich das dort nicht zuverlässig als Syntax schreiben lässt. Im Ergebnis steht dann, was du unter «Search limits» einstellst. Alter und Geschlecht schreibt das Tool als MeSH-Check-Tag.",
     filtersHeading: "Filter",
     filtersHint: "Alle Filter sind optional.",
     language: "Sprache",
@@ -226,7 +235,7 @@ export const ssCopy = {
       "meta-analysis": "Metaanalyse",
     },
     humans: "Nur Studien am Menschen",
-    humansHint: "Schliesst reine Tierstudien aus.",
+    humansHint: "Schliesst reine Tierstudien aus. Gilt für PubMed; die Cochrane Library hat dafür keinen Filter.",
     caseHeading: "Vorschläge aus deinem Fall",
     caseHint:
       "Alter und Geschlecht stehen oft im Fall. Als Filter schränken sie die Treffer stark ein, weil PubMed beides nicht bei jeder Studie verschlagwortet. Darum sind die Vorschläge aus. Schalte sie nur ein, wenn die Frage wirklich auf diese Gruppe zielt.",
@@ -248,8 +257,43 @@ export const ssCopy = {
 
   result: {
     heading: "Suchstring",
-    hint: "Kopiere den String direkt ins Suchfeld von PubMed oder lade ihn herunter.",
+    hint: "Kopiere den String direkt ins Suchfeld der Datenbank oder lade ihn herunter. Pro gewählter Datenbank gibt es einen eigenen String.",
     stringLabel: "Suchstring für PubMed",
+    stringLabelFor: (db: string) => `Suchstring für ${db}`,
+    format: {
+      label: "Format",
+      single: "Eine Zeile",
+      manager: "Search Manager (zeilenweise)",
+    },
+    copyLines: "Zeilen kopieren",
+    linesCopied: "Zeilen kopiert",
+    cochraneSingleHint:
+      "Füge den String im «Search manager» der Cochrane Library in eine Suchzeile ein. Eine Zeile versteht Klammern, AND, OR, NOT, [mh …] und Feldcodes.",
+    cochraneManagerHint:
+      "Ein Begriff pro Zeile, dann je Suchkomponente eine OR-Zeile und am Ende eine AND-Zeile. So siehst du die Trefferzahl jedes Begriffs. Lege die Zeilen der Reihe nach im Search Manager an, ab #1: Die Nummern vergibt die Cochrane Library selbst. Ob mehrzeilig eingefügter Text dort automatisch auf Zeilen verteilt wird, haben wir nicht geprüft; wenn nicht, füge Zeile für Zeile ein. Die Nummern stehen im Download.",
+    cochraneOpen: "In Cochrane Library öffnen",
+    cochraneOpenHint: "Öffnet den Search Manager. Die Cochrane Library nimmt über einen Link keinen String entgegen, du fügst ihn selbst ein.",
+    cochraneNoCount:
+      "Eine Trefferzählung gibt es hier nur für PubMed. Für die Cochrane Library kennen wir keine offene Schnittstelle, die ein Browser ohne Anmeldung ansprechen darf. Der Search Manager zeigt dir die Trefferzahl jeder Zeile selbst.",
+    limitsHeading: "Das stellst du in der Cochrane Library selbst ein",
+    limitsHint: "Diese Filter lassen sich dort nicht zuverlässig als Syntax schreiben. Sie stehen darum nicht im String.",
+    lineKinds: { term: "Begriff", component: "Suchkomponente", filter: "Filter", final: "Alles verknüpft" },
+    diff: {
+      show: "Unterschiede PubMed und Cochrane anzeigen",
+      hide: "Unterschiede ausblenden",
+      heading: "So steht jede Suchkomponente in PubMed und in der Cochrane Library",
+      intro:
+        "Dieselben Begriffe, zweimal geschrieben. Gleich bleiben die Logik (OR innerhalb, AND zwischen den Suchkomponenten) und die Klammern.",
+      component: "Suchkomponente",
+      pubmed: "PubMed",
+      cochrane: "Cochrane Library",
+      points: [
+        "Schlagwort: [Mesh] wird zu [mh …]. Ohne Unterbegriffe schreibst du in PubMed [Mesh:NoExp], in der Cochrane Library ein ^ vor das Schlagwort.",
+        "Stichwort: [tiab] wird zu :ti,ab,kw. Der Feldcode steht hinter dem Begriff, und die Cochrane Library sucht zusätzlich in den Schlüsselwörtern.",
+        "Trunkierung: PubMed erlaubt * in Anführungszeichen, die Cochrane Library nicht. Dort wird aus «back exercise*» der Ausdruck (back NEXT exercise*).",
+        "Filter: Sprache, Zeitraum und Studientyp stehen in PubMed im String, in der Cochrane Library stellst du sie selbst unter «Search limits» ein.",
+      ],
+    },
     empty: "Noch kein Suchstring. Dafür braucht es mindestens eine Suchkomponente mit einem aktiven Begriff.",
     copy: "Kopieren",
     copied: "Kopiert",
@@ -260,9 +304,11 @@ export const ssCopy = {
       `${components} ${components === 1 ? "Suchkomponente" : "Suchkomponenten"}, ${terms} ${terms === 1 ? "Begriff" : "Begriffe"}`,
     noticesHeading: "Auf einen Blick",
     tableHeading: "Suchkomponenten im Überblick",
-    tableCols: { component: "Suchkomponente", keywords: "Stichworte", subjectHeadings: "Schlagworte (MeSH)" },
+    tableCols: { component: "Suchkomponente", keywords: "Stichworte", subjectHeadings: "Schlagworte (MeSH)", syntax: "Schreibweise" },
     none: "keine",
     legend: "So liest du den String: Schlagworte mit [Mesh] sind umrandet, Stichworte mit [tiab] sucht PubMed in Titel und Abstract, AND und OR sind grau.",
+    legendCochrane:
+      "So liest du den String: Schlagworte mit [mh …] sind umrandet, Stichworte mit :ti,ab,kw sucht die Cochrane Library in Titel, Abstract und Schlüsselwörtern, AND, OR und NEXT sind grau.",
   },
 
   pubmed: {
@@ -303,7 +349,24 @@ export const ssCopy = {
 
   lint: {
     heading: "Eigenen String prüfen",
-    hint: "Füge deinen PubMed-Suchstring ein, zum Beispiel aus einer Übung. Das Tool markiert typische Fehler wie typografische Anführungszeichen, fehlende Klammern bei AND und OR oder fehlende Field Tags, und korrigiert, wo es geht.",
+    hint: "Füge deinen Suchstring für PubMed oder die Cochrane Library ein, zum Beispiel aus einer Übung. Das Tool erkennt die Syntax, markiert typische Fehler wie typografische Anführungszeichen, fehlende Klammern bei AND und OR oder fehlende Field Tags beziehungsweise Feldcodes, und korrigiert, wo es geht.",
+    syntax: {
+      label: "Syntax",
+      auto: "Automatisch",
+      pubmed: "PubMed",
+      cochrane: "Cochrane Library",
+      detected: (name: string) => `Erkannt: ${name}`,
+    },
+    convert: {
+      toCochrane: "In Cochrane-Syntax umwandeln",
+      toPubmed: "In PubMed-Syntax umwandeln",
+      exampleToCochrane: "Korrigiertes Beispiel in Cochrane-Syntax zeigen",
+      converted: "Umgewandelt. Geh das Ergebnis durch, bevor du es verwendest.",
+      nothing: "Hier gab es nichts umzuwandeln.",
+      appliedHeading: "Das hat das Tool gemacht",
+      unsafeHeading: "Nicht umgewandelt, das prüfst du selbst",
+      unsafeHint: "Diese Teile sind unverändert im String geblieben, weil es keine sichere Entsprechung gibt. Raten tut das Tool nicht.",
+    },
     inputLabel: "Dein Suchstring",
     inputPlaceholder: '("back pain"[tiab] OR "Back Pain"[Mesh]) AND ...',
     lockedTitle: "In der Demo kannst du nur den Beispielstring prüfen.",
@@ -346,7 +409,7 @@ export const ssCopy = {
   paywall: {
     title: "Suchstring-Generator",
     sub: "Mit dem Abo freigeschaltet.",
-    lede: "Du schreibst deine PICO-Frage oder die Aufgabe aus dem Unterricht rein. Das Tool erkennt die Suchkomponenten, ordnet Schlagworte (MeSH) und Stichworte zu und baut daraus einen PubMed-String. Du gehst drüber und korrigierst, bevor du ihn kopierst.",
+    lede: "Du schreibst deine PICO-Frage oder die Aufgabe aus dem Unterricht rein. Das Tool erkennt die Suchkomponenten, ordnet Schlagworte (MeSH) und Stichworte zu und baut daraus einen String für PubMed, für die Cochrane Library oder für beide. Du gehst drüber und korrigierst, bevor du ihn kopierst.",
     whatHeading: "Was das Tool macht",
     points: [
       "Verarbeitet ganze Fälle und Aufgabenblätter: erkennt «P:»-Zeilen, überliest Arbeitsaufträge und schlägt Alter und Geschlecht als Filter vor, die du selbst einschaltest.",
@@ -354,8 +417,10 @@ export const ssCopy = {
       "Kennt rund 17'000 MeSH-Schlagworte (MeSH 2026), nicht nur eine kleine Begriffstabelle. Deutsche Bezeichnungen gibt es für etwa die Hälfte davon, aus Wikidata und einer eigenen Liste; die übrigen findest du über den englischen Namen. Im Wörterbuch kannst du von Hand stöbern und breiter oder enger gehen.",
       "Zeigt zu jeder Komponente Schlagworte (MeSH) und Stichworte, die du entfernen, ergänzen, trunkieren oder in einen anderen Block verschieben kannst. Bei mehrdeutigen Wörtern schaltest du auf ein anderes Schlagwort um.",
       "Setzt Klammern, Field Tags und Trunkierung so, wie es die aktuelle PubMed-Hilfe vorgibt.",
-      "Zählt auf Wunsch die Treffer in PubMed, Komponente für Komponente, und sagt dir bei null oder sehr vielen Treffern, wo du lockern oder eingrenzen kannst.",
-      "Prüft eigene Strings auf typische Fehler: typografische Anführungszeichen, fehlende Klammern bei AND und OR, fehlende Field Tags. Vieles davon korrigiert es mit einem Klick.",
+      "Schreibt denselben Suchstring auch für die Cochrane Library (CENTRAL): [mh …] für Schlagworte, :ti,ab,kw für Stichworte und NEXT statt Stern in Anführungszeichen, wahlweise in einer Zeile oder zeilenweise für den Search Manager. Sprache, Zeitraum und Studientyp lassen sich dort nicht zuverlässig als Syntax schreiben. Das Tool sagt dir, was du unter «Search limits» selbst einstellst, statt Syntax zu erfinden.",
+      "Zählt auf Wunsch die Treffer in PubMed, Komponente für Komponente, und sagt dir bei null oder sehr vielen Treffern, wo du lockern oder eingrenzen kannst. Für die Cochrane Library gibt es keine Trefferzählung; dort zeigt dir der Search Manager die Zahl je Zeile.",
+      "Prüft eigene Strings auf typische Fehler, für PubMed und für die Cochrane Library: typografische Anführungszeichen, fehlende Klammern bei AND und OR, fehlende Field Tags oder Feldcodes, falsche Zeilenbezüge im Search Manager. Vieles davon korrigiert es mit einem Klick.",
+      "Wandelt einen eingefügten String zwischen PubMed- und Cochrane-Syntax um, soweit das eindeutig geht, und listet auf, was es nicht übertragen konnte.",
     ],
     sampleHeading: "So sieht ein Ergebnis aus",
     sampleCaption: "Beispiel: der ganze Fall von Herrn Müller (OST Übung 3), erzeugt mit diesem Tool. Ein Entwurf, kein fertiger String.",

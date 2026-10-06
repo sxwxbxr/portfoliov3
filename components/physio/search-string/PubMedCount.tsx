@@ -23,8 +23,15 @@ const MANY = 20000
  * Opt-in hit counts. Nothing is sent until the button is pressed, and then only
  * the finished search strings go to PubMed (NCBI), one request at a time.
  */
-export function PubMedCount({ built }: { built: BuiltQuery }) {
+export function PubMedCount({
+  built,
+  onRowsChange,
+}: {
+  built: BuiltQuery
+  onRowsChange?: (rows: CountRow[]) => void
+}) {
   const [rows, setRows] = useState<Record<string, CountRow>>({})
+  useEffect(() => onRowsChange?.(Object.values(rows)), [rows, onRowsChange])
   const [status, setStatus] = useState<Status>("idle")
   const [error, setError] = useState<PubMedErrorCode | null>(null)
   const [done, setDone] = useState(0)

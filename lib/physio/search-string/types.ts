@@ -116,6 +116,8 @@ export interface SearchModel {
   filters: Filters
   /** Blocks that go into the string. Comparison is off by default. */
   includedBlocks: Record<Block, boolean>
+  /** Databases the result is written for. Missing means PubMed only. */
+  databases?: DatabaseId[]
 }
 
 export interface PicoInput {
@@ -183,6 +185,22 @@ export interface BuiltComponent {
   stichworte: string[]
   /** MeSH headings, with `:NoExp` marked in the string only. */
   schlagworte: string[]
+  /** The single terms of the OR-group in the database's syntax (same order as in `query`). */
+  parts?: string[]
+  /** The MeSH headings in the database's syntax, same order as `schlagworte`. */
+  meshSyntax?: string[]
+}
+
+/** One line of a Search Manager strategy (Cochrane Library). */
+export interface StrategyLine {
+  /** Line number, 1-based. Combination lines refer to it as #n. */
+  n: number
+  /** The search of this line, without the number. */
+  query: string
+  kind: "term" | "component" | "filter" | "final"
+  /** German description: the Suchkomponente or what the line combines. */
+  label: string
+  conceptId?: string
 }
 
 export interface BuiltQuery {
@@ -192,7 +210,14 @@ export interface BuiltQuery {
   filterClauses: string[]
   notices: Notice[]
   empty: boolean
+  /** Cochrane: the same search as numbered Search Manager lines. */
+  lines?: StrategyLine[]
+  /** Filters the string cannot express; the person sets them in the database's interface. */
+  limitNotes?: string[]
 }
+
+/** Which syntax the linter checks. "auto" detects it from the field syntax. */
+export type LintDatabase = "pubmed" | "cochrane" | "auto"
 
 export type LintSeverity = "error" | "warning" | "info"
 

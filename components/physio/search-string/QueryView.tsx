@@ -21,7 +21,98 @@ function Tag({ tag }: { tag: string }) {
   )
 }
 
-export function QueryView({ query, label }: { query: string; label: string }) {
+/** Cochrane tokens: [mh …] pill, "phrase" with field code, field code after a parenthesis, operators, #n line references, words. */
+const COCHRANE_RE =
+  /(\[mh(?:[^\]\[]|\[[^\]]*\])*\])|("[^"]*")(:[a-z]+(?:,[a-z]+)*)?|\b(AND|OR|NOT|NEXT|NEAR(?:\/\d+)?)\b|([()])|(:[a-z]+(?:,[a-z]+)*)|(#\d+)|([^\s()"[\]:]+)(:[a-z]+(?:,[a-z]+)*)?|(\s+)|([\s\S])/gi
+
+function CochraneNodes({ query, lineBreaks }: { query: string; lineBreaks: boolean }) {
+  const nodes: ReactNode[] = []
+  let depth = 0
+  let key = 0
+  COCHRANE_RE.lastIndex = 0
+  let m: RegExpExecArray | null
+  while ((m = COCHRANE_RE.exec(query))) {
+    const [, mesh, phrase, phraseField, op, paren, field, ref, word, wordField, space, other] = m
+    const k = key++
+    if (mesh) {
+      nodes.push(
+        <span key={k} className="mx-px rounded-[3px] border border-edge-mid bg-(--wash) px-1 text-(--signal-hi)">
+          {mesh}
+        </span>,
+      )
+    } else if (phrase) {
+      nodes.push(
+        <span key={k}>
+          <span className="text-fg">{phrase}</span>
+          {phraseField && <span className="text-fg-muted">{phraseField}</span>}
+        </span>,
+      )
+    } else if (op) {
+      const upper = op.toUpperCase()
+      const lineBreak = lineBreaks && depth === 0 && upper === "AND" && nodes.length > 0
+      nodes.push(
+        <span key={k}>
+          {lineBreak && <br />}
+          <span className="text-[11px] tracking-wide text-fg-muted">{op}</span>
+        </span>,
+      )
+    } else if (paren) {
+      depth += paren === "(" ? 1 : -1
+      nodes.push(
+        <span key={k} className="text-fg-muted">
+          {paren}
+        </span>,
+      )
+    } else if (field) {
+      nodes.push(
+        <span key={k} className="text-fg-muted">
+          {field}
+        </span>,
+      )
+    } else if (ref) {
+      nodes.push(
+        <span key={k} className="text-fg">
+          {ref}
+        </span>,
+      )
+    } else if (word) {
+      nodes.push(
+        <span key={k}>
+          <span className="text-fg">{word}</span>
+          {wordField && <span className="text-fg-muted">{wordField}</span>}
+        </span>,
+      )
+    } else if (space) {
+      nodes.push(<span key={k}>{space}</span>)
+    } else if (other) {
+      nodes.push(<span key={k}>{other}</span>)
+    }
+  }
+  return <>{nodes}</>
+}
+
+export function QueryView({
+  query,
+  label,
+  syntax = "pubmed",
+  lineBreaks = true,
+}: {
+  query: string
+  label: string
+  /** Which spelling to colour. */
+  syntax?: "pubmed" | "cochrane"
+  /** Start a new line at every top-level AND. */
+  lineBreaks?: boolean
+}) {
+  if (syntax === "cochrane") {
+    return (
+      <pre aria-label={label} className="whitespace-pre-wrap break-words font-mono text-[13px] leading-[1.9] [overflow-wrap:anywhere]">
+        <code>
+          <CochraneNodes query={query} lineBreaks={lineBreaks} />
+        </code>
+      </pre>
+    )
+  }
   const nodes: ReactNode[] = []
   let depth = 0
   let key = 0
@@ -38,7 +129,7 @@ export function QueryView({ query, label }: { query: string; label: string }) {
         </span>,
       )
     } else if (op) {
-      const lineBreak = depth === 0 && op === "AND" && nodes.length > 0
+      const lineBreak = lineBreaks && depth === 0 && op === "AND" && nodes.length > 0
       nodes.push(
         <span key={k}>
           {lineBreak && <br />}

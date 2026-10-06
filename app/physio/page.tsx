@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { HeroPreview } from "@/components/physio/HeroPreview"
 import { ToolCard } from "@/components/physio/ToolCard"
+import { guideCopy } from "@/lib/physio/copy/guide"
 import { accountCopy } from "@/lib/physio/copy/account"
 import { siteCopy } from "@/lib/physio/copy/site"
 import { PHYSIO_TOOLS, isNewTool, landingTools } from "@/lib/physio/tools"
@@ -96,6 +97,7 @@ export default function PhysioLanding() {
                   <h3 className="flex flex-wrap items-center gap-3 text-2xl">
                     {tool.name}
                     {isNewTool(tool, now) && <span className="tab text-xs">{c.tools.new}</span>}
+                    {tool.guide && <span className="tab text-xs">{guideCopy.toolBadge}</span>}
                   </h3>
                   <p className="measure leading-relaxed text-fg-muted">{tool.summary}</p>
                 </div>

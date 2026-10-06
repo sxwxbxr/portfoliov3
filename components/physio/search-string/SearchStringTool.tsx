@@ -1,8 +1,10 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ssCopy } from "@/lib/physio/copy/search-string"
+import { lintGuide, type LintGuideCtx } from "@/lib/physio/guide/lint-guide"
+import { EMPTY_EDITS, makeSuchstringCtx, suchstringGuide, type WorksheetEdits } from "@/lib/physio/guide/suchstring"
 import {
   EXAMPLES,
   STUDENT_SEARCH_STRING,
@@ -10,11 +12,16 @@ import {
   createModel,
   type AnalysisResult,
   type Candidate,
+  type CountRow,
   type Filters,
+  type LintFinding,
   type PicoInput,
   type SearchModel,
 } from "@/lib/physio/search-string"
 import { getMeshIndex, type MeshMeta } from "@/lib/physio/search-string/mesh-index"
+import { GuideInvite, GuideToggle } from "@/components/physio/guide/GuideToggle"
+import { GuideProvider } from "@/components/physio/guide/GuideProvider"
+import { CriteriaPanel, LintFindingsPanel, PicoPanel, TermsPanel, WorksheetPanel } from "@/components/physio/guide/suchstring-panels"
 import { ConceptsPanel } from "./ConceptsPanel"
 import { DatabasePanel } from "./DatabasePanel"
 import { LintPanel } from "./LintPanel"
@@ -22,6 +29,9 @@ import { QuestionPanel } from "./QuestionPanel"
 import { ResultPanel } from "./ResultPanel"
 
 interface Run {
+  /** The case as it was analysed (the guided mode reads this, not what is typed right now). */
+  text: string
+  pico: PicoInput
   analysis: AnalysisResult
   candidates: Candidate[]
   model: SearchModel
@@ -32,6 +42,8 @@ interface Run {
 async function makeRun(text: string, pico: PicoInput, filters?: Partial<Filters>): Promise<Run> {
   const analysis = await analyzeAsync({ text, pico })
   return {
+    text,
+    pico,
     analysis,
     candidates: analysis.candidates,
     model: createModel(analysis, filters),
@@ -40,10 +52,11 @@ async function makeRun(text: string, pico: PicoInput, filters?: Partial<Filters>
   }
 }
 
-function Step({ n, title, hint, children }: { n?: number; title: string; hint: string; children: ReactNode }) {
+/** `guide` is the data-guide id the guided mode highlights and scrolls to. */
+function Step({ n, title, hint, guide, children }: { n?: number; title: string; hint: string; guide?: string; children: ReactNode }) {
   const id = `ss-step-${n ?? "lint"}`
   return (
-    <section aria-labelledby={id} className="grid grid-cols-1 gap-x-12 gap-y-6 border-t border-edge-soft py-10 md:py-14 lg:grid-cols-[15rem_minmax(0,1fr)]">
+    <section aria-labelledby={id} data-guide={guide} className="grid grid-cols-1 gap-x-12 gap-y-6 border-t border-edge-soft py-10 md:py-14 lg:grid-cols-[15rem_minmax(0,1fr)]">
       <header className="lg:sticky lg:top-28 lg:self-start">
         {n !== undefined && (
           <p className="annotate text-fg-muted">
@@ -62,6 +75,9 @@ function Step({ n, title, hint, children }: { n?: number; title: string; hint: s
 
 const TAB_CLASS =
   "min-h-11 rounded-full border border-edge-mid px-5 text-sm text-fg-muted data-[state=active]:border-signal data-[state=active]:bg-signal data-[state=active]:text-signal-fg data-[state=active]:shadow-none hover:text-fg"
+
+const GENERATE_PANELS = { pico: PicoPanel, criteria: CriteriaPanel, terms: TermsPanel, worksheet: WorksheetPanel }
+const LINT_PANELS = { "lint-findings": LintFindingsPanel }
 
 /** Source line with the index version, once the dictionary's meta file has arrived. */
 function Attribution() {
@@ -151,11 +167,55 @@ export function SearchStringTool({ mode }: { mode: "full" | "demo" }) {
     setRun((r) => (r ? { ...r, model, edited: true } : r))
   }
 
-  return (
-    <div className="sheet pb-24 md:pb-32">
-      <p className="annotate text-fg-muted mb-6 max-w-[72ch]">{ssCopy.privacy}</p>
+  // ── Guided mode: everything it shows is derived from this tool's own state and stays in memory.
+  const [tab, setTab] = useState("generate")
+  const [counts, setCounts] = useState<CountRow[]>([])
+  const [lintState, setLintState] = useState<{ text: string; findings: LintFinding[] }>({ text: "", findings: [] })
+  const [lintBaseline, setLintBaseline] = useState<number | null>(null)
+  const [editsState, setEditsState] = useState<{ key: string; edits: WorksheetEdits }>({ key: "", edits: EMPTY_EDITS })
+  const now = useMemo(() => new Date(), [])
 
-      <Tabs defaultValue="generate" className="gap-0">
+  const caseKey = run?.question ?? ""
+  const edits = editsState.key === caseKey ? editsState.edits : EMPTY_EDITS
+  const setEdits = useCallback(
+    (update: (e: WorksheetEdits) => WorksheetEdits) =>
+      setEditsState((prev) => ({ key: caseKey, edits: update(prev.key === caseKey ? prev.edits : EMPTY_EDITS) })),
+    [caseKey],
+  )
+  const resetEdits = useCallback(() => setEditsState({ key: "", edits: EMPTY_EDITS }), [])
+  const onLintState = useCallback((state: { text: string; findings: LintFinding[] }) => {
+    setLintState(state)
+    setLintBaseline((prev) => (state.text.trim() ? (prev ?? state.findings.length) : null))
+  }, [])
+
+  const guideCtx = useMemo(
+    () =>
+      makeSuchstringCtx({
+        mode,
+        text: run?.text ?? "",
+        pico: run?.pico ?? {},
+        busy,
+        analysis: run?.analysis ?? null,
+        model: run?.model ?? null,
+        counts,
+        edits,
+        now,
+        setEdits,
+        resetEdits,
+      }),
+    [mode, run, busy, counts, edits, now, setEdits, resetEdits],
+  )
+  const lintCtx: LintGuideCtx = useMemo(() => ({ mode, text: lintState.text, findings: lintState.findings, baseline: lintBaseline }), [mode, lintState, lintBaseline])
+
+  const body = (
+    <>
+      <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-start md:justify-between md:gap-8">
+        <p className="annotate text-fg-muted max-w-[72ch]">{ssCopy.privacy}</p>
+        <GuideToggle className="shrink-0 self-start" />
+      </div>
+      <GuideInvite />
+
+      <Tabs value={tab} onValueChange={setTab} className="gap-0">
         <TabsList className="mb-2 h-auto flex-wrap justify-start gap-2 bg-transparent p-0">
           <TabsTrigger value="generate" className={TAB_CLASS}>
             {ssCopy.tabs.generate}
@@ -166,7 +226,7 @@ export function SearchStringTool({ mode }: { mode: "full" | "demo" }) {
         </TabsList>
 
         <TabsContent value="generate" className="mt-8">
-          <Step n={1} title={ssCopy.question.heading} hint={ssCopy.question.hint}>
+          <Step n={1} title={ssCopy.question.heading} hint={ssCopy.question.hint} guide="ss-case">
             <QuestionPanel
               locked={demo}
               exampleId={exampleId}
@@ -184,7 +244,7 @@ export function SearchStringTool({ mode }: { mode: "full" | "demo" }) {
 
           {run ? (
             <div aria-busy={busy} className={busy ? "opacity-60 transition-opacity" : "transition-opacity"}>
-              <Step n={2} title={ssCopy.concepts.heading} hint={ssCopy.concepts.hint}>
+              <Step n={2} title={ssCopy.concepts.heading} hint={ssCopy.concepts.hint} guide="ss-concepts">
                 <ConceptsPanel
                   model={run.model}
                   onChange={updateModel}
@@ -193,11 +253,11 @@ export function SearchStringTool({ mode }: { mode: "full" | "demo" }) {
                   notices={run.analysis.notices}
                 />
               </Step>
-              <Step n={3} title={ssCopy.database.heading} hint={ssCopy.database.hint}>
+              <Step n={3} title={ssCopy.database.heading} hint={ssCopy.database.hint} guide="ss-database">
                 <DatabasePanel model={run.model} onChange={updateModel} suggestions={run.analysis.filterSuggestions} />
               </Step>
-              <Step n={4} title={ssCopy.result.heading} hint={ssCopy.result.hint}>
-                <ResultPanel model={run.model} question={run.question} />
+              <Step n={4} title={ssCopy.result.heading} hint={ssCopy.result.hint} guide="ss-result">
+                <ResultPanel model={run.model} question={run.question} onCountsChange={setCounts} />
               </Step>
             </div>
           ) : (
@@ -215,13 +275,27 @@ export function SearchStringTool({ mode }: { mode: "full" | "demo" }) {
         </TabsContent>
 
         <TabsContent value="lint" className="mt-8">
-          <Step title={ssCopy.lint.heading} hint={ssCopy.lint.hint}>
-            <LintPanel locked={demo} exampleString={STUDENT_SEARCH_STRING} />
+          <Step title={ssCopy.lint.heading} hint={ssCopy.lint.hint} guide="ss-lint">
+            <LintPanel locked={demo} exampleString={STUDENT_SEARCH_STRING} onStateChange={onLintState} />
           </Step>
         </TabsContent>
       </Tabs>
 
       <Attribution />
+    </>
+  )
+
+  return (
+    <div className="sheet pb-24 md:pb-32">
+      {tab === "generate" ? (
+        <GuideProvider guide={suchstringGuide} ctx={guideCtx} panels={GENERATE_PANELS}>
+          {body}
+        </GuideProvider>
+      ) : (
+        <GuideProvider guide={lintGuide} ctx={lintCtx} panels={LINT_PANELS}>
+          {body}
+        </GuideProvider>
+      )}
     </div>
   )
 }

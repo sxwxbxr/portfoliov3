@@ -5,8 +5,10 @@ import { ssCopy } from "@/lib/physio/copy/search-string"
 import {
   DATABASES,
   LANGUAGES,
+  selectedDatabases,
   setFilters,
   toggleAgeGroup,
+  toggleDatabase,
   toggleStudyType,
   type FilterSuggestion,
   type SearchModel,
@@ -32,39 +34,54 @@ interface Props {
 export function DatabasePanel({ model, onChange, suggestions = [] }: Props) {
   const uid = useId()
   const f = model.filters
+  const chosen = selectedDatabases(model)
+  const cochrane = chosen.includes("cochrane")
   return (
     <div className="flex flex-col gap-10">
       <fieldset className="flex flex-col gap-3">
         <legend className="sr-only">{t.legend}</legend>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {DATABASES.map((db) => (
-            <label
-              key={db.id}
-              className={`cast flex items-center justify-between gap-3 px-5 py-4 ${
-                db.available ? "cursor-pointer has-[:checked]:bg-plate-hi has-[:checked]:outline has-[:checked]:outline-1 has-[:checked]:outline-fg" : "cursor-not-allowed opacity-60"
-              }`}
-            >
-              <span className="flex items-center gap-3">
+          {DATABASES.map((db) => {
+            const on = chosen.includes(db.id)
+            const last = on && chosen.length === 1
+            return (
+              <label
+                key={db.id}
+                className={`cast flex items-start gap-3 px-5 py-4 ${
+                  db.available ? "cursor-pointer has-[:checked]:bg-plate-hi has-[:checked]:outline has-[:checked]:outline-1 has-[:checked]:outline-fg" : "cursor-not-allowed opacity-60"
+                }`}
+              >
                 <input
-                  type="radio"
+                  type="checkbox"
                   name={`${uid}-db`}
                   value={db.id}
-                  checked={db.id === "pubmed"}
-                  disabled={!db.available}
-                  readOnly
-                  className="size-4 accent-signal"
+                  checked={on}
+                  disabled={!db.available || last}
+                  onChange={() => onChange(toggleDatabase(model, db.id))}
+                  className="mt-1 size-4 shrink-0 accent-signal"
                 />
-                <span className="text-fg">{db.label}</span>
-              </span>
-              {!db.available && <span className="tab text-xs text-fg-muted">{t.soon}</span>}
-            </label>
-          ))}
+                <span className="flex min-w-0 flex-col gap-0.5">
+                  <span className="flex flex-wrap items-center gap-x-3 text-fg">
+                    {db.label}
+                    {!db.available && <span className="tab text-xs text-fg-muted">{t.soon}</span>}
+                  </span>
+                  <span className="text-xs leading-relaxed text-fg-muted">{t.dbHints[db.id] ?? db.hint}</span>
+                </span>
+              </label>
+            )
+          })}
         </div>
+        <p className="text-xs text-fg-muted">{t.atLeastOne}</p>
       </fieldset>
 
       <fieldset className="flex flex-col gap-6">
         <legend className="mb-2 text-xl tracking-tight">{t.filtersHeading}</legend>
         <p className="text-sm text-fg-muted">{t.filtersHint}</p>
+        {cochrane && (
+          <div className="well px-5 py-4" role="note">
+            <p className="measure text-sm leading-relaxed text-fg-muted">{t.cochraneFilters}</p>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div className="flex flex-col gap-1.5">

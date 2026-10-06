@@ -48,6 +48,8 @@ export type PhysioTool = {
   /** "paid": full version behind the subscription (a demo may be free). "free": no account needed. */
   access: "paid" | "free"
   icon: ToolIconKey
+  /** The tool has a guided mode ("Geführter Modus"); the hub and the cards show "mit Anleitung". */
+  guide?: boolean
   /** Full tool page (behind the subscription when access is "paid"). */
   path: string
   /** Free demo with fixed examples, if the tool has one. */
@@ -67,6 +69,7 @@ export const PHYSIO_TOOLS: PhysioTool[] = [
     addedAt: "2026-10-06",
     access: "paid",
     icon: "brackets",
+    guide: true,
     path: "/tools/suchstring",
     demoPath: "/tools/suchstring/demo",
   },

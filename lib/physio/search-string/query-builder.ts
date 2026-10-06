@@ -2,6 +2,7 @@
  * Turns the editable model into a search string: OR inside a Suchkomponente,
  * AND between components, rendered through a database profile.
  */
+import { buildStrategyLines } from "./cochrane"
 import { genericLevel } from "./lint"
 import { getRenderProfile } from "./profiles"
 import { BLOCKS, type BuiltComponent, type BuiltQuery, type Concept, type DatabaseId, type Notice, type SearchModel } from "./types"
@@ -19,6 +20,8 @@ export function buildQuery(model: SearchModel, databaseId: DatabaseId = "pubmed"
 
   const notices: Notice[] = []
   const components: BuiltComponent[] = []
+  const isCochrane = databaseId === "cochrane"
+  const nextForms: string[] = []
 
   for (const concept of orderConcepts(model)) {
     if (!model.includedBlocks[concept.block]) continue
@@ -27,10 +30,13 @@ export function buildQuery(model: SearchModel, databaseId: DatabaseId = "pubmed"
     const textParts = concept.freeText.filter((f) => !f.removed)
     const parts: string[] = []
     const schlagworte: string[] = []
+    const meshSyntax: string[] = []
     const stichworte: string[] = []
 
     for (const m of meshParts) {
-      parts.push(profile.mesh(m.heading, m.explode))
+      const meshPart = profile.mesh(m.heading, m.explode)
+      parts.push(meshPart)
+      meshSyntax.push(meshPart)
       schlagworte.push(m.explode ? m.heading : `${m.heading} (ohne Unterbegriffe)`)
     }
     for (const f of textParts) {
@@ -39,12 +45,15 @@ export function buildQuery(model: SearchModel, databaseId: DatabaseId = "pubmed"
       if (parts.includes(r.term)) continue
       parts.push(r.term)
       stichworte.push(r.plain)
+      if (r.nextForm) nextForms.push(r.term)
       if (r.truncationDropped) {
         notices.push({
           severity: "warning",
           code: "trunc-dropped",
           conceptId: concept.id,
-          message: `«${f.text}» in «${concept.label}»: Vor dem * braucht PubMed mindestens 4 Zeichen. Das Tool hat den Stern weggelassen.`,
+          message: isCochrane
+            ? `«${f.text}» in «${concept.label}»: Vor dem * braucht die Cochrane Library mindestens ${profile.minStem} Zeichen, und mehrere Sterne in einem Wort gehen nicht. Das Tool hat den Stern weggelassen.`
+            : `«${f.text}» in «${concept.label}»: Vor dem * braucht PubMed mindestens 4 Zeichen. Das Tool hat den Stern weggelassen.`,
         })
       }
       if (!/\s/.test(r.plain)) {
@@ -85,6 +94,8 @@ export function buildQuery(model: SearchModel, databaseId: DatabaseId = "pubmed"
       query: profile.group(parts),
       stichworte,
       schlagworte,
+      parts,
+      meshSyntax,
     })
   }
 
@@ -114,12 +125,35 @@ export function buildQuery(model: SearchModel, databaseId: DatabaseId = "pubmed"
       message: "Das Startjahr liegt nach dem Endjahr. Der Zeitraum ergibt keine Treffer.",
     })
   }
-  if (f.studyTypes.length) {
+  if (f.studyTypes.length && !isCochrane) {
     notices.push({
       severity: "info",
       code: "study-filter",
       message: "Der Studientyp-Filter nutzt Publikationstypen. Neue Studien sind dort oft noch nicht verschlagwortet und fehlen dann.",
     })
+  }
+
+  if (isCochrane && components.length) {
+    if (nextForms.length) {
+      notices.push({
+        severity: "info",
+        code: "cochrane-next",
+        message: `${nextForms.length === 1 ? "Eine Phrase mit * steht" : `${nextForms.length} Phrasen mit * stehen`} als NEXT-Ausdruck, zum Beispiel ${nextForms[0].replace(/:ti,ab,kw$/, "")}. Die Cochrane Library unterstützt Sterne in Anführungszeichen nicht.`,
+      })
+    }
+    notices.push({
+      severity: "info",
+      code: "cochrane-mesh-coverage",
+      message:
+        "Schlagworte [mh] finden in der Cochrane Library nur Einträge aus PubMed, MEDLINE und ClinicalTrials.gov. Einträge aus anderen Quellen, etwa Embase, findest du nur über die Stichworte. Darum stehen beide im String.",
+    })
+    if (f.ageGroups.length || f.sex) {
+      notices.push({
+        severity: "info",
+        code: "cochrane-checktag",
+        message: "Alter und Geschlecht sind MeSH-Check-Tags. Einträge ohne MeSH-Indexierung fallen mit diesem Filter weg.",
+      })
+    }
   }
 
   const filterClauses = profile.filterClauses(f)
@@ -137,7 +171,12 @@ export function buildQuery(model: SearchModel, databaseId: DatabaseId = "pubmed"
     })
   }
 
-  return { databaseId, query, components, filterClauses, notices, empty: !components.length }
+  const result: BuiltQuery = { databaseId, query, components, filterClauses, notices, empty: !components.length }
+  if (isCochrane) {
+    result.lines = buildStrategyLines(components, filterClauses)
+    result.limitNotes = profile.limitNotes?.(f) ?? []
+  }
+  return result
 }
 
 export const BLOCK_LABEL: Record<(typeof BLOCKS)[number], string> = {

@@ -6,8 +6,9 @@
  *   analyze(input)            the same with the curated terminology only (synchronous, offline)
  *   createModel(analysis)     editable model
  *   edit.*                    removeConcept, moveConcept, toggleExplode, addFreeText, ...
- *   buildQuery(model)         model -> PubMed string + table rows + notices
- *   lintQuery(string)         "Eigenen String prüfen" -> findings with fixes
+ *   buildQuery(model, db)     model -> string for PubMed or Cochrane (+ Search Manager lines) + table rows + notices
+ *   lintQuery(string, opts)   "Eigenen String prüfen" (PubMed or Cochrane, auto-detected) -> findings with fixes
+ *   convertToCochrane / convertToPubmed   field tags and MeSH syntax of a pasted string
  *   applyFix / autoFix        repair a string from lint findings
  *   exportText / exportJson   downloads
  */
@@ -33,9 +34,26 @@ export { germanForms, isNoiseWord } from "./german"
 export { PUBMED_TOOL, createPubMedCounter, countRows, getPubMedCounter, pubmedSearchUrl, PubMedError } from "./pubmed"
 export type { CountRow, PubMedCounter, PubMedErrorCode } from "./pubmed"
 export { buildQuery, BLOCK_LABEL, MANY_COMPONENTS } from "./query-builder"
-export { DATABASES, LANGUAGES, STUDY_TYPE_PT, getRenderProfile, cleanFreeText, stemLength, PUBMED_MIN_STEM } from "./profiles"
+export {
+  COCHRANE_ADVANCED_SEARCH_URL,
+  COCHRANE_FIELDS,
+  COCHRANE_MIN_STEM,
+  COCHRANE_SOURCES,
+  DATABASES,
+  LANGUAGES,
+  STUDY_TYPE_PT,
+  getRenderProfile,
+  cleanFreeText,
+  stemLength,
+  PUBMED_MIN_STEM,
+} from "./profiles"
+export { buildStrategyLines, strategyText } from "./cochrane"
 export type { DatabaseInfo, RenderProfile } from "./profiles"
 export { lintQuery, applyEdits, applyFix, autoFix, genericLevel } from "./lint"
+export type { LintOptions } from "./lint"
+export { detectLintDatabase } from "./lint-cochrane"
+export { convertToCochrane, convertToPubmed } from "./convert"
+export type { ConvertNote, ConvertResult } from "./convert"
 export * from "./edit"
 export { exportText, exportJson, DRAFT_NOTE } from "./export"
 

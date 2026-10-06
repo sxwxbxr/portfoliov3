@@ -1,9 +1,19 @@
 "use client"
 
-import { useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import { ssCopy } from "@/lib/physio/copy/search-string"
-import { applyFix, autoFix, lintQuery, type LintFinding } from "@/lib/physio/search-string"
+import {
+  applyFix,
+  autoFix,
+  convertToCochrane,
+  convertToPubmed,
+  detectLintDatabase,
+  lintQuery,
+  type ConvertResult,
+  type LintDatabase,
+  type LintFinding,
+} from "@/lib/physio/search-string"
 import { physioPath } from "@/lib/physio/urls"
 import { HighlightedText } from "./QueryView"
 
@@ -13,7 +23,11 @@ interface Props {
   /** Demo: the text is the shipped student string and cannot be typed over. */
   locked: boolean
   exampleString: string
+  /** Current text, findings and the syntax that was checked, for the guided mode. */
+  onStateChange?: (state: { text: string; findings: LintFinding[]; database: "pubmed" | "cochrane" }) => void
 }
+
+const SYNTAX_OPTIONS: LintDatabase[] = ["auto", "pubmed", "cochrane"]
 
 const BADGE: Record<LintFinding["severity"], string> = {
   error: "border-destructive bg-destructive font-medium text-destructive-foreground",
@@ -26,13 +40,17 @@ function snippet(text: string, f: LintFinding): string {
   return raw.length > 36 ? `${raw.slice(0, 35)}…` : raw
 }
 
-export function LintPanel({ locked, exampleString }: Props) {
+export function LintPanel({ locked, exampleString, onStateChange }: Props) {
   const [text, setText] = useState(locked ? exampleString : "")
   const [history, setHistory] = useState<string[]>([])
   const [message, setMessage] = useState("")
+  const [database, setDatabase] = useState<LintDatabase>("auto")
+  const [converted, setConverted] = useState<{ to: "cochrane" | "pubmed"; result: ConvertResult } | null>(null)
   const areaRef = useRef<HTMLTextAreaElement>(null)
 
-  const findings = useMemo(() => lintQuery(text), [text])
+  const effective = useMemo(() => (database === "auto" ? detectLintDatabase(text) : database), [database, text])
+  const findings = useMemo(() => lintQuery(text, { database }), [text, database])
+  useEffect(() => onStateChange?.({ text, findings, database: effective }), [text, findings, effective, onStateChange])
   const counts = useMemo(
     () => ({
       error: findings.filter((f) => f.severity === "error").length,
@@ -46,6 +64,28 @@ export function LintPanel({ locked, exampleString }: Props) {
   function change(next: string) {
     setHistory((h) => [...h, text].slice(-30))
     setText(next)
+    setConverted(null)
+  }
+
+  function convert(to: "cochrane" | "pubmed") {
+    const result = to === "cochrane" ? convertToCochrane(text) : convertToPubmed(text)
+    if (result.changed) {
+      change(result.text)
+      setDatabase("auto")
+      setMessage(t.convert.converted)
+    } else {
+      setMessage(t.convert.nothing)
+    }
+    setConverted({ to, result })
+  }
+
+  /** Demo: the corrected example string, written for the Cochrane Library. */
+  function showExampleInCochrane() {
+    const result = convertToCochrane(autoFix(exampleString).text)
+    change(result.text)
+    setDatabase("auto")
+    setMessage(t.convert.converted)
+    setConverted({ to: "cochrane", result })
   }
 
   function fix(f: LintFinding) {
@@ -55,7 +95,7 @@ export function LintPanel({ locked, exampleString }: Props) {
   }
 
   function fixAll() {
-    const r = autoFix(text)
+    const r = autoFix(text, 12, { database })
     if (!r.applied.length) {
       setMessage(t.fixAllNone)
       return
@@ -70,6 +110,7 @@ export function LintPanel({ locked, exampleString }: Props) {
     setHistory((h) => h.slice(0, -1))
     setText(prev)
     setMessage("")
+    setConverted(null)
   }
 
   function goTo(f: LintFinding) {
@@ -88,9 +129,14 @@ export function LintPanel({ locked, exampleString }: Props) {
           </label>
           <div className="flex flex-wrap gap-2">
             {locked ? (
-              <button type="button" className="control min-h-11 px-4 text-sm" onClick={() => change(exampleString)} disabled={text === exampleString}>
-                {t.resetExample}
-              </button>
+              <>
+                <button type="button" className="control min-h-11 px-4 text-sm" onClick={() => change(exampleString)} disabled={text === exampleString}>
+                  {t.resetExample}
+                </button>
+                <button type="button" className="control min-h-11 px-4 text-sm" onClick={showExampleInCochrane}>
+                  {t.convert.exampleToCochrane}
+                </button>
+              </>
             ) : (
               <>
                 <button type="button" className="control min-h-11 px-4 text-sm" onClick={() => change(exampleString)}>
@@ -107,6 +153,30 @@ export function LintPanel({ locked, exampleString }: Props) {
           </div>
         </div>
 
+        <div className="flex flex-wrap items-center gap-2">
+          <span id="ss-lint-syntax" className="annotate mr-1 text-fg-muted">
+            {t.syntax.label}
+          </span>
+          <div role="group" aria-labelledby="ss-lint-syntax" className="flex flex-wrap gap-2">
+            {SYNTAX_OPTIONS.map((o) => (
+              <button
+                key={o}
+                type="button"
+                aria-pressed={database === o}
+                onClick={() => setDatabase(o)}
+                className={`min-h-11 rounded-full border px-5 text-sm ${
+                  database === o ? "border-signal bg-signal text-signal-fg" : "border-edge-mid text-fg-muted hover:text-fg"
+                }`}
+              >
+                {t.syntax[o]}
+              </button>
+            ))}
+          </div>
+          {database === "auto" && text.trim() !== "" && (
+            <span className="annotate text-fg-muted">{t.syntax.detected(t.syntax[effective])}</span>
+          )}
+        </div>
+
         <textarea
           id="ss-lint-input"
           ref={areaRef}
@@ -120,6 +190,48 @@ export function LintPanel({ locked, exampleString }: Props) {
           placeholder={t.inputPlaceholder}
           className="field w-full resize-y px-4 py-3 font-mono text-base leading-relaxed md:text-[13px]"
         />
+
+        {!locked && text.trim() !== "" && (
+          <div className="flex flex-wrap gap-2">
+            <button type="button" className="control min-h-11 px-4 text-sm" onClick={() => convert("cochrane")}>
+              {t.convert.toCochrane}
+            </button>
+            <button type="button" className="control min-h-11 px-4 text-sm" onClick={() => convert("pubmed")}>
+              {t.convert.toPubmed}
+            </button>
+          </div>
+        )}
+
+        {converted && (converted.result.applied.length > 0 || converted.result.unsafe.length > 0) && (
+          <div className="well flex flex-col gap-4 px-5 py-4" role="status">
+            {converted.result.applied.length > 0 && (
+              <div className="flex flex-col gap-1.5">
+                <p className="text-fg">{t.convert.appliedHeading}</p>
+                <ul className="flex flex-col gap-1.5">
+                  {converted.result.applied.map((n) => (
+                    <li key={n.message} className="measure text-sm leading-relaxed text-fg-muted [overflow-wrap:anywhere]">
+                      {n.message}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {converted.result.unsafe.length > 0 && (
+              <div className="flex flex-col gap-1.5">
+                <p className="text-fg">{t.convert.unsafeHeading}</p>
+                <p className="measure text-sm leading-relaxed text-fg-muted">{t.convert.unsafeHint}</p>
+                <ul className="flex flex-col gap-2">
+                  {converted.result.unsafe.map((n, i) => (
+                    <li key={`${n.snippet}-${i}`} className="flex flex-col gap-0.5">
+                      {n.snippet && <code className="font-mono text-xs text-fg [overflow-wrap:anywhere]">{n.snippet}</code>}
+                      <span className="measure text-sm leading-relaxed text-fg-muted [overflow-wrap:anywhere]">{n.message}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
 
         {locked && (
           <div className="well flex flex-col gap-1 px-5 py-4" role="note">

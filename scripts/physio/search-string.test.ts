@@ -1084,3 +1084,420 @@ describe("PubMed counts", () => {
     assert.equal(pubmedSearchUrl('"a b"[tiab]'), "https://pubmed.ncbi.nlm.nih.gov/?term=%22a%20b%22%5Btiab%5D")
   })
 })
+
+/* ── Cochrane Library ────────────────────────────────────────────────────────── */
+
+import {
+  COCHRANE_FIELDS,
+  DATABASES,
+  convertToCochrane,
+  convertToPubmed,
+  detectLintDatabase,
+  selectedDatabases,
+  strategyText,
+  toggleDatabase,
+  type BuiltQuery,
+} from "../../lib/physio/search-string"
+
+const MUELLER_COCHRANE =
+  '((office NEXT worker*):ti,ab,kw OR (desk NEXT worker*):ti,ab,kw OR (sedentary NEXT worker*):ti,ab,kw OR (white NEXT collar NEXT worker*):ti,ab,kw OR (computer NEXT worker*):ti,ab,kw OR (clerical NEXT worker*):ti,ab,kw) AND ([mh "Low Back Pain"] OR "low back pain":ti,ab,kw OR "lower back pain":ti,ab,kw OR "lumbar pain":ti,ab,kw OR lumbago:ti,ab,kw OR "low backache":ti,ab,kw OR LBP:ti,ab,kw) AND ([mh "Exercise Therapy"] OR (back NEXT exercise*):ti,ab,kw OR "back training":ti,ab,kw OR "back school":ti,ab,kw OR "core stability":ti,ab,kw OR (core NEXT stabilization NEXT exercise*):ti,ab,kw OR (core NEXT stabilisation NEXT exercise*):ti,ab,kw OR "trunk stabilization":ti,ab,kw OR (lumbar NEXT stabilization NEXT exercise*):ti,ab,kw) AND ([mh "Work Capacity Evaluation"] OR [mh "Return to Work"] OR [mh "Sick Leave"] OR [mh Absenteeism] OR "work ability":ti,ab,kw OR "ability to work":ti,ab,kw OR "work capacity":ti,ab,kw OR "work disability":ti,ab,kw OR "return to work":ti,ab,kw OR "sick leave":ti,ab,kw OR "sickness absence":ti,ab,kw OR absenteeism:ti,ab,kw OR "work productivity":ti,ab,kw OR presenteeism:ti,ab,kw)'
+
+const KNIE = EXAMPLES.find((e) => e.id === "knie")!
+const KNIE_COCHRANE =
+  '([mh Aged] OR (older NEXT adult*):ti,ab,kw OR "older people":ti,ab,kw OR elderly:ti,ab,kw OR senior*:ti,ab,kw) AND ([mh "Osteoarthritis, Knee"] OR "knee osteoarthritis":ti,ab,kw OR "osteoarthritis of the knee":ti,ab,kw OR "knee OA":ti,ab,kw OR gonarthrosis:ti,ab,kw) AND ([mh "Resistance Training"] OR "resistance training":ti,ab,kw OR "strength training":ti,ab,kw OR (strengthening NEXT exercise*):ti,ab,kw OR "weight training":ti,ab,kw OR "muscle strengthening":ti,ab,kw) AND ([mh "Pain Measurement"] OR "pain intensity":ti,ab,kw OR "pain severity":ti,ab,kw OR (pain NEXT level*):ti,ab,kw OR "visual analogue scale":ti,ab,kw OR "numeric rating scale":ti,ab,kw) AND ([mh "Disability Evaluation"] OR disabilit*:ti,ab,kw OR (physical NEXT function*):ti,ab,kw OR "functional status":ti,ab,kw OR (functional NEXT limitation*):ti,ab,kw)'
+
+const kneeModel = () => createModel(analyze({ text: KNIE.text, pico: KNIE.pico }), KNIE.filters)
+const notInfo = (findings: LintFinding[]) => findings.filter((f) => f.severity !== "info")
+const errorsOf = (findings: LintFinding[]) => findings.filter((f) => f.severity === "error")
+
+describe("Cochrane: profile", () => {
+  it("is available, CINAHL and Embase are not", () => {
+    const by = Object.fromEntries(DATABASES.map((d) => [d.id, d.available]))
+    assert.equal(by.pubmed, true)
+    assert.equal(by.cochrane, true)
+    assert.equal(by.cinahl, false)
+    assert.equal(by.embase, false)
+  })
+
+  it("selects PubMed by default and keeps at least one database", () => {
+    const m = kneeModel()
+    assert.deepEqual(selectedDatabases(m), ["pubmed"])
+    const both = toggleDatabase(m, "cochrane")
+    assert.deepEqual(selectedDatabases(both), ["pubmed", "cochrane"])
+    const onlyCochrane = toggleDatabase(both, "pubmed")
+    assert.deepEqual(selectedDatabases(onlyCochrane), ["cochrane"])
+    assert.deepEqual(selectedDatabases(toggleDatabase(onlyCochrane, "cochrane")), ["cochrane"])
+    assert.deepEqual(selectedDatabases({ ...m, databases: ["cinahl"] }), ["pubmed"])
+    assert.deepEqual(selectedDatabases({ ...m, databases: undefined }), ["pubmed"])
+  })
+})
+
+describe("Cochrane: rendering", () => {
+  it("writes the whole Herr Müller case with [mh], :ti,ab,kw and NEXT (exact string)", async () => {
+    const model = createModel(await run(FULL_CASE))
+    const built = buildQuery(model, "cochrane")
+    assert.equal(built.query, MUELLER_COCHRANE)
+    assert.equal(built.databaseId, "cochrane")
+  })
+
+  it("renders the Müller example and the knee question exactly", () => {
+    const m = createModel(analyze({ text: MUELLER.text, pico: MUELLER.pico }))
+    assert.equal(buildQuery(m, "cochrane").query, MUELLER_COCHRANE)
+    assert.equal(buildQuery(kneeModel(), "cochrane").query, KNIE_COCHRANE)
+  })
+
+  it("follows the verified rules in every example", () => {
+    for (const e of EXAMPLES) {
+      const built = buildQuery(createModel(analyze({ text: e.text, pico: e.pico }), e.filters), "cochrane")
+      const q = built.query
+      assert.ok(balanced(q), e.id)
+      assert.ok(!/\[(tiab|Mesh|Majr|pt|dp|la)[\]:]/i.test(q), `${e.id}: PubMed syntax`)
+      for (const phrase of q.matchAll(/"([^"]*)"/g)) assert.ok(!/[*?]/.test(phrase[1]), `${e.id}: wildcard inside quotes`)
+      assert.ok(!/\bhumans\b/i.test(q), `${e.id}: no humans filter`)
+      for (const m of q.matchAll(/\[mh ([^\]]*)\]/g)) {
+        const heading = m[1].replace(/^\^/, "")
+        if (/\s|,/.test(heading)) assert.ok(heading.startsWith('"') && heading.endsWith('"'), `${e.id}: ${m[0]} needs quotes`)
+      }
+      assert.deepEqual(notInfo(lintQuery(q)), [], `${e.id}: lint`)
+    }
+  })
+
+  it("writes truncated phrases as NEXT chains and hyphens as spaces", () => {
+    const base = kneeModel()
+    const id = base.concepts[0].id
+    const q = buildQuery(addFreeText(base, id, "white-collar worker*").model, "cochrane").query
+    assert.ok(q.includes("(white NEXT collar NEXT worker*):ti,ab,kw"))
+    assert.ok(!q.includes("white-collar"))
+    assert.ok(buildQuery(addFreeText(base, id, "geriatric*").model, "cochrane").query.includes("geriatric*:ti,ab,kw"))
+  })
+
+  it("drops a wildcard whose root is shorter than three characters", () => {
+    const base = kneeModel()
+    const built = buildQuery(addFreeText(base, base.concepts[0].id, "ab*").model, "cochrane")
+    assert.ok(built.query.includes("ab:ti,ab,kw"))
+    assert.ok(!built.query.includes("ab*"))
+    assert.ok(built.notices.some((n) => n.code === "trunc-dropped" && n.message.includes("Cochrane")))
+  })
+
+  it("respects the explode toggle: ^ for no explosion, with and without quotes", () => {
+    let m = kneeModel()
+    const oa = m.concepts.find((c) => c.mesh.some((x) => x.heading === "Osteoarthritis, Knee"))!
+    const aged = m.concepts.find((c) => c.mesh.some((x) => x.heading === "Aged"))!
+    assert.ok(buildQuery(m, "cochrane").query.includes('[mh "Osteoarthritis, Knee"]'))
+    m = toggleExplode(toggleExplode(m, oa.id, "Osteoarthritis, Knee"), aged.id, "Aged")
+    const q = buildQuery(m, "cochrane").query
+    assert.ok(q.includes('[mh ^"Osteoarthritis, Knee"]'))
+    assert.ok(q.includes("[mh ^Aged]"))
+    assert.ok(!q.includes('[mh "Osteoarthritis, Knee"]'))
+    assert.ok(buildQuery(m).query.includes('"Osteoarthritis, Knee"[Mesh:NoExp]'))
+  })
+
+  it("keeps the PubMed output unchanged", () => {
+    const m = kneeModel()
+    const pm = buildQuery(m)
+    assert.equal(pm.databaseId, "pubmed")
+    assert.equal(pm.lines, undefined)
+    assert.equal(pm.limitNotes, undefined)
+    assert.equal(buildQuery(m, "pubmed").query, pm.query)
+    assert.ok(pm.query.startsWith('("Aged"[Mesh] OR "older adult*"[tiab] OR "older people"[tiab] OR elderly[tiab] OR senior*[tiab]) AND ("Osteoarthritis, Knee"[Mesh] OR'))
+    assert.ok(pm.query.includes('"strengthening exercise*"[tiab]'))
+    assert.ok(pm.query.endsWith('"functional limitation*"[tiab])'))
+  })
+})
+
+describe("Cochrane: Search Manager strategy", () => {
+  const built: BuiltQuery = buildQuery(kneeModel(), "cochrane")
+  const lines = built.lines!
+
+  it("numbers the lines without gaps and ends with the combination of all components", () => {
+    assert.deepEqual(
+      lines.map((l) => l.n),
+      lines.map((_, i) => i + 1),
+    )
+    const last = lines[lines.length - 1]
+    assert.equal(last.kind, "final")
+    const components = lines.filter((l) => l.kind === "component")
+    assert.equal(components.length, 5)
+    assert.equal(last.query, components.map((l) => `#${l.n}`).join(" AND "))
+  })
+
+  it("gives every term its own line and combines the terms of a component with OR", () => {
+    const termLines = lines.filter((l) => l.kind === "term")
+    assert.equal(termLines.length, built.components.reduce((n, c) => n + (c.parts?.length ?? 0), 0))
+    for (const l of termLines) assert.ok(!l.query.includes("#"), l.query)
+    for (const c of lines.filter((l) => l.kind === "component")) {
+      assert.ok(/^#\d+( OR #\d+)+$/.test(c.query), c.query)
+      for (const ref of c.query.matchAll(/#(\d+)/g)) {
+        const target = lines[Number(ref[1]) - 1]
+        assert.ok(Number(ref[1]) < c.n && target.kind === "term" && target.conceptId === c.conceptId)
+      }
+    }
+  })
+
+  it("references only earlier lines and never mixes #n with free text", () => {
+    for (const l of lines) {
+      for (const ref of l.query.matchAll(/#(\d+)/g)) assert.ok(Number(ref[1]) < l.n, `${l.n}: ${l.query}`)
+      if (l.query.includes("#")) assert.ok(/^[#\d ANDOR]+$/.test(l.query), l.query)
+    }
+  })
+
+  it("prints numbered and unnumbered text that the linter accepts", () => {
+    const numbered = strategyText(lines, true)
+    const plain = strategyText(lines, false)
+    assert.ok(numbered.startsWith("#1 [mh Aged]\n#2 (older NEXT adult*):ti,ab,kw"))
+    assert.equal(plain.split("\n").length, lines.length)
+    assert.deepEqual(notInfo(lintQuery(numbered)), [])
+    assert.deepEqual(errorsOf(lintQuery(plain)), [])
+  })
+
+  it("has no final line for a single component", () => {
+    let m = kneeModel()
+    for (const c of m.concepts.slice(1)) m = removeConcept(m, c.id)
+    const one = buildQuery(m, "cochrane")
+    assert.equal(one.lines!.filter((l) => l.kind === "final").length, 0)
+    assert.equal(one.lines![one.lines!.length - 1].kind, "component")
+  })
+})
+
+describe("Cochrane: filters become notes, not syntax", () => {
+  const filtered = () => setFilters(kneeModel(), { language: "german", yearFrom: 2015, yearTo: 2024, studyTypes: ["rct"], humansOnly: true })
+
+  it("leaves language, dates, study type and humans out of the string", () => {
+    const built = buildQuery(filtered(), "cochrane")
+    assert.equal(built.query, KNIE_COCHRANE)
+    assert.deepEqual(built.filterClauses, [])
+    assert.equal(built.limitNotes!.length, 4)
+    const joined = built.limitNotes!.join(" ")
+    assert.ok(joined.includes("Sprache Deutsch") && joined.includes("2015 bis 2024") && joined.includes("Studientyp") && joined.includes("Nur Studien am Menschen"))
+    assert.ok(joined.includes("Search limits"))
+    assert.ok(!built.notices.some((n) => n.code === "study-filter"))
+  })
+
+  it("keeps the filters in the PubMed string", () => {
+    const q = buildQuery(filtered()).query
+    assert.ok(q.includes("german[la]") && q.includes("[dp]") && q.includes("randomized controlled trial[pt]") && q.includes("animals[mh]"))
+  })
+
+  it("writes age and sex as MeSH check tags and puts them in their own line", () => {
+    const m = setFilters(toggleAgeGroup(kneeModel(), "Middle Aged"), { sex: "Male" })
+    const built = buildQuery(m, "cochrane")
+    assert.ok(built.query.endsWith('AND [mh "Middle Aged"] AND [mh Male]'))
+    assert.deepEqual(built.filterClauses, ['[mh "Middle Aged"]', "[mh Male]"])
+    assert.equal(built.lines!.filter((l) => l.kind === "filter").length, 2)
+    assert.ok(built.notices.some((n) => n.code === "cochrane-checktag"))
+  })
+
+  it("has no limit notes when no filter is set", () => {
+    assert.deepEqual(buildQuery(kneeModel(), "cochrane").limitNotes, [])
+  })
+})
+
+describe("Cochrane: lint", () => {
+  const BROKEN =
+    '([mh Low Back Pain] OR "low back pain"[tiab] OR [mh "Pain"^]) AND (“back exercise*”:ti,ab,kw or exercise therapy:ti,ab,tw) AND [mh "Vaccines"/ae] AND ab*:ti'
+
+  it("detects the syntax from the field syntax", () => {
+    assert.equal(detectLintDatabase('"back pain"[tiab] AND "Low Back Pain"[Mesh]'), "pubmed")
+    assert.equal(detectLintDatabase('[mh "Low Back Pain"] AND "back pain":ti,ab,kw'), "cochrane")
+    assert.equal(detectLintDatabase("(hearing NEXT aid*):ti,ab,kw"), "cochrane")
+    assert.equal(detectLintDatabase("#1 OR #2"), "cochrane")
+    assert.equal(detectLintDatabase("back pain AND exercise"), "pubmed")
+    assert.equal(detectLintDatabase(""), "pubmed")
+    assert.equal(detectLintDatabase(STUDENT_SEARCH_STRING), "pubmed")
+  })
+
+  it("leaves PubMed findings exactly as before", () => {
+    const before = lintQuery(STUDENT_SEARCH_STRING)
+    assert.deepEqual(lintQuery(STUDENT_SEARCH_STRING, { database: "auto" }), before)
+    assert.deepEqual(lintQuery(STUDENT_SEARCH_STRING, { database: "pubmed" }), before)
+    assert.ok(before.length > 0)
+  })
+
+  it("passes clean Cochrane strings", () => {
+    assert.deepEqual(lintQuery(MUELLER_COCHRANE), [])
+    assert.deepEqual(lintQuery(KNIE_COCHRANE), [])
+    assert.deepEqual(lintQuery('[mh ^"Low Back Pain"[mj]/AE,AD] AND (hearing NEXT aid*):ti,ab,kw'), [])
+    assert.deepEqual(lintQuery('"lung cancer":ti OR smith:au OR english:la', { database: "cochrane" }), [])
+  })
+
+  it("finds the typical mistakes in a broken Cochrane string", () => {
+    const f = lintQuery(BROKEN)
+    const c = codes(f)
+    for (const code of [
+      "mesh-unquoted",
+      "pubmed-syntax",
+      "mesh-caret",
+      "quotes-typographic",
+      "trunc-in-phrase",
+      "operator-lowercase",
+      "field-unknown",
+      "phrase-unquoted",
+      "mesh-qualifier-case",
+      "trunc-short",
+    ]) {
+      assert.ok(c.includes(code), `missing ${code} in ${c.join(", ")}`)
+    }
+    assert.ok(f.every((x) => x.start >= 0 && x.end <= BROKEN.length))
+    assert.equal(f.find((x) => x.code === "field-unknown")!.fix!.label, "Durch :ti,ab,kw ersetzen")
+  })
+
+  it("repairs what is unambiguous and the result has no errors left", () => {
+    const fixed = autoFix(BROKEN).text
+    assert.ok(fixed.includes('[mh "Low Back Pain"]'))
+    assert.ok(fixed.includes('[mh ^"Pain"]'))
+    assert.ok(fixed.includes("(back NEXT exercise*):ti,ab,kw"))
+    assert.ok(fixed.includes('[mh "Vaccines"/AE]'))
+    assert.ok(fixed.includes('"low back pain":ti,ab,kw'))
+    assert.deepEqual(errorsOf(lintQuery(fixed)).map((x) => x.code), ["pubmed-syntax"].filter(() => fixed.includes("[tiab]")))
+  })
+
+  it("checks brackets, quotes, parentheses and operators", () => {
+    assert.ok(codes(lintQuery('[mh "Low Back Pain" AND "pain":ti')).includes("bracket-unclosed"))
+    assert.ok(codes(lintQuery('"low back pain:ti,ab,kw')).includes("quote-unclosed"))
+    assert.ok(codes(lintQuery('("a b":ti,ab,kw OR "c d":ti,ab,kw')).includes("paren-unclosed"))
+    assert.ok(codes(lintQuery('"a b":ti,ab,kw AND AND "c d":ti,ab,kw')).includes("op-double"))
+    assert.ok(codes(lintQuery('"a b":ti,ab,kw OR "c d":ti,ab,kw AND "e f":ti,ab,kw')).includes("mixed-operators"))
+    assert.ok(codes(lintQuery('"hearing aid":ti,ab,kw NEXT/3 "aid":ti')).includes("next-distance"))
+    assert.ok(codes(lintQuery('[mh "A B"]:ti,ab AND "x y":ti,ab,kw')).includes("field-on-mesh"))
+    assert.ok(codes(lintQuery("(english OR spanish):la")).includes("field-la-nesting"))
+  })
+
+  it("checks truncation: root, several stars, mesh, quoted phrase", () => {
+    assert.ok(codes(lintQuery("ab*:ti,ab,kw")).includes("trunc-short"))
+    assert.ok(codes(lintQuery("leuk*mia*:ti,ab,kw")).includes("trunc-multi"))
+    assert.deepEqual(codes(lintQuery("leuk*mia:ti,ab,kw")), [])
+    assert.deepEqual(codes(lintQuery("wom?n:ti,ab,kw")), [])
+    assert.ok(codes(lintQuery("[mh Pain*]")).includes("trunc-mesh"))
+    const phrase = lintQuery('"hearing aid*":ti,ab,kw').find((x) => x.code === "trunc-in-phrase")!
+    assert.equal(applyEdits('"hearing aid*":ti,ab,kw', phrase.fix!.edits), "(hearing NEXT aid*):ti,ab,kw")
+  })
+
+  it("converts PubMed tags inside a Cochrane string with a fix", () => {
+    const src = '[mh "Low Back Pain"] AND "back pain"[tiab]'
+    const pm = lintQuery(src).find((x) => x.code === "pubmed-syntax")!
+    assert.equal(applyEdits(src, pm.fix!.edits), '[mh "Low Back Pain"] AND "back pain":ti,ab,kw')
+  })
+
+  it("checks Search Manager lines: missing references, mixing with free text, NEXT", () => {
+    const strategy = '"low back pain":ti,ab,kw\n"back pain":ti,ab,kw\n#1 OR #2\n#1 OR #7\n(#3 OR #1) AND tinnitus:ti,ab,kw\n#1 NEXT #2'
+    const c = codes(lintQuery(strategy))
+    assert.ok(c.includes("line-missing") && c.includes("ref-mixed") && c.includes("ref-proximity"))
+    assert.deepEqual(codes(lintQuery('#1 [mh "Low Back Pain"]\n#2 "back pain":ti,ab,kw\n#3 #1 OR #2')), [])
+    assert.ok(codes(lintQuery("#1 [mh Pain]\n#5 pain*:ti\n#3 #1 OR #2")).includes("line-label"))
+    assert.ok(codes(lintQuery("#1 OR #2")).includes("line-missing"))
+    assert.ok(codes(lintQuery('"a b":ti,ab,kw\n"c d":ti,ab,kw\n{OR #1-#4}')).includes("line-missing"))
+    assert.deepEqual(codes(lintQuery('"a b":ti,ab,kw\n"c d":ti,ab,kw\n{OR #1-#2}')), [])
+    assert.ok(codes(lintQuery('"a b":ti,ab,kw\n"c d":ti,ab,kw\n"e f":ti,ab,kw\n#1 AND #2')).includes("line-orphan"))
+  })
+
+  it("accepts a Cochrane string in PubMed mode only with a conversion finding", () => {
+    const src = '[mh "Low Back Pain"] AND "back pain":ti,ab,kw'
+    const c = lintQuery(src, { database: "pubmed" }).find((x) => x.code === "cochrane-syntax")!
+    assert.ok(c && c.fix)
+    assert.equal(applyEdits(src, c.fix!.edits), '"Low Back Pain"[Mesh] AND "back pain"[tiab]')
+  })
+})
+
+describe("Cochrane: converter", () => {
+  const PUBMED_KNIE = buildQuery(kneeModel()).query
+
+  it("converts a clean PubMed string to Cochrane and back without loss", () => {
+    const toCo = convertToCochrane(PUBMED_KNIE)
+    assert.equal(toCo.text, KNIE_COCHRANE)
+    assert.deepEqual(toCo.unsafe, [])
+    const back = convertToPubmed(toCo.text)
+    assert.equal(back.text, PUBMED_KNIE)
+    assert.deepEqual(back.unsafe, [])
+    assert.ok(back.applied.some((n) => n.message.includes("kw")))
+  })
+
+  it("converts the whole Müller case (the hyphen becomes a space, the rest is identical)", () => {
+    const m = createModel(analyze({ text: MUELLER.text, pico: MUELLER.pico }))
+    const r = convertToCochrane(buildQuery(m).query)
+    assert.equal(r.text, MUELLER_COCHRANE)
+    assert.deepEqual(r.unsafe, [])
+  })
+
+  it("handles NoExp, major topic and a single quoted word", () => {
+    assert.equal(
+      convertToCochrane('"Back Pain"[Mesh:NoExp] OR "Pain"[Majr] OR "pain"[tiab]').text,
+      '[mh ^"Back Pain"] OR [mh "Pain"[mj]] OR pain:ti,ab,kw',
+    )
+    assert.equal(convertToPubmed('[mh ^"Back Pain"[mj]]').text, '"Back Pain"[Majr:NoExp]')
+    assert.equal(convertToPubmed('[mh ^"Back Pain"] OR [mh Pain]').text, '"Back Pain"[Mesh:NoExp] OR "Pain"[Mesh]')
+  })
+
+  it("reports what it cannot convert and leaves it untouched", () => {
+    const r = convertToCochrane('"back pain"[tiab] AND ("2010/01/01"[dp] : "3000"[dp]) AND english[la] AND "rct"[pt] AND "x"[sb]')
+    assert.ok(r.text.startsWith('"back pain":ti,ab,kw AND ("2010/01/01"[dp] : "3000"[dp]) AND english[la]'))
+    assert.equal(r.unsafe.length, 5)
+    assert.ok(r.unsafe.some((u) => u.message.includes("Search limits")))
+    const c = convertToPubmed('[mh "Vaccines"/AE] AND "a b":kw AND (cancer NEAR lung):ti,ab,kw AND wom?n:ti,ab,kw')
+    assert.equal(c.unsafe.length, 4)
+    assert.ok(c.text.includes('[mh "Vaccines"/AE]') && c.text.includes("wom?n:ti,ab,kw"))
+  })
+
+  it("drops the humans filter with a note", () => {
+    const r = convertToCochrane('"back pain"[tiab] NOT (animals[mh] NOT humans[mh])')
+    assert.equal(r.text, '"back pain":ti,ab,kw')
+    assert.ok(r.applied.some((n) => n.message.includes("nur Menschen")))
+  })
+
+  it("writes operators in capitals for PubMed and refuses multi-line strategies", () => {
+    assert.equal(convertToPubmed('"a b":ti,ab,kw or "c d":ti,ab,kw').text, '"a b"[tiab] OR "c d"[tiab]')
+    const multi = convertToPubmed('"a b":ti,ab,kw\n#1')
+    assert.equal(multi.changed, false)
+    assert.equal(multi.unsafe.length, 1)
+  })
+
+  it("turns the Cochrane output of every example into a PubMed string without errors", () => {
+    for (const e of EXAMPLES) {
+      const co = buildQuery(createModel(analyze({ text: e.text, pico: e.pico })), "cochrane").query
+      const pm = convertToPubmed(co)
+      assert.deepEqual(pm.unsafe, [], e.id)
+      assert.deepEqual(errorsOf(lintQuery(pm.text)), [], e.id)
+    }
+  })
+})
+
+describe("Cochrane: exports", () => {
+  const m = kneeModel()
+  const built = buildQuery(setFilters(m, { yearFrom: 2020 }), "cochrane")
+  const input = { question: KNIE.text, built, model: m, date: "2026-10-06" }
+
+  it("names database and format in the text export", () => {
+    const one = exportText(input)
+    assert.ok(one.includes("Datenbank: Cochrane Library (CENTRAL)") && one.includes("Format: Ein Suchstring (Suchfeld)"))
+    assert.ok(one.includes(KNIE_COCHRANE) && one.includes("Zeitraum 2020 bis …") && one.includes("Entwurf"))
+    const lines = exportText({ ...input, format: "manager" })
+    assert.ok(lines.includes("Format: Search Manager, eine Zeile pro Suche") && lines.includes("#1 [mh Aged]"))
+    assert.ok(lines.includes(`#${built.lines!.length} #`))
+  })
+
+  it("names database and format in the JSON export", () => {
+    const one = JSON.parse(exportJson(input))
+    assert.equal(one.database, "cochrane")
+    assert.equal(one.format, "single-line")
+    assert.equal(one.query, KNIE_COCHRANE)
+    assert.equal(one.lines.length, built.lines!.length)
+    assert.equal(one.limitNotes.length, 1)
+    const manager = JSON.parse(exportJson({ ...input, format: "manager" }))
+    assert.equal(manager.format, "search-manager")
+    assert.equal(manager.query, strategyText(built.lines!, false))
+    assert.equal(manager.singleLine, KNIE_COCHRANE)
+  })
+
+  it("keeps the PubMed export as before and adds the format", () => {
+    const pm = buildQuery(m)
+    const json = JSON.parse(exportJson({ ...input, built: pm }))
+    assert.equal(json.database, "pubmed")
+    assert.equal(json.format, "single-line")
+    assert.equal(json.query, pm.query)
+    assert.equal(json.lines, undefined)
+    assert.ok(exportText({ ...input, built: pm }).includes("Datenbank: PubMed\nFormat: Ein Suchstring (Suchfeld)"))
+  })
+
+  it("exposes the field code used", () => {
+    assert.equal(COCHRANE_FIELDS, ":ti,ab,kw")
+  })
+})
