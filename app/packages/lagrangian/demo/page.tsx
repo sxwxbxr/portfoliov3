@@ -139,7 +139,10 @@ indicator(tabs, bar, { itemSelector: "button", onSelect: (i) => showPanel(i) })
 const effect = fall(section)
 effect.start()
 effect.explode({ x: 400, y: 600 })
-await effect.restore()`
+await effect.restore()
+
+board([todo, doing, done], { onMove: ({ item, to }) => save(item, to) })
+zoom(viewport, { max: 6 })`
 
 export default function LagrangianDemoPage() {
   const btn = "control inline-flex items-center gap-1 py-2.5 pr-4 pl-5 text-sm"

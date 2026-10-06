@@ -94,7 +94,7 @@ export const lagrangianDemo = {
   pro: {
     label: "Pro",
     title: "Finished pieces on the same physics.",
-    sub: "Sheet, drawer, dialog, carousel, pull to refresh, swipe stack, sortable lists, toasts, tab indicator, page effects, jelly, ropes and sounds.",
+    sub: "Sheet, drawer, dialog, carousel, pull to refresh, swipe stack, sortable lists, toasts, tab indicator, page effects, board, zoom, jelly, ropes and sounds.",
     lede:
       "Lagrangian Pro turns the physics into interface parts you would otherwise build yourself: a sheet that lands where the throw would carry it, cards that tilt around your finger, lists that make room as you drag, and objects that squash, swing and clack. Each is a few lines. Here is what they look like in code.",
     sheetHeading: "Bottom sheet",
@@ -102,7 +102,7 @@ export const lagrangianDemo = {
     sortHeading: "Sortable list in React",
     blocksHeading: "Drawer, dialog, carousel, pull to refresh",
     effectsHeading: "Jelly, rope and sound",
-    stackHeading: "Toasts, tab indicator, falling page",
+    stackHeading: "Toasts, tabs, falling page, board, zoom",
     cta: "See Pro and prices",
   },
   closing: {

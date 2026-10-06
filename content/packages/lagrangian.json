@@ -70,6 +70,8 @@
       "Toast stack: springs in at the edge, neighbours make room, swipe to throw away, timers pause on hover and focus",
       "Sliding indicator for tabs and segmented controls that keeps its velocity when the selection changes",
       "Page effect: a section falls apart under gravity, piles up, can be blown away and springs back into the layout",
+      "Board: drag to rearrange a wrapping grid or the columns of a kanban board, with keyboard and screen reader support",
+      "Zoom and pan for images and maps: pinch, wheel, double tap and drag with inertia and rubber-banding",
       "Reduced motion respected everywhere"
     ]
   },
@@ -92,7 +94,7 @@
     },
     {
       "q": "What does Lagrangian Pro add?",
-      "a": "Finished interface pieces built on the free physics: a bottom sheet, a side drawer, a dialog, a carousel, pull to refresh, a toast stack, a tab indicator, a page effect that lets a section fall apart, a swipe stack, sortable lists, layout transitions, jelly deformation, ropes and impact sounds, with React hooks. The free library stays free and keeps everything it has today."
+      "a": "Finished interface pieces built on the free physics: a bottom sheet, a side drawer, a dialog, a carousel, pull to refresh, a toast stack, a tab indicator, a page effect that lets a section fall apart, a drag-and-drop board for grids and columns, zoom and pan, a swipe stack, sortable lists, layout transitions, jelly deformation, ropes and impact sounds, with React hooks. The free library stays free and keeps everything it has today."
     },
     {
       "q": "Do my customers need a licence?",
@@ -146,6 +148,11 @@
       "pro": true
     },
     {
+      "feature": "Board (grid and kanban) and zoom",
+      "free": false,
+      "pro": true
+    },
+    {
       "feature": "Layout transitions",
       "free": false,
       "pro": true
@@ -177,7 +184,7 @@
     "packages": [
       {
         "name": "@weber-development/lagrangian-pro",
-        "description": "Bottom sheet, drawer, dialog, carousel, pull to refresh, toasts, tab indicator, page effects, swipe stack, sortable lists, layout transitions, jelly, ropes and impact sounds, framework-free."
+        "description": "Bottom sheet, drawer, dialog, carousel, pull to refresh, toasts, tab indicator, page effects, board, zoom, swipe stack, sortable lists, layout transitions, jelly, ropes and impact sounds, framework-free."
       },
       {
         "name": "@weber-development/lagrangian-pro-react",
