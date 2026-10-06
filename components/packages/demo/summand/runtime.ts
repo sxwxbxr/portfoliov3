@@ -9,7 +9,7 @@ import { useEffect, useState } from "react"
  * npm, bundled into one file.
  */
 
-export const SUMMAND_URL = "/demos/summand/summand-0.1.0.min.js"
+export const SUMMAND_URL = "/demos/summand/summand-0.2.0.min.js"
 export const SAMPLES_URL = "/demos/summand/samples/"
 
 export interface ValidationMessage {
@@ -50,7 +50,10 @@ export interface LeitwegId {
 }
 
 export interface SummandModule {
-  validateInvoice(input: string | Uint8Array, options?: { xrechnung?: boolean }): ValidationResult
+  validateInvoice(
+    input: string | Uint8Array,
+    options?: { xrechnung?: boolean; lang?: "en" | "de" },
+  ): ValidationResult
   isValidLeitwegId(id: string): boolean
   parseLeitwegId(id: string): LeitwegId | undefined
   leitwegCheckDigits(coarse: string, fine?: string): string

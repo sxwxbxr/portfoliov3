@@ -45,6 +45,7 @@
       "Profiles recognised: XRechnung, Peppol BIS, EN 16931, Factur-X MINIMUM, BASIC WL, BASIC and EXTENDED",
       "Leitweg-ID check with ISO 7064 check digits",
       "Every finding with rule ID, message, XPath and line number; an invoice summary with number, parties and totals",
+      "Messages in English or German for every rule, from code (lang: \"de\") or the CLI (--lang de)",
       "Pure TypeScript with its own XPath 2.0 and Schematron engine: Node, browsers, workers and edge runtimes, no Java",
       "summand CLI: validate, extract the XML from a PDF, check a Leitweg-ID"
     ],

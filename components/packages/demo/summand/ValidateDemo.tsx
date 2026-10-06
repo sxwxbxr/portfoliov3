@@ -21,22 +21,27 @@ export function ValidateDemo() {
   const mod = useSummand()
   const [file, setFile] = useState<Loaded | null>(null)
   const [xrechnung, setXrechnung] = useState(false)
+  const [german, setGerman] = useState(false)
   const [result, setResult] = useState<ValidationResult | null>(null)
   const [busy, setBusy] = useState(false)
   const [problem, setProblem] = useState<string | null>(null)
   const [dragging, setDragging] = useState(false)
   const inputId = useId()
   const optionId = useId()
+  const langId = useId()
 
   const run = useCallback(
-    (loaded: Loaded, forceXrechnung: boolean) => {
+    (loaded: Loaded, opts: { xrechnung: boolean; german: boolean }) => {
       if (!mod) return
       setBusy(true)
       setProblem(null)
       // Let the "Validating…" state paint before the synchronous check runs.
       setTimeout(() => {
         try {
-          setResult(mod.validateInvoice(loaded.bytes, { xrechnung: forceXrechnung }))
+          setResult(mod.validateInvoice(loaded.bytes, {
+              xrechnung: opts.xrechnung,
+              lang: opts.german ? "de" : "en",
+            }),)
         } catch {
           setProblem(summandDemoCopy.failed)
           setResult(null)
@@ -55,9 +60,9 @@ export function ValidateDemo() {
         return
       }
       setFile(loaded)
-      run(loaded, xrechnung)
+      run(loaded, { xrechnung, german })
     },
-    [run, xrechnung],
+    [run, xrechnung, german],
   )
 
   const loadSample = async (name: string) => {
@@ -140,10 +145,22 @@ export function ValidateDemo() {
             checked={xrechnung}
             onChange={(e) => {
               setXrechnung(e.target.checked)
-              if (file) run(file, e.target.checked)
+              if (file) run(file, { xrechnung: e.target.checked, german })
             }}
           />
           {t.xrechnung}
+        </label>
+        <label htmlFor={langId} className="inline-flex items-center gap-2 text-sm text-fg-muted">
+          <input
+            id={langId}
+            type="checkbox"
+            checked={german}
+            onChange={(e) => {
+              setGerman(e.target.checked)
+              if (file) run(file, { xrechnung, german: e.target.checked })
+            }}
+          />
+          {t.german}
         </label>
       </div>
 
