@@ -5,6 +5,7 @@ import type { SiteSettings } from "@/lib/data"
 import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
 import { copy } from "@/lib/copy"
 import { PACKAGES_ENTRY } from "@/lib/packages/urls"
+import { PHYSIO_ENTRY } from "@/lib/physio/urls"
 
 const footerNav = [
   {
@@ -19,6 +20,7 @@ const footerNav = [
       // The blog lives on the package site; posts come from Schulz Media and /admin/news.
       { name: copy.nav.blog, href: `${PACKAGES_ENTRY}/blog`, sameTab: true },
       { name: copy.nav.releaseNotes, href: `${PACKAGES_ENTRY}/releasenotes`, sameTab: true },
+      { name: copy.nav.physio, href: PHYSIO_ENTRY, sameTab: true },
     ],
   },
   {

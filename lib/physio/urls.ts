@@ -24,3 +24,6 @@ export function physioPath(p = "/"): string {
 export function physioUrl(p = "/"): string {
   return PHYSIO_ORIGIN ? `${PHYSIO_ORIGIN}${strip(p)}` || PHYSIO_ORIGIN : `${MAIN_ORIGIN}/physio${strip(p)}`
 }
+
+/** Entry link from the portfolio (footer). */
+export const PHYSIO_ENTRY = PHYSIO_ORIGIN ?? "/physio"

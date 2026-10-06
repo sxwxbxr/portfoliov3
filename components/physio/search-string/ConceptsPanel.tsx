@@ -470,7 +470,7 @@ function TreeList({ title, empty, items, onReplace }: { title: string; empty: st
       {items.length === 0 ? (
         <p className="text-sm text-fg-muted">{empty}</p>
       ) : (
-        <ul className="flex max-h-64 flex-col gap-1.5 overflow-y-auto">
+        <ul data-lenis-prevent="" className="flex max-h-64 flex-col gap-1.5 overflow-y-auto overscroll-contain">
           {items.map((d) => (
             <li key={d.ui}>
               <button
