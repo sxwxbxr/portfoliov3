@@ -460,3 +460,10 @@
     border: 1px solid #999 !important;
   }
 }
+
+/* physio.sweber.dev brings its own header and footer. The root layout is
+   shared, so the portfolio footer, scroll bar and chat widget step aside
+   whenever the physio shell is on the page. */
+body:has([data-site="physio"]) .portfolio-chrome {
+  display: none;
+}

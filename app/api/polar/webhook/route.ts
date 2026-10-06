@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server"
-import crypto from "crypto"
 import nodemailer from "nodemailer"
 import { z } from "zod"
 import { POLAR_PORTAL_URL } from "@/lib/packages/polar"
+import { verifyPolarWebhook } from "@/lib/polar/webhook"
+import { isPhysioProduct } from "@/lib/physio/polar"
 
 export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
@@ -19,8 +20,6 @@ export const dynamic = "force-dynamic"
  * e-mail sign-in code does not reach every mailbox.
  */
 
-const TOLERANCE_S = 5 * 60
-
 const orderSchema = z.object({
   id: z.string(),
   customer_id: z.string().optional(),
@@ -28,32 +27,9 @@ const orderSchema = z.object({
   total_amount: z.number().optional(),
   currency: z.string().optional(),
   customer: z.object({ id: z.string().optional(), email: z.string().email(), name: z.string().nullish() }),
-  product: z.object({ name: z.string() }).nullish(),
+  product_id: z.string().nullish(),
+  product: z.object({ id: z.string().optional(), name: z.string() }).nullish(),
 })
-
-/** Standard Webhooks keys; Polar secrets made before 2026-09-08 use the raw string. */
-function signingKeys(secret: string): Buffer[] {
-  const keys = [Buffer.from(secret, "utf8")]
-  if (secret.startsWith("whsec_")) keys.unshift(Buffer.from(secret.slice(6), "base64"))
-  return keys
-}
-
-function verify(body: string, headers: Headers, secret: string): boolean {
-  const id = headers.get("webhook-id")
-  const ts = headers.get("webhook-timestamp")
-  const sigs = headers.get("webhook-signature")
-  if (!id || !ts || !sigs) return false
-  if (Math.abs(Date.now() / 1000 - Number(ts)) > TOLERANCE_S) return false
-  const given = sigs
-    .split(" ")
-    .map((s) => s.split(",")[1])
-    .filter(Boolean)
-    .map((s) => Buffer.from(s, "base64"))
-  return signingKeys(secret).some((key) => {
-    const expected = crypto.createHmac("sha256", key).update(`${id}.${ts}.${body}`).digest()
-    return given.some((g) => g.length === expected.length && crypto.timingSafeEqual(g, expected))
-  })
-}
 
 const escapeHtml = (value: string) =>
   value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;")
@@ -155,7 +131,7 @@ export async function POST(req: Request) {
   if (!secret) return NextResponse.json({ error: "not configured" }, { status: 503 })
 
   const body = await req.text()
-  if (!verify(body, req.headers, secret)) {
+  if (!verifyPolarWebhook(body, req.headers, secret)) {
     return NextResponse.json({ error: "invalid signature" }, { status: 401 })
   }
 
@@ -166,6 +142,8 @@ export async function POST(req: Request) {
   if (!parsed.success) return NextResponse.json({ error: "unexpected payload" }, { status: 422 })
   const order = parsed.data
   if (order.billing_reason === "subscription_cycle") return NextResponse.json({ ignored: "renewal" })
+  // physio.sweber.dev subscribers are served by /api/physio/polar/webhook, not the package access mail.
+  if (isPhysioProduct(order.product_id ?? order.product?.id)) return NextResponse.json({ ignored: "physio" })
 
   const from = process.env.ORDER_MAIL_FROM || process.env.SMTP_FROM
   if (!from || !process.env.SMTP_HOST) {

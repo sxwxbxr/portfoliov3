@@ -202,3 +202,62 @@ export const packagePosts = pgTable("package_posts", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 })
+
+// ── physio.sweber.dev ────────────────────────────────────────────────────────
+// Student accounts of the physio tool platform. Separate from `users` (admin):
+// a physio session must never open /admin, so it is signed with its own secret.
+
+export const physioUsers = pgTable("physio_users", {
+  id: serial("id").primaryKey(),
+  // Stored lowercased and trimmed.
+  email: text("email").notNull().unique(),
+  passwordHash: text("password_hash").notNull(),
+  emailVerifiedAt: timestamp("email_verified_at"),
+  // Bumped on password reset and "log out everywhere"; sessions carry the
+  // version they were issued with and die when it no longer matches.
+  sessionVersion: integer("session_version").notNull().default(0),
+  // Mirrored from Polar webhooks (subscription.*). Polar is the source of truth.
+  polarCustomerId: text("polar_customer_id"),
+  subscriptionId: text("subscription_id"),
+  // Polar status: none | incomplete | trialing | active | past_due | canceled | unpaid
+  subscriptionStatus: text("subscription_status").notNull().default("none"),
+  subscriptionProductId: text("subscription_product_id"),
+  currentPeriodEnd: timestamp("current_period_end"),
+  cancelAtPeriodEnd: boolean("cancel_at_period_end").notNull().default(false),
+  // `modified_at` of the last applied subscription payload; older deliveries
+  // arriving out of order are ignored.
+  subscriptionModifiedAt: timestamp("subscription_modified_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+})
+
+/** One-time links for e-mail verification and password reset. Only the SHA-256 of the token is stored. */
+export const physioTokens = pgTable("physio_tokens", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => physioUsers.id, { onDelete: "cascade" }),
+  // "verify" | "reset"
+  type: text("type").notNull(),
+  tokenHash: text("token_hash").notNull().unique(),
+  expiresAt: timestamp("expires_at").notNull(),
+  usedAt: timestamp("used_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+})
+
+/** Tool ideas sent in by students via physio.sweber.dev/vorschlaege. */
+export const physioSuggestions = pgTable("physio_suggestions", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  // Free label chosen in the form, e.g. "Recherche", "Lernen", "Praxis".
+  category: text("category").notNull().default(""),
+  // Optional, only if the student wants an answer.
+  contactEmail: text("contact_email").notNull().default(""),
+  userId: integer("user_id").references(() => physioUsers.id, { onDelete: "set null" }),
+  // new | planned | in_progress | done | declined
+  status: text("status").notNull().default("new"),
+  adminNote: text("admin_note").notNull().default(""),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+})

@@ -178,14 +178,23 @@ export default async function RootLayout({
           {copy.common.skipToContent}
         </a>
         <ThemeProvider attribute="class" forcedTheme="dark" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
-          <ScrollProgress />
+          {/* .portfolio-chrome is hidden on physio pages, see globals.css. */}
+          <div className="portfolio-chrome">
+            <ScrollProgress />
+          </div>
           <SmoothScroll>
             <div className="flex min-h-screen flex-col">
               <main id="main-content" className="flex-1">{children}</main>
-              <Footer settings={settings} />
+              <div className="portfolio-chrome">
+                <Footer settings={settings} />
+              </div>
             </div>
           </SmoothScroll>
-          {AI_FEATURES_ENABLED && <ChatWidget />}
+          {AI_FEATURES_ENABLED && (
+            <div className="portfolio-chrome">
+              <ChatWidget />
+            </div>
+          )}
         </ThemeProvider>
         <Analytics />
         <SpeedInsights />
