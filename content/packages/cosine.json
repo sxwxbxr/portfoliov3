@@ -42,6 +42,8 @@
       "Hybrid ranking in the browser: BM25 keyword search with prefix matching and typo tolerance, plus cosine similarity on embeddings",
       "Instant keyword results, semantic ranking as soon as the model is loaded, keyword-only for visitors who save data",
       "Scoped search: limit a search field to parts of the site, e.g. only the API reference",
+      "Synonym lists stored in the index, so \"login\" also finds \"sign in\", even before the model has loaded",
+      "Incremental builds in the CLI: --incremental embeds only new and changed sections",
       "Compact int8 vectors: about 400 bytes per section",
       "Accessible <cosine-search> web component (ARIA combobox) in English, German, French and Italian",
       "React component and hooks, English or multilingual models, model self-hosting for GDPR and FADP"
@@ -193,6 +195,12 @@
   ],
   "publishedAt": "2026-10-05",
   "releases": [
+    {
+      "version": "0.4.0",
+      "date": "2026-10-06",
+      "title": "Synonyms and incremental builds",
+      "url": "https://packages.sweber.dev/blog/cosine-0-4-0-released"
+    },
     {
       "version": "0.3.0",
       "date": "2026-10-05",
