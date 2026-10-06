@@ -1,3 +1,4 @@
-Witness scan: 3 pages, 1 notices, 1 labels, 1 marked elements, 2 AI-marked images, 0 with C2PA, 0 AI-marked audio/video, 0 watermarked texts
+Witness scan: 3 pages, 1 notices, 1 labels, 1 marked elements, 2 AI-marked images, 1 with C2PA, 0 AI-marked audio/video, 0 watermarked texts
 ERROR   blog/lagoon.html img[src="/images/lagoon.png"]: Shows the AI-generated image images/lagoon.png without a visible label next to it. [ai-image-unlabelled]
-1 errors, 0 warnings
+ERROR   images/studio-portrait.png: The C2PA manifest does not hold up: The file content does not match its hash. Signed by CN=Example Image Studio, O=Example. [c2pa-invalid]
+2 errors, 0 warnings

@@ -84,10 +84,11 @@ dd { margin: 0; }
 </section>
 <h2>Automated check</h2>
 <p class="muted">Checked on October 5, 2026</p>
-<table><thead><tr><th>Pages</th><th>Notices</th><th>Labels</th><th>Marked elements</th><th>AI images</th><th>C2PA images</th><th>AI audio and video</th><th>Watermarked texts</th></tr></thead><tbody><tr><td>3</td><td>1</td><td>1</td><td>1</td><td>2</td><td>0</td><td>0</td><td>0</td></tr></tbody></table>
+<table><thead><tr><th>Pages</th><th>Notices</th><th>Labels</th><th>Marked elements</th><th>AI images</th><th>C2PA images</th><th>AI audio and video</th><th>C2PA verified</th><th>Watermarked texts</th></tr></thead><tbody><tr><td>3</td><td>1</td><td>1</td><td>1</td><td>2</td><td>1</td><td>0</td><td>0</td><td>0</td></tr></tbody></table>
 <h3>Findings</h3>
 <table><tbody>
 <tr><td class="error">Error</td><td><code>blog/lagoon.html</code></td><td>Shows the AI-generated image images/lagoon.png without a visible label next to it.</td></tr>
+<tr><td class="error">Error</td><td><code>images/studio-portrait.png</code></td><td>The C2PA manifest does not hold up: The file content does not match its hash. Signed by CN=Example Image Studio, O=Example.</td></tr>
 </tbody></table>
 <h2>Evidence of notices</h2>
 <table><thead><tr><th>Notice</th><th>Version</th><th>Shown</th><th>Acknowledged</th><th>First</th><th>Last</th></tr></thead><tbody>
