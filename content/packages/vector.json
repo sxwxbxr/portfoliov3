@@ -57,7 +57,7 @@
       "sendMany for up to 1000 events at once, and receiver dedupers (memory, Postgres, SQLite, MySQL) that skip repeated webhook ids"
     ],
     "pro": [
-      "Embeddable customer portal: a tenant-scoped REST handler and React components for endpoints, secrets, a searchable message log (id, payload text, status, endpoint), retries, test events and an event catalog with examples and schemas; light, dark and shadcn/ui themes",
+      "Embeddable customer portal: a tenant-scoped REST handler (adapters for Express, Hono, Fastify and plain Node) and React components for endpoints, secrets, a searchable message log (id, payload text, status, endpoint), retries, test events and an event catalog with examples and schemas; light, dark and shadcn/ui themes",
       "Typed event catalog with Standard Schema validation, generated Markdown docs, AsyncAPI 3 and TypeScript types, with a CLI",
       "Operations: alerts to Slack, email or a webhook, a circuit breaker per endpoint, weekly reports per tenant, bulk recovery after outages, health reports, Prometheus metrics and data retention",
       "Inbound webhooks: verify Stripe, GitHub, GitLab, Shopify, Paddle, Polar, Linear, Sentry, Lemon Squeezy, Svix/Standard Webhooks and HMAC-signed requests, store each event once and forward it to your services with retries and a log",
