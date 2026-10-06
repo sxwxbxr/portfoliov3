@@ -60,7 +60,7 @@
       "Embeddable customer portal: a tenant-scoped REST handler and React components for endpoints, secrets, a searchable message log (id, payload text, status, endpoint), retries, test events and an event catalog with examples and schemas; light, dark and shadcn/ui themes",
       "Typed event catalog with Standard Schema validation, generated Markdown docs, AsyncAPI 3 and TypeScript types, with a CLI",
       "Operations: alerts to Slack, email or a webhook, a circuit breaker per endpoint, weekly reports per tenant, bulk recovery after outages, health reports, Prometheus metrics and data retention",
-      "Inbound webhooks: verify Stripe, GitHub, Shopify, Svix/Standard Webhooks and HMAC-signed requests, store each event once and forward it to your services with retries and a log",
+      "Inbound webhooks: verify Stripe, GitHub, GitLab, Shopify, Paddle, Polar, Linear, Sentry, Lemon Squeezy, Svix/Standard Webhooks and HMAC-signed requests, store each event once and forward it to your services with retries and a log",
       "Chat formats: Slack, Microsoft Teams, Discord and Google Chat messages written from templates per event type, escaped against mentions and cut to each service's limits, plus pick, omit and redact of fields per endpoint",
       "OpenTelemetry: a span and metrics for every delivery attempt for Grafana, Datadog, Honeycomb or any backend, with URL and tenant left out unless you ask"
     ]
@@ -97,7 +97,7 @@
       "pro": true
     },
     {
-      "feature": "Inbound webhooks from Stripe, GitHub, Shopify and others",
+      "feature": "Inbound webhooks from Stripe, GitHub, GitLab, Shopify, Paddle, Polar and others",
       "free": false,
       "pro": true
     },
