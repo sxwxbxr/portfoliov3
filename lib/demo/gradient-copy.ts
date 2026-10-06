@@ -18,6 +18,8 @@ export const gradientDemo = {
     useAccent: "Add an accent color",
     pin: "Keep the exact brand color on its closest step",
     status: "Add matching status colors (success, warning, danger, info)",
+    share: "Copy link to this palette",
+    shareHint: "The colors are in the address, so you can send the palette or open it again later.",
     presets: "Examples",
     invalid: "Use a color like #e30613, rgb(227 6 19) or oklch(60% 0.2 25).",
     picker: (name: string) => `Pick the ${name} color`,
@@ -82,6 +84,19 @@ export const gradientDemo = {
     failed: (scale: string, mode: string, fg: string, bg: string, ratio: number, need: number) =>
       `${scale} ${mode}: ${fg} on ${bg} is ${ratio}:1, needs ${need}:1`,
   },
+  series: {
+    label: "Charts",
+    title: "Chart colors that stay apart",
+    sub: "Also with a color vision deficiency.",
+    lede:
+      "Chart libraries often ship series colors that blur into one for people with red-green deficiency. Gradient picks colors from your brand hue that keep their distance under protanopia, deuteranopia and tritanopia and reach 3:1 on the page. Switch the color vision above to see for yourself.",
+    count: "Number of series",
+    chartLabel: (mode: string) => `Example bar chart in ${mode} mode`,
+    distance: (d: number) => `Smallest distance between two colors: ${d} (0.08 and up is clearly different).`,
+    good: "All pairs are clearly distinguishable.",
+    label2: "Label the series directly or use different markers, color alone is not enough here.",
+    cli: "Same colors with the CLI",
+  },
   pair: {
     label: "Pair",
     title: "Check any two colors",
@@ -112,6 +127,7 @@ export const gradientDemo = {
     tailwind: "Tailwind v4",
     css: "CSS variables",
     lightDark: "CSS light-dark()",
+    shadcn: "shadcn/ui",
     tailwind3: "Tailwind v3",
     tokens: "Design tokens",
     scss: "Sass",
