@@ -1,7 +1,7 @@
 {
   "slug": "permito",
   "name": "Permito",
-  "tagline": "Self-hosted cookie banner, preference center and consent gates for React and Next.js. No network calls, no tracking, no dark patterns.",
+  "tagline": "Self-hosted cookie banner, preference center and consent gates for React, Next.js and any site via a script tag. No network calls, no tracking, no dark patterns.",
   "seoTitle": "Permito – self-hosted cookie consent for React & Next.js",
   "description": "Permito is a consent toolkit you ship inside your own app instead of loading from a third-party server. Optional categories are opt-in, \"Reject all\" carries the same weight as \"Accept all\", and nothing that needs consent loads before it is given.\n\nIt is built for agencies in Switzerland, Germany and Austria: German, Swiss German, English, French and Italian are included, Google Consent Mode v2 is wired in, and the Next.js helpers read consent on the server so gated content never flashes.",
   "status": "beta",
@@ -29,7 +29,8 @@
       "Server-safe Next.js helpers, so gated content never flashes on load",
       "Google Consent Mode v2 with a configurable category mapping",
       "German, Swiss German, English, French and Italian built in; keyboard and screen-reader accessible",
-      "Decisions expire after a number of days you choose, Global Privacy Control is honoured on request, and a choice applies in every open tab at once"
+      "Decisions expire after a number of days you choose, Global Privacy Control is honoured on request, and a choice applies in every open tab at once",
+      "Drop-in script tag for WordPress, static sites and CMS templates, with the same banner and preference dialog, no React needed"
     ],
     "pro": [
       "Service catalog with 71 providers, each entry sourced from the provider's own documentation with a retrieval date",
@@ -49,6 +50,7 @@
     { "feature": "Google Consent Mode v2", "free": true, "pro": true },
     { "feature": "DE, DE-CH, EN, FR, IT translations", "free": true, "pro": true },
     { "feature": "Consent expiry, Global Privacy Control, tab sync", "free": true, "pro": true },
+    { "feature": "Script tag for sites without React", "free": true, "pro": true },
     { "feature": "Service catalog", "free": false, "pro": true },
     { "feature": "Cookie table for the privacy policy", "free": false, "pro": true },
     { "feature": "Consent log", "free": false, "pro": true },
@@ -154,6 +156,18 @@
   "videos": [],
   "articles": [],
   "releases": [
+    {
+      "version": "0.3.0",
+      "date": "2026-10-06",
+      "title": "Permito 0.3.0: the cookie banner as a script tag",
+      "url": "https://www.npmjs.com/package/@permitojs/core/v/0.3.0"
+    },
+    {
+      "version": "0.2.0",
+      "date": "2026-10-05",
+      "title": "Permito 0.2.0: consent expiry, Global Privacy Control and tab sync",
+      "url": "https://www.npmjs.com/package/@permitojs/core/v/0.2.0"
+    },
     {
       "version": "0.1.0",
       "date": "2026-10-04",
