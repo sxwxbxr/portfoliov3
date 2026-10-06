@@ -1,0 +1,17 @@
+name: Content-Check
+
+# Ersatz für den entfallenen Vercel-Preview-Check: läuft ohne npm install
+# (die Pro-Pakete brauchen ein Token) und prüft nur Inhalte und vercel.json.
+on:
+  pull_request:
+
+jobs:
+  content:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node scripts/check-content.mjs
