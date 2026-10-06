@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lista di controllo dell'accessibilità: Bäckerei Muster</title>
+<style>
+body{font:16px/1.5 system-ui,sans-serif;margin:0;color:#1a1a1a;background:#fff}
+header{position:sticky;top:0;background:#fff;border-bottom:1px solid #ccc;padding:1rem 1.5rem;z-index:1}
+main{max-width:52rem;margin:0 auto;padding:1rem 1.5rem 4rem}
+h1{font-size:1.4rem;margin:0 0 .25rem}
+h2{font-size:1.1rem;margin:0 0 .5rem}
+.level{font-size:.8rem;border:1px solid #555;border-radius:.25rem;padding:0 .3rem;vertical-align:middle}
+.item{border:1px solid #ccc;border-left-width:6px;border-radius:.4rem;padding:1rem;margin:1rem 0}
+.item[data-status=pass]{border-left-color:#0a6b2d}.item[data-status=fail]{border-left-color:#a4161a}
+.item[data-status=not-applicable]{border-left-color:#666}
+fieldset{border:0;padding:0;margin:.5rem 0;display:flex;flex-wrap:wrap;gap:1rem}
+.field{display:flex;flex-direction:column;gap:.25rem;margin:.5rem 0;font-size:.9rem}
+.row{display:flex;gap:1rem;flex-wrap:wrap}
+textarea,input[type=text],input[type=date]{font:inherit;padding:.4rem;border:1px solid #767676;border-radius:.25rem}
+button{font:inherit;padding:.5rem 1rem;border:2px solid #1f4fa3;background:#1f4fa3;color:#fff;border-radius:.3rem;cursor:pointer}
+:focus-visible{outline:3px solid #1f4fa3;outline-offset:2px}
+.auto{color:#a4161a}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<header>
+<h1>Lista di controllo dell'accessibilità: Bäckerei Muster</h1>
+<p>Valutato: <span id="progress"></span> · <label><input type="checkbox" id="only-open"> Mostra solo i criteri da verificare</label> · <button type="button" id="download">Scarica checklist.json</button> <span id="status" role="status"></span></p>
+</header>
+<main>
+<p>Verifica ogni criterio a mano. I problemi trovati automaticamente sono già segnati come «non conforme». Le tue voci restano in questo browser finché non scarichi il file.</p>
+<section class="item" data-id="1.1.1" data-status="untested">
+<h2 id="h-1-1-1">1.1.1 Contenuti non testuali <span class="level">A</span></h2>
+<p><strong>Come verificare:</strong> Ogni immagine informativa, icona e comando ha un'alternativa testuale con la stessa funzione; le immagini decorative sono nascoste.</p>
+
+<fieldset><legend class="sr">1.1.1</legend><label><input type="radio" name="s-1-1-1" value="untested" checked> Da verificare</label> <label><input type="radio" name="s-1-1-1" value="pass"> Conforme</label> <label><input type="radio" name="s-1-1-1" value="fail"> Non conforme</label> <label><input type="radio" name="s-1-1-1" value="not-applicable"> Non applicabile</label></fieldset>
+<label class="field">Nota (in caso di errore: testo per la dichiarazione di accessibilità)<textarea name="notes" rows="2"></textarea></label>
+<div class="row"><label class="field">Correzione prevista<input type="date" name="plannedFix" value=""></label>
+<label class="field">Verificato da<input type="text" name="testedBy" value=""></label></div>
+</section>
+<section class="item" data-id="1.3.1" data-status="untested">
+<h2 id="h-1-3-1">1.3.1 Informazioni e correlazioni <span class="level">A</span></h2>
+<p><strong>Come verificare:</strong> Titoli, elenchi, tabelle e gruppi di campi sono marcati come tali, non solo formattati per sembrarlo.</p>
+
+<fieldset><legend class="sr">1.3.1</legend><label><input type="radio" name="s-1-3-1" value="untested" checked> Da verificare</label> <label><input type="radio" name="s-1-3-1" value="pass"> Conforme</label> <label><input type="radio" name="s-1-3-1" value="fail"> Non conforme</label> <label><input type="radio" name="s-1-3-1" value="not-applicable"> Non applicabile</label></fieldset>
+<label class="field">Nota (in caso di errore: testo per la dichiarazione di accessibilità)<textarea name="notes" rows="2"></textarea></label>
+<div class="row"><label class="field">Correzione prevista<input type="date" name="plannedFix" value=""></label>
+<label class="field">Verificato da<input type="text" name="testedBy" value=""></label></div>
+</section>
+<section class="item" data-id="1.4.3" data-status="fail">
+<h2 id="h-1-4-3">1.4.3 Contrasto (minimo) <span class="level">AA</span></h2>
+<p><strong>Come verificare:</strong> Il testo ha un contrasto di almeno 4,5:1, il testo grande 3:1, anche su immagini e negli stati hover e focus.</p>
+<p class="auto">Elementi trovati automaticamente: 1</p>
+<fieldset><legend class="sr">1.4.3</legend><label><input type="radio" name="s-1-4-3" value="untested"> Da verificare</label> <label><input type="radio" name="s-1-4-3" value="pass"> Conforme</label> <label><input type="radio" name="s-1-4-3" value="fail" checked> Non conforme</label> <label><input type="radio" name="s-1-4-3" value="not-applicable"> Non applicabile</label></fieldset>
+<label class="field">Nota (in caso di errore: testo per la dichiarazione di accessibilità)<textarea name="notes" rows="2"></textarea></label>
+<div class="row"><label class="field">Correzione prevista<input type="date" name="plannedFix" value=""></label>
+<label class="field">Verificato da<input type="text" name="testedBy" value=""></label></div>
+</section>
+<section class="item" data-id="1.4.11" data-status="untested">
+<h2 id="h-1-4-11">1.4.11 Contrasto per elementi non testuali <span class="level">AA</span></h2>
+<p><strong>Come verificare:</strong> Bordi dei campi, indicatori di focus, icone ed elementi dei grafici hanno un contrasto di almeno 3:1.</p>
+
+<fieldset><legend class="sr">1.4.11</legend><label><input type="radio" name="s-1-4-11" value="untested" checked> Da verificare</label> <label><input type="radio" name="s-1-4-11" value="pass"> Conforme</label> <label><input type="radio" name="s-1-4-11" value="fail"> Non conforme</label> <label><input type="radio" name="s-1-4-11" value="not-applicable"> Non applicabile</label></fieldset>
+<label class="field">Nota (in caso di errore: testo per la dichiarazione di accessibilità)<textarea name="notes" rows="2"></textarea></label>
+<div class="row"><label class="field">Correzione prevista<input type="date" name="plannedFix" value=""></label>
+<label class="field">Verificato da<input type="text" name="testedBy" value=""></label></div>
+</section>
+<section class="item" data-id="2.1.1" data-status="untested">
+<h2 id="h-2-1-1">2.1.1 Tastiera <span class="level">A</span></h2>
+<p><strong>Come verificare:</strong> Ogni funzione è utilizzabile con la sola tastiera: menu, finestre di dialogo, cursori, selettori di data, trascinamento.</p>
+
+<fieldset><legend class="sr">2.1.1</legend><label><input type="radio" name="s-2-1-1" value="untested" checked> Da verificare</label> <label><input type="radio" name="s-2-1-1" value="pass"> Conforme</label> <label><input type="radio" name="s-2-1-1" value="fail"> Non conforme</label> <label><input type="radio" name="s-2-1-1" value="not-applicable"> Non applicabile</label></fieldset>
+<label class="field">Nota (in caso di errore: testo per la dichiarazione di accessibilità)<textarea name="notes" rows="2"></textarea></label>
+<div class="row"><label class="field">Correzione prevista<input type="date" name="plannedFix" value=""></label>
+<label class="field">Verificato da<input type="text" name="testedBy" value=""></label></div>
+</section>
+<section class="item" data-id="2.4.4" data-status="untested">
+<h2 id="h-2-4-4">2.4.4 Scopo del link (nel contesto) <span class="level">A</span></h2>
+<p><strong>Come verificare:</strong> Il testo del link, da solo o con la sua frase, dice dove porta; niente «altro» o «clicca qui» isolati.</p>
+
+<fieldset><legend class="sr">2.4.4</legend><label><input type="radio" name="s-2-4-4" value="untested" checked> Da verificare</label> <label><input type="radio" name="s-2-4-4" value="pass"> Conforme</label> <label><input type="radio" name="s-2-4-4" value="fail"> Non conforme</label> <label><input type="radio" name="s-2-4-4" value="not-applicable"> Non applicabile</label></fieldset>
+<label class="field">Nota (in caso di errore: testo per la dichiarazione di accessibilità)<textarea name="notes" rows="2"></textarea></label>
+<div class="row"><label class="field">Correzione prevista<input type="date" name="plannedFix" value=""></label>
+<label class="field">Verificato da<input type="text" name="testedBy" value=""></label></div>
+</section>
+<section class="item" data-id="2.4.7" data-status="untested">
+<h2 id="h-2-4-7">2.4.7 Focus visibile <span class="level">AA</span></h2>
+<p><strong>Come verificare:</strong> Il focus della tastiera è sempre ben visibile.</p>
+
+<fieldset><legend class="sr">2.4.7</legend><label><input type="radio" name="s-2-4-7" value="untested" checked> Da verificare</label> <label><input type="radio" name="s-2-4-7" value="pass"> Conforme</label> <label><input type="radio" name="s-2-4-7" value="fail"> Non conforme</label> <label><input type="radio" name="s-2-4-7" value="not-applicable"> Non applicabile</label></fieldset>
+<label class="field">Nota (in caso di errore: testo per la dichiarazione di accessibilità)<textarea name="notes" rows="2"></textarea></label>
+<div class="row"><label class="field">Correzione prevista<input type="date" name="plannedFix" value=""></label>
+<label class="field">Verificato da<input type="text" name="testedBy" value=""></label></div>
+</section>
+<section class="item" data-id="3.1.1" data-status="untested">
+<h2 id="h-3-1-1">3.1.1 Lingua della pagina <span class="level">A</span></h2>
+<p><strong>Come verificare:</strong> La lingua della pagina è impostata correttamente nell'elemento html.</p>
+
+<fieldset><legend class="sr">3.1.1</legend><label><input type="radio" name="s-3-1-1" value="untested" checked> Da verificare</label> <label><input type="radio" name="s-3-1-1" value="pass"> Conforme</label> <label><input type="radio" name="s-3-1-1" value="fail"> Non conforme</label> <label><input type="radio" name="s-3-1-1" value="not-applicable"> Non applicabile</label></fieldset>
+<label class="field">Nota (in caso di errore: testo per la dichiarazione di accessibilità)<textarea name="notes" rows="2"></textarea></label>
+<div class="row"><label class="field">Correzione prevista<input type="date" name="plannedFix" value=""></label>
+<label class="field">Verificato da<input type="text" name="testedBy" value=""></label></div>
+</section>
+<section class="item" data-id="3.3.2" data-status="untested">
+<h2 id="h-3-3-2">3.3.2 Etichette o istruzioni <span class="level">A</span></h2>
+<p><strong>Come verificare:</strong> Ogni campo ha un'etichetta visibile; i campi obbligatori e i formati sono spiegati.</p>
+
+<fieldset><legend class="sr">3.3.2</legend><label><input type="radio" name="s-3-3-2" value="untested" checked> Da verificare</label> <label><input type="radio" name="s-3-3-2" value="pass"> Conforme</label> <label><input type="radio" name="s-3-3-2" value="fail"> Non conforme</label> <label><input type="radio" name="s-3-3-2" value="not-applicable"> Non applicabile</label></fieldset>
+<label class="field">Nota (in caso di errore: testo per la dichiarazione di accessibilità)<textarea name="notes" rows="2"></textarea></label>
+<div class="row"><label class="field">Correzione prevista<input type="date" name="plannedFix" value=""></label>
+<label class="field">Verificato da<input type="text" name="testedBy" value=""></label></div>
+</section>
+<section class="item" data-id="4.1.2" data-status="untested">
+<h2 id="h-4-1-2">4.1.2 Nome, ruolo, valore <span class="level">A</span></h2>
+<p><strong>Come verificare:</strong> I comandi personalizzati espongono nome, ruolo e stato alle tecnologie assistive (da verificare con uno screen reader).</p>
+
+<fieldset><legend class="sr">4.1.2</legend><label><input type="radio" name="s-4-1-2" value="untested" checked> Da verificare</label> <label><input type="radio" name="s-4-1-2" value="pass"> Conforme</label> <label><input type="radio" name="s-4-1-2" value="fail"> Non conforme</label> <label><input type="radio" name="s-4-1-2" value="not-applicable"> Non applicabile</label></fieldset>
+<label class="field">Nota (in caso di errore: testo per la dichiarazione di accessibilità)<textarea name="notes" rows="2"></textarea></label>
+<div class="row"><label class="field">Correzione prevista<input type="date" name="plannedFix" value=""></label>
+<label class="field">Verificato da<input type="text" name="testedBy" value=""></label></div>
+</section>
+</main>
+<script>
+(() => {
+  const initial = {"version":1,"project":"Bäckerei Muster","level":"AA","items":[{"id":"1.1.1","status":"untested"},{"id":"1.3.1","status":"untested"},{"id":"1.4.3","status":"fail","automatedIssues":1},{"id":"1.4.11","status":"untested"},{"id":"2.1.1","status":"untested"},{"id":"2.4.4","status":"untested"},{"id":"2.4.7","status":"untested"},{"id":"3.1.1","status":"untested"},{"id":"3.3.2","status":"untested"},{"id":"4.1.2","status":"untested"}]};
+  const key = "surjection-checklist:" + initial.project;
+  let state = initial;
+  try {
+    const stored = JSON.parse(localStorage.getItem(key) || "null");
+    if (stored && stored.version === 1) state = stored;
+  } catch {}
+  const byId = new Map(state.items.map((i) => [i.id, i]));
+  const sections = [...document.querySelectorAll(".item")];
+  const statusEl = document.getElementById("status");
+  function progress() {
+    const done = state.items.filter((i) => i.status !== "untested").length;
+    document.getElementById("progress").textContent = done + "/" + state.items.length;
+  }
+  function filter() {
+    const only = document.getElementById("only-open").checked;
+    for (const s of sections) s.classList.toggle("hidden", only && s.dataset.status !== "untested");
+  }
+  function save() {
+    try { localStorage.setItem(key, JSON.stringify(state)); statusEl.textContent = "Salvato"; } catch {}
+  }
+  for (const section of sections) {
+    const item = byId.get(section.dataset.id);
+    if (!item) continue;
+    section.dataset.status = item.status;
+    for (const radio of section.querySelectorAll("input[type=radio]")) radio.checked = radio.value === item.status;
+    for (const name of ["notes", "plannedFix", "testedBy"]) {
+      const field = section.querySelector("[name=" + name + "]");
+      field.value = item[name] || "";
+      field.addEventListener("change", () => {
+        if (field.value) item[name] = field.value; else delete item[name];
+        save();
+      });
+    }
+    section.addEventListener("change", (event) => {
+      if (event.target.type !== "radio") return;
+      item.status = event.target.value;
+      item.testedOn = new Date().toISOString().slice(0, 10);
+      section.dataset.status = item.status;
+      progress(); filter(); save();
+    });
+  }
+  document.getElementById("only-open").addEventListener("change", filter);
+  document.getElementById("download").addEventListener("click", () => {
+    const blob = new Blob([JSON.stringify(state, null, 2) + "\n"], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "checklist.json";
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+  progress();
+})();
+</script>
+</body>
+</html>

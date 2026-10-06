@@ -185,8 +185,29 @@ export default function SurjectionDemoPage() {
         sub={t.checklist.sub}
         lede={<p>{t.checklist.lede}</p>}
       >
-        {demo.editor ? (
-          <OutputFrame html={demo.editor} title={t.checklist.frameTitle} height={720} scripts />
+        {demo.editor && demo.editorFr && demo.editorIt ? (
+          <CookieTableTabs
+            label={t.checklist.tabsLabel}
+            tabs={[
+              {
+                id: "en",
+                label: "English",
+                content: <OutputFrame html={demo.editor} title={t.checklist.frameTitle} height={720} scripts />,
+              },
+              {
+                id: "fr",
+                label: "Français",
+                lang: "fr",
+                content: <OutputFrame html={demo.editorFr} title={t.checklist.frameTitle} height={720} scripts />,
+              },
+              {
+                id: "it",
+                label: "Italiano",
+                lang: "it",
+                content: <OutputFrame html={demo.editorIt} title={t.checklist.frameTitle} height={720} scripts />,
+              },
+            ]}
+          />
         ) : (
           <Missing />
         )}
