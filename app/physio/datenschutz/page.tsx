@@ -37,7 +37,7 @@ export default function PrivacyPage() {
 
       <div className="flex flex-col">
         {c.sections.map((s) => (
-          <section key={s.heading} className="grid gap-4 border-t border-edge-soft py-8 md:grid-cols-[14rem_1fr] md:gap-10">
+          <section key={s.heading} className="grid grid-cols-1 gap-4 border-t border-edge-soft py-8 md:grid-cols-[14rem_1fr] md:gap-10">
             <h2 className="text-lg tracking-tight">{s.heading}</h2>
             <div className="flex min-w-0 flex-col gap-4">
               {"paragraphs" in s &&

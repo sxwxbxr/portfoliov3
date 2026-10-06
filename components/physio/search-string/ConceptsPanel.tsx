@@ -1,6 +1,6 @@
 "use client"
 
-import { useId, useState, type FormEvent } from "react"
+import { useEffect, useId, useState, type FormEvent } from "react"
 import { X } from "lucide-react"
 import { ssCopy } from "@/lib/physio/copy/search-string"
 import {
@@ -9,19 +9,30 @@ import {
   addConceptFromTerminology,
   addCustomConcept,
   addFreeText,
+  addMeshConcept,
+  descriptorLabel,
+  moreSynonyms,
   moveConcept,
   removeConcept,
+  replaceMeshHeading,
   setBlockIncluded,
   setFreeTextRemoved,
   setMeshRemoved,
+  stemLength,
+  switchMeshAlternative,
   toggleExplode,
+  toggleTruncation,
+  PUBMED_MIN_STEM,
   type Block,
   type Candidate,
   type Category,
   type Concept,
+  type MeshChoice,
   type Notice,
   type SearchModel,
 } from "@/lib/physio/search-string"
+import { MeshBrowser, categoryLabel } from "./MeshBrowser"
+import { resolveHeading, useNeighbours } from "./mesh-hooks"
 import { Notices } from "./Notices"
 
 const t = ssCopy.concepts
@@ -58,6 +69,7 @@ export function ConceptsPanel({ model, onChange, candidates, onCandidatesChange,
       )}
 
       <AddConcept model={model} onChange={onChange} />
+      <MeshBrowser model={model} onChange={onChange} />
     </div>
   )
 }
@@ -70,7 +82,7 @@ function BlockGroup({ block, model, onChange }: { block: Block; model: SearchMod
   return (
     <section aria-label={copy.title} className="flex flex-col gap-4">
       <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
-        <div>
+        <div className="flex flex-col gap-1">
           <h3 className="text-xl tracking-tight">{copy.title}</h3>
           <p className="text-sm text-fg-muted">{copy.sub}</p>
         </div>
@@ -80,7 +92,7 @@ function BlockGroup({ block, model, onChange }: { block: Block; model: SearchMod
             type="checkbox"
             checked={included}
             onChange={(e) => onChange(setBlockIncluded(model, block, e.target.checked))}
-            className="size-4 accent-white"
+            className="size-4 accent-signal"
           />
           <label htmlFor={checkId} className="text-sm text-fg">
             {t.blockInclude}
@@ -117,20 +129,28 @@ function ConceptCard({
   dimmed: boolean
 }) {
   const uid = useId()
+  const [treeFor, setTreeFor] = useState<string | null>(null)
   const activeMesh = concept.mesh.filter((m) => !m.removed)
   const activeText = concept.freeText.filter((f) => !f.removed)
   const removedMesh = concept.mesh.filter((m) => m.removed)
   const removedText = concept.freeText.filter((f) => f.removed)
+  const descriptor = concept.origin === "mesh" ? concept.descriptor : undefined
+  const more = descriptor ? moreSynonyms(descriptor, concept.freeText.filter((f) => !f.removed).map((f) => f.text)) : []
 
   return (
     <article aria-labelledby={`${uid}-h`} className={`cast flex flex-col gap-6 p-5 md:p-6 ${dimmed ? "opacity-70" : ""}`}>
       <header className="flex flex-wrap items-start justify-between gap-x-4 gap-y-3">
-        <div className="min-w-0">
-          <h4 id={`${uid}-h`} className="text-lg tracking-tight">
+        <div className="flex min-w-0 flex-col gap-1">
+          <h4 id={`${uid}-h`} className="text-lg tracking-tight [overflow-wrap:anywhere]">
             {concept.label}
           </h4>
-          <p className="annotate text-fg-muted mt-0.5 [overflow-wrap:anywhere]">
-            {concept.origin === "custom" ? t.custom : concept.matchedText ? `${t.detectedFrom} «${concept.matchedText}»` : " "}
+          {descriptor && (
+            <p className="annotate text-fg-muted [overflow-wrap:anywhere]">
+              {t.englishName}: {descriptor.name} · {categoryLabel(descriptor)}
+            </p>
+          )}
+          <p className="annotate text-fg-muted [overflow-wrap:anywhere]">
+            {concept.origin === "custom" ? t.custom : concept.matchedText ? `${t.detectedFrom} «${concept.matchedText}»` : " "}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -159,6 +179,26 @@ function ConceptCard({
           </button>
         </div>
       </header>
+
+      {descriptor && (
+        <details className="text-sm">
+          <summary className="inline-flex min-h-11 cursor-pointer items-center text-fg-muted">{t.meshTitle}</summary>
+          <dl className="mt-2 flex flex-col gap-3">
+            <div>
+              <dt className="annotate text-fg-muted">{t.scopeNote}</dt>
+              <dd className="mt-0.5 leading-relaxed text-fg-muted">{descriptor.scopeNote || ssCopy.mesh.noScopeNote}</dd>
+            </div>
+            <div>
+              <dt className="annotate text-fg-muted">{t.germanNames}</dt>
+              <dd className="mt-0.5 text-fg-muted [overflow-wrap:anywhere]">{descriptor.german.length ? descriptor.german.join(", ") : t.noGerman}</dd>
+            </div>
+          </dl>
+        </details>
+      )}
+
+      {concept.alternatives && concept.alternatives.length > 0 && (
+        <Alternatives concept={concept} onPick={(ui) => onChange(switchMeshAlternative(model, concept.id, ui))} />
+      )}
 
       <div className="flex flex-col gap-2.5">
         <h5 className="annotate text-fg-muted">{t.schlagworte}</h5>
@@ -189,6 +229,16 @@ function ConceptCard({
                   >
                     {m.explode ? t.explodeOn : t.explodeOff}
                   </button>
+                  <button
+                    type="button"
+                    aria-expanded={treeFor === m.heading}
+                    aria-controls={`${uid}-tree`}
+                    aria-describedby={chipId}
+                    onClick={() => setTreeFor(treeFor === m.heading ? null : m.heading)}
+                    className="relative rounded-full border border-edge-mid px-2.5 py-0.5 text-xs text-fg-muted after:absolute after:-inset-1.5 after:content-[''] hover:text-fg"
+                  >
+                    {t.tree.open}
+                  </button>
                   <RemoveButton
                     label={`${t.removeTerm}: ${m.heading}`}
                     onClick={() => onChange(setMeshRemoved(model, concept.id, m.heading, true))}
@@ -198,6 +248,18 @@ function ConceptCard({
             })}
           </ul>
         )}
+        {treeFor && (
+          <TreeSteps
+            id={`${uid}-tree`}
+            concept={concept}
+            heading={treeFor}
+            onClose={() => setTreeFor(null)}
+            onReplace={(d) => {
+              onChange(replaceMeshHeading(model, concept.id, treeFor, d))
+              setTreeFor(null)
+            }}
+          />
+        )}
       </div>
 
       <div className="flex flex-col gap-2.5">
@@ -206,26 +268,67 @@ function ConceptCard({
           <p className="text-sm text-fg-muted">{t.allTextRemoved}</p>
         ) : (
           <ul className="flex flex-wrap gap-2">
-            {activeText.map((f) => (
-              <li
-                key={f.text}
-                className="inline-flex max-w-full items-center gap-1 rounded-full border border-edge-mid py-1 pr-1 pl-3 text-sm"
-              >
-                <span className="text-fg [overflow-wrap:anywhere]">{f.text}</span>
-                <RemoveButton
-                  label={`${t.removeTerm}: ${f.text}`}
-                  onClick={() => onChange(setFreeTextRemoved(model, concept.id, f.text, true))}
-                />
-              </li>
-            ))}
+            {activeText.map((f) => {
+              const canTrunc = !f.text.includes("*") && stemLength(`${f.text}*`) >= PUBMED_MIN_STEM
+              return (
+                <li
+                  key={f.text}
+                  className="inline-flex max-w-full items-center gap-1 rounded-full border border-edge-mid py-1 pr-1 pl-3 text-sm"
+                >
+                  <span className="text-fg [overflow-wrap:anywhere]">
+                    {f.text}
+                    {f.trunc ? "*" : ""}
+                  </span>
+                  {canTrunc && (
+                    <button
+                      type="button"
+                      aria-pressed={!!f.trunc}
+                      aria-label={`${t.truncLabel}: ${f.text}`}
+                      title={t.truncHelp}
+                      onClick={() => onChange(toggleTruncation(model, concept.id, f.text))}
+                      className={`relative grid h-6 min-w-6 place-items-center rounded-full border px-1.5 text-xs after:absolute after:-inset-2.5 after:content-[''] ${
+                        f.trunc ? "border-signal bg-(--wash) text-(--signal-hi)" : "border-edge-mid text-fg-muted"
+                      }`}
+                    >
+                      *
+                    </button>
+                  )}
+                  <RemoveButton
+                    label={`${t.removeTerm}: ${f.text}`}
+                    onClick={() => onChange(setFreeTextRemoved(model, concept.id, f.text, true))}
+                  />
+                </li>
+              )
+            })}
           </ul>
         )}
         <AddTermForm concept={concept} model={model} onChange={onChange} />
+        {more.length > 0 && (
+          <details className="text-sm">
+            <summary className="inline-flex min-h-11 cursor-pointer items-center text-fg-muted">
+              {t.moreSynonyms} ({more.length})
+            </summary>
+            <p className="mt-1 text-xs text-fg-muted">{t.moreSynonymsHint}</p>
+            <ul className="mt-3 flex flex-wrap gap-2">
+              {more.map((term) => (
+                <li key={term}>
+                  <button
+                    type="button"
+                    className="control min-h-9 px-3 text-sm [overflow-wrap:anywhere]"
+                    onClick={() => onChange(addFreeText(model, concept.id, term).model)}
+                  >
+                    + {term}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </details>
+        )}
       </div>
 
       {(removedMesh.length > 0 || removedText.length > 0) && (
         <details className="text-sm">
-          <summary className="cursor-pointer text-fg-muted">
+          <summary className="inline-flex min-h-11 cursor-pointer items-center text-fg-muted">
             {t.removedTerms} ({removedMesh.length + removedText.length})
           </summary>
           <ul className="mt-3 flex flex-wrap gap-2">
@@ -257,6 +360,133 @@ function ConceptCard({
         </details>
       )}
     </article>
+  )
+}
+
+/** Other descriptors the same word could mean: German label, English name, definition. */
+function Alternatives({ concept, onPick }: { concept: Concept; onPick: (ui: string) => void }) {
+  const uid = useId()
+  const alts = concept.alternatives ?? []
+  return (
+    <section aria-labelledby={`${uid}-h`} className="well flex flex-col gap-3 px-4 py-4">
+      <div className="flex flex-col gap-1">
+        <h5 id={`${uid}-h`} className="text-sm text-fg">
+          {t.alternativesHeading}
+        </h5>
+        <p className="text-xs leading-relaxed text-fg-muted">{t.alternativesHint}</p>
+      </div>
+      <ul className="flex flex-col gap-3">
+        {alts.map((a) => (
+          <li key={a.ui} className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2 border-t border-edge-soft pt-3 first:border-t-0 first:pt-0">
+            <div className="min-w-0 flex-1 basis-56">
+              <p className="text-sm text-fg [overflow-wrap:anywhere]">
+                {descriptorLabel(a)} <span className="text-fg-muted">· {a.name}</span>
+              </p>
+              {a.scopeNote && <p className="mt-0.5 text-xs leading-relaxed text-fg-muted">{a.scopeNote}</p>}
+            </div>
+            <button type="button" className="control min-h-11 px-4 text-sm" onClick={() => onPick(a.ui)}>
+              {t.alternativesUse}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+/** Broader and narrower MeSH headings of one heading, to swap the heading of a component. */
+function TreeSteps({
+  id,
+  concept,
+  heading,
+  onClose,
+  onReplace,
+}: {
+  id: string
+  concept: Concept
+  heading: string
+  onClose: () => void
+  onReplace: (d: MeshChoice) => void
+}) {
+  const [base, setBase] = useState<MeshChoice | null | undefined>(() =>
+    concept.descriptor?.name === heading ? concept.descriptor : undefined,
+  )
+  useEffect(() => {
+    if (base !== undefined) return
+    let cancelled = false
+    resolveHeading(heading).then(
+      (d) => !cancelled && setBase(d),
+      () => !cancelled && setBase(null),
+    )
+    return () => {
+      cancelled = true
+    }
+  }, [base, heading])
+
+  const neighbours = useNeighbours(base ?? null)
+  const loading = base === undefined || neighbours.status === "loading"
+  const failed = base === null || neighbours.status === "error"
+  const parents = neighbours.status === "ready" ? neighbours.value.parents : []
+  const children = neighbours.status === "ready" ? neighbours.value.children : []
+
+  return (
+    <div id={id} className="well flex flex-col gap-4 px-4 py-4">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="flex flex-col gap-1">
+          <h6 className="text-sm text-fg">
+            {t.tree.heading}: {heading}
+          </h6>
+          <p className="text-xs leading-relaxed text-fg-muted">{t.tree.hint}</p>
+        </div>
+        <button type="button" className="control min-h-11 px-4 text-sm" onClick={onClose}>
+          {t.tree.close}
+        </button>
+      </div>
+      {loading && !failed && (
+        <p role="status" className="inline-flex items-center gap-2 text-sm text-fg-muted">
+          <span aria-hidden="true" className="size-2 animate-pulse rounded-full bg-signal-bright" />
+          {t.tree.loading}
+        </p>
+      )}
+      {failed && (
+        <p role="alert" className="text-sm text-destructive">
+          {t.tree.failed}
+        </p>
+      )}
+      {!loading && !failed && (
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+          <TreeList title={t.tree.broader} empty={t.tree.noBroader} items={parents} onReplace={onReplace} />
+          <TreeList title={t.tree.narrower} empty={t.tree.noNarrower} items={children} onReplace={onReplace} />
+        </div>
+      )}
+    </div>
+  )
+}
+
+function TreeList({ title, empty, items, onReplace }: { title: string; empty: string; items: MeshChoice[]; onReplace: (d: MeshChoice) => void }) {
+  return (
+    <div className="flex min-w-0 flex-col gap-2">
+      <h6 className="annotate text-fg-muted">{title}</h6>
+      {items.length === 0 ? (
+        <p className="text-sm text-fg-muted">{empty}</p>
+      ) : (
+        <ul className="flex max-h-64 flex-col gap-1.5 overflow-y-auto">
+          {items.map((d) => (
+            <li key={d.ui}>
+              <button
+                type="button"
+                className="control w-full min-h-11 px-3 py-1.5 text-left text-sm [overflow-wrap:anywhere]"
+                onClick={() => onReplace(d)}
+                title={`${t.tree.use}: ${d.name}`}
+              >
+                <span className="text-fg">{d.name}</span>
+                {descriptorLabel(d) !== d.name && <span className="text-fg-muted"> · {descriptorLabel(d)}</span>}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   )
 }
 
@@ -337,7 +567,15 @@ function CandidateList({
   const [error, setError] = useState<string | null>(null)
 
   function adopt(c: Candidate) {
-    const r = addCustomConcept(model, c.text, blocks[c.id] ?? c.block)
+    const block = blocks[c.id] ?? c.block
+    if (c.suggestion) {
+      const r = addMeshConcept(model, c.suggestion, block, c.text)
+      setError(null)
+      onChange(r.model)
+      onCandidatesChange(candidates.filter((x) => x.id !== c.id))
+      return
+    }
+    const r = addCustomConcept(model, c.text, block)
     if (r.error) {
       setError(r.error)
       return
@@ -349,16 +587,23 @@ function CandidateList({
 
   return (
     <section aria-labelledby="ss-candidates" className="flex flex-col gap-4">
-      <div>
+      <div className="flex flex-col gap-1">
         <h3 id="ss-candidates" className="text-xl tracking-tight">
           {t.candidatesHeading}
         </h3>
-        <p className="measure mt-1 text-sm leading-relaxed text-fg-muted">{t.candidatesHint}</p>
+        <p className="measure text-sm leading-relaxed text-fg-muted">{t.candidatesHint}</p>
       </div>
       <ul className="flex flex-col gap-2">
         {candidates.map((c) => (
           <li key={c.id} className="well flex flex-wrap items-center gap-x-3 gap-y-2 rounded-[0.375rem] px-4 py-3">
-            <span className="min-w-[6rem] flex-1 font-mono text-sm text-fg [overflow-wrap:anywhere]">{c.text}</span>
+            <div className="min-w-[8rem] flex-1">
+              <span className="block font-mono text-sm text-fg [overflow-wrap:anywhere]">{c.text}</span>
+              {c.suggestion && (
+                <span className="mt-0.5 block text-xs text-fg-muted [overflow-wrap:anywhere]">
+                  {t.candidateSuggestion}: {descriptorLabel(c.suggestion)} · {c.suggestion.name}
+                </span>
+              )}
+            </div>
             <label htmlFor={`cand-${c.id}`} className="sr-only">
               {t.candidateBlock}
             </label>
@@ -375,7 +620,7 @@ function CandidateList({
               ))}
             </select>
             <button type="button" className="control control-primary min-h-11 px-4 text-sm" onClick={() => adopt(c)}>
-              {t.candidateAdd}
+              {c.suggestion ? t.candidateAddSuggestion : t.candidateAdd}
             </button>
             <button
               type="button"

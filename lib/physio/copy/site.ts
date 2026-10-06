@@ -23,7 +23,7 @@ export const siteCopy = {
     meta: {
       title: "Tools",
       description:
-        "Alle Browser-Tools für das Physiotherapie-Studium auf einen Blick, nach Kategorie sortiert, jeweils mit freier Demo.",
+        "Browser-Tools für das Physiotherapie-Studium, nach Kategorie sortiert. Die Demos sind frei, die Vollversionen im Abo.",
     },
     hero: {
       title: "Tools",
@@ -32,7 +32,7 @@ export const siteCopy = {
     },
     search: {
       label: "Tools durchsuchen",
-      placeholder: "Name, Stichwort oder Thema",
+      placeholder: "Name oder Thema, zum Beispiel PubMed",
       clear: "Suche leeren",
     },
     filters: {
@@ -53,10 +53,10 @@ export const siteCopy = {
       openNamed: (name: string) => `${name} öffnen`,
       demoNamed: (name: string) => `Demo von ${name} ausprobieren`,
       paid: "Vollversion mit Abo, Demo frei",
-      paidNoDemo: "Mit Abo",
+      paidNoDemo: "Vollversion mit Abo",
       free: "Ohne Konto nutzbar",
-      soonNote: "Noch nicht verfügbar.",
-      tags: "Stichworte",
+      soonNote: "Angekündigt, noch nicht nutzbar.",
+      tags: "Themen",
     },
     empty: {
       title: "Nichts gefunden",
@@ -71,7 +71,7 @@ export const siteCopy = {
       cta: "Tool vorschlagen",
     },
     frame: {
-      breadcrumb: "Brotkrumen",
+      breadcrumb: "Navigationspfad",
       home: "Tools",
       viewLabel: "Ansicht",
       demo: "Demo",
@@ -89,7 +89,7 @@ export const siteCopy = {
     account: {
       heading: "Deine Tools",
       textActive: "Alle Tools sind in deinem Abo enthalten.",
-      textInactive: "Ohne aktives Abo siehst du bei der Vollversion eine Vorschau. Die Demos bleiben frei.",
+      textInactive: "Ohne aktives Abo zeigt dir die Vollversion nur, was das Tool kann. Die Demos bleiben frei.",
       open: "Öffnen",
       demo: "Demo",
       all: "Alle Tools ansehen",
@@ -106,7 +106,7 @@ export const siteCopy = {
   landing: {
     metaTitle: "Physio Tools: Browser-Tools für das Physiotherapie-Studium",
     metaDescription:
-      "Kleine Browser-Tools für das Physiotherapie-Studium. Der Suchstring-Generator baut aus deiner PICO-Frage einen PubMed-Suchstring mit MeSH-Terms und Stichworten.",
+      "Kleine Browser-Tools für das Physiotherapie-Studium. Der Suchstring-Generator baut aus deiner PICO-Frage oder deinem Fall einen PubMed-Suchstring mit Schlagworten (MeSH) und Stichworten.",
     eyebrow: "Für das Physiotherapie-Studium",
     title: "Aus deiner PICO-Frage",
     titleSub: "wird ein PubMed-Suchstring.",
@@ -134,9 +134,10 @@ export const siteCopy = {
       new: "Neu",
       highlights: {
         suchstring: [
-          "Versteht deutsche und englische Fragen, auch mit «ue» statt «ü».",
+          "Versteht deutsche und englische Fragen, auch den ganzen Fall samt Aufgabenblatt.",
+          "Kennt rund 17'000 MeSH-Schlagworte, etwa die Hälfte davon mit deutschen Bezeichnungen.",
           "Zeigt zu jeder Komponente Schlagworte und Stichworte, die du entfernen, ergänzen oder verschieben kannst.",
-          "Prüft eigene Strings auf typische Fehler und korrigiert vieles mit einem Klick.",
+          "Zählt auf Wunsch die Treffer in PubMed und prüft eigene Strings auf typische Fehler.",
         ] as string[],
       } as Record<string, string[]>,
       moreTitle: "Weitere Tools",
@@ -151,15 +152,15 @@ export const siteCopy = {
       items: [
         {
           title: "Frage eingeben",
-          text: "Als Satz auf Deutsch oder Englisch, oder mit P, I, C und O einzeln. Eine Aufgabe aus dem Unterricht geht auch.",
+          text: "Als Satz auf Deutsch oder Englisch, mit P, I, C und O einzeln, oder gleich der ganze Fall samt Aufgabenblatt.",
         },
         {
           title: "Komponenten prüfen",
-          text: "Das Tool zeigt, was es erkannt hat. Du entfernst, verschiebst oder ergänzt Begriffe, bis es zu deiner Frage passt.",
+          text: "Das Tool zeigt, was es erkannt hat, und sagt dir, wo es ein Wort wie «Schultertraining» zerlegt hat. Du entfernst, verschiebst oder ergänzt Begriffe, bis es zu deiner Frage passt.",
         },
         {
           title: "Filter setzen",
-          text: "Sprache, Erscheinungsjahr und Studientyp. Alles ist optional.",
+          text: "Sprache, Erscheinungsjahr und Studientyp. Alter und Geschlecht aus dem Fall schlägt das Tool vor, einschalten musst du sie selbst. Alles ist optional.",
         },
         {
           title: "Kopieren und gegenprüfen",
@@ -173,11 +174,11 @@ export const siteCopy = {
       items: [
         {
           title: "Läuft in deinem Browser",
-          text: "Deine Fragestellung wird weder an einen Server gesendet noch gespeichert.",
+          text: "Deine Fragestellung bleibt auf deinem Gerät. Das Tool lädt nur Teile des MeSH-Wörterbuchs nach, und die Trefferzählung in PubMed startest du selbst; sie schickt nur den fertigen String.",
         },
         {
           title: "Regelbasiert, ohne KI",
-          text: "Feste Regeln und eine Begriffstabelle statt eines Sprachmodells. Das Tool erfindet keine Begriffe, und das Ergebnis bleibt ein Entwurf, den du prüfst.",
+          text: "Feste Regeln, das MeSH-Wörterbuch und eine eigene Begriffstabelle statt eines Sprachmodells. Das Tool erfindet keine Begriffe, und das Ergebnis bleibt ein Entwurf, den du prüfst.",
         },
         {
           title: "Aus der Schweiz",
@@ -234,7 +235,8 @@ export const siteCopy = {
       {
         heading: "Der Suchstring-Generator",
         paragraphs: [
-          "Deine Fragestellung und die erzeugten Suchstrings verarbeitet der Suchstring-Generator nur in deinem Browser. Sie werden weder an unseren Server gesendet noch gespeichert.",
+          "Deine Fragestellung und die erzeugten Suchstrings verarbeitet der Suchstring-Generator in deinem Browser. Wir empfangen und speichern sie nicht. Das Tool lädt dafür Teile eines öffentlichen MeSH-Wörterbuchs von physio.sweber.dev nach; dein Browser fragt dabei Dateinamen wie «terms/lo.json» ab, nie deinen Text.",
+          "Die Trefferzählung ist optional. Erst wenn du sie startest, schickt dein Browser den fertigen Suchstring (nicht deine Fragestellung) direkt an PubMed, einen Dienst der U.S. National Library of Medicine (NCBI, USA). Dasselbe gilt für «In PubMed öffnen». Für diese Abfragen gilt die Datenschutzerklärung des NCBI.",
         ],
       },
       {

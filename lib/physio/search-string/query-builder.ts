@@ -34,7 +34,7 @@ export function buildQuery(model: SearchModel, databaseId: DatabaseId = "pubmed"
       schlagworte.push(m.explode ? m.heading : `${m.heading} (ohne Unterbegriffe)`)
     }
     for (const f of textParts) {
-      const r = profile.freeText(f.text)
+      const r = profile.freeText(f.trunc && !f.text.includes("*") ? `${f.text}*` : f.text)
       if (!r) continue
       if (parts.includes(r.term)) continue
       parts.push(r.term)
@@ -44,7 +44,7 @@ export function buildQuery(model: SearchModel, databaseId: DatabaseId = "pubmed"
           severity: "warning",
           code: "trunc-dropped",
           conceptId: concept.id,
-          message: `«${f.text}» in «${concept.label}»: Vor dem * müssen mindestens 4 Zeichen stehen. Der Stern wurde weggelassen.`,
+          message: `«${f.text}» in «${concept.label}»: Vor dem * braucht PubMed mindestens 4 Zeichen. Das Tool hat den Stern weggelassen.`,
         })
       }
       if (!/\s/.test(r.plain)) {
@@ -69,7 +69,7 @@ export function buildQuery(model: SearchModel, databaseId: DatabaseId = "pubmed"
       })
       continue
     }
-    if (!meshParts.length && concept.origin === "terminology") {
+    if (!meshParts.length && concept.origin !== "custom") {
       notices.push({
         severity: "info",
         code: "no-active-mesh",

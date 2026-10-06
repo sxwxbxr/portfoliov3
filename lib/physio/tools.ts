@@ -59,7 +59,7 @@ export const PHYSIO_TOOLS: PhysioTool[] = [
     slug: "suchstring",
     name: "Suchstring-Generator",
     summary:
-      "Macht aus deiner PICO-Frage einen PubMed-Suchstring mit MeSH-Schlagworten, Stichworten, Klammern und Trunkierung.",
+      "Macht aus deiner PICO-Frage einen PubMed-Suchstring mit Schlagworten (MeSH), Stichworten, Klammern und Trunkierung.",
     category: "recherche",
     tags: ["PubMed", "PICO", "MeSH", "Suchstring"],
     status: "live",

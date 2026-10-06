@@ -32,7 +32,7 @@ const formatDate = (d: Date) =>
 /** One account topic: hairline, label column left, content right. */
 function Row({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section className="grid gap-4 border-t border-edge-soft py-8 md:grid-cols-[14rem_1fr] md:gap-10">
+    <section className="grid grid-cols-1 gap-4 border-t border-edge-soft py-8 md:grid-cols-[14rem_1fr] md:gap-10">
       <h2 className="text-lg tracking-tight">{title}</h2>
       <div className="flex min-w-0 flex-col items-start gap-4">{children}</div>
     </section>

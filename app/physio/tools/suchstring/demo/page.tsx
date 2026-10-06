@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { ToolFrame } from "@/components/physio/ToolFrame"
 import { SearchStringTool } from "@/components/physio/search-string/SearchStringTool"
 import { ssCopy } from "@/lib/physio/copy/search-string"
 import { physioPath, physioUrl } from "@/lib/physio/urls"
@@ -20,22 +21,11 @@ export const metadata: Metadata = {
 export default function SuchstringDemoPage() {
   const t = ssCopy.demo
   return (
-    <>
-      <header className="sheet pt-10 pb-12 md:pt-16 md:pb-16">
-        <div className="flex flex-col items-start gap-5">
-          <p className="tab text-xs text-fg-muted">{ssCopy.hero.demoBadge}</p>
-          <h1 className="display text-balance">
-            {ssCopy.hero.title}
-            <span className="headline-sub">{ssCopy.hero.sub}</span>
-          </h1>
-          <p className="lede">{ssCopy.hero.demoLede}</p>
-        </div>
-      </header>
-
+    <ToolFrame slug="suchstring" view="demo" lede={ssCopy.hero.demoLede}>
       <SearchStringTool mode="demo" />
 
       <section aria-labelledby="demo-cta" className="sheet border-t border-edge-soft py-14 md:py-20">
-        <div className="grid gap-8 lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-12">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-12">
           <h2 id="demo-cta" className="headline">
             {t.ctaHeading}
           </h2>
@@ -56,6 +46,6 @@ export default function SuchstringDemoPage() {
           </div>
         </div>
       </section>
-    </>
+    </ToolFrame>
   )
 }

@@ -20,11 +20,16 @@ interface Props {
   error: string | null
   /** True once the concepts below were edited by hand. */
   edited: boolean
+  /** An analysis is running (the dictionary is loading). */
+  busy: boolean
 }
+
+/** Long enough for a whole task sheet. */
+export const MAX_TEXT_LENGTH = 6000
 
 const PICO_KEYS = ["population", "intervention", "comparison", "outcome", "studyType"] as const
 
-export function QuestionPanel({ locked, exampleId, onExample, text, onText, pico, onPico, onSubmit, error, edited }: Props) {
+export function QuestionPanel({ locked, exampleId, onExample, text, onText, pico, onPico, onSubmit, error, edited, busy }: Props) {
   const uid = useId()
   const example = EXAMPLES.find((e) => e.id === exampleId)
   const picoFilled = PICO_KEYS.some((k) => (pico[k] ?? "").trim())
@@ -65,8 +70,8 @@ export function QuestionPanel({ locked, exampleId, onExample, text, onText, pico
           value={text}
           onChange={(e) => onText(e.target.value)}
           readOnly={locked}
-          rows={5}
-          maxLength={1500}
+          rows={locked ? 9 : 8}
+          maxLength={MAX_TEXT_LENGTH}
           placeholder={t.textPlaceholder}
           aria-describedby={`${uid}-text-hint`}
           aria-invalid={error ? true : undefined}
@@ -110,9 +115,12 @@ export function QuestionPanel({ locked, exampleId, onExample, text, onText, pico
 
       <div className="flex flex-col gap-3">
         <div className="flex flex-wrap items-center gap-3">
-          <button type="submit" className="control control-primary min-h-11 px-6 text-sm">
-            {locked ? t.reset : t.submit}
+          <button type="submit" disabled={busy} aria-disabled={busy} className="control control-primary min-h-11 px-6 text-sm">
+            {busy ? t.submitting : locked ? t.reset : t.submit}
           </button>
+          <span role="status" aria-live="polite" className="text-sm text-fg-muted">
+            {busy ? t.analysing : ""}
+          </span>
         </div>
         {error && (
           <p role="alert" className="text-sm text-destructive">

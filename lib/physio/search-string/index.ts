@@ -2,7 +2,8 @@
  * Public surface of the search-string engine (pure TypeScript, runs in the
  * browser, nothing here talks to a server).
  *
- *   analyze(input)            question + PICO fields -> concepts, candidates, notices
+ *   analyzeAsync(input)       question, whole case or task sheet -> concepts (curated + MeSH index), candidates, notices
+ *   analyze(input)            the same with the curated terminology only (synchronous, offline)
  *   createModel(analysis)     editable model
  *   edit.*                    removeConcept, moveConcept, toggleExplode, addFreeText, ...
  *   buildQuery(model)         model -> PubMed string + table rows + notices
@@ -15,7 +16,22 @@ import type { Filters, PicoInput } from "./types"
 
 export * from "./types"
 export { normalizeText, tokenize, stemToken, phraseKey, isStopword } from "./normalize"
-export { analyze, splitExplicit, conceptFromTerm, TERMINOLOGY } from "./parser"
+export { analyze, splitExplicit, conceptFromTerm, cleanTaskText, prepareUnits, TERMINOLOGY } from "./parser"
+export { analyzeAsync } from "./pipeline"
+export type { AnalyzeOptions } from "./pipeline"
+export {
+  conceptFromDescriptor,
+  defaultFreeText,
+  descriptorLabel,
+  meshKind,
+  moreSynonyms,
+  naturalName,
+  treeLetters,
+} from "./mesh-concepts"
+export { extractDemographics, ageGroupFor } from "./demographics"
+export { germanForms, isNoiseWord } from "./german"
+export { PUBMED_TOOL, createPubMedCounter, countRows, getPubMedCounter, pubmedSearchUrl, PubMedError } from "./pubmed"
+export type { CountRow, PubMedCounter, PubMedErrorCode } from "./pubmed"
 export { buildQuery, BLOCK_LABEL, MANY_COMPONENTS } from "./query-builder"
 export { DATABASES, LANGUAGES, STUDY_TYPE_PT, getRenderProfile, cleanFreeText, stemLength, PUBMED_MIN_STEM } from "./profiles"
 export type { DatabaseInfo, RenderProfile } from "./profiles"

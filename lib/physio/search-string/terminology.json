@@ -7,7 +7,7 @@
       "label": "Unterer Rückenschmerz (LWS)",
       "category": "population",
       "broader": "back-pain",
-      "aliasesDe": ["Kreuzschmerzen", "Kreuzschmerz", "unterer Rückenschmerz", "untere Rückenschmerzen", "Rückenschmerzen im unteren Rücken", "LWS", "LWS Beschwerden", "LWS Schmerzen", "LWS Syndrom", "Lumbalgie", "lumbale Rückenschmerzen", "Lendenwirbelsäule", "Hexenschuss", "chronische Kreuzschmerzen", "unspezifische Kreuzschmerzen", "unspezifische Rückenschmerzen", "chronische LWS Schmerzen"],
+      "aliasesDe": ["Kreuzschmerzen", "Kreuzschmerz", "unterer Rückenschmerz", "untere Rückenschmerzen", "Rückenschmerzen im unteren Rücken", "LWS", "LWS Beschwerden", "LWS Schmerzen", "LWS Syndrom", "Lumbalgie", "lumbale Rückenschmerzen", "Lendenwirbelsäule", "Hexenschuss", "chronische Kreuzschmerzen", "unspezifische Kreuzschmerzen", "unspezifische Rückenschmerzen", "chronische LWS Schmerzen", "unterer Rücken", "lumbale Beschwerden"],
       "aliasesEn": ["low back pain", "lower back pain", "lumbar pain", "lumbago", "LBP", "chronic low back pain", "nonspecific low back pain", "non specific low back pain"],
       "mesh": ["Low Back Pain"],
       "freeText": ["low back pain", "lower back pain", "lumbar pain", "lumbago", "low backache", "LBP"]
@@ -115,7 +115,7 @@
       "id": "chronic-pain",
       "label": "Chronische Schmerzen",
       "category": "population",
-      "aliasesDe": ["chronische Schmerzen", "chronischer Schmerz", "Schmerzchronifizierung", "Chronifizierung", "persistierende Schmerzen", "anhaltende Schmerzen", "Schmerzsyndrom"],
+      "aliasesDe": ["chronische Schmerzen", "chronischer Schmerz", "Schmerzchronifizierung", "Chronifizierung", "persistierende Schmerzen", "anhaltende Schmerzen"],
       "aliasesEn": ["chronic pain", "persistent pain", "long term pain"],
       "mesh": ["Chronic Pain"],
       "freeText": ["chronic pain", "persistent pain"]
@@ -178,7 +178,7 @@
       "id": "office-workers",
       "label": "Büroangestellte",
       "category": "population",
-      "aliasesDe": ["Büroangestellte", "Büroangestellter", "Büroangestellten", "Büroarbeiter", "Büroarbeiterin", "Bürokaufmann", "Bürokauffrau", "Büroarbeit", "Bürojob", "Büroberuf", "Bildschirmarbeit", "Bildschirmarbeiter", "Schreibtischarbeit", "Schreibtischarbeiter", "sitzende Tätigkeit", "sitzende Berufe"],
+      "aliasesDe": ["Büroangestellte", "Büroangestellter", "Büroangestellten", "Büroarbeiter", "Büroarbeiterin", "Bürokaufmann", "Bürokauffrau", "Büroarbeit", "Bürojob", "Büroberuf", "Bildschirmarbeit", "Bildschirmarbeiter", "Schreibtischarbeit", "Schreibtischarbeiter", "sitzende Tätigkeit", "sitzende Berufe", "Büro", "Büroumfeld"],
       "aliasesEn": ["office workers", "office worker", "desk workers", "desk worker", "sedentary workers", "sedentary worker", "white collar workers", "computer workers", "clerical workers"],
       "mesh": [],
       "freeText": ["office worker*", "desk worker*", "sedentary worker*", "white-collar worker*", "computer worker*", "clerical worker*"]
@@ -450,7 +450,7 @@
       "id": "work-ability",
       "label": "Arbeitsfähigkeit / Wiedereingliederung",
       "category": "outcome",
-      "aliasesDe": ["Arbeitsfähigkeit", "Arbeitsunfähigkeit", "arbeitsfähig", "Arbeitsproduktivität", "Produktivität", "Krankschreibung", "Krankschreibungen", "Krankheitsbedingte Absenzen", "Absenzen", "Wiedereingliederung", "Rückkehr an den Arbeitsplatz", "Rückkehr zur Arbeit", "Krankentage", "Arbeitsausfall", "Fehlzeiten", "Krankmeldung", "Arbeitsleistung", "Präsentismus", "Leistungsfähigkeit im Beruf"],
+      "aliasesDe": ["Arbeitsfähigkeit", "Arbeitsunfähigkeit", "arbeitsfähig", "Arbeitsproduktivität", "Produktivität", "Krankschreibung", "Krankschreibungen", "Krankheitsbedingte Absenzen", "Absenzen", "Wiedereingliederung", "Rückkehr an den Arbeitsplatz", "Rückkehr zur Arbeit", "Krankentage", "Arbeitsausfall", "Fehlzeiten", "Krankmeldung", "Arbeitsleistung", "Präsentismus", "Leistungsfähigkeit im Beruf", "Krankheitsausfall", "Krankheitsausfälle", "Arbeitsausfälle", "arbeitsunfähig", "krankgeschrieben", "Krankheitsabsenzen"],
       "aliasesEn": ["work ability", "ability to work", "work capacity", "work disability", "return to work", "sick leave", "sickness absence", "absenteeism", "productivity", "work productivity", "presenteeism"],
       "mesh": ["Work Capacity Evaluation", "Return to Work", "Sick Leave", "Absenteeism"],
       "freeText": ["work ability", "ability to work", "work capacity", "work disability", "return to work", "sick leave", "sickness absence", "absenteeism", "work productivity", "presenteeism"]
@@ -499,6 +499,51 @@
       "aliasesEn": ["recurrence", "recurrent", "relapse", "relapses", "re injury", "reinjury"],
       "mesh": ["Recurrence"],
       "freeText": ["recurrence", "recurrent", "relapse*", "re-injury"]
+    },
+    {
+      "id": "surgery",
+      "label": "Operation (chirurgischer Eingriff)",
+      "category": "intervention",
+      "aliasesDe": ["Operation", "Operationen", "operativer Eingriff", "operative Behandlung", "operative Therapie", "chirurgischer Eingriff", "chirurgische Behandlung", "Operation am Knie", "Knieoperation"],
+      "aliasesEn": ["surgery", "surgical procedure", "surgical procedures", "surgical treatment", "operative treatment"],
+      "mesh": ["Surgical Procedures, Operative"],
+      "freeText": ["surgery", "surgical procedure*", "surgical treatment", "operative treatment", "surgical intervention"]
+    },
+    {
+      "id": "pulmonary-rehabilitation",
+      "label": "Lungenrehabilitation",
+      "category": "intervention",
+      "aliasesDe": ["Lungenrehabilitation", "pulmonale Rehabilitation", "Lungensport", "Rehabilitation der Lunge", "Lungenreha"],
+      "aliasesEn": ["pulmonary rehabilitation", "respiratory rehabilitation", "lung rehabilitation"],
+      "mesh": [],
+      "freeText": ["pulmonary rehabilitation", "respiratory rehabilitation", "lung rehabilitation"]
+    },
+    {
+      "id": "breathing-exercises",
+      "label": "Atemtherapie / Atemübungen",
+      "category": "intervention",
+      "aliasesDe": ["Atemtherapie", "Atemübungen", "Atemtraining", "Atemgymnastik", "Atemphysiotherapie"],
+      "aliasesEn": ["breathing exercises", "breathing exercise", "breathing training", "respiratory physiotherapy"],
+      "mesh": ["Breathing Exercises"],
+      "freeText": ["breathing exercise*", "breathing training", "respiratory muscle training", "respiratory physiotherapy"]
+    },
+    {
+      "id": "return-to-sport",
+      "label": "Rückkehr zum Sport",
+      "category": "outcome",
+      "aliasesDe": ["Rückkehr zum Sport", "Rückkehr in den Sport", "Wiederaufnahme des Sports", "Wiedereinstieg in den Sport", "Return to Sport", "Return to Play", "Sportrückkehr"],
+      "aliasesEn": ["return to sport", "return to sports", "return to play", "return to competition"],
+      "mesh": ["Return to Sport"],
+      "freeText": ["return to sport*", "return to play", "return to competition"]
+    },
+    {
+      "id": "gait-speed",
+      "label": "Gehgeschwindigkeit",
+      "category": "outcome",
+      "aliasesDe": ["Gehgeschwindigkeit", "Ganggeschwindigkeit", "Gehtempo", "Schrittgeschwindigkeit"],
+      "aliasesEn": ["walking speed", "gait speed", "gait velocity"],
+      "mesh": ["Walking Speed"],
+      "freeText": ["walking speed", "gait speed", "gait velocity"]
     },
     {
       "id": "rct",

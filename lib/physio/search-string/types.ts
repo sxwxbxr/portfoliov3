@@ -56,6 +56,24 @@ export interface FreeTextTerm {
   /** Added by the user, not from the terminology. */
   custom?: boolean
   removed?: boolean
+  /** Append `*` when the string is built. Offered per term, never applied blindly. */
+  trunc?: boolean
+}
+
+/**
+ * A MeSH descriptor with everything the editor needs offline: German labels,
+ * scope note and the entry terms to pick synonyms from. Same shape as the index
+ * delivers it (see mesh-index.ts), kept here so the model stays plain data.
+ */
+export interface MeshChoice {
+  ui: string
+  /** MeSH heading, e.g. "Low Back Pain" or "Osteoarthritis, Knee". */
+  name: string
+  treeNumbers: string[]
+  entryTerms: string[]
+  german: string[]
+  /** English, about 300 characters. May be empty. */
+  scopeNote: string
 }
 
 /** One editable Suchkomponente. */
@@ -68,10 +86,17 @@ export interface Concept {
   block: Block
   mesh: MeshTerm[]
   freeText: FreeTextTerm[]
-  origin: "terminology" | "custom"
+  /** terminology: curated table. mesh: built from a MeSH descriptor of the index. custom: typed by the user. */
+  origin: "terminology" | "custom" | "mesh"
   /** The words of the question that triggered this concept. */
   matchedText?: string
+  /** Descriptor the concept was built from (origin "mesh"). */
+  descriptor?: MeshChoice
+  /** Other descriptors the same word could mean (ambiguous German terms). The user can switch. */
+  alternatives?: MeshChoice[]
 }
+
+export type SexFilter = "" | "Male" | "Female"
 
 export interface Filters {
   /** Lowercase PubMed language name ("english"), or "" for no filter. */
@@ -80,6 +105,10 @@ export interface Filters {
   yearTo: number | null
   studyTypes: StudyTypeId[]
   humansOnly: boolean
+  /** MeSH age group headings ("Middle Aged"). Several are OR-ed. */
+  ageGroups: string[]
+  /** MeSH check tag "Male" or "Female". */
+  sex: SexFilter
 }
 
 export interface SearchModel {
@@ -102,12 +131,27 @@ export interface AnalyzeInput {
   pico?: PicoInput
 }
 
-/** A word or phrase of the question that matched nothing in the terminology. */
+/** A word or phrase of the question that was not turned into a Suchkomponente. */
 export interface Candidate {
   id: string
   text: string
   /** Best guess of the block, from the surrounding markers. */
   block: Block
+  /**
+   * Set when the MeSH index knows the word but the match is too weak to add on
+   * its own (a body part, a social term). The user can adopt it with one click.
+   */
+  suggestion?: MeshChoice
+}
+
+/** An optional filter derived from the case (age, sex). Never switched on by the engine. */
+export interface FilterSuggestion {
+  id: string
+  kind: "age" | "sex"
+  /** MeSH heading: "Middle Aged", "Male". */
+  value: string
+  /** The words of the question it comes from ("45 Jahre"). */
+  evidence: string
 }
 
 export type NoticeSeverity = "info" | "warning"
@@ -124,6 +168,8 @@ export interface AnalysisResult {
   candidates: Candidate[]
   notices: Notice[]
   studyTypes: StudyTypeId[]
+  /** Optional age and sex filters found in a patient case. Off by default. */
+  filterSuggestions: FilterSuggestion[]
 }
 
 /** One row of the RefHunter-style table. */

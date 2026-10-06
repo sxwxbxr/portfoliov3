@@ -2,7 +2,17 @@
 
 import { useId, useState } from "react"
 import { ssCopy } from "@/lib/physio/copy/search-string"
-import { DATABASES, LANGUAGES, setFilters, toggleStudyType, type SearchModel, type StudyTypeId } from "@/lib/physio/search-string"
+import {
+  DATABASES,
+  LANGUAGES,
+  setFilters,
+  toggleAgeGroup,
+  toggleStudyType,
+  type FilterSuggestion,
+  type SearchModel,
+  type SexFilter,
+  type StudyTypeId,
+} from "@/lib/physio/search-string"
 
 const t = ssCopy.database
 const STUDY_TYPES: StudyTypeId[] = ["rct", "systematic-review", "meta-analysis"]
@@ -12,14 +22,21 @@ function parseYear(raw: string): number | null {
   return Number.isFinite(n) && n >= 1000 && n <= 3000 ? n : null
 }
 
-export function DatabasePanel({ model, onChange }: { model: SearchModel; onChange: (m: SearchModel) => void }) {
+interface Props {
+  model: SearchModel
+  onChange: (m: SearchModel) => void
+  /** Optional age and sex filters found in the case. Off until the user switches them on. */
+  suggestions?: FilterSuggestion[]
+}
+
+export function DatabasePanel({ model, onChange, suggestions = [] }: Props) {
   const uid = useId()
   const f = model.filters
   return (
     <div className="flex flex-col gap-10">
       <fieldset className="flex flex-col gap-3">
         <legend className="sr-only">{t.legend}</legend>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {DATABASES.map((db) => (
             <label
               key={db.id}
@@ -35,7 +52,7 @@ export function DatabasePanel({ model, onChange }: { model: SearchModel; onChang
                   checked={db.id === "pubmed"}
                   disabled={!db.available}
                   readOnly
-                  className="size-4 accent-white"
+                  className="size-4 accent-signal"
                 />
                 <span className="text-fg">{db.label}</span>
               </span>
@@ -46,8 +63,8 @@ export function DatabasePanel({ model, onChange }: { model: SearchModel; onChang
       </fieldset>
 
       <fieldset className="flex flex-col gap-6">
-        <legend className="mb-1 text-xl tracking-tight">{t.filtersHeading}</legend>
-        <p className="-mt-3 text-sm text-fg-muted">{t.filtersHint}</p>
+        <legend className="mb-2 text-xl tracking-tight">{t.filtersHeading}</legend>
+        <p className="text-sm text-fg-muted">{t.filtersHint}</p>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div className="flex flex-col gap-1.5">
@@ -102,7 +119,7 @@ export function DatabasePanel({ model, onChange }: { model: SearchModel; onChang
                   type="checkbox"
                   checked={f.studyTypes.includes(id)}
                   onChange={() => onChange(toggleStudyType(model, id))}
-                  className="size-4 accent-white"
+                  className="size-4 accent-signal"
                 />
                 <span className="text-sm">{t.studyTypeLabels[id]}</span>
               </label>
@@ -116,7 +133,7 @@ export function DatabasePanel({ model, onChange }: { model: SearchModel; onChang
               type="checkbox"
               checked={f.humansOnly}
               onChange={(e) => onChange(setFilters(model, { humansOnly: e.target.checked }))}
-              className="size-4 accent-white"
+              className="size-4 accent-signal"
               aria-describedby={`${uid}-humans`}
             />
             <span className="text-sm">{t.humans}</span>
@@ -125,6 +142,36 @@ export function DatabasePanel({ model, onChange }: { model: SearchModel; onChang
             {t.humansHint}
           </p>
         </div>
+
+        {suggestions.length > 0 && (
+          <div className="well flex flex-col gap-3 px-5 py-4">
+            <div className="flex flex-col gap-1">
+              <h4 className="text-lg tracking-tight">{t.caseHeading}</h4>
+              <p className="measure text-sm leading-relaxed text-fg-muted">{t.caseHint}</p>
+            </div>
+            <div className="flex flex-col gap-0.5">
+              {suggestions.map((sg) => {
+                const on = sg.kind === "age" ? f.ageGroups.includes(sg.value) : f.sex === sg.value
+                const label = sg.kind === "age" ? (t.ageLabels[sg.value] ?? sg.value) : (t.sexLabels[sg.value] ?? sg.value)
+                return (
+                  <label key={sg.id} className="flex min-h-11 cursor-pointer items-center gap-3 text-fg">
+                    <input
+                      type="checkbox"
+                      checked={on}
+                      onChange={() =>
+                        onChange(sg.kind === "age" ? toggleAgeGroup(model, sg.value) : setFilters(model, { sex: on ? "" : (sg.value as SexFilter) }))
+                      }
+                      className="size-4 shrink-0 accent-signal"
+                    />
+                    <span className="text-sm">
+                      {label} <span className="text-fg-muted">({t.fromCase(sg.evidence)})</span>
+                    </span>
+                  </label>
+                )
+              })}
+            </div>
+          </div>
+        )}
       </fieldset>
     </div>
   )

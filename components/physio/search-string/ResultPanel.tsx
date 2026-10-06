@@ -5,6 +5,7 @@ import { Check, Copy, Download } from "lucide-react"
 import { ssCopy } from "@/lib/physio/copy/search-string"
 import { buildQuery, exportJson, exportText, type SearchModel } from "@/lib/physio/search-string"
 import { Notices } from "./Notices"
+import { PubMedCount } from "./PubMedCount"
 import { QueryView } from "./QueryView"
 
 const t = ssCopy.result
@@ -113,6 +114,7 @@ export function ResultPanel({ model, question }: { model: SearchModel; question:
       <Notices notices={built.notices} heading={t.noticesHeading} />
 
       {!built.empty && <ComponentTable components={built.components} />}
+      {!built.empty && <PubMedCount built={built} />}
     </div>
   )
 }

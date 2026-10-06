@@ -110,6 +110,11 @@ const pubmed: RenderProfile = {
     if (f.studyTypes.length) {
       clauses.push(`(${f.studyTypes.map((t) => `${STUDY_TYPE_PT[t]}[pt]`).join(" OR ")})`)
     }
+    if (f.ageGroups.length) {
+      const groups = f.ageGroups.map((g) => `"${g}"[Mesh]`)
+      clauses.push(groups.length === 1 ? groups[0] : `(${groups.join(" OR ")})`)
+    }
+    if (f.sex) clauses.push(`"${f.sex}"[Mesh]`)
     if (f.language) clauses.push(`${f.language}[la]`)
     const from = f.yearFrom
     const to = f.yearTo

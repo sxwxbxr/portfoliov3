@@ -391,7 +391,7 @@ function checkOperand(o: Operand, ctx: Ctx, agg: Aggregates) {
       findings.push({
         code: "trunc-mesh",
         severity: "error",
-        message: "Trunkierung (*) funktioniert bei Schlagworten ([Mesh]) nicht. Nenne die Überschrift vollständig.",
+        message: "Trunkierung (*) funktioniert bei Schlagworten ([Mesh]) nicht. Schreib das Schlagwort vollständig aus.",
         start: o.s,
         end: o.e,
       })
@@ -424,7 +424,7 @@ function checkOperand(o: Operand, ctx: Ctx, agg: Aggregates) {
     findings.push({
       code: "mesh-unquoted",
       severity: "warning",
-      message: "Eine Schlagwort-Überschrift aus mehreren Wörtern gehört in Anführungszeichen.",
+      message: "Ein Schlagwort aus mehreren Wörtern gehört in Anführungszeichen.",
       start: o.s,
       end: o.e,
       fix: { label: "Anführungszeichen setzen", edits: [{ start: o.s, end: o.s, text: '"' }, { start: o.textEnd, end: o.textEnd, text: '"' }] },

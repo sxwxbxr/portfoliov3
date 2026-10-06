@@ -32,7 +32,7 @@ export default function VorschlaegePage() {
       </header>
 
       <section className="sheet pb-24 md:pb-32">
-        <div className="grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-16">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-16">
           <Section className="relative min-w-0">
             <div className="cast p-6 md:p-8">
               <h2 className="mb-6 text-xl tracking-tight">{c.form.heading}</h2>

@@ -16,8 +16,8 @@ interface Props {
 }
 
 const BADGE: Record<LintFinding["severity"], string> = {
-  error: "border-destructive text-destructive",
-  warning: "border-fg text-fg",
+  error: "border-destructive bg-destructive font-medium text-destructive-foreground",
+  warning: "border-fg bg-fg font-medium text-plate",
   info: "border-edge-mid text-fg-muted",
 }
 

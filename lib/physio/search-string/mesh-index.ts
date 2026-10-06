@@ -16,10 +16,14 @@ import {
   meshDescriptorBucketKey,
   meshTermShardKey,
   meshTreeShardKey,
+  normalizeMeshTerm,
   type MeshTermSource,
 } from "./mesh-normalize"
 
 export type { MeshTermSource } from "./mesh-normalize"
+
+/** Lower is better. Curated German first, then MeSH's own names. */
+export const SOURCE_RANK: Record<MeshTermSource, number> = { "de-curated": 0, "en-name": 1, "en-entry": 2, "de-wd": 3 }
 
 export const DEFAULT_MESH_BASE_URL = "/physio/mesh/2026"
 
@@ -48,6 +52,13 @@ export interface MeshDescriptor {
   scopeNote: string
 }
 
+/** One typed-prefix suggestion: a normalised index term and what it points to. */
+export interface MeshTermSuggestion {
+  /** Normalised term, e.g. "rueckenschmerzen". */
+  term: string
+  refs: MeshTermRef[]
+}
+
 export interface MeshTreeNode {
   treeNumber: string
   ui: string
@@ -74,6 +85,11 @@ export interface MeshIndexOptions {
 export interface MeshIndex {
   /** Resolves normalised terms (see normalizeMeshTerm) to descriptor refs. Terms without a hit are absent from the map. */
   lookupTerms(normalisedTerms: string[]): Promise<Map<string, MeshTermRef[]>>
+  /**
+   * Index terms that start with the typed prefix (at least two characters). Loads the one shard of the
+   * first two characters. Sorted by best source, then by length. For autocomplete.
+   */
+  suggestTerms(prefix: string, limit?: number): Promise<MeshTermSuggestion[]>
   /** Full descriptor details. Unknown UIs are absent from the map. */
   getDescriptors(uis: string[]): Promise<Map<string, MeshDescriptor>>
   /** Direct children of a tree number, sorted by tree number. */
@@ -127,6 +143,23 @@ export function createMeshIndex(options: MeshIndexOptions = {}): MeshIndex {
         )
       }
       return out
+    },
+
+    async suggestTerms(prefix, limit = 40) {
+      const p = normalizeMeshTerm(prefix)
+      if (p.length < 2) return []
+      const table = await shard<Record<string, RawRef[]>>(`terms/${meshTermShardKey(p)}.json`, {})
+      const rows: MeshTermSuggestion[] = []
+      for (const [term, raw] of Object.entries(table)) {
+        if (!term.startsWith(p)) continue
+        rows.push({
+          term,
+          refs: raw.map((r) => ({ ui: r[0], source: MESH_SOURCE_CODES[r[1]], acronym: r[2] === 1 })),
+        })
+      }
+      const rank = (r: MeshTermSuggestion) => Math.min(...r.refs.map((x) => SOURCE_RANK[x.source]))
+      rows.sort((a, b) => rank(a) - rank(b) || a.term.length - b.term.length || (a.term < b.term ? -1 : 1))
+      return rows.slice(0, limit)
     },
 
     async getDescriptors(uis) {

@@ -1,12 +1,12 @@
 "use client"
 
-import { useState, type ReactNode } from "react"
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ssCopy } from "@/lib/physio/copy/search-string"
 import {
   EXAMPLES,
   STUDENT_SEARCH_STRING,
-  analyze,
+  analyzeAsync,
   createModel,
   type AnalysisResult,
   type Candidate,
@@ -14,6 +14,7 @@ import {
   type PicoInput,
   type SearchModel,
 } from "@/lib/physio/search-string"
+import { getMeshIndex, type MeshMeta } from "@/lib/physio/search-string/mesh-index"
 import { ConceptsPanel } from "./ConceptsPanel"
 import { DatabasePanel } from "./DatabasePanel"
 import { LintPanel } from "./LintPanel"
@@ -28,8 +29,8 @@ interface Run {
   edited: boolean
 }
 
-function makeRun(text: string, pico: PicoInput, filters?: Partial<Filters>): Run {
-  const analysis = analyze({ text, pico })
+async function makeRun(text: string, pico: PicoInput, filters?: Partial<Filters>): Promise<Run> {
+  const analysis = await analyzeAsync({ text, pico })
   return {
     analysis,
     candidates: analysis.candidates,
@@ -42,7 +43,7 @@ function makeRun(text: string, pico: PicoInput, filters?: Partial<Filters>): Run
 function Step({ n, title, hint, children }: { n?: number; title: string; hint: string; children: ReactNode }) {
   const id = `ss-step-${n ?? "lint"}`
   return (
-    <section aria-labelledby={id} className="grid gap-x-12 gap-y-6 border-t border-edge-soft py-10 md:py-14 lg:grid-cols-[15rem_minmax(0,1fr)]">
+    <section aria-labelledby={id} className="grid grid-cols-1 gap-x-12 gap-y-6 border-t border-edge-soft py-10 md:py-14 lg:grid-cols-[15rem_minmax(0,1fr)]">
       <header className="lg:sticky lg:top-28 lg:self-start">
         {n !== undefined && (
           <p className="annotate text-fg-muted">
@@ -62,10 +63,36 @@ function Step({ n, title, hint, children }: { n?: number; title: string; hint: s
 const TAB_CLASS =
   "min-h-11 rounded-full border border-edge-mid px-5 text-sm text-fg-muted data-[state=active]:border-signal data-[state=active]:bg-signal data-[state=active]:text-signal-fg data-[state=active]:shadow-none hover:text-fg"
 
+/** Source line with the index version, once the dictionary's meta file has arrived. */
+function Attribution() {
+  const [meta, setMeta] = useState<MeshMeta | null>(null)
+  useEffect(() => {
+    let cancelled = false
+    getMeshIndex()
+      .getMeta()
+      .then((m) => !cancelled && m?.version && setMeta(m))
+      .catch(() => undefined)
+    return () => {
+      cancelled = true
+    }
+  }, [])
+  const c = meta?.counts as Record<string, number> | undefined
+  return (
+    <footer className="mt-10 flex flex-col gap-1 border-t border-edge-soft pt-6">
+      <p className="annotate text-fg-muted">{ssCopy.attribution.source}</p>
+      {meta && c && <p className="annotate text-fg-muted">{ssCopy.attribution.version(meta.version, c.descriptors ?? 0, c.descriptorsWithGerman ?? 0)}</p>}
+    </footer>
+  )
+}
+
 /**
- * The Suchstring-Generator. Everything runs in the browser: the question is
- * analysed by lib/physio/search-string and never leaves this component.
- * `demo` locks the free input to the shipped examples.
+ * The Suchstring-Generator. The question is analysed in the browser by
+ * lib/physio/search-string and never leaves this component. The only network
+ * traffic is the loading of public dictionary files (shard names, not text) and
+ * the opt-in PubMed count (search string only).
+ *
+ * `demo` locks the free input to the shipped examples. The dictionary search
+ * and the PubMed count stay usable in the demo: neither needs an own question.
  */
 export function SearchStringTool({ mode }: { mode: "full" | "demo" }) {
   const demo = mode === "demo"
@@ -74,8 +101,32 @@ export function SearchStringTool({ mode }: { mode: "full" | "demo" }) {
   const [exampleId, setExampleId] = useState(first?.id ?? "")
   const [text, setText] = useState(first?.text ?? "")
   const [pico, setPico] = useState<PicoInput>(first?.pico ?? {})
-  const [run, setRun] = useState<Run | null>(() => (first ? makeRun(first.text, first.pico ?? {}, first.filters) : null))
+  const [run, setRun] = useState<Run | null>(null)
+  const [busy, setBusy] = useState(demo)
   const [error, setError] = useState<string | null>(null)
+  const ticket = useRef(0)
+
+  const analyse = useCallback(async (t: string, p: PicoInput, filters?: Partial<Filters>) => {
+    const mine = ++ticket.current
+    setBusy(true)
+    try {
+      const next = await makeRun(t, p, filters)
+      if (mine !== ticket.current) return
+      setRun(next)
+      setError(null)
+    } catch {
+      if (mine === ticket.current) setError(ssCopy.question.failError)
+    } finally {
+      if (mine === ticket.current) setBusy(false)
+    }
+  }, [])
+
+  // The demo shows the first example right away.
+  useEffect(() => {
+    if (first) void analyse(first.text, first.pico ?? {}, first.filters)
+    // Runs once on mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   function pickExample(id: string) {
     setExampleId(id)
@@ -84,7 +135,7 @@ export function SearchStringTool({ mode }: { mode: "full" | "demo" }) {
     if (!ex) return
     setText(ex.text)
     setPico(ex.pico ?? {})
-    setRun(makeRun(ex.text, ex.pico ?? {}, ex.filters))
+    void analyse(ex.text, ex.pico ?? {}, ex.filters)
   }
 
   function submit() {
@@ -93,12 +144,7 @@ export function SearchStringTool({ mode }: { mode: "full" | "demo" }) {
       setError(ssCopy.question.emptyError)
       return
     }
-    try {
-      setRun(makeRun(text, pico))
-      setError(null)
-    } catch {
-      setError(ssCopy.question.failError)
-    }
+    void analyse(text, pico)
   }
 
   function updateModel(model: SearchModel) {
@@ -107,7 +153,7 @@ export function SearchStringTool({ mode }: { mode: "full" | "demo" }) {
 
   return (
     <div className="sheet pb-24 md:pb-32">
-      <p className="annotate text-fg-muted mb-6 max-w-[62ch]">{ssCopy.privacy}</p>
+      <p className="annotate text-fg-muted mb-6 max-w-[72ch]">{ssCopy.privacy}</p>
 
       <Tabs defaultValue="generate" className="gap-0">
         <TabsList className="mb-2 h-auto flex-wrap justify-start gap-2 bg-transparent p-0">
@@ -132,11 +178,12 @@ export function SearchStringTool({ mode }: { mode: "full" | "demo" }) {
               onSubmit={demo ? () => pickExample(exampleId || EXAMPLES[0].id) : submit}
               error={error}
               edited={!!run?.edited}
+              busy={busy}
             />
           </Step>
 
           {run ? (
-            <>
+            <div aria-busy={busy} className={busy ? "opacity-60 transition-opacity" : "transition-opacity"}>
               <Step n={2} title={ssCopy.concepts.heading} hint={ssCopy.concepts.hint}>
                 <ConceptsPanel
                   model={run.model}
@@ -147,15 +194,22 @@ export function SearchStringTool({ mode }: { mode: "full" | "demo" }) {
                 />
               </Step>
               <Step n={3} title={ssCopy.database.heading} hint={ssCopy.database.hint}>
-                <DatabasePanel model={run.model} onChange={updateModel} />
+                <DatabasePanel model={run.model} onChange={updateModel} suggestions={run.analysis.filterSuggestions} />
               </Step>
               <Step n={4} title={ssCopy.result.heading} hint={ssCopy.result.hint}>
                 <ResultPanel model={run.model} question={run.question} />
               </Step>
-            </>
+            </div>
           ) : (
             <div className="border-t border-edge-soft py-10">
-              <p className="text-sm text-fg-muted">{ssCopy.concepts.waiting}</p>
+              {busy ? (
+                <p role="status" className="inline-flex items-center gap-2 text-sm text-fg-muted">
+                  <span aria-hidden="true" className="size-2 animate-pulse rounded-full bg-signal-bright" />
+                  {ssCopy.attribution.loading}
+                </p>
+              ) : (
+                <p className="text-sm text-fg-muted">{ssCopy.concepts.waiting}</p>
+              )}
             </div>
           )}
         </TabsContent>
@@ -166,6 +220,8 @@ export function SearchStringTool({ mode }: { mode: "full" | "demo" }) {
           </Step>
         </TabsContent>
       </Tabs>
+
+      <Attribution />
     </div>
   )
 }
