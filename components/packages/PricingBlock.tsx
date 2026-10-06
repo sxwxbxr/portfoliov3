@@ -10,8 +10,10 @@ import { copy } from "@/lib/copy"
 
 type Period = "monthly" | "yearly"
 
-const chf = new Intl.NumberFormat("de-CH", { maximumFractionDigits: 0 })
-const money = (amount: number) => `CHF ${chf.format(amount)}`
+// Grouped by hand: Intl's de-CH separator differs between Node (') and browsers (’),
+// which made every price a hydration mismatch.
+const money = (amount: number) =>
+  `CHF ${Math.round(amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "\u2019")}`
 
 /** Whole months saved when paying yearly, or 0 when there is no saving. */
 function monthsFree(tier: PriceTier): number {
