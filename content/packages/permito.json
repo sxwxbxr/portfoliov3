@@ -289,6 +289,12 @@
   "articles": [],
   "releases": [
     {
+      "version": "0.9.0",
+      "date": "2026-10-06",
+      "title": "Permito 0.9.0: release candidate, WordPress guide, versioning policy",
+      "url": "https://www.npmjs.com/package/@permitojs/core/v/0.9.0"
+    },
+    {
       "version": "0.8.0",
       "date": "2026-10-06",
       "title": "Permito 0.8.0: API freeze candidate, pinned API, migration guide",
