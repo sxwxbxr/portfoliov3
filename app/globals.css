@@ -32,7 +32,7 @@
   /* ── Type ─────────────────────────────────────────────────────── */
   --fg:          #ededed;   /* 15.6:1 on plate                            */
   --fg-muted:    #8f8f8f;   /*  5.6:1 on plate                            */
-  --fg-subtle:   #6e6e6e;   /*  3.4:1 on plate — meta, never body copy    */
+  --fg-subtle:   #8a8a8a;   /*  5.2:1 on plate — meta, never body copy    */
 
   /* ── Lines ────────────────────────────────────────────────────── */
   --edge:        #6e6e6e;   /* input boundaries, 3.4:1 on plate           */

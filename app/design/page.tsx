@@ -17,7 +17,7 @@ const TOKENS: { name: string; cls: string; value: string; note: string }[] = [
   { name: "well", cls: "bg-well", value: "#0f0f0f", note: "Inputs, tracks, code" },
   { name: "fg", cls: "bg-fg", value: "#ededed", note: "Text" },
   { name: "fg-muted", cls: "bg-fg-muted", value: "#8f8f8f", note: "Body copy, secondary text" },
-  { name: "fg-subtle", cls: "bg-fg-subtle", value: "#6e6e6e", note: "Meta, never body copy" },
+  { name: "fg-subtle", cls: "bg-fg-subtle", value: "#8a8a8a", note: "Meta, never body copy" },
   { name: "edge", cls: "bg-edge", value: "#6e6e6e", note: "Input boundaries" },
   { name: "edge-soft", cls: "bg-edge-soft", value: "#222222", note: "Section rules, row dividers" },
   { name: "edge-mid", cls: "bg-edge-mid", value: "#333333", note: "Control outlines" },
