@@ -62,7 +62,8 @@
       "Evidence export of the consent log as NDJSON or CSV for a period, with a manifest, SHA-256 and an optional HMAC signature, plus a check that shows whether file or manifest were changed afterwards",
       "Audit report in German or English as Markdown and HTML: configuration, site scan, catalog freshness and the evidence manifest in one document, with missing parts marked as not checked",
       "Seals for the consent log: a keyed hash chain over the entries of a period, linked from period to period, so later changes, removals and additions are detectable; seals hold only entry IDs and hashes",
-      "Catalog texts and cookie table headings in German, English, French, Italian and Spanish, and a freshness check for CI that lists catalog entries older than a limit"
+      "Catalog texts and cookie table headings in German, English, French, Italian and Spanish, and a freshness check for CI that lists catalog entries older than a limit",
+      "WordPress plugin generator: one JSON file becomes a plugin that loads the banner, blocks scripts that other plugins enqueue by handle (also WooCommerce) and adds shortcodes for the settings link and the cookie table"
     ]
   },
   "comparison": [
