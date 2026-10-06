@@ -375,7 +375,7 @@ export const ssCopy = {
     failedRow: "Fehler",
     errors: {
       rate: "PubMed hat die Anfragen vorübergehend begrenzt. Warte eine Minute und zähle noch einmal.",
-      network: "PubMed ist von deinem Browser aus gerade nicht erreichbar. Prüfe die Verbindung oder öffne den String direkt in PubMed.",
+      network: "PubMed hat auch nach drei Versuchen nicht geantwortet. Zähl in einer Minute noch einmal. Klappt es nie, blockiert oft ein Werbeblocker, ein VPN oder das Netz der Hochschule die Anfrage. Die Trefferzahl siehst du auch mit «In PubMed öffnen».",
       query: "PubMed hat den String nicht verstanden. Öffne ihn in PubMed, dort steht, was nicht stimmt.",
       other: "Die Zählung hat nicht geklappt. Öffne den String direkt in PubMed.",
     },

@@ -1038,7 +1038,7 @@ describe("PubMed counts", () => {
     assert.ok(!url.searchParams.has("email"))
   })
 
-  it("keeps 350 ms between requests, one at a time, and caches per string", async () => {
+  it("keeps 400 ms between requests, one at a time, and caches per string", async () => {
     const { counter, calls } = counterWith(() => ok("5"))
     const rows = [
       { id: "a", query: "a[tiab]" },
@@ -1051,8 +1051,19 @@ describe("PubMed counts", () => {
     assert.equal(r.stopped, null)
     assert.deepEqual(seen, [5, 5, 5, 5])
     assert.equal(calls.length, 3, "the repeated string comes from the cache")
-    for (let i = 1; i < calls.length; i++) assert.ok(calls[i].at - calls[i - 1].at >= 350)
+    for (let i = 1; i < calls.length; i++) assert.ok(calls[i].at - calls[i - 1].at >= 400)
     assert.equal(counter.cached("a[tiab]"), 5)
+  })
+
+  it("retries a dropped request and then counts", async () => {
+    let n = 0
+    const { counter, calls } = counterWith(() => {
+      if (n++ === 0) throw new TypeError("failed to fetch")
+      return ok("42")
+    })
+    assert.equal(await counter.count("total[tiab]"), 42)
+    assert.equal(calls.length, 2)
+    assert.ok(calls[1].at - calls[0].at >= 1500, "waits before the retry")
   })
 
   it("stops at a rate limit and reports the error", async () => {
@@ -1069,6 +1080,7 @@ describe("PubMed counts", () => {
       throw new TypeError("failed to fetch")
     })
     await assert.rejects(net.counter.count("x"), (e: unknown) => e instanceof PubMedError && e.code === "network")
+    assert.equal(net.calls.length, 3, "two retries before giving up")
     const bad = counterWith(() => new Response(JSON.stringify({ esearchresult: { ERROR: "Invalid query" } }), { status: 200 }))
     await assert.rejects(bad.counter.count("x"), (e: unknown) => e instanceof PubMedError && e.code === "query")
   })
