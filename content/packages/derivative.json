@@ -39,7 +39,7 @@
   "features": {
     "free": [
       "Reads Changesets (default and GitHub formats), Keep a Changelog, conventional-changelog, conventional commits with tags and GitHub Releases",
-      "derivative build writes changelog.json, an Atom feed and a standalone changelog page",
+      "derivative build writes changelog.json, an Atom feed, a JSON Feed and a standalone changelog page; derivative init sets it all up in one step",
       "<derivative-widget>: popover or inline, unread badge, about 6 kB gzipped, no dependencies",
       "Announcement toast for the newest titled release, shown once per reader, and a filter for the entry types users see",
       "Accessible: labelled dialog, focus handling, Escape to close, reduced motion respected",
@@ -48,14 +48,14 @@
       "React bindings: <WhatsNew>, useChangelog and an unstyled <ChangelogList>"
     ],
     "pro": [
-      "Read statistics without cookies or visitor IDs: opens, reads and link clicks per release, with an HTML report and CSV export",
+      "Read statistics without cookies or visitor IDs: opens, reads and link clicks per release, with an HTML report, CSV export and storage in a file, Postgres or SQLite",
       "Audience segments: entries only for certain plans or roles, via rules or a [for: pro] marker, and scheduled releases",
-      "Announcements: an e-mail digest in your branding and posts to Slack, Teams, Discord, Mattermost, Google Chat and Mastodon"
+      "Announcements: an e-mail digest in your branding and posts to Slack, Teams, Discord, Mattermost, Google Chat, Mastodon and Bluesky"
     ]
   },
   "comparison": [
     {
-      "feature": "Changelog parsers, CLI and Atom feed",
+      "feature": "Changelog parsers, CLI, Atom and JSON Feed",
       "free": true,
       "pro": true
     },
@@ -75,7 +75,7 @@
       "pro": true
     },
     {
-      "feature": "E-mail digest, chat and Mastodon announcements",
+      "feature": "E-mail digest, chat, Mastodon and Bluesky announcements",
       "free": false,
       "pro": true
     },
