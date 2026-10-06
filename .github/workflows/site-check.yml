@@ -31,10 +31,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm install --no-save --no-audit --no-fund playwright@1.50.0 && npx playwright install --with-deps chromium
-      - run: node scripts/demo-check.mjs "${{ inputs.origin }}"
+      - name: Playwright in eigenem Ordner installieren
+        run: |
+          mkdir pw && cp scripts/demo-check.mjs pw/
+          cd pw && npm init -y >/dev/null && npm install --no-audit --no-fund playwright@1.50.0
+          npx playwright install --with-deps chromium
+      - run: cd pw && node demo-check.mjs "${{ inputs.origin }}"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: screenshots
-          path: shots
+          path: pw/shots
