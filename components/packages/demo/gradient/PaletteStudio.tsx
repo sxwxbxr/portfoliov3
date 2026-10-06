@@ -14,7 +14,11 @@ import {
   type Deficiency,
   fixContrast,
   createPalette,
+  contrastOnBlend,
+  createBlend,
   createSeries,
+  extractColors,
+  pickBrand,
   type Mode,
   type Palette,
   parseColor,
@@ -511,6 +515,146 @@ function SeriesSection({ brand, vision }: { brand: string; vision: Vision }) {
   )
 }
 
+function BlendSection() {
+  const b = t.blend
+  const [from, setFrom] = useState("#0a84ff")
+  const [to, setTo] = useState("#ffd60a")
+  const [text, setText] = useState("#ffffff")
+  const valid = isColor(from) && isColor(to) && isColor(text)
+  const blend = useMemo(() => (valid ? createBlend([from, to], { steps: 9 }) : null), [from, to, valid])
+  const result = useMemo(() => (blend ? contrastOnBlend(blend, text) : null), [blend, text])
+  return (
+    <Block id="blend" label={b.label} title={b.title} sub={b.sub} lede={<p>{b.lede}</p>}>
+      <div className="grid gap-8 lg:grid-cols-2">
+        <div className="flex flex-col gap-6">
+          <ColorField label={b.from} value={from} onChange={setFrom} />
+          <ColorField label={b.to} value={to} onChange={setTo} />
+          <ColorField label={b.text} value={text} onChange={setText} />
+        </div>
+        {blend && result && (
+          <div className="flex min-w-0 flex-col gap-4">
+            <div className="flex flex-col gap-2">
+              <p className="annotate">{b.srgb}</p>
+              <div className="h-14 rounded-xl border border-edge" style={{ background: `linear-gradient(90deg, ${from}, ${to})` }} />
+            </div>
+            <div className="flex flex-col gap-2">
+              <p className="annotate">{b.oklch}</p>
+              <div
+                className="flex h-24 items-center justify-center rounded-xl border border-edge px-4 text-center text-lg font-semibold"
+                style={{ background: blend.css, color: text }}
+              >
+                {b.textSample}
+              </div>
+            </div>
+            <p className="text-sm text-fg" role="status">
+              {b.contrast(result.min, result.max)} {result.pass ? b.pass : b.fail}
+            </p>
+          </div>
+        )}
+      </div>
+      <div className="mt-8">
+        <CodeBlock title={b.cli} code={`npx @sweberdev/gradient blend ${shellQuote(from)} ${shellQuote(to)} --steps 9`} />
+      </div>
+    </Block>
+  )
+}
+
+const EXAMPLE_IMAGE =
+  "data:image/svg+xml;utf8," +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="240" height="160"><rect width="240" height="160" fill="#ffffff"/><circle cx="80" cy="80" r="56" fill="#e30613"/><rect x="120" y="60" width="90" height="40" rx="8" fill="#0a84ff"/></svg>',
+  )
+
+function ImageSection({ onUse }: { onUse: (hex: string) => void }) {
+  const m = t.image
+  const inputId = useId()
+  const [src, setSrc] = useState<string | null>(null)
+  const [colors, setColors] = useState<{ hex: string; share: number }[] | null>(null)
+  const [error, setError] = useState(false)
+  const brand = colors ? pickBrand(colors) : null
+
+  const load = (url: string, revoke = false) => {
+    setError(false)
+    const img = new Image()
+    img.onload = () => {
+      const scale = Math.min(1, 200 / Math.max(img.width, img.height))
+      const canvas = document.createElement("canvas")
+      canvas.width = Math.max(1, Math.round(img.width * scale))
+      canvas.height = Math.max(1, Math.round(img.height * scale))
+      const ctx = canvas.getContext("2d")
+      if (!ctx) return setError(true)
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+      setColors(extractColors(ctx.getImageData(0, 0, canvas.width, canvas.height).data, { count: 5 }))
+      setSrc(url)
+      if (revoke) setTimeout(() => URL.revokeObjectURL(url), 1000)
+    }
+    img.onerror = () => setError(true)
+    img.src = url
+  }
+
+  return (
+    <Block id="image" label={m.label} title={m.title} sub={m.sub} lede={<p>{m.lede}</p>}>
+      <div className="grid gap-8 lg:grid-cols-2">
+        <div className="flex flex-col gap-4">
+          <label htmlFor={inputId} className="control inline-flex cursor-pointer items-center self-start px-3 py-2 text-sm">
+            {m.drop}
+          </label>
+          <input
+            id={inputId}
+            type="file"
+            accept="image/*"
+            className="sr-only"
+            onChange={(e) => {
+              const file = e.target.files?.[0]
+              if (file) load(URL.createObjectURL(file), true)
+            }}
+          />
+          <button type="button" onClick={() => load(EXAMPLE_IMAGE)} className="control inline-flex items-center self-start px-3 py-2 text-sm">
+            {m.example}
+          </button>
+          {src && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={src} alt="" className="max-h-40 max-w-full self-start rounded-xl border border-edge bg-white object-contain" />
+          )}
+          {error && (
+            <p className="text-sm text-fg" role="alert">
+              {m.error}
+            </p>
+          )}
+        </div>
+        {colors && (
+          <div className="well flex flex-col gap-4 px-5 py-4" role="status">
+            <p className="annotate">{m.colors}</p>
+            <ul className="flex flex-col gap-1.5 font-mono text-sm text-fg">
+              {colors.map((c) => (
+                <li key={c.hex} className="inline-flex items-center gap-2">
+                  <span aria-hidden="true" className="h-4 w-4 rounded-full border border-edge" style={{ background: c.hex }} />
+                  {c.hex} <span className="text-fg-muted">{Math.round(c.share * 100)}%</span>
+                </li>
+              ))}
+            </ul>
+            <div className="flex flex-col gap-2 border-t border-edge pt-4">
+              {brand ? (
+                <>
+                  <p className="text-sm text-fg">
+                    {m.pick}: <span className="font-mono">{brand}</span>
+                  </p>
+                  <button type="button" onClick={() => onUse(brand)} className="control inline-flex items-center gap-2 self-start px-3 py-2 text-sm">
+                    <span aria-hidden="true" className="h-3.5 w-3.5 rounded-full" style={{ background: brand }} />
+                    {m.use}
+                  </button>
+                </>
+              ) : (
+                <p className="text-sm text-fg">{m.none}</p>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </Block>
+  )
+}
+
 function shellQuote(value: string) {
   return `"${value.replace(/"/g, '\\"')}"`
 }
@@ -736,6 +880,10 @@ export function PaletteStudio() {
       <SeriesSection brand={shown.scales[0]?.source ?? brand} vision={vision} />
 
       <AuditSection />
+
+      <BlendSection />
+
+      <ImageSection onUse={setBrand} />
 
       <PairCheck />
 
