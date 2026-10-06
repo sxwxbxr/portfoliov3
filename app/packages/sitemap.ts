@@ -42,6 +42,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       const demo = demoUrlOf(p)
       return demo ? [{ url: pkgUrl(demo), changeFrequency: "monthly" as const, priority: 0.8 }] : []
     }),
+    { url: pkgUrl("/sigmoid/curves"), changeFrequency: "monthly" as const, priority: 0.7 },
     ...getBundles().map((b) => ({
       url: pkgUrl(`/bundles/${b.slug}`),
       changeFrequency: "monthly" as const,

@@ -19,7 +19,8 @@
   "install": "pnpm add @sweberdev/sigmoid",
   "npm": [
     "@sweberdev/sigmoid",
-    "@sweberdev/sigmoid-react"
+    "@sweberdev/sigmoid-react",
+    "@sweberdev/sigmoid-vue"
   ],
   "code": {
     "title": "app/page.tsx",
@@ -47,8 +48,10 @@
       "A small fallback with the same range maths as the CSS spec, also inside scroll containers, so every browser looks the same",
       "Physically correct springs, the logistic S-curve and Bézier curves as functions and as CSS linear()",
       "Curves usable with Motion, GSAP, CSS transitions and as a Tailwind CSS v4 theme",
+      "A curve editor on packages.sweber.dev: tune, copy as CSS or Tailwind, share by link",
       "prefers-reduced-motion respected by default",
       "React components and hooks: Reveal, Parallax, ScrollProgress, useScrub, useStory",
+      "Vue 3 directives and composables: v-reveal, v-parallax, useScrollProgress, useStory",
       "About 2.4 kB for a reveal, 3.9 kB for everything, checked in CI"
     ]
   },
@@ -62,6 +65,10 @@
       "a": "Browsers with CSS scroll-driven animations, such as Chrome, Edge and Safari 26. Others get the JavaScript fallback with the same result. The docs list the details."
     },
     {
+      "q": "Is there a Vue package?",
+      "a": "Yes. @sweberdev/sigmoid-vue has the v-reveal and v-parallax directives and composables such as useScrollProgress and useStory. Install it next to @sweberdev/sigmoid."
+    },
+    {
       "q": "Does it work with Next.js and Server Components?",
       "a": "Yes. The data-sigmoid attributes work in Server Components without client code. The React components are client components that render one element."
     },
@@ -72,6 +79,12 @@
   ],
   "publishedAt": "2026-10-05",
   "releases": [
+    {
+      "version": "0.4.0",
+      "date": "2026-10-06",
+      "title": "Sigmoid 0.4.0: Vue, a curve editor and browser tests",
+      "url": "https://packages.sweber.dev/blog/sigmoid-0-4-0-released"
+    },
     {
       "version": "0.3.0",
       "date": "2026-10-06",

@@ -109,6 +109,12 @@ export default function SigmoidDemoPage() {
 
       <Block id="curves" label={t.curves.label} title={t.curves.title} sub={t.curves.sub} lede={<p>{t.curves.lede}</p>}>
         <CurveLab />
+        <p className="mt-8">
+          <Link href={pkgPath("/sigmoid/curves")} className="control inline-flex items-center gap-1 py-2.5 pr-4 pl-5 text-sm">
+            {t.curves.editorLink}
+            <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
+          </Link>
+        </p>
       </Block>
 
       <Block id="reveal" label={t.reveal.label} title={t.reveal.title} sub={t.reveal.sub} lede={<p>{t.reveal.lede}</p>}>
