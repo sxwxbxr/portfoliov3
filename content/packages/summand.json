@@ -58,7 +58,8 @@
       "Export valid purchase invoices as a DATEV booking batch (EXTF 700, SKR03 or SKR04) for your tax advisor",
       "Fetch invoices straight from a mailbox over IMAP or Microsoft 365 and drop the XML and PDF attachments into the inbox folder",
       "Write a real A4 PDF of every invoice, PDF/A-3b with the original XML attached, so XRechnung and ZUGFeRD CII invoices stay valid ZUGFeRD files",
-      "Write e-invoices from a typed invoice object: XRechnung and EN 16931 as UBL or CII, always checked with Summand, with exact VAT and total calculation and ZUGFeRD PDFs"
+      "Write e-invoices from a typed invoice object: XRechnung and EN 16931 as UBL or CII, always checked with Summand, with exact VAT and total calculation and ZUGFeRD PDFs",
+      "Check incoming invoices against purchase orders and goods receipts: quantities, prices, VAT and totals within tolerances you set, partial invoices tracked, every difference with a stable code in German or English"
     ]
   },
   "comparison": [
@@ -112,11 +113,15 @@
       },
       {
         "name": "@weber-development/summand-inbox",
-        "description": "Validates folders of invoices from the command line or your code, watches an inbox folder, or fetches invoices straight from a mailbox (IMAP or Microsoft 365), and sorts each new invoice into valid, invalid and duplicate: JSON, CSV, JUnit and HTML reports, duplicate detection across runs, an audit log with a SHA-256 per file and a DATEV booking batch export, and a PDF for every valid invoice, and converts invoices between UBL and CII."
+        "description": "Validates folders of invoices from the command line or your code, watches an inbox folder, or fetches invoices straight from a mailbox (IMAP or Microsoft 365), and sorts each new invoice into valid, invalid and duplicate: JSON, CSV, JUnit and HTML reports, duplicate detection across runs, an audit log with a SHA-256 per file and a DATEV booking batch export, and a PDF for every valid invoice, and converts invoices between UBL and CII, and matches invoices against purchase orders."
       },
       {
         "name": "@weber-development/summand-write",
         "description": "Writes an Invoice object as XRechnung or EN 16931 e-invoice in UBL 2.1 or CII D16B and checks the result with Summand before it returns, so you never send out an invalid invoice by accident. Can calculate line amounts, the VAT breakdown and totals with exact decimal arithmetic, and produce a ZUGFeRD / Factur-X PDF."
+      },
+      {
+        "name": "@weber-development/summand-match",
+        "description": "Checks an invoice against the purchase order it belongs to, and against a goods receipt for a three-way match. Pairs the lines in an explainable way, compares quantity, unit, price, VAT and totals within tolerances you set, tracks what is still open on partial invoices and reports every difference with a stable code, in German or English. Orders load from JSON or CSV."
       }
     ],
     "waitlistUrl": "mailto:info@sweber.dev?subject=Summand%20Pro%20waitlist"
