@@ -52,7 +52,9 @@
     "pro": [
       "Read any invoice into one typed object with all EN 16931 business terms, from UBL or CII, XML or PDF",
       "Show invoices as readable, printable HTML in German or English, with the validation report",
-      "Validate whole folders: JSON, CSV, JUnit and HTML reports, duplicate detection and a hash-chained audit log"
+      "Validate whole folders: JSON, CSV, JUnit and HTML reports, duplicate detection and a hash-chained audit log",
+      "Watch an inbox folder: every new invoice is checked once it is fully written and sorted into valid, invalid and duplicate",
+      "Export valid purchase invoices as a DATEV booking batch (EXTF 700, SKR03 or SKR04) for your tax advisor"
     ]
   },
   "comparison": [
@@ -106,7 +108,7 @@
       },
       {
         "name": "@weber-development/summand-inbox",
-        "description": "Validates folders of invoices from the command line or your code: JSON, CSV, JUnit and HTML reports, duplicate detection across runs and an audit log with a SHA-256 per file."
+        "description": "Validates folders of invoices from the command line or your code, or watches an inbox folder and sorts each new invoice into valid, invalid and duplicate: JSON, CSV, JUnit and HTML reports, duplicate detection across runs, an audit log with a SHA-256 per file and a DATEV booking batch export."
       }
     ],
     "waitlistUrl": "mailto:info@sweber.dev?subject=Summand%20Pro%20waitlist"

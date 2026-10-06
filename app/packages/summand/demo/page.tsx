@@ -112,6 +112,8 @@ export default function SummandDemoPage() {
               {demo.audit ? <CodeBlock title={t.pro.audit} code={demo.audit} /> : <Missing />}
             </div>
           </div>
+          {demo.watch ? <CodeBlock title={t.pro.watch} code={demo.watch.trimEnd()} /> : <Missing />}
+          {demo.datev ? <CodeBlock title={t.pro.datev} code={demo.datev.trimEnd()} /> : <Missing />}
           <div className="flex flex-col gap-2">
             <p className="annotate">{t.pro.report}</p>
             {demo.report ? <OutputFrame html={demo.report} title={t.pro.reportTitle} height={640} /> : <Missing />}
