@@ -43,13 +43,13 @@
       "derivative build writes changelog.json, an Atom feed, a JSON Feed and a standalone changelog page; derivative init sets it all up in one step",
       "<derivative-widget>: popover or inline, unread badge, optional search field, about 6 kB gzipped, no dependencies",
       "Announcement toast for the newest titled release, shown once per reader, and a filter for the entry types users see",
-      "Accessible: labelled dialog, focus handling, Escape to close, reduced motion respected, a correct heading outline, and axe checks in the test suite",
-      "Labels and dates in English, German, French and Italian; dark mode and CSS custom properties",
+      "Accessible: labelled dialog, focus handling, Escape to close, reduced motion respected, a correct heading outline, and axe and real-Chromium checks (contrast, RTL, phone width) in the test suite",
+      "Labels and dates in English, German, French and Italian; dark mode, right-to-left pages, a dozen CSS custom properties and styleable parts",
       "Highlights: a title, summary and image for the releases that matter",
       "Bindings for React (<WhatsNew>, useChangelog, an unstyled <ChangelogList>) and Vue 3 (<WhatsNew>, useChangelog); Svelte, Astro and plain HTML use the element directly"
     ],
     "pro": [
-      "Read statistics without cookies or visitor IDs: opens, reads and link clicks per release, plus a \"Was this helpful?\" vote under each release, with an HTML report, CSV export and storage in a file, Postgres or SQLite",
+      "Read statistics without cookies or visitor IDs: opens, reads and link clicks per release, plus a \"Was this helpful?\" vote under each release, with an HTML report, a password-protected dashboard route for your own backend, CSV export and storage in a file, Postgres or SQLite",
       "Audience segments and languages: entries only for certain plans or roles, scheduled releases, and a feed per language translated with DeepL, an OpenAI-compatible model or Anthropic, with a cache so only changed texts cost anything; entries can also follow your feature flags (Unleash, LaunchDarkly)",
       "Announcements: a subscriber list with double opt-in and e-mail digests sent through Resend, Postmark, Amazon SES or any SMTP server (one-click unsubscribe, consent evidence), plus posts to Slack, Teams, Discord, Mattermost, Google Chat, Mastodon, Bluesky and LinkedIn"
     ]
@@ -66,7 +66,7 @@
       "pro": true
     },
     {
-      "feature": "Read statistics, helpful votes, report and CSV export",
+      "feature": "Read statistics, helpful votes, dashboard route, report and CSV export",
       "free": false,
       "pro": true
     },
@@ -97,7 +97,7 @@
     "packages": [
       {
         "name": "@weber-development/derivative-insights",
-        "description": "Counts opens, reads and link clicks per release on your own endpoint, adds a helpful / not helpful vote under each release, without cookies or visitor IDs, and renders a report."
+        "description": "Counts opens, reads and link clicks per release on your own endpoint, adds a helpful / not helpful vote under each release, without cookies or visitor IDs, and renders a report or serves a dashboard route."
       },
       {
         "name": "@weber-development/derivative-segments",
