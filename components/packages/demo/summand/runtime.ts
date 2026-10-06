@@ -9,7 +9,7 @@ import { useEffect, useState } from "react"
  * npm, bundled into one file.
  */
 
-export const SUMMAND_URL = "/demos/summand/summand-0.2.0.min.js"
+export const SUMMAND_URL = "/demos/summand/summand-0.3.0.min.js"
 export const SAMPLES_URL = "/demos/summand/samples/"
 
 export interface ValidationMessage {
@@ -27,6 +27,8 @@ export interface ValidationResult {
   profile?: { id: string; label: string; specificationId: string; en16931: boolean }
   source: { type: "xml" | "pdf"; attachmentName?: string; pdfConformanceLevel?: string }
   ruleSets: Array<{ id: string; name: string; version: string; license: string }>
+  /** XML Schemas checked before the rules (0.3.0 and later). */
+  schemas?: Array<{ id: string; name: string; version: string; license: string }>
   errors: ValidationMessage[]
   warnings: ValidationMessage[]
   infos: ValidationMessage[]

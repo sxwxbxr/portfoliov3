@@ -6,10 +6,10 @@ export const summandDemoCopy = {
   title: "Summand",
   titleSub: "Live demo, free and Pro.",
   intro:
-    "The first two sections run the real @sweberdev/summand build in your browser: the XPath and Schematron engine with the official CEN and KoSIT rules, the PDF reader and the Leitweg-ID check. The Pro section shows output of the real Pro packages for a few sample invoices.",
+    "The first two sections run the real @sweberdev/summand build in your browser: the XML Schema check, the XPath and Schematron engine with the official CEN and KoSIT rules, the PDF reader and the Leitweg-ID check. The Pro section shows output of the real Pro packages for a few sample invoices.",
   isolation: "Your invoice never leaves your browser. Nothing is uploaded or stored.",
   legal:
-    "Summand checks invoices technically against EN 16931 and XRechnung. It does not check XML schemas yet, and it is not tax advice.",
+    "Summand checks invoices technically against EN 16931 and XRechnung. It is not tax advice.",
   overview: "Summand overview",
   docs: "Read the docs",
   jump: "On this page",
@@ -25,7 +25,7 @@ export const summandDemoCopy = {
     label: "Validate",
     title: "Check an e-invoice against the official rules",
     sub: "EN 16931 and XRechnung.",
-    lede: "Drop an XRechnung or ZUGFeRD / Factur-X file, or pick a sample. Summand finds the syntax and profile, applies the matching rule sets and lists every finding with rule, line and XPath.",
+    lede: "Drop an XRechnung or ZUGFeRD / Factur-X file, or pick a sample. Summand finds the syntax and profile, checks the XML Schema, applies the matching rule sets and lists every finding with rule, line and XPath.",
     samples: "Samples",
     sampleList: [
       { file: "xrechnung-ubl.xml", label: "XRechnung UBL" },
@@ -48,6 +48,7 @@ export const summandDemoCopy = {
     syntax: "Syntax",
     source: "Source",
     ruleSets: "Rule sets",
+    schemas: "XML Schema",
     pdf: (name?: string) => `XML embedded in the PDF${name ? ` (${name})` : ""}`,
     xml: "XML file",
     summary: "Invoice",

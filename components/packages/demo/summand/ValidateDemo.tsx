@@ -201,6 +201,16 @@ export function ValidateDemo() {
                       ))
                     : "–"}
                 </dd>
+                <dt className="text-fg-muted">{t.schemas}</dt>
+                <dd>
+                  {result.schemas?.length
+                    ? result.schemas.map((r) => (
+                        <span key={r.id} className="block">
+                          {r.name}
+                        </span>
+                      ))
+                    : "–"}
+                </dd>
               </dl>
               {s && (
                 <dl className="grid grid-cols-[max-content_1fr] content-start gap-x-6 gap-y-1 text-sm">
