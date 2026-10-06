@@ -24,8 +24,9 @@ export function AppPreview({ feed }: { feed: Feed }) {
   const [accent, setAccent] = useState("#2f5bea")
   const [types, setTypes] = useState<string | undefined>(undefined)
   const [announce, setAnnounce] = useState(true)
+  const [search, setSearch] = useState(false)
   const [round, setRound] = useState(0)
-  const ids = { lang: useId(), theme: useId(), accent: useId(), types: useId(), announce: useId() }
+  const ids = { lang: useId(), theme: useId(), accent: useId(), types: useId(), announce: useId(), search: useId() }
 
   useEffect(() => {
     if (resolvedTheme === "dark" || resolvedTheme === "light") setTheme(resolvedTheme)
@@ -106,6 +107,19 @@ export function AppPreview({ feed }: { feed: Feed }) {
             <span className="annotate block">{t.announceNote}</span>
           </span>
         </label>
+        <label htmlFor={ids.search} className="flex items-start gap-2 sm:col-span-3">
+          <input
+            id={ids.search}
+            type="checkbox"
+            className="mt-1"
+            checked={search}
+            onChange={(e) => setSearch(e.target.checked)}
+          />
+          <span className="text-sm">
+            {t.search}
+            <span className="annotate block">{t.searchNote}</span>
+          </span>
+        </label>
       </div>
 
       <div className="well overflow-visible p-1.5">
@@ -123,13 +137,14 @@ export function AppPreview({ feed }: { feed: Feed }) {
             <span className="font-semibold">Muster Ledger</span>
             {mod ? (
               <Widget
-                key={`${round}-${announce}`}
+                key={`${round}-${announce}-${search}`}
                 feed={feed}
                 attrs={{
                   lang,
                   theme,
                   types,
                   announce: announce ? "" : undefined,
+                  search: search ? "" : undefined,
                   "storage-key": STORAGE_KEY,
                   href: "#playground",
                   label: undefined,
