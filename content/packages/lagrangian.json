@@ -1,0 +1,74 @@
+{
+  "slug": "lagrangian",
+  "name": "Lagrangian",
+  "tagline": "Animation with real physics: springs that keep their momentum when interrupted, throws with friction onto snap points, and a small 2D world with gravity, collisions and rolling. About 7 kB.",
+  "seoTitle": "Lagrangian – physics-based animation: interruptible springs, inertia, gravity and collisions",
+  "description": "Most web animation is a curve over a fixed duration. Click twice and the element stops dead and starts again; throw it and it ignores how fast you threw. Lagrangian animates with physics instead. Its springs are the exact solution of the damped oscillator, so they know their position and velocity at every moment and simply continue when the target changes, at any frame rate.\n\nDrag an element and Lagrangian measures how fast you let go, lets it glide with friction like iOS scrolling, rubber-bands past the edges and lands exactly on the nearest snap point. For playful interfaces there is a small 2D world: round bodies with gravity, restitution and Coulomb friction, so they bounce, slide and roll, plus springs between bodies and a pointer joint for grabbing and throwing. When the user asks for reduced motion, automatic motion jumps to its end.",
+  "status": "beta",
+  "tags": [
+    "Animation",
+    "Physics",
+    "Spring",
+    "Gestures",
+    "Drag",
+    "Gravity",
+    "React"
+  ],
+  "license": "MIT",
+  "order": 31,
+  "install": "pnpm add @sweberdev/lagrangian",
+  "npm": [
+    "@sweberdev/lagrangian",
+    "@sweberdev/lagrangian-react"
+  ],
+  "code": {
+    "title": "app/drawer.tsx",
+    "language": "tsx",
+    "snippet": "import { draggable, World } from \"@sweberdev/lagrangian\"\nimport { useSpringProps } from \"@sweberdev/lagrangian-react\"\n\n// Springs that keep their momentum when the state flips mid-flight\nconst panel = useSpringProps<HTMLElement>({ x: open ? 0 : -320 }, { bounce: 0.2 })\n\n// Throw a sheet onto snap points\ndraggable(sheet, { axis: \"y\", snap: { y: [0, 240, 480] } })\n\n// Drop things that bounce and roll\nconst world = new World({ bounds: box }).start()\nworld.add({ x: 120, y: 0, radius: 24, restitution: 0.8, element: ball })"
+  },
+  "links": {
+    "docs": "https://packages.sweber.dev/lagrangian/docs",
+    "github": "https://github.com/Weber-Development/lagrangian",
+    "npm": "https://www.npmjs.com/package/@sweberdev/lagrangian"
+  },
+  "docs": {
+    "repo": "Weber-Development/lagrangian",
+    "path": "docs",
+    "ref": "main"
+  },
+  "demoUrl": "/lagrangian/demo",
+  "features": {
+    "free": [
+      "Springs solved in closed form: exact at any frame rate, with duration and bounce or stiffness, damping and mass",
+      "Interrupt anything: every property keeps its velocity, so a new target continues the motion",
+      "animate() for transforms, opacity and CSS custom properties, with delay and stagger",
+      "draggable(): velocity from a least-squares fit, friction like iOS scrolling, rubber-banding past the bounds",
+      "Snap points the throw lands on exactly, by adjusting the glide instead of jumping",
+      "A 2D world: gravity, air drag, collisions with restitution, Coulomb friction and rolling",
+      "Springs between bodies, a pointer joint to grab and throw, sleep when everything rests",
+      "rk4() and system() for your own equations of motion",
+      "Reduced motion respected: automatic motion jumps to where it would rest",
+      "React hooks: useSpringProps, useSpring, useDraggable, useWorld, useBody",
+      "About 7 kB min+gzip for everything, checked in CI"
+    ]
+  },
+  "faq": [
+    {
+      "q": "How is this different from Sigmoid?",
+      "a": "Sigmoid ties motion to the scroll position with native CSS scroll timelines and turns springs into CSS easing curves. Lagrangian runs physics in real time: interruptible springs, gestures, throws, gravity and collisions. They work well together."
+    },
+    {
+      "q": "Why not Motion or GSAP?",
+      "a": "Both are excellent and do far more, such as layout animations and timelines. Lagrangian focuses on the physics: exact springs, throws that land on snap points and a world with collisions and rolling, in about 7 kB."
+    },
+    {
+      "q": "Is it a game physics engine?",
+      "a": "No. Bodies are circles, which keeps the engine small and exact. It is meant for playful interfaces. For polygons, joints and thousands of bodies use Matter.js or Rapier."
+    },
+    {
+      "q": "What happens with reduced motion?",
+      "a": "Springs and throws jump to where they would come to rest, so the layout ends up the same. Dragging and the world still follow the pointer, because the user is moving them."
+    }
+  ],
+  "publishedAt": "2026-10-06"
+}

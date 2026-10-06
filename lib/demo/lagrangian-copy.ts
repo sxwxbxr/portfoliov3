@@ -1,0 +1,100 @@
+// Copy of the Lagrangian live demo (/lagrangian/demo). Kept next to the demo so
+// parallel package launches do not all edit lib/copy.ts.
+export const lagrangianDemo = {
+  seoTitle: "Lagrangian live demo: interruptible springs, throws, gravity and a double pendulum",
+  description:
+    "Click a spring faster than CSS can keep up, throw cards onto snap points, drop balls that bounce and roll, and watch a double pendulum turn chaotic. All with @sweberdev/lagrangian.",
+  title: "Lagrangian",
+  titleSub: "Live demo. Click, throw, drop.",
+  overview: "Lagrangian overview",
+  intro:
+    "Everything on this page moves with real physics from @sweberdev/lagrangian: springs solved exactly, friction, gravity, collisions. Nothing has a fixed duration. Interrupt anything and it continues from where it is and how fast it moves.",
+  jump: "Jump to",
+  jumpLinks: [
+    { href: "#springs", label: "Springs" },
+    { href: "#throw", label: "Throw" },
+    { href: "#world", label: "World" },
+    { href: "#pendulum", label: "Double pendulum" },
+  ],
+  docs: "Read the docs",
+  reduced:
+    "Reduced motion is on. Springs and throws jump straight to where they would come to rest. Dragging and the playground still follow your pointer, and the pendulum waits for you to press play.",
+  springs: {
+    label: "Springs",
+    title: "Click faster than CSS can keep up.",
+    sub: "A transition restarts. A spring keeps its momentum.",
+    lede:
+      "Both dots go to the other side when you click. The upper one uses a CSS transition, the lower one a Lagrangian spring. Click several times in a row and watch the plot: the transition stops dead and starts again, the spring turns around smoothly because it knows its velocity.",
+    toggle: "Click to send them across",
+    css: "CSS transition, 600 ms",
+    spring: "Lagrangian spring",
+    duration: "Duration",
+    bounce: "Bounce",
+    plotLabel: "Position of both dots over the last three seconds",
+    codeHeading: "The spring",
+  },
+  throwing: {
+    label: "Throw",
+    title: "Throws that land where they should.",
+    sub: "Velocity, friction, snap points and soft edges.",
+    lede:
+      "Swipe the cards. Lagrangian measures how fast you let go, lets the strip glide with friction like iOS scrolling and adjusts the glide so it ends exactly on a card. Pull past the first or last card and it resists, then springs back. The puck on the right has no snap points, only walls.",
+    deckLabel: "Cards",
+    cards: ["Mass", "Velocity", "Friction", "Gravity", "Restitution"],
+    puckLabel: "Free throw",
+    released: "Released at",
+    landed: "landed on",
+    hint: "Drag and let go",
+    codeHeading: "The cards",
+  },
+  world: {
+    label: "World",
+    title: "Drop things. Grab them. Throw them.",
+    sub: "Gravity, collisions, friction and rolling.",
+    lede:
+      "Pick up any ball and throw it. Bigger balls are heavier, collisions keep momentum, and friction at the contact point makes balls roll. Switch to the Moon or turn gravity off. When everything rests for a second the world stops computing, so an idle page costs nothing.",
+    drop: "Drop more",
+    shake: "Shake",
+    reset: "Reset",
+    gravity: "Gravity",
+    gravities: [
+      { label: "Earth", value: 9.81 },
+      { label: "Moon", value: 1.62 },
+      { label: "Jupiter", value: 24.79 },
+      { label: "Off", value: 0 },
+    ],
+    material: "Material",
+    materials: [
+      { label: "Rubber", restitution: 0.85 },
+      { label: "Wood", restitution: 0.5 },
+      { label: "Clay", restitution: 0.08 },
+    ],
+    bodies: "bodies",
+    running: "simulating at 240 Hz",
+    asleep: "at rest, no CPU used",
+    hint: "Grab a ball",
+    codeHeading: "The playground",
+  },
+  pendulum: {
+    label: "Double pendulum",
+    title: "Write your own equations of motion.",
+    sub: "Chaos from one Lagrangian.",
+    lede:
+      "Two double pendulums, started one thousandth of a radian apart. Their equations of motion come straight from the Lagrangian L = T − V and are stepped with RK4 at 240 Hz. For a few seconds they move as one, then they go completely different ways. The energy readout shows how little the integrator drifts.",
+    play: "Play",
+    pause: "Pause",
+    restart: "Restart",
+    angle: "Start angle",
+    energy: "Energy drift",
+    time: "Time",
+    canvasLabel: "Two double pendulums drawn with their trails",
+    codeHeading: "The equations",
+  },
+  closing: {
+    label: "Get it",
+    title: "About 7 kB of physics.",
+    sub: "Free and open source under the MIT licence.",
+    lede:
+      "Springs, throws, dragging and the world work with any framework. React hooks are in @sweberdev/lagrangian-react. The docs explain every option and the maths behind it.",
+  },
+} as const
