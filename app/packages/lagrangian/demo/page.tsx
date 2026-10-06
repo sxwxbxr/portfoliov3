@@ -129,6 +129,18 @@ menuButton.onclick = () => menu.toggle()
 const confirm = dialog(box, { backdrop: shade })
 deleteButton.onclick = () => confirm.show()`
 
+const STACK_CODE = `import { fall, indicator, toasts } from "@weber-development/lagrangian-pro"
+
+const stack = toasts(corner, { edge: "bottom", max: 4 })
+saveButton.onclick = () => stack.show("Saved")
+
+indicator(tabs, bar, { itemSelector: "button", onSelect: (i) => showPanel(i) })
+
+const effect = fall(section)
+effect.start()
+effect.explode({ x: 400, y: 600 })
+await effect.restore()`
+
 export default function LagrangianDemoPage() {
   const btn = "control inline-flex items-center gap-1 py-2.5 pr-4 pl-5 text-sm"
 
@@ -217,6 +229,9 @@ export default function LagrangianDemoPage() {
             </div>
             <div className="min-w-0">
               <CodeBlock title={t.pro.effectsHeading} code={EFFECTS_CODE} />
+            </div>
+            <div className="min-w-0">
+              <CodeBlock title={t.pro.stackHeading} code={STACK_CODE} />
             </div>
           </div>
           <div>
