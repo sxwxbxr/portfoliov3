@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { guideCopy } from "@/lib/physio/copy/guide"
 import { siteCopy } from "@/lib/physio/copy/site"
 import type { PhysioTool } from "@/lib/physio/tools"
 import { physioPath } from "@/lib/physio/urls"
@@ -37,8 +38,9 @@ export function ToolCard({ tool, isNew }: { tool: PhysioTool; isNew: boolean }) 
         <p className="leading-relaxed text-fg-muted">{tool.summary}</p>
       </div>
 
-      {tool.tags.length > 0 && (
+      {(tool.tags.length > 0 || tool.guide) && (
         <ul className="flex flex-wrap gap-1.5" aria-label={t.tags}>
+          {tool.guide && <li className="tab rounded-md px-2 py-0.5 text-xs font-medium">{guideCopy.toolBadge}</li>}
           {tool.tags.map((tag) => (
             <li key={tag} className="rounded-md border border-edge-soft bg-plate-hi px-2 py-0.5 text-xs text-fg-muted">
               {tag}

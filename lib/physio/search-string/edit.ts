@@ -4,9 +4,9 @@
  */
 import { conceptFromDescriptor, defaultFreeText, descriptorLabel, naturalName } from "./mesh-concepts"
 import { analyze, conceptFromTerm, TERMINOLOGY } from "./parser"
-import { cleanFreeText } from "./profiles"
+import { DATABASES, cleanFreeText } from "./profiles"
 import { normalizeText } from "./normalize"
-import type { AnalysisResult, Block, Concept, Filters, MeshChoice, SearchModel, StudyTypeId, Terminology } from "./types"
+import type { AnalysisResult, Block, Concept, DatabaseId, Filters, MeshChoice, SearchModel, StudyTypeId, Terminology } from "./types"
 
 export const DEFAULT_FILTERS: Filters = {
   language: "",
@@ -23,7 +23,29 @@ export function createModel(analysis: AnalysisResult, filters: Partial<Filters> 
     concepts: analysis.concepts.map((c) => ({ ...c, mesh: c.mesh.map((m) => ({ ...m })), freeText: c.freeText.map((f) => ({ ...f })) })),
     filters: { ...DEFAULT_FILTERS, studyTypes: analysis.studyTypes, ...filters },
     includedBlocks: { population: true, intervention: true, comparison: false, outcome: true },
+    databases: ["pubmed"],
   }
+}
+
+/** The databases the result is written for: available ones only, in picker order, PubMed when nothing is set. */
+export function selectedDatabases(model: SearchModel): DatabaseId[] {
+  const wanted = model.databases ?? ["pubmed"]
+  const chosen = DATABASES.filter((d) => d.available && wanted.includes(d.id)).map((d) => d.id)
+  return chosen.length ? chosen : ["pubmed"]
+}
+
+/** Switches one database on or off. The last remaining database cannot be switched off. */
+export function toggleDatabase(model: SearchModel, id: DatabaseId): SearchModel {
+  const current = selectedDatabases(model)
+  const next = current.includes(id) ? current.filter((d) => d !== id) : [...current, id]
+  if (!next.length) return model
+  return { ...model, databases: DATABASES.filter((d) => next.includes(d.id)).map((d) => d.id) }
+}
+
+/** Replaces the selection (a single database: "switch"). Unavailable databases are ignored. */
+export function setDatabases(model: SearchModel, ids: DatabaseId[]): SearchModel {
+  const next = DATABASES.filter((d) => d.available && ids.includes(d.id)).map((d) => d.id)
+  return next.length ? { ...model, databases: next } : model
 }
 
 /** Convenience for tests and callers without UI: question in, model out. */
@@ -217,4 +239,23 @@ export function hasDefaultSynonyms(c: Concept): boolean {
 export function toggleAgeGroup(model: SearchModel, group: string): SearchModel {
   const has = model.filters.ageGroups.includes(group)
   return setFilters(model, { ageGroups: has ? model.filters.ageGroups.filter((g) => g !== group) : [...model.filters.ageGroups, group] })
+}
+
+/* ── Subject-heading suggestions (CINAHL, Embase) ───────────────── */
+
+/** Databases whose headings are suggestions derived from MeSH (CINAHL Headings, Emtree) and can be left out. */
+export function headingOptionDatabases(): DatabaseId[] {
+  return DATABASES.filter((d) => d.available && d.headingSuggestions).map((d) => d.id)
+}
+
+/** True when the string for this database contains headings. PubMed and Cochrane always do (MeSH is their own vocabulary). */
+export function headingsEnabled(model: SearchModel, id: DatabaseId): boolean {
+  return !headingOptionDatabases().includes(id) || !(model.headingsOff ?? []).includes(id)
+}
+
+/** Switches the subject-heading suggestions of one database on or off. Off means free text only. Other databases are ignored. */
+export function setHeadings(model: SearchModel, id: DatabaseId, on: boolean): SearchModel {
+  if (!headingOptionDatabases().includes(id)) return model
+  const off = (model.headingsOff ?? []).filter((d) => d !== id)
+  return { ...model, headingsOff: on ? off : [...off, id] }
 }

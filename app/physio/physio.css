@@ -275,3 +275,70 @@ html:has([data-site="physio"]) {
   html:has([data-site="physio"]) { --ground: #fff; }
   [data-site="physio"] header { position: static; }
 }
+
+/* ══════════════════════════════════════════════════════════════════════
+   Guided mode ("Geführter Modus", components/physio/guide).
+   The area of the current step carries data-guide-active: a ring, no overlay,
+   the tool stays usable. The print sheet of the worksheet is mounted under
+   <body> and hidden on screen; while printing it is the only thing shown.
+   ══════════════════════════════════════════════════════════════════════ */
+
+[data-site="physio"] [data-guide] {
+  scroll-margin-top: 6.5rem;
+}
+
+[data-site="physio"] [data-guide][data-guide-active="true"] {
+  outline: 2px solid var(--signal);
+  outline-offset: 0.5rem;
+  border-radius: var(--radius-card);
+  background-color: color-mix(in oklab, var(--wash) 38%, transparent);
+}
+
+@media (forced-colors: active) {
+  [data-site="physio"] [data-guide][data-guide-active="true"] { outline-color: Highlight; }
+}
+
+.guide-print-sheet { display: none; }
+
+@media print {
+  body:has(> .guide-print-sheet) > *:not(.guide-print-sheet) { display: none !important; }
+  html, body { background: #fff !important; height: auto !important; overflow: visible !important; }
+  .guide-print-sheet {
+    display: block;
+    color: #000;
+    background: #fff;
+    font-family: var(--font-sans), system-ui, sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.45;
+    padding: 0;
+  }
+  .guide-print-sheet h1,
+  .guide-print-sheet h2,
+  .guide-print-sheet h3 {
+    font-family: var(--font-physio-serif), Georgia, serif;
+    color: #000;
+    font-weight: 600;
+    line-height: 1.2;
+    break-after: avoid;
+  }
+  .guide-print-sheet h1 { font-size: 18pt; margin: 0 0 4pt; }
+  .guide-print-sheet h2 { font-size: 13pt; margin: 14pt 0 4pt; }
+  .guide-print-sheet h3 { font-size: 11pt; margin: 8pt 0 3pt; }
+  .guide-print-sheet p { margin: 3pt 0; }
+  .guide-print-sheet .meta { color: #333; font-size: 9pt; }
+  .guide-print-sheet .draft { border: 1px solid #000; padding: 4pt 6pt; font-size: 9pt; margin: 8pt 0; }
+  .guide-print-sheet table { width: 100%; border-collapse: collapse; margin: 3pt 0; }
+  .guide-print-sheet th,
+  .guide-print-sheet td { border: 1px solid #777; padding: 3pt 5pt; vertical-align: top; text-align: left; font-weight: normal; }
+  .guide-print-sheet thead th { font-weight: 600; background: #eee; }
+  .guide-print-sheet tr { break-inside: avoid; }
+  .guide-print-sheet pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 8.5pt;
+    border: 1px solid #777;
+    padding: 4pt 6pt;
+    margin: 3pt 0;
+  }
+}

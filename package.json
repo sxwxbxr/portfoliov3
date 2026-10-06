@@ -16,7 +16,7 @@
     "db:studio": "drizzle-kit studio",
     "check:contrast": "node scripts/check-contrast.mjs",
     "physio:mesh": "npx tsx scripts/physio/mesh/build-index.ts",
-    "test:physio": "npx tsx --test scripts/physio/search-string.test.ts scripts/physio/mesh-index.test.ts"
+    "test:physio": "npx tsx --test scripts/physio/search-string.test.ts scripts/physio/mesh-index.test.ts scripts/physio/guide.test.ts"
   },
   "dependencies": {
     "@dotlottie/player-component": "^2.7.12",
