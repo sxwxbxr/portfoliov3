@@ -51,8 +51,8 @@
     ],
     "pro": [
       "Notice and label wording in all 24 official EU languages",
-      "CI scanner that fails the build when AI images, audio, video or text lack a label or marking, or a chat lacks its notice; also checks content whose C2PA manifest declares AI",
-      "AI register with a transparency report for clients (including the key dates that apply) and a public \"How we use AI\" page"
+      "CI scanner that fails the build when AI images, audio, video or text lack a label or marking, or a chat lacks its notice; verifies C2PA manifests (signature, hashes, file content, signer) and checks single-page apps in a browser",
+      "AI register with a transparency report for clients (including the key dates that apply), a public \"How we use AI\" page, and import from a spreadsheet (CSV)"
     ]
   },
   "comparison": [
