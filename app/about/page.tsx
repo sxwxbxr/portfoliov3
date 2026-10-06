@@ -26,7 +26,7 @@ export default async function About() {
   ])
   const hasSkills = skills.length > 0
   const skillGroupCount = groupByCategory(skills as SkillRow[]).length
-  const portrait = resolveImage("/260216_professionalMG.jpeg")
+  const portrait = resolveImage("/seya-weber-portrait.jpg")
   // There is deliberately no CV download here. It is replaced by an opt-in
   // "send me the CV" checkbox on the contact form — see docs/CV_DELIVERY.md.
   // The point is that a CV should be requested, not lying on a public URL.
