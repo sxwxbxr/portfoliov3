@@ -1,3 +1,4 @@
+import { Suspense } from "react"
 import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
@@ -9,6 +10,7 @@ import { JsonLd } from "@/components/JsonLd"
 import { InstallCommand } from "@/components/packages/InstallCommand"
 import { PackageBadges } from "@/components/packages/Badges"
 import { PricingBlock } from "@/components/packages/PricingBlock"
+import { CheckoutSuccess } from "@/components/packages/CheckoutSuccess"
 import { TrackedLink } from "@/components/packages/TrackedLink"
 import { YouTubeEmbed } from "@/components/packages/YouTubeEmbed"
 import { getPackage, getPackages } from "@/lib/packages"
@@ -136,6 +138,15 @@ export default async function PackagePage({ params }: Props) {
             <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
             {copy.packages.backToOverview}
           </Link>
+
+          {pkg.pro && (
+            <Suspense fallback={null}>
+              <CheckoutSuccess
+                name={pkg.pro.name}
+                docsHref={pkg.docs ? pkgPath(`/${pkg.slug}/docs`) : pkg.links.docs}
+              />
+            </Suspense>
+          )}
 
           <div className="flex flex-col items-start gap-5">
             <PackageBadges pkg={pkg} />
