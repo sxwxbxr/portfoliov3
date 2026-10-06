@@ -1,7 +1,7 @@
 {
   "slug": "sigmoid",
   "name": "Sigmoid",
-  "tagline": "Scroll motion without the JavaScript tax: native CSS scroll timelines, spring and S-curve easings as CSS linear(), reduced motion by default. About 2.9 kB for a reveal.",
+  "tagline": "Scroll motion without the JavaScript tax: native CSS scroll timelines, spring and S-curve easings as CSS linear(), reduced motion by default. About 3 kB for a reveal.",
   "seoTitle": "Sigmoid – scroll-driven animations and spring easing for CSS and React",
   "description": "Most scroll animations still run in JavaScript: a listener measures elements and changes styles on every frame. Browsers can now do this themselves with CSS scroll-driven animations. Sigmoid is a small layer on top of that platform feature. Reveals, parallax and scroll-linked effects run on native view and scroll timelines, and a tiny fallback with the same range maths covers browsers that do not have them yet.\n\nWith `sigmoid.css` you do not even need JavaScript: write `data-sigmoid=\"fade-up\"` and the browser animates it. The easing curves are the other half: physically correct springs, the logistic S-curve and Bézier curves that work as JavaScript functions and as CSS `linear()`, also together with Motion, GSAP or Tailwind. When people ask their system for reduced motion, Sigmoid shows the content without moving it.",
   "status": "beta",
@@ -58,13 +58,19 @@
       "React components and hooks: Reveal, Parallax, ScrollProgress, useScrub, useStory",
       "Vue 3 directives and composables: v-reveal, v-parallax, useScrollProgress, useStory",
       "Svelte actions: use:reveal, use:parallax, use:track, use:story, and a guide for Astro",
-      "About 2.9 kB for a reveal, 4.7 kB for everything, checked in CI"
+      "About 3.1 kB for a reveal, 4.9 kB for everything, checked in CI",
+      "A public benchmark against GSAP ScrollTrigger, Motion and AOS that you can run yourself, and migration guides from all three",
+      "A stable API: semantic versioning, a deprecation policy and tests that pin every export"
     ]
   },
   "faq": [
     {
       "q": "Why not just use Motion or GSAP?",
       "a": "Both are excellent and do far more: layout animations, gestures, timelines. If you only need scroll-linked motion and good curves, Sigmoid lets the browser do the work and stays around 2 kB. Its easing curves also work inside Motion and GSAP."
+    },
+    {
+      "q": "How does it compare in size and speed?",
+      "a": "A reveal is about 3 kB, GSAP with ScrollTrigger about 45 kB and Motion about 23 kB, all minified and gzipped. On a native timeline Sigmoid runs about 1 ms of JavaScript while scrolling. With hundreds of elements animating at once, Chromium's native path costs more main-thread time than GSAP in our headless test, and we say so in the benchmark. The script is in the repository."
     },
     {
       "q": "Which browsers run it natively?",
@@ -85,6 +91,12 @@
   ],
   "publishedAt": "2026-10-05",
   "releases": [
+    {
+      "version": "0.7.0",
+      "date": "2026-10-06",
+      "title": "Sigmoid 0.7.0: a faster fallback, a benchmark and a stable API",
+      "url": "https://packages.sweber.dev/blog/sigmoid-0-7-0-released"
+    },
     {
       "version": "0.6.0",
       "date": "2026-10-06",

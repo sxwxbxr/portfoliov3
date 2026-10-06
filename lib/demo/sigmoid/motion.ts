@@ -103,8 +103,34 @@ type Driver = () => void;
 const drivers = new Set<Driver>();
 let frame = 0;
 
+// Positions are measured once and reused until the layout changes: on resize,
+// when an observed element changes size, or when the page gets taller or wider.
+let layoutGeneration = 0;
+let layoutKey = "";
+let sizeObserver: ResizeObserver | undefined;
+
+function readLayoutKey() {
+  const root = document.documentElement;
+  layoutKey = `${layoutGeneration}:${root.scrollHeight}:${root.scrollWidth}`;
+}
+
+function relayout() {
+  layoutGeneration++;
+  schedule();
+}
+
+/**
+ * Measures all elements again on the next frame. Sigmoid already does this on
+ * resize and when the page or an element changes size; call it after a change
+ * that only moves elements, such as reordering a list.
+ */
+export function refresh() {
+  if (hasWindow()) relayout();
+}
+
 function tick() {
   frame = 0;
+  readLayoutKey();
   for (const drive of drivers) drive();
 }
 
@@ -118,9 +144,11 @@ const listen = { passive: true, capture: true };
 function addDriver(drive: Driver) {
   if (!drivers.size) {
     addEventListener("scroll", schedule, listen);
-    addEventListener("resize", schedule, listen);
+    addEventListener("resize", relayout, listen);
+    sizeObserver = typeof ResizeObserver === "undefined" ? undefined : new ResizeObserver(relayout);
   }
   drivers.add(drive);
+  readLayoutKey();
   drive();
 }
 
@@ -128,7 +156,9 @@ function removeDriver(drive: Driver) {
   drivers.delete(drive);
   if (!drivers.size) {
     removeEventListener("scroll", schedule, listen);
-    removeEventListener("resize", schedule, listen);
+    removeEventListener("resize", relayout, listen);
+    sizeObserver?.disconnect();
+    sizeObserver = undefined;
   }
 }
 
@@ -155,12 +185,20 @@ function layoutPos(el: HTMLElement, axis: Axis) {
   return pos;
 }
 
-/**
- * Position relative to the start of its scroller's visible area, without the
- * element's own transform, so parallax cannot feed back.
- */
-function measure(el: Element, box: HTMLElement | null, axis: Axis) {
+interface Metrics {
+  /** Start edge in the scroller's content, without the element's own transform. */
+  abs: number;
+  size: number;
+  viewport: number;
+  box: HTMLElement | null;
+  /** SVG and other non-HTML elements have no offsets: they are measured on every frame. */
+  live: boolean;
+  key: string;
+}
+
+function measure(el: Element, axis: Axis): Metrics {
   const block = axis === "block";
+  const box = scrollBox(el, axis);
   const viewport = box
     ? block
       ? box.clientHeight
@@ -169,25 +207,37 @@ function measure(el: Element, box: HTMLElement | null, axis: Axis) {
       ? innerHeight
       : innerWidth;
   if (el instanceof HTMLElement) {
-    const page = block ? scrollY : scrollX;
-    const top = box
-      ? layoutPos(el, axis) -
-        layoutPos(box, axis) -
-        (block ? box.clientTop + box.scrollTop : box.clientLeft + box.scrollLeft)
-      : layoutPos(el, axis) - page;
-    return { top, height: block ? el.offsetHeight : el.offsetWidth, viewport };
+    const abs = box
+      ? layoutPos(el, axis) - layoutPos(box, axis) - (block ? box.clientTop : box.clientLeft)
+      : layoutPos(el, axis);
+    sizeObserver?.observe(el);
+    if (box) sizeObserver?.observe(box);
+    return {
+      abs,
+      size: block ? el.offsetHeight : el.offsetWidth,
+      viewport,
+      box,
+      live: false,
+      key: layoutKey,
+    };
   }
-  const rect = el.getBoundingClientRect();
-  const offset = box
-    ? block
-      ? box.getBoundingClientRect().top + box.clientTop
-      : box.getBoundingClientRect().left + box.clientLeft
-    : 0;
-  return {
-    top: (block ? rect.top : rect.left) - offset,
-    height: block ? rect.height : rect.width,
-    viewport,
-  };
+  return { abs: 0, size: 0, viewport, box, live: true, key: layoutKey };
+}
+
+/** Start edge relative to the scroller's visible area, for the current scroll position. */
+function position(m: Metrics, el: Element, axis: Axis) {
+  const block = axis === "block";
+  if (m.live) {
+    const rect = el.getBoundingClientRect();
+    const offset = m.box
+      ? block
+        ? m.box.getBoundingClientRect().top + m.box.clientTop
+        : m.box.getBoundingClientRect().left + m.box.clientLeft
+      : 0;
+    return { top: (block ? rect.top : rect.left) - offset, size: block ? rect.height : rect.width };
+  }
+  const scrolled = m.box ? (block ? m.box.scrollTop : m.box.scrollLeft) : block ? scrollY : scrollX;
+  return { top: m.abs - scrolled, size: m.size };
 }
 
 function controller(animations: Animation[], native: boolean, stop?: () => void): Controller {
@@ -236,9 +286,12 @@ function run(
     a.pause();
     return a;
   });
+  const last = animations.map(() => Number.NaN);
   const drive = () => {
     animations.forEach((a, i) => {
       const p = progress(elements[i] as Element, i);
+      if (p === last[i]) return;
+      last[i] = p;
       a.currentTime = (js ? Math.min(Math.max(js(p), 0), 1) : p) * 1000;
     });
   };
@@ -263,12 +316,16 @@ function shiftRange(r: Range, shift: number): Range {
 }
 
 function viewDriver(rangeAt: (index: number) => Range, axis: Axis = "block", subject?: Element) {
-  const boxes = new Map<Element, HTMLElement | null>();
+  const cache = new Map<Element, Metrics>();
   return (el: Element, index: number) => {
     const target = subject ?? el;
-    if (!boxes.has(target)) boxes.set(target, scrollBox(target, axis));
-    const { top, height, viewport } = measure(target, boxes.get(target) ?? null, axis);
-    return viewProgress(rangeAt(index), top, height, viewport);
+    let m = cache.get(target);
+    if (!m || m.key !== layoutKey) {
+      m = measure(target, axis);
+      cache.set(target, m);
+    }
+    const { top, size } = position(m, target, axis);
+    return viewProgress(rangeAt(index), top, size, m.viewport);
   };
 }
 

@@ -22,6 +22,7 @@ export {
   prefersReducedMotion,
   progress,
   type RevealOptions,
+  refresh,
   reveal,
   type ScrubOptions,
   type SplitText,
