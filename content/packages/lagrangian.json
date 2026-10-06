@@ -61,6 +61,10 @@
       "Ropes, chains and garlands with Verlet integration: grab them, swing them, hang elements from them",
       "Impact sounds synthesized with Web Audio for a World: loudness from speed, pitch from size, five materials",
       "React hooks for every piece, tested with React 18 and 19 and Strict Mode",
+      "Pull to refresh: resistance, threshold, held while loading, springs back with its momentum",
+      "Carousel: a throw carries as far as its speed says, rubber-banded ends, arrow keys and ARIA roles",
+      "Side drawer from the left or right: draggable, the throw decides, focus goes in and back out",
+      "Modal dialog with a spring transition, focus trap, scroll lock, Escape and backdrop",
       "Reduced motion respected everywhere"
     ]
   },
@@ -83,7 +87,7 @@
     },
     {
       "q": "What does Lagrangian Pro add?",
-      "a": "Finished interface pieces built on the free physics: a bottom sheet, a swipe stack, sortable lists, layout transitions, jelly deformation, ropes and impact sounds, with React hooks. The free library stays free and keeps everything it has today."
+      "a": "Finished interface pieces built on the free physics: a bottom sheet, a side drawer, a dialog, a carousel, pull to refresh, a swipe stack, sortable lists, layout transitions, jelly deformation, ropes and impact sounds, with React hooks. The free library stays free and keeps everything it has today."
     },
     {
       "q": "Do my customers need a licence?",
@@ -127,6 +131,11 @@
       "pro": true
     },
     {
+      "feature": "Pull to refresh, carousel, drawer and dialog",
+      "free": false,
+      "pro": true
+    },
+    {
       "feature": "Layout transitions",
       "free": false,
       "pro": true
@@ -158,7 +167,7 @@
     "packages": [
       {
         "name": "@weber-development/lagrangian-pro",
-        "description": "Bottom sheet, swipe stack, sortable lists, layout transitions, jelly, ropes and impact sounds, framework-free."
+        "description": "Bottom sheet, drawer, dialog, carousel, pull to refresh, swipe stack, sortable lists, layout transitions, jelly, ropes and impact sounds, framework-free."
       },
       {
         "name": "@weber-development/lagrangian-pro-react",

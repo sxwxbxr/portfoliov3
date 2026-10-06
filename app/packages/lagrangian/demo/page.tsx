@@ -118,6 +118,17 @@ rope({ from: { x: 160, y: 0 }, length: 240, onFrame: (r) => path.setAttribute("d
 // Impact sounds for the world
 new World({ bounds: box, onCollide: impactSound({ material: "wood" }).collide })`
 
+const BLOCKS_CODE = `import { carousel, dialog, drawer, pullToRefresh } from "@weber-development/lagrangian-pro"
+
+pullToRefresh(scroller, { onRefresh: () => reload() })
+carousel(viewport, { align: "center", label: "Photos" })
+
+const menu = drawer(nav, { side: "left", backdrop: shade })
+menuButton.onclick = () => menu.toggle()
+
+const confirm = dialog(box, { backdrop: shade })
+deleteButton.onclick = () => confirm.show()`
+
 export default function LagrangianDemoPage() {
   const btn = "control inline-flex items-center gap-1 py-2.5 pr-4 pl-5 text-sm"
 
@@ -200,6 +211,9 @@ export default function LagrangianDemoPage() {
             </div>
             <div className="min-w-0">
               <CodeBlock title={t.pro.sortHeading} code={SORT_CODE} />
+            </div>
+            <div className="min-w-0">
+              <CodeBlock title={t.pro.blocksHeading} code={BLOCKS_CODE} />
             </div>
             <div className="min-w-0">
               <CodeBlock title={t.pro.effectsHeading} code={EFFECTS_CODE} />
