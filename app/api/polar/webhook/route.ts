@@ -14,16 +14,20 @@ export const dynamic = "force-dynamic"
  *
  * Env: POLAR_WEBHOOK_SECRET (from the Polar webhook settings) and the SMTP_*
  * variables of the contact form. ORDER_MAIL_FROM overrides SMTP_FROM.
+ * With POLAR_ACCESS_TOKEN (scopes customer_sessions:write, customers:read,
+ * members:read) the mail also carries a direct sign-in link, because Polar's
+ * e-mail sign-in code does not reach every mailbox.
  */
 
 const TOLERANCE_S = 5 * 60
 
 const orderSchema = z.object({
   id: z.string(),
+  customer_id: z.string().optional(),
   billing_reason: z.string().optional(),
   total_amount: z.number().optional(),
   currency: z.string().optional(),
-  customer: z.object({ email: z.string().email(), name: z.string().nullish() }),
+  customer: z.object({ id: z.string().optional(), email: z.string().email(), name: z.string().nullish() }),
   product: z.object({ name: z.string() }).nullish(),
 })
 
@@ -59,7 +63,38 @@ function formatAmount(amount?: number, currency?: string) {
   return `${currency.toUpperCase()} ${(amount / 100).toFixed(2)}`
 }
 
-function confirmationMail(order: z.infer<typeof orderSchema>) {
+/** One-off portal link that signs in without a code; undefined when not configured or on error. */
+async function portalLoginLink(customerId?: string): Promise<{ url: string; expires: string } | undefined> {
+  const token = process.env.POLAR_ACCESS_TOKEN
+  if (!token || !customerId) return undefined
+  const polar = async (path: string, init?: RequestInit) => {
+    const res = await fetch(`https://api.polar.sh/v1${path}`, {
+      ...init,
+      headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
+    })
+    if (!res.ok) throw new Error(`${path} ${res.status}`)
+    return res.json()
+  }
+  try {
+    const body: Record<string, string> = { customer_id: customerId }
+    // Team customers (seat-based Agency/Lifetime) sign in as their owner member.
+    const members = (await polar(`/members/?customer_id=${customerId}&limit=50`).catch(() => undefined))
+      ?.items as { id: string; role?: string }[] | undefined
+    const owner = members?.find((m) => m.role === "owner")
+    if (owner) body.member_id = owner.id
+    const session = await polar("/customer-sessions/", { method: "POST", body: JSON.stringify(body) })
+    return { url: session.customer_portal_url, expires: session.expires_at }
+  } catch (e) {
+    console.error("Polar portal link failed", e)
+    return undefined
+  }
+}
+
+function formatExpiry(iso: string) {
+  return new Date(iso).toLocaleString("de-CH", { timeZone: "Europe/Zurich", dateStyle: "short", timeStyle: "short" })
+}
+
+function confirmationMail(order: z.infer<typeof orderSchema>, login?: { url: string; expires: string }) {
   const product = order.product?.name ?? "Pro"
   const amount = formatAmount(order.total_amount, order.currency)
   const greeting = order.customer.name ? `Hallo ${order.customer.name}` : "Hallo"
@@ -69,8 +104,16 @@ function confirmationMail(order: z.infer<typeof orderSchema>) {
     `vielen Dank für deinen Kauf von ${product}${amount ? ` (${amount})` : ""}.`,
     "",
     "So erhältst du Zugriff:",
-    `1. Melde dich im Kundenportal an: ${POLAR_PORTAL_URL}`,
-    "   Verwende die E-Mail-Adresse, mit der du gekauft hast. Polar schickt dir einen Anmeldecode.",
+    ...(login
+      ? [
+          `1. Öffne das Kundenportal über diesen persönlichen Link (gültig bis ${formatExpiry(login.expires)} Uhr):`,
+          `   ${login.url}`,
+          `   Später meldest du dich unter ${POLAR_PORTAL_URL} mit der Kauf-E-Mail an; Polar schickt dir einen Anmeldecode.`,
+        ]
+      : [
+          `1. Melde dich im Kundenportal an: ${POLAR_PORTAL_URL}`,
+          "   Verwende die E-Mail-Adresse, mit der du gekauft hast. Polar schickt dir einen Anmeldecode.",
+        ]),
     "2. Agency und Lifetime: Weise im Portal jeder Person einen Platz zu, auch dir selbst.",
     "3. Verbinde im Portal deinen GitHub-Account und nimm die Einladung zum privaten Pro-Repository an.",
     "4. Installiere die Pro-Pakete aus GitHub Packages, wie in der Dokumentation beschrieben.",
@@ -90,7 +133,7 @@ function confirmationMail(order: z.infer<typeof orderSchema>) {
     .split("\n")
     .map((l) => escapeHtml(l))
     .join("<br />")
-    .replaceAll(POLAR_PORTAL_URL, `<a href="${POLAR_PORTAL_URL}">${POLAR_PORTAL_URL}</a>`)}</div>`
+    .replace(/https:\/\/[^\s<]+/g, (url) => `<a href="${url}">${url}</a>`)}</div>`
   return { subject: `Dein Kauf: ${product}`, text, html }
 }
 
@@ -129,7 +172,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "mail not configured" }, { status: 503 })
   }
 
-  const { subject, text, html } = confirmationMail(order)
+  const { subject, text, html } = confirmationMail(order, await portalLoginLink(order.customer_id ?? order.customer.id))
   // A failed send returns 500, so Polar retries the delivery.
   await getTransporter().sendMail({
     from,
