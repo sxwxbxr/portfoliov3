@@ -53,7 +53,8 @@
       "No dependencies; runs on Node.js, Bun, Deno and edge runtimes",
       "transform hook: change the body per endpoint, add headers or skip a delivery, without touching the stored message",
       "Rate limit per endpoint (requests per second, by option, function or endpoint metadata) that delays instead of failing, and egress through a proxy dispatcher for a fixed IP",
-      "hold hook: pause deliveries to an endpoint without using up retries, the building block for circuit breakers and maintenance windows"
+      "hold hook: pause deliveries to an endpoint without using up retries, the building block for circuit breakers and maintenance windows",
+      "sendMany for up to 1000 events at once, and receiver dedupers (memory, Postgres, SQLite, MySQL) that skip repeated webhook ids"
     ],
     "pro": [
       "Embeddable customer portal: a tenant-scoped REST handler and React components for endpoints, secrets, a searchable message log (id, payload text, status, endpoint), retries, test events and an event catalog with examples and schemas; light, dark and shadcn/ui themes",
@@ -106,6 +107,11 @@
     },
     {
       "feature": "Rate limit per endpoint and egress proxy",
+      "free": true,
+      "pro": true
+    },
+    {
+      "feature": "Batch sending and receiver-side deduplication",
       "free": true,
       "pro": true
     },
