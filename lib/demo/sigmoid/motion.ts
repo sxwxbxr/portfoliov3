@@ -193,12 +193,24 @@ interface Metrics {
   box: HTMLElement | null;
   /** SVG and other non-HTML elements have no offsets: they are measured on every frame. */
   live: boolean;
+  /** Inline axis in a right-to-left scroller: progress starts at the right edge. */
+  rtl: boolean;
   key: string;
+}
+
+/** CSS `zoom` makes offsets and scroll positions use different units: measure those live. */
+function zoomed(el: Element) {
+  for (let n: Element | null = el; n; n = n.parentElement) {
+    const z = (getComputedStyle(n) as CSSStyleDeclaration & { zoom?: string }).zoom;
+    if (z && z !== "1" && z !== "normal") return true;
+  }
+  return false;
 }
 
 function measure(el: Element, axis: Axis): Metrics {
   const block = axis === "block";
   const box = scrollBox(el, axis);
+  const rtl = !block && getComputedStyle(box ?? document.documentElement).direction === "rtl";
   const viewport = box
     ? block
       ? box.clientHeight
@@ -206,7 +218,7 @@ function measure(el: Element, axis: Axis): Metrics {
     : block
       ? innerHeight
       : innerWidth;
-  if (el instanceof HTMLElement) {
+  if (el instanceof HTMLElement && !zoomed(el)) {
     const abs = box
       ? layoutPos(el, axis) - layoutPos(box, axis) - (block ? box.clientTop : box.clientLeft)
       : layoutPos(el, axis);
@@ -218,10 +230,11 @@ function measure(el: Element, axis: Axis): Metrics {
       viewport,
       box,
       live: false,
+      rtl,
       key: layoutKey,
     };
   }
-  return { abs: 0, size: 0, viewport, box, live: true, key: layoutKey };
+  return { abs: 0, size: 0, viewport, box, live: true, rtl, key: layoutKey };
 }
 
 /** Start edge relative to the scroller's visible area, for the current scroll position. */
@@ -234,10 +247,13 @@ function position(m: Metrics, el: Element, axis: Axis) {
         ? m.box.getBoundingClientRect().top + m.box.clientTop
         : m.box.getBoundingClientRect().left + m.box.clientLeft
       : 0;
-    return { top: (block ? rect.top : rect.left) - offset, size: block ? rect.height : rect.width };
+    const size = block ? rect.height : rect.width;
+    const top = (block ? rect.top : rect.left) - offset;
+    return { top: m.rtl ? m.viewport - top - size : top, size };
   }
   const scrolled = m.box ? (block ? m.box.scrollTop : m.box.scrollLeft) : block ? scrollY : scrollX;
-  return { top: m.abs - scrolled, size: m.size };
+  const top = m.abs - scrolled;
+  return { top: m.rtl ? m.viewport - top - m.size : top, size: m.size };
 }
 
 function controller(animations: Animation[], native: boolean, stop?: () => void): Controller {
