@@ -21,6 +21,8 @@
 @keyframes sigmoid-scale-in { from { opacity: 0; transform: scale(0.94); } }
 @keyframes sigmoid-blur-in { from { opacity: 0; filter: blur(8px); } }
 @keyframes sigmoid-clip-up { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes sigmoid-rotate-in { from { opacity: 0; transform: rotate(-4deg) scale(0.96); } }
+@keyframes sigmoid-flip-up { from { opacity: 0; transform: perspective(800px) rotateX(24deg); } }
 @keyframes sigmoid-parallax {
   from { transform: translateY(calc(var(--sigmoid-parallax, 60) * 1px)); }
   to { transform: translateY(calc(var(--sigmoid-parallax, 60) * -1px)); }
@@ -48,6 +50,8 @@
   [data-sigmoid="scale-in"] { --sigmoid-keyframes: sigmoid-scale-in; }
   [data-sigmoid="blur-in"] { --sigmoid-keyframes: sigmoid-blur-in; }
   [data-sigmoid="clip-up"] { --sigmoid-keyframes: sigmoid-clip-up; }
+  [data-sigmoid="rotate-in"] { --sigmoid-keyframes: sigmoid-rotate-in; }
+  [data-sigmoid="flip-up"] { --sigmoid-keyframes: sigmoid-flip-up; }
     [data-sigmoid="parallax"] {
       --sigmoid-keyframes: sigmoid-parallax;
       animation-timing-function: linear;
