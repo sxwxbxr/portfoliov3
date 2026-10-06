@@ -29,6 +29,11 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
       lenis = new Lenis({
         duration: 1.2,
         easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        // physio.sweber.dev is a tool UI full of scrollable panels (guide
+        // sheet, result lists). Smoothing would take the wheel from them, so
+        // those pages scroll natively. Checked per event: the shell can also
+        // appear after a client-side navigation.
+        prevent: () => document.querySelector('[data-site="physio"]') !== null,
       })
 
       lenisRef.current = lenis
