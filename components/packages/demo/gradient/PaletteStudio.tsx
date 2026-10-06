@@ -7,9 +7,11 @@ import { CodeBlock } from "@/components/packages/demo/CodeBlock"
 import { CookieTableTabs } from "@/components/packages/demo/CookieTableTabs"
 import {
   checkDistinguishable,
+  checkPair,
   checkPalette,
   DEFICIENCIES,
   type Deficiency,
+  fixContrast,
   createPalette,
   type Mode,
   type Palette,
@@ -19,9 +21,11 @@ import {
   STEPS,
   toCss,
   toHex,
+  toScss,
   toTailwind,
   toTailwindV3,
   toTokens,
+  toTypeScript,
 } from "@sweberdev/gradient"
 import { gradientDemo } from "@/lib/demo/gradient-copy"
 
@@ -285,6 +289,75 @@ function CopyButton({ text }: { text: string }) {
   )
 }
 
+function PairCheck() {
+  const p = t.pair
+  const [text, setText] = useState("#ff5a5f")
+  const [background, setBackground] = useState("#ffffff")
+  const valid = isColor(text) && isColor(background)
+  const result = useMemo(() => (valid ? checkPair(text, background) : null), [text, background, valid])
+  const fixed = useMemo(
+    () => (result && !result.aa ? fixContrast(text, background) : null),
+    [result, text, background],
+  )
+  const mark = (ok: boolean) => (ok ? p.pass : p.fail)
+  return (
+    <Block id="pair" label={p.label} title={p.title} sub={p.sub} lede={<p>{p.lede}</p>}>
+      <div className="grid gap-8 lg:grid-cols-2">
+        <div className="flex flex-col gap-6">
+          <ColorField label={p.text} value={text} onChange={setText} />
+          <ColorField label={p.background} value={background} onChange={setBackground} />
+          {result && (
+            <div
+              className="rounded-xl border border-edge p-6"
+              style={{ background: result.background, color: result.foreground }}
+            >
+              <p className="text-2xl font-semibold tracking-tight">{p.sampleLarge}</p>
+              <p className="mt-2 text-sm leading-relaxed">{p.sample}</p>
+            </div>
+          )}
+        </div>
+        {result && (
+          <div className="well flex flex-col gap-4 px-5 py-4" role="status">
+            <p className="font-mono text-3xl text-fg">{result.ratio}:1</p>
+            <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-1.5 text-sm">
+              <dt className="text-fg-muted">{p.body}</dt>
+              <dd className="text-fg">
+                AA {mark(result.aa)} · AAA {mark(result.aaa)}
+              </dd>
+              <dt className="text-fg-muted">{p.large}</dt>
+              <dd className="text-fg">
+                AA {mark(result.aaLarge)} · AAA {mark(result.aaaLarge)}
+              </dd>
+              <dt className="text-fg-muted">{p.ui}</dt>
+              <dd className="text-fg">{mark(result.aaLarge)}</dd>
+              <dt className="text-fg-muted">APCA</dt>
+              <dd className="text-fg">
+                Lc {result.apca} <span className="text-fg-muted">{p.apcaNote}</span>
+              </dd>
+            </dl>
+            {!result.aa && (
+              <div className="flex flex-col gap-2 border-t border-edge pt-4">
+                <p className="text-sm text-fg">{fixed ? p.suggestion(fixed, checkPair(fixed, background).ratio) : p.noFix}</p>
+                {fixed && (
+                  <button
+                    type="button"
+                    onClick={() => setText(fixed)}
+                    className="control inline-flex items-center gap-2 self-start px-3 py-2 text-sm"
+                  >
+                    <span aria-hidden="true" className="h-3.5 w-3.5 rounded-full" style={{ background: fixed }} />
+                    {p.use}
+                  </button>
+                )}
+              </div>
+            )}
+            <CodeBlock title={p.cli} code={`npx @sweberdev/gradient check ${shellQuote(text)} ${shellQuote(background)}`} />
+          </div>
+        )}
+      </div>
+    </Block>
+  )
+}
+
 function shellQuote(value: string) {
   return `"${value.replace(/"/g, '\\"')}"`
 }
@@ -344,6 +417,8 @@ export function PaletteStudio() {
       lightDark: toCss(shown, { dark: "light-dark" }),
       tailwind3: `${v3.css}\n// tailwind.config.js → theme.extend.colors\n${JSON.stringify(v3.colors, null, 2)}\n`,
       tokens: `${JSON.stringify(toTokens(shown), null, 2)}\n`,
+      scss: toScss(shown),
+      ts: toTypeScript(shown),
     }
   }, [shown])
 
@@ -358,7 +433,7 @@ export function PaletteStudio() {
     .filter(Boolean)
     .join(" ")
 
-  const tabs = (["tailwind", "css", "lightDark", "tailwind3", "tokens"] as const).map((id) => ({
+  const tabs = (["tailwind", "css", "lightDark", "tailwind3", "scss", "ts", "tokens"] as const).map((id) => ({
     id,
     label: t.export[id],
     content: (
@@ -464,6 +539,8 @@ export function PaletteStudio() {
           )}
         </div>
       </Block>
+
+      <PairCheck />
 
       <Block id="export" label={t.export.label} title={t.export.title} sub={t.export.sub}>
         <div className="flex flex-col gap-8">

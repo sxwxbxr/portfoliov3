@@ -45,8 +45,9 @@
       "A neutral grey tinted with your brand hue, and a readable text color for every step",
       "Status colors on request: success, warning, danger and info that match your brand and keep the same contrast promises",
       "Color vision check: simulates protanopia, deuteranopia and tritanopia and flags colors that look alike",
-      "Export as Tailwind CSS v4 theme, Tailwind v3 config, CSS variables (also with light-dark()), W3C design tokens or JSON",
+      "Export as Tailwind CSS v4 theme, Tailwind v3 config, CSS variables (also with light-dark()), Sass, TypeScript, W3C design tokens or JSON",
       "Contrast checks for CI, also when you pin your exact brand color",
+      "Check any two colors with gradient check: WCAG 2 levels, APCA, and the closest color that passes",
       "CLI and a zero-dependency library that runs in Node.js and the browser"
     ]
   },
@@ -70,6 +71,10 @@
     {
       "q": "Can people with a color vision deficiency tell my colors apart?",
       "a": "Run gradient --check or checkDistinguishable(). It simulates protanopia, deuteranopia and tritanopia and lists the pairs that look alike at step 600. For those, add an icon or a label: color alone is never enough for status messages."
+    },
+    {
+      "q": "Does Gradient support APCA?",
+      "a": "gradient check and checkPair() show the APCA value (Lc) next to the WCAG 2 ratio. Pass and fail follow WCAG 2.2, because that is the standard the European Accessibility Act refers to; APCA is part of the WCAG 3 draft and shown for information."
     }
   ],
   "publishedAt": "2026-10-05"
