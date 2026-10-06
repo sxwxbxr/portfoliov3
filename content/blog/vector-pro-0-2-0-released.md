@@ -15,7 +15,7 @@ Vector Pro 0.2.0 is out. It is the first feature update since the [0.1.0 launch]
 "Did you send us the webhook for invoice 4711?" is the support question a webhook portal should answer without you. The message log now has a search bar and filters:
 
 - **Search** by message id, or by any text in the payload, such as an invoice number or an email address.
-- **Event type**: one type, or a pattern such as `invoice.*`.
+- **Event type**: pick one from your catalog; the API also takes a pattern such as `invoice.*`.
 - **Status**: for example only messages with a failed delivery.
 - **Endpoint**: what one endpoint received.
 
