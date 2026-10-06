@@ -4,7 +4,7 @@
   "tagline": "Licenses, plans and feature entitlements for developers who sell software. Signed offline license keys, Polar.sh license keys and React feature gates, without a licensing SaaS.",
   "seoTitle": "Integral – software licensing, license keys and entitlements for Polar.sh, Node and React",
   "description": "Integral is a library for developers who sell software: desktop apps, self-hosted tools, CLIs or paid libraries. Licenses are signed with Ed25519 on your side and verified offline in your app with the public key, so nobody can forge or change one, and no licensing server has to be reachable at runtime. Declare plans with features and limits once, then ask `has(\"export\")` or `check(\"projects\", used)` anywhere.\n\nPolar.sh is built in: validate, activate and deactivate Polar license keys through Polar's public API, with a cache and grace period so customers are not locked out offline. Licenses can end updates instead of usage, so versions released before the end keep working after a cancellation. Zero dependencies, runs in Node, browsers and edge runtimes, MIT-licensed. Integral Pro adds a license server that turns Polar orders and subscriptions into signed licenses automatically, and a React activation view.",
-  "status": "beta",
+  "status": "stable",
   "tags": [
     "Licensing",
     "License keys",
