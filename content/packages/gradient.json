@@ -4,7 +4,7 @@
   "tagline": "Accessible color scales from one brand color, where the step number tells you the contrast. Light and dark mode, OKLCH, export for Tailwind and CSS.",
   "seoTitle": "Gradient – accessible OKLCH color scales with dark mode for Tailwind and CSS",
   "description": "Gradient turns one brand color into eleven steps from 50 to 950, for light and dark mode, plus a grey tinted with your hue. Most palette generators space lightness evenly, so contrast depends on the hue: blue-600 passes on white, yellow-600 often does not. Gradient solves every step for a fixed contrast instead. Step 500 always reaches 3:1, step 600 4.5:1 and step 800 7:1 against the page, in dark mode against black, for every color you start from.\n\nColors are computed in OKLCH and brought into sRGB by lowering chroma only, so the contrast stays where it was solved. Every step comes with a readable text color for buttons and badges. Export the palette as a Tailwind CSS v4 theme, a Tailwind v3 config, CSS custom properties, W3C design tokens or JSON, from code or with one CLI command. No dependencies, MIT-licensed.",
-  "status": "beta",
+  "status": "stable",
   "tags": [
     "Color",
     "OKLCH",
@@ -110,6 +110,10 @@
     {
       "q": "Will my generated files change when I update Gradient?",
       "a": "Not within a major version: for the same input and options the generated colors and files stay byte for byte the same, unless a release fixes a broken contrast promise, which the changelog names. The tests snapshot every output format to enforce this. Run gradient build --verify in CI to see whether committed files differ."
+    },
+    {
+      "q": "Is Gradient 1.0 stable?",
+      "a": "Yes. From 1.0 the exported API, the command line, the config file and the generated files follow semantic versioning: within 1.x the same input gives byte-for-byte the same files and the contrast promises are never weakened. The tests snapshot the exported names and every output format, and CI runs the built package on Node.js 20 and 22, Bun and Deno. The stability page in the docs lists what may change in a minor version."
     }
   ],
   "publishedAt": "2026-10-05"

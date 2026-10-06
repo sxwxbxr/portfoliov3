@@ -669,7 +669,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Weber-Development/gradient@v0`
+      - uses: Weber-Development/gradient@v1`
 
 function ConfigSection({
   colors,
