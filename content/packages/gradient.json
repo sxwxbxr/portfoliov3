@@ -56,6 +56,8 @@
       "Dominant colors from a logo or photo, and a pick for the brand color, from raw pixels without any dependency",
       "One gradient.config.json for every output: gradient build writes all files, gradient build --verify fails in CI when one is out of date, with a JSON schema for editor completion",
       "GitHub Action that checks pull requests for out-of-date color files and contrast problems and keeps one comment with the result",
+      "Stability policy and tests that guard it: the exported API and every output format are snapshot-tested, so generated colors stay identical within a major version",
+      "Guides for WCAG 2.2 and EAA coverage, recipes for Next.js, Vite and theme editors, and a migration guide from the Tailwind default colors",
       "CLI and a zero-dependency library that runs in Node.js and the browser"
     ]
   },
@@ -103,6 +105,10 @@
     {
       "q": "How do I keep generated color files up to date in CI?",
       "a": "Put your colors in gradient.config.json (gradient init writes a starter file) and run gradient build --verify in CI. It writes nothing and exits with 1 when a file is missing or differs, a contrast promise fails or an audited stylesheet fails. The GitHub Action Weber-Development/gradient@v0 does the same on pull requests and comments the result."
+    },
+    {
+      "q": "Will my generated files change when I update Gradient?",
+      "a": "Not within a major version: for the same input and options the generated colors and files stay byte for byte the same, unless a release fixes a broken contrast promise, which the changelog names. The tests snapshot every output format to enforce this. Run gradient build --verify in CI to see whether committed files differ."
     }
   ],
   "publishedAt": "2026-10-05"
