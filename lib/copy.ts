@@ -1086,6 +1086,7 @@ export const copy = {
         sub: "Every client, every run.",
         lede: "surjection-history records each run per project and renders one dashboard for all clients: the latest status, the change since the last run and a trend line. These three projects were checked three times each, from August to October.",
         frameTitle: "Example dashboard",
+        badgesLabel: "Status badges for READMEs and client portals",
       },
 
       checklist: {
