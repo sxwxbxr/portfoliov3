@@ -50,7 +50,7 @@
       "No dependencies; runs on Node.js, Bun, Deno and edge runtimes"
     ],
     "pro": [
-      "Embeddable customer portal: a tenant-scoped REST handler and React components for endpoints, secrets, the message log, retries and test events",
+      "Embeddable customer portal: a tenant-scoped REST handler and React components for endpoints, secrets, a searchable message log (id, payload text, status, endpoint), retries, test events and an event catalog with examples and schemas; light, dark and shadcn/ui themes",
       "Typed event catalog with Standard Schema validation, generated Markdown docs, AsyncAPI 3 and TypeScript types, with a CLI",
       "Operations: alerts to Slack, email or a webhook, bulk recovery after outages, health reports, Prometheus metrics and data retention"
     ]
@@ -103,7 +103,7 @@
     "packages": [
       {
         "name": "@weber-development/vector-portal",
-        "description": "An embeddable webhook portal for your customers: a REST handler scoped to one tenant and React components for endpoints, secrets, the message log, retries and test events."
+        "description": "An embeddable webhook portal for your customers: a REST handler scoped to one tenant and React components for endpoints, secrets, a searchable message log, retries, test events and an event catalog, styled to match shadcn/ui if you like."
       },
       {
         "name": "@weber-development/vector-catalog",
