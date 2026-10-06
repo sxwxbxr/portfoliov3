@@ -1,7 +1,7 @@
 {
   "slug": "sigmoid",
   "name": "Sigmoid",
-  "tagline": "Scroll motion without the JavaScript tax: native CSS scroll timelines, spring and S-curve easings as CSS linear(), reduced motion by default. About 2.8 kB for a reveal.",
+  "tagline": "Scroll motion without the JavaScript tax: native CSS scroll timelines, spring and S-curve easings as CSS linear(), reduced motion by default. About 2.9 kB for a reveal.",
   "seoTitle": "Sigmoid – scroll-driven animations and spring easing for CSS and React",
   "description": "Most scroll animations still run in JavaScript: a listener measures elements and changes styles on every frame. Browsers can now do this themselves with CSS scroll-driven animations. Sigmoid is a small layer on top of that platform feature. Reveals, parallax and scroll-linked effects run on native view and scroll timelines, and a tiny fallback with the same range maths covers browsers that do not have them yet.\n\nWith `sigmoid.css` you do not even need JavaScript: write `data-sigmoid=\"fade-up\"` and the browser animates it. The easing curves are the other half: physically correct springs, the logistic S-curve and Bézier curves that work as JavaScript functions and as CSS `linear()`, also together with Motion, GSAP or Tailwind. When people ask their system for reduced motion, Sigmoid shows the content without moving it.",
   "status": "beta",
@@ -20,7 +20,8 @@
   "npm": [
     "@sweberdev/sigmoid",
     "@sweberdev/sigmoid-react",
-    "@sweberdev/sigmoid-vue"
+    "@sweberdev/sigmoid-vue",
+    "@sweberdev/sigmoid-svelte"
   ],
   "code": {
     "title": "app/page.tsx",
@@ -47,15 +48,17 @@
       "Horizontal scrolling on the inline axis, for carousels and galleries",
       "splitText(): words and characters that arrive one after another, readable by screen readers",
       "Counters without JavaScript: data-sigmoid=\"count\"",
+      "Linked animations: one element drives others, and pinned sections with one attribute",
       "Zero-JavaScript mode: data-sigmoid attributes in one stylesheet",
-      "A small fallback with the same range maths as the CSS spec, also inside scroll containers, so every browser looks the same",
+      "A small fallback with the same range maths as the CSS spec, also inside scroll containers, tested against the native path in Chromium, Firefox and WebKit",
       "Physically correct springs, the logistic S-curve and Bézier curves as functions and as CSS linear()",
       "Curves usable with Motion, GSAP, CSS transitions and as a Tailwind CSS v4 theme",
       "A curve editor on packages.sweber.dev: tune, copy as CSS or Tailwind, share by link",
       "prefers-reduced-motion respected by default",
       "React components and hooks: Reveal, Parallax, ScrollProgress, useScrub, useStory",
       "Vue 3 directives and composables: v-reveal, v-parallax, useScrollProgress, useStory",
-      "About 2.8 kB for a reveal, 4.5 kB for everything, checked in CI"
+      "Svelte actions: use:reveal, use:parallax, use:track, use:story, and a guide for Astro",
+      "About 2.9 kB for a reveal, 4.7 kB for everything, checked in CI"
     ]
   },
   "faq": [
@@ -65,11 +68,11 @@
     },
     {
       "q": "Which browsers run it natively?",
-      "a": "Browsers with CSS scroll-driven animations, such as Chrome, Edge and Safari 26. Others get the JavaScript fallback with the same result. The docs list the details."
+      "a": "Browsers with CSS scroll-driven animations, such as Chrome, Edge and Safari 26. Others, Firefox for now, get the JavaScript fallback with the same result. CI checks both paths in real Chromium, Firefox and WebKit on every change. The docs list the details."
     },
     {
-      "q": "Is there a Vue package?",
-      "a": "Yes. @sweberdev/sigmoid-vue has the v-reveal and v-parallax directives and composables such as useScrollProgress and useStory. Install it next to @sweberdev/sigmoid."
+      "q": "Is there a Vue or Svelte package?",
+      "a": "Yes. @sweberdev/sigmoid-vue has the v-reveal and v-parallax directives and composables, @sweberdev/sigmoid-svelte has the actions use:reveal, use:parallax, use:track and use:story. Install either next to @sweberdev/sigmoid. Astro needs no adapter, the docs have a guide."
     },
     {
       "q": "Does it work with Next.js and Server Components?",
@@ -82,6 +85,12 @@
   ],
   "publishedAt": "2026-10-05",
   "releases": [
+    {
+      "version": "0.6.0",
+      "date": "2026-10-06",
+      "title": "Sigmoid 0.6.0: Svelte, linked animations and tests in three browsers",
+      "url": "https://packages.sweber.dev/blog/sigmoid-0-6-0-released"
+    },
     {
       "version": "0.5.0",
       "date": "2026-10-06",

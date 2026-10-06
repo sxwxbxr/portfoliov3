@@ -17,6 +17,7 @@ export const sigmoidDemo = {
     { href: "#numbers", label: "Numbers" },
     { href: "#story", label: "Scroll story" },
     { href: "#text", label: "Text and rows" },
+    { href: "#linked", label: "Linked" },
     { href: "#zero-js", label: "Zero JavaScript" },
   ],
   docs: "Read the docs",
@@ -74,8 +75,8 @@ export const sigmoidDemo = {
     lede:
       "These counters are not animations. track() reports how far each card has travelled through the window, and a few lines of code turn that into a number. The same works for video frames, canvas drawings or a chart.",
     stats: [
-      { value: 2800, unit: "bytes", label: "for reveal and init, min+gzip" },
-      { value: 52, unit: "tests", label: "for the core, React and Vue, plus a Chromium check" },
+      { value: 2900, unit: "bytes", label: "for reveal and init, min+gzip" },
+      { value: 57, unit: "tests", label: "for the core, React, Vue and Svelte, plus a check in three browsers" },
       { value: 10, unit: "presets", label: "from fade-in to flip-up" },
     ],
     codeHeading: "track()",
@@ -111,8 +112,19 @@ export const sigmoidDemo = {
       { title: "Three frameworks", text: "React, Vue and plain CSS." },
     ],
     counterLabel: "tests run on every change, no JavaScript on this number",
-    counterValue: 52,
+    counterValue: 57,
     codeHeading: "splitText() and the inline axis",
+  },
+  linked: {
+    label: "Linked",
+    title: "One element drives another.",
+    sub: "New in 0.6: a stage on the left, captions on the right.",
+    lede:
+      "The two captions are not on the tall block, but its way through the window drives them: reveal(caption, { subject: stage }). In markup the same is data-sigmoid-timeline on the stage and data-sigmoid-follow on the caption. The browser drives it natively, without a timeline-scope in your CSS.",
+    stage: "Scroll past this block",
+    first: "The stage moves, the first caption arrives.",
+    second: "Later, the second one comes out of the blur.",
+    codeHeading: "Linked animations",
   },
   zeroJs: {
     label: "Zero JavaScript",

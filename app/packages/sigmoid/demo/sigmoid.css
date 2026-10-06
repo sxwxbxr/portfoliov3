@@ -36,6 +36,11 @@
 [data-sigmoid="count"] { counter-reset: sigmoid-n var(--sigmoid-count, 0); }
 [data-sigmoid="count"]::after { content: counter(sigmoid-n); }
 
+/* data-sigmoid-pin: a tall section whose first child stays in view while you scroll
+   through it. Pair it with story(). Length: --sigmoid-pin-length (default 300vh). */
+[data-sigmoid-pin] { height: var(--sigmoid-pin-length, 300vh); }
+[data-sigmoid-pin] > :first-child { position: sticky; top: 0; height: 100vh; height: 100dvh; }
+
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     [data-sigmoid] {
