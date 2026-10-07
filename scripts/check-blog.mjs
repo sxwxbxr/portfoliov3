@@ -27,7 +27,8 @@ for (const name of readdirSync(dir).filter((n) => n.endsWith(".md"))) {
     if (v === undefined) continue;
     if (!Array.isArray(v)) errors.push(`${dir}/${name}: ${key} muss eine Liste sein`);
     else v.forEach((x, i) => {
-      if (typeof x !== "string") errors.push(`${dir}/${name}: ${key}[${i}] ist ${JSON.stringify(x)} (${typeof x}), in Anführungszeichen setzen`);
+      // Zahlen in tags toleriert lib/blog/local.ts (z.coerce.string()); packages muss String bleiben.
+      if (typeof x !== "string" && !(key === "tags" && typeof x === "number")) errors.push(`${dir}/${name}: ${key}[${i}] ist ${JSON.stringify(x)} (${typeof x}), in Anführungszeichen setzen`);
     });
   }
 }
