@@ -5,7 +5,7 @@ date: 2026-10-07
 author: Seya Weber
 type: release
 packages: [vector]
-tags: [Vector, Vector Pro, Webhooks, 1.0, release]
+tags: [Vector, Vector Pro, Webhooks, "1.0", release]
 ---
 
 Vector Pro 1.0.0 is out. All six packages are at 1.0.0 on GitHub Packages, one day after [Vector 1.0.0](https://packages.sweber.dev/blog/vector-1-0-0-released). The API is the one from 0.9.x, so upgrading needs no code changes.
