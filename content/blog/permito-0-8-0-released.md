@@ -5,7 +5,7 @@ date: 2026-10-06
 author: Seya Weber
 type: release
 packages: [permito]
-tags: [Permito, API, release, 1.0]
+tags: [Permito, API, release, "1.0"]
 ---
 
 Permito 0.8.0 is out on npm. It is the API freeze candidate: unless you report a problem, the public API you see now is the API of 1.0.

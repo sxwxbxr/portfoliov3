@@ -5,7 +5,7 @@ date: 2026-10-07
 author: Seya Weber
 type: release
 packages: [vector]
-tags: [Vector, Webhooks, Svix alternative, 1.0, release]
+tags: [Vector, Webhooks, Svix alternative, "1.0", release]
 ---
 
 Vector 1.0.0 is on npm as `@sweberdev/vector`. It has the same API as the 0.7.0 release candidate, so upgrading needs no code changes. What changes is the promise: from now on Vector follows semantic versioning, and the [stability rules](https://packages.sweber.dev/vector) apply.

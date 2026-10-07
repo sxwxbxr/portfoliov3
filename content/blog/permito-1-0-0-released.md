@@ -5,7 +5,7 @@ date: 2026-10-06
 author: Seya Weber
 type: release
 packages: [permito]
-tags: [Permito, release, 1.0, semver]
+tags: [Permito, release, "1.0", semver]
 ---
 
 Permito 1.0.0 is out on npm, for `@permitojs/core` and `@permitojs/react`. The code is identical to 0.9.0. Version 1.0.0 adds the promise that comes with the number.
