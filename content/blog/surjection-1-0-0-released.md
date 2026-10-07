@@ -5,7 +5,7 @@ date: 2026-10-07
 author: Seya Weber
 type: release
 packages: [surjection]
-tags: [Surjection, Accessibility, WCAG 2.2, 1.0, release]
+tags: [Surjection, Accessibility, WCAG 2.2, "1.0", release]
 ---
 
 Surjection and Surjection Pro are at 1.0.0. Since the first release on 5 October the toolkit grew from axe-core in Playwright to a complete workflow for agencies: checks that axe-core cannot do, reports with evidence, history across clients and the manual checklist. 1.0 does not add features. It adds a promise.
