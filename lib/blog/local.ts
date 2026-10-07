@@ -22,7 +22,7 @@ const frontmatter = z.object({
   updated: isoDate.optional(),
   author: z.string().default("Seya Weber"),
   coverImage: z.string().optional(),
-  tags: z.array(z.string()).default([]),
+  tags: z.array(z.coerce.string()).default([]),
   packages: z.array(z.string()).default([]),
   type: z.enum(["news", "tutorial", "release"]).default("news"),
   videos: z.array(z.string()).default([]),
