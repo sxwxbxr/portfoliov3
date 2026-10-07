@@ -4,7 +4,7 @@
   "tagline": "A self-hosted audit log for SaaS apps: who changed what, and when. Field-level diffs in your own Postgres or SQLite, and a ready React view for your customers' admins.",
   "seoTitle": "Logarithm – self-hosted audit log for SaaS apps with React viewer (Postgres, SQLite)",
   "description": "Sooner or later a B2B customer asks who changed what in their account, and security questionnaires, ISO 27001 and SOC 2 audits ask the same. Logarithm records it with one call: actor, action, targets and a field-level diff computed from the state before and after. Passwords, tokens and card numbers are never stored, also inside nested objects.\n\nEvents live in your own database: Postgres 13+ (also Neon and Supabase), MySQL 8 and MariaDB, or SQLite (better-sqlite3, node:sqlite, Bun). Every event belongs to a tenant, and a scoped log cannot read other tenants. A Fetch API handler serves Next.js, Remix, Hono or Workers, and the React view shows your customers' admins an activity log with search, filters, day groups and diffs, in English, German, French and Italian. No external service, MIT-licensed.",
-  "status": "beta",
+  "status": "stable",
   "tags": [
     "Audit log",
     "SaaS",
