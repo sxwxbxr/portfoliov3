@@ -49,7 +49,7 @@ export default async function KennzahlenPage() {
 
       <section className="space-y-3">
         <h3 className="font-display text-lg font-semibold">Polar-Verkäufe</h3>
-        {polar.error ? (
+        {polar.error !== undefined ? (
           <Unavailable error={polar.error} />
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -69,7 +69,7 @@ export default async function KennzahlenPage() {
 
       <section className="space-y-3">
         <h3 className="font-display text-lg font-semibold">dev.to</h3>
-        {devto.error ? (
+        {devto.error !== undefined ? (
           <Unavailable error={devto.error} />
         ) : (
           <>
@@ -111,7 +111,7 @@ export default async function KennzahlenPage() {
 
       <section className="space-y-3">
         <h3 className="font-display text-lg font-semibold">npm-Downloads</h3>
-        {npm.error ? (
+        {npm.error !== undefined ? (
           <Unavailable error={npm.error} />
         ) : (
           <>
