@@ -5,7 +5,7 @@ date: 2026-10-06
 author: Seya Weber
 type: release
 packages: [integral]
-tags: [Integral, Licensing, 1.0, Stable API, release]
+tags: [Integral, Licensing, "1.0", Stable API, release]
 ---
 
 Integral 1.0.0 is out. `@sweberdev/integral` and `@sweberdev/integral-react` 1.0.0 are on npm, and Integral Pro 1.0.0 is available to subscribers.

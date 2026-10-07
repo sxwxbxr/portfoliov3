@@ -17,7 +17,7 @@ Version 1.0, Stand 2026-10-04
 ### 1. Parteien und Gegenstand
 
 1.1 Lizenzgeberin ist Seya Weber, handelnd unter der Bezeichnung „Weber Development“,
-[Adresse folgt], Schweiz („Lizenzgeberin“). Der Kauf läuft über Polar als Merchant of Record:
+Längistrasse 3, 9248 Bichwil, Schweiz („Lizenzgeberin“). Der Kauf läuft über Polar als Merchant of Record:
 Kaufvertrag und Rechnung kommen von Polar. Diese Lizenzbedingungen regeln die Nutzung der
 Software zwischen Lizenzgeberin und Lizenznehmer.
 
@@ -172,7 +172,7 @@ Permito ist technische Consent-Infrastruktur, keine Rechtsberatung. Der Einsatz 
 macht eine Website nicht konform mit der DSGVO, den ePrivacy-Regeln, dem schweizerischen
 Datenschutzgesetz oder anderem Recht. Für Konfiguration, Texte und rechtliche Einordnung ist
 der Lizenznehmer bzw. der Betreiber der Website verantwortlich. Einzelheiten stehen in
-[`DISCLAIMER.md`](./DISCLAIMER.md).
+[Haftungsausschluss](https://packages.sweber.dev/license/disclaimer).
 
 ### 12. Gewährleistung
 
@@ -195,8 +195,9 @@ zwölf Monaten vor dem schädigenden Ereignis bezahlt hat.
 entgangenen Gewinn, Bussen, Verwaltungsmassnahmen und Ansprüche von Endkunden oder anderen
 Dritten, etwa wegen einer unzutreffenden Katalogangabe oder einer fehlerhaften Konfiguration.
 
-13.4 Der Lizenznehmer stellt die Lizenzgeberin von Ansprüchen seiner Endkunden frei, die sich
-aus seinen Kundenprojekten ergeben.
+13.4 Der Lizenznehmer stellt die Lizenzgeberin von Ansprüchen seiner Endkunden frei, soweit diese
+auf der Konfiguration, den Inhalten oder einer Verletzung dieser Bedingungen durch den
+Lizenznehmer beruhen.
 
 ### 14. Anwendbares Recht und Gerichtsstand
 

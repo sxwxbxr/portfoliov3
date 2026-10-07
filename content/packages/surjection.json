@@ -4,7 +4,7 @@
   "tagline": "Accessibility checks for CI and tests, client-ready reports and accessibility statements in five languages. Built on axe-core, no overlay.",
   "seoTitle": "Surjection – accessibility testing and statements for agencies (BFSG, EAA)",
   "description": "Surjection helps agencies make accessibility part of every project instead of a one-off scan. It runs axe-core in Playwright and Vitest, maps every finding to WCAG 2.2 and EN 301 549, and fails the build only on new problems thanks to a baseline for existing sites.\n\nIt also generates the accessibility statement (Erklärung zur Barrierefreiheit) in German, Swiss German, French, Italian and English, and ships small accessible React building blocks. Surjection is deliberately not an overlay widget: it helps you fix the code, it does not hide problems. Automated tests find only part of all barriers, so Surjection does not promise legal conformity.",
-  "status": "beta",
+  "status": "stable",
   "tags": [
     "Accessibility",
     "WCAG 2.2",
@@ -41,23 +41,23 @@
       "Playwright helper and Vitest matcher on top of axe-core, tested against WCAG 2.2 AA by default",
       "Every finding mapped to its WCAG success criterion and EN 301 549 clause",
       "Baseline for existing sites: CI fails only on new issues, not on the whole backlog",
-      "CLI for whole sites: sitemap, desktop or mobile viewport, JUnit XML for GitLab, Azure DevOps and Jenkins",
+      "CLI for whole sites: sitemap with up to 8 pages at once (600 pages in 90 seconds), desktop or mobile viewport, JUnit XML for GitLab, Azure DevOps and Jenkins",
       "surjection init sets up a config file and a GitHub Actions workflow in one command",
       "Layout check: reflow at 320 px (1.4.10) and text spacing (1.4.12), which axe-core cannot decide",
       "Keyboard check: finds focus traps, missing focus indicators and a jumping focus order by pressing Tab through each page",
       "Checks pages behind a login with a saved Playwright session, in light or dark colour scheme and with reduced motion",
       "States: opened menus, dialogs and forms are checked after a few click steps, each as its own page in reports and baseline",
-      "Screenshots of every affected element, saved next to the results",
+      "Screenshots of every affected element, saved next to the results; --compare-with adds before and after images of what was fixed",
       "SARIF 2.1.0 and JUnit output, plus a JSON schema for the config file with completion in your editor",
       "Markdown report for pull requests and job summaries, in German, Swiss German, French, Italian and English",
-      "Accessibility statement generator (DE, DE-CH, FR, IT, EN) as Markdown and HTML",
+      "Accessibility statement generator (DE, DE-CH, FR, IT, EN) as Markdown and HTML, derived directly from the Pro checklist if you use it",
       "Accessible React building blocks: skip link, visually hidden text, live announcements, reduced motion"
     ],
     "pro": [
-      "Client reports in your agency's branding, as HTML, PDF and editable Word document, with a screenshot of every affected element as evidence",
+      "Client reports in your agency's branding, as HTML, PDF and editable Word document, with a screenshot of every affected element as evidence and a before and after image of everything you fixed since the last report",
       "Fix list as CSV for Excel: one row per element, with status and note columns for your developers",
       "History across all client projects, so you can show progress over time, with a status badge per project and a nightly check that tells you what got worse, by webhook (Slack, Teams, Discord) or mail",
-      "Guided manual checklist for the criteria automated tests cannot cover, in German, Swiss German, English, French and Italian"
+      "Guided manual checklist for the criteria automated tests cannot cover, in German, Swiss German, English, French and Italian, with evidence (links, screenshots) and reviewer for every criterion"
     ]
   },
   "comparison": [
@@ -179,6 +179,10 @@
     }
   },
   "faq": [
+    {
+      "q": "Is Surjection 1.0 stable?",
+      "a": "Yes. From 1.0 the documented API, the command line options, the config file, the formats of the results, baseline and checklist files and the ids of Surjection's own rules follow semantic versioning, and the Pro packages share the version. Within 1.x nothing of that is removed. What can change in any release: which problems the checks find, because axe-core is updated and finds more, and the texts of reports. The stability page in the docs lists both."
+    },
     {
       "q": "Does Surjection make my website legally compliant?",
       "a": "No tool can promise that. Automated tests detect only part of all barriers. Surjection makes testing and documentation part of your workflow, but a manual review is still needed."

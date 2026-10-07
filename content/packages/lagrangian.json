@@ -74,6 +74,8 @@
       "Page effect: a section falls apart under gravity, piles up, can be blown away and springs back into the layout",
       "Board: drag to rearrange a wrapping grid or the columns of a kanban board, with keyboard and screen reader support",
       "Zoom and pan for images and maps: pinch, wheel, double tap and drag with inertia and rubber-banding",
+      "Popover anchored to its trigger: springs out of the facing side, flips when there is no room, follows scrolling, Escape and outside click",
+      "Sortable lists scroll the page or their parent while you hold an item near the edge",
       "Reduced motion respected everywhere"
     ]
   },
@@ -145,7 +147,7 @@
       "pro": true
     },
     {
-      "feature": "Toast stack, tab indicator and page effects",
+      "feature": "Toast stack, popover, tab indicator and page effects",
       "free": false,
       "pro": true
     },

@@ -48,7 +48,9 @@
       "Every finding with rule ID, message, XPath and line number; an invoice summary with number, parties and totals",
       "Messages in English or German for every rule, from code (lang: \"de\") or the CLI (--lang de)",
       "Pure TypeScript with its own XPath 2.0 and Schematron engine: Node, browsers, workers and edge runtimes, no Java",
-      "summand CLI: validate, extract the XML from a PDF, check a Leitweg-ID"
+      "Rule set versions at hand: ruleSetInfo() and `summand rules` list what is bundled, `summand rules --check` tells you whether CEN or KoSIT published something newer",
+      "Fast on big invoices: 1,000 lines in about half a second, 5,000 lines in a few seconds",
+      "summand CLI: validate, extract the XML from a PDF, check a Leitweg-ID, list and check rule sets"
     ],
     "pro": [
       "Read any invoice into one typed object with all EN 16931 business terms, from UBL or CII, XML or PDF",
@@ -56,6 +58,7 @@
       "Validate whole folders: JSON, CSV, JUnit and HTML reports, duplicate detection and a hash-chained audit log",
       "Watch an inbox folder: every new invoice is checked once it is fully written and sorted into valid, invalid and duplicate",
       "Export valid purchase invoices as a DATEV booking batch (EXTF 700, SKR03 or SKR04) for your tax advisor",
+      "Export valid purchase invoices as voucher payloads for the Lexoffice and sevDesk APIs, plus an overview CSV (you post them yourself; no credentials stored)",
       "Fetch invoices straight from a mailbox over IMAP or Microsoft 365 and drop the XML and PDF attachments into the inbox folder",
       "Write a real A4 PDF of every invoice, PDF/A-3b with the original XML attached, so XRechnung and ZUGFeRD CII invoices stay valid ZUGFeRD files",
       "Write e-invoices from a typed invoice object: XRechnung and EN 16931 as UBL or CII, always checked with Summand, with exact VAT and total calculation and ZUGFeRD PDFs",

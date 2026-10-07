@@ -1073,7 +1073,7 @@ export const copy = {
         label: "Report",
         title: "Client report (Pro)",
         sub: "In your branding.",
-        lede: "surjection-report turns the check, the screenshots of the affected elements, the history and the manual checklist into a report for the client, with the logo and colour of the agency, here the made-up Pixel & Co. It is available as HTML, PDF and an editable Word document in German, Swiss German, French, Italian and English.",
+        lede: "surjection-report turns the check, the screenshots of the affected elements, the history and the manual checklist into a report for the client, with the logo and colour of the agency, here the made-up Pixel & Co. A section \"Fixed since the last report\" shows what you fixed, with the element before and after. It is available as HTML, PDF and an editable Word document in German, Swiss German, French, Italian and English.",
         tabsLabel: "Report language",
         frameTitle: (lang: string) => `Example report, ${lang}`,
         pdf: "Download the PDF (German)",

@@ -15,3 +15,8 @@ jobs:
         with:
           node-version: 20
       - run: node scripts/check-content.mjs
+      - name: TypeScript-Syntax prüfen
+        run: |
+          mkdir -p /tmp/ts && cd /tmp/ts && npm init -y >/dev/null && npm install --no-audit --no-fund typescript@5 yaml@2
+          cd "$GITHUB_WORKSPACE" && node scripts/check-syntax.mjs /tmp/ts/node_modules/typescript
+          node scripts/check-blog.mjs /tmp/ts/node_modules/yaml

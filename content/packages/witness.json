@@ -40,6 +40,7 @@
     "free": [
       "<witness-notice>: chatbot notice before the first message, then a compact label that can be reopened, with shown and acknowledged events as evidence",
       "<witness-label>: badge for AI-generated, AI-edited or deepfake content with a details popover, inline or as an image overlay",
+      "<witness-player>: wraps an audio or video element and keeps the AI label with it, over the picture or above the controls, for deepfake content",
       "Image marking: IPTC digital source type in XMP for PNG, JPEG and WebP, in the browser or on the server; C2PA files are left untouched",
       "Audio and video marking: the same XMP in MP3, WAV, MP4, MOV and M4A files, without re-encoding",
       "Reads C2PA Content Credentials in images, audio and video: which tool made the file and whether it declares AI (read, not validated)",
@@ -47,12 +48,12 @@
       "Vercel AI SDK middleware for generateText, streamText and generateImage",
       "schema.org JSON-LD, meta tags and Next.js metadata for AI content",
       "witness CLI: mark images, audio and video in a build step and inspect files",
-      "React components: <AiNotice>, <AiLabel>, <AiContent> and useAiDisclosure; wording in English, German, French and Italian"
+      "React components: <AiNotice>, <AiLabel>, <AiContent>, <AiPlayer> and useAiDisclosure; wording in English, German, French and Italian"
     ],
     "pro": [
       "Notice and label wording in all 24 official EU languages",
       "CI scanner that fails the build when AI images, audio, video or text lack a label or marking, or a chat lacks its notice; verifies C2PA manifests in images, audio and video (signature, hashes, file content, signer) and checks single-page apps in a browser",
-      "AI register with a transparency report for clients (including the key dates that apply), a public \"How we use AI\" page, import from a spreadsheet (CSV) and warnings before the Article 50 deadlines",
+      "AI register with a transparency report for clients (including the key dates that apply), a public \"How we use AI\" page, import from a spreadsheet (CSV), warnings before the Article 50 deadlines, drafts for AI use the register misses (from the scan), a change log and a legal-status changelog that shows what changed since your last review",
       "C2PA signing with your own certificate: sign generated PNG, JPEG, WebP, WAV and MP4/MOV/M4A files with Content Credentials, as API and CLI"
     ]
   },

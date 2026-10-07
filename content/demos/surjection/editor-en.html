@@ -23,6 +23,10 @@ button{font:inherit;padding:.5rem 1rem;border:2px solid #1f4fa3;background:#1f4f
 .auto{color:#a4161a}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .hidden{display:none}
+.imgs{list-style:none;padding:0;margin:.25rem 0;display:flex;gap:.75rem;flex-wrap:wrap}
+.imgs li{display:flex;flex-direction:column;gap:.25rem;font-size:.85rem}
+.imgs img{max-width:10rem;max-height:6rem;border:1px solid #ccc}
+.imgs button{padding:.15rem .5rem;font-size:.8rem}
 </style>
 </head>
 <body>
@@ -38,6 +42,8 @@ button{font:inherit;padding:.5rem 1rem;border:2px solid #1f4fa3;background:#1f4f
 
 <fieldset><legend class="sr">1.1.1</legend><label><input type="radio" name="s-1-1-1" value="untested" checked> Untested</label> <label><input type="radio" name="s-1-1-1" value="pass"> Pass</label> <label><input type="radio" name="s-1-1-1" value="fail"> Fail</label> <label><input type="radio" name="s-1-1-1" value="not-applicable"> Not applicable</label></fieldset>
 <label class="field">Note (for failures: text for the accessibility statement)<textarea name="notes" rows="2"></textarea></label>
+<label class="field">Evidence: links or references, one per line<textarea name="evidence" rows="2"></textarea></label>
+<div class="field"><label>Attach a screenshot as evidence <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple class="img-input"></label><ul class="imgs"></ul></div>
 <div class="row"><label class="field">Planned fix<input type="date" name="plannedFix" value=""></label>
 <label class="field">Tested by<input type="text" name="testedBy" value=""></label></div>
 </section>
@@ -47,6 +53,8 @@ button{font:inherit;padding:.5rem 1rem;border:2px solid #1f4fa3;background:#1f4f
 
 <fieldset><legend class="sr">1.3.1</legend><label><input type="radio" name="s-1-3-1" value="untested" checked> Untested</label> <label><input type="radio" name="s-1-3-1" value="pass"> Pass</label> <label><input type="radio" name="s-1-3-1" value="fail"> Fail</label> <label><input type="radio" name="s-1-3-1" value="not-applicable"> Not applicable</label></fieldset>
 <label class="field">Note (for failures: text for the accessibility statement)<textarea name="notes" rows="2"></textarea></label>
+<label class="field">Evidence: links or references, one per line<textarea name="evidence" rows="2"></textarea></label>
+<div class="field"><label>Attach a screenshot as evidence <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple class="img-input"></label><ul class="imgs"></ul></div>
 <div class="row"><label class="field">Planned fix<input type="date" name="plannedFix" value=""></label>
 <label class="field">Tested by<input type="text" name="testedBy" value=""></label></div>
 </section>
@@ -56,6 +64,8 @@ button{font:inherit;padding:.5rem 1rem;border:2px solid #1f4fa3;background:#1f4f
 <p class="auto">Elements found automatically: 1</p>
 <fieldset><legend class="sr">1.4.3</legend><label><input type="radio" name="s-1-4-3" value="untested"> Untested</label> <label><input type="radio" name="s-1-4-3" value="pass"> Pass</label> <label><input type="radio" name="s-1-4-3" value="fail" checked> Fail</label> <label><input type="radio" name="s-1-4-3" value="not-applicable"> Not applicable</label></fieldset>
 <label class="field">Note (for failures: text for the accessibility statement)<textarea name="notes" rows="2"></textarea></label>
+<label class="field">Evidence: links or references, one per line<textarea name="evidence" rows="2"></textarea></label>
+<div class="field"><label>Attach a screenshot as evidence <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple class="img-input"></label><ul class="imgs"></ul></div>
 <div class="row"><label class="field">Planned fix<input type="date" name="plannedFix" value=""></label>
 <label class="field">Tested by<input type="text" name="testedBy" value=""></label></div>
 </section>
@@ -65,6 +75,8 @@ button{font:inherit;padding:.5rem 1rem;border:2px solid #1f4fa3;background:#1f4f
 
 <fieldset><legend class="sr">1.4.11</legend><label><input type="radio" name="s-1-4-11" value="untested" checked> Untested</label> <label><input type="radio" name="s-1-4-11" value="pass"> Pass</label> <label><input type="radio" name="s-1-4-11" value="fail"> Fail</label> <label><input type="radio" name="s-1-4-11" value="not-applicable"> Not applicable</label></fieldset>
 <label class="field">Note (for failures: text for the accessibility statement)<textarea name="notes" rows="2"></textarea></label>
+<label class="field">Evidence: links or references, one per line<textarea name="evidence" rows="2"></textarea></label>
+<div class="field"><label>Attach a screenshot as evidence <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple class="img-input"></label><ul class="imgs"></ul></div>
 <div class="row"><label class="field">Planned fix<input type="date" name="plannedFix" value=""></label>
 <label class="field">Tested by<input type="text" name="testedBy" value=""></label></div>
 </section>
@@ -74,6 +86,8 @@ button{font:inherit;padding:.5rem 1rem;border:2px solid #1f4fa3;background:#1f4f
 
 <fieldset><legend class="sr">2.1.1</legend><label><input type="radio" name="s-2-1-1" value="untested" checked> Untested</label> <label><input type="radio" name="s-2-1-1" value="pass"> Pass</label> <label><input type="radio" name="s-2-1-1" value="fail"> Fail</label> <label><input type="radio" name="s-2-1-1" value="not-applicable"> Not applicable</label></fieldset>
 <label class="field">Note (for failures: text for the accessibility statement)<textarea name="notes" rows="2"></textarea></label>
+<label class="field">Evidence: links or references, one per line<textarea name="evidence" rows="2"></textarea></label>
+<div class="field"><label>Attach a screenshot as evidence <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple class="img-input"></label><ul class="imgs"></ul></div>
 <div class="row"><label class="field">Planned fix<input type="date" name="plannedFix" value=""></label>
 <label class="field">Tested by<input type="text" name="testedBy" value=""></label></div>
 </section>
@@ -83,6 +97,8 @@ button{font:inherit;padding:.5rem 1rem;border:2px solid #1f4fa3;background:#1f4f
 
 <fieldset><legend class="sr">2.4.4</legend><label><input type="radio" name="s-2-4-4" value="untested" checked> Untested</label> <label><input type="radio" name="s-2-4-4" value="pass"> Pass</label> <label><input type="radio" name="s-2-4-4" value="fail"> Fail</label> <label><input type="radio" name="s-2-4-4" value="not-applicable"> Not applicable</label></fieldset>
 <label class="field">Note (for failures: text for the accessibility statement)<textarea name="notes" rows="2"></textarea></label>
+<label class="field">Evidence: links or references, one per line<textarea name="evidence" rows="2"></textarea></label>
+<div class="field"><label>Attach a screenshot as evidence <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple class="img-input"></label><ul class="imgs"></ul></div>
 <div class="row"><label class="field">Planned fix<input type="date" name="plannedFix" value=""></label>
 <label class="field">Tested by<input type="text" name="testedBy" value=""></label></div>
 </section>
@@ -92,6 +108,8 @@ button{font:inherit;padding:.5rem 1rem;border:2px solid #1f4fa3;background:#1f4f
 
 <fieldset><legend class="sr">2.4.7</legend><label><input type="radio" name="s-2-4-7" value="untested" checked> Untested</label> <label><input type="radio" name="s-2-4-7" value="pass"> Pass</label> <label><input type="radio" name="s-2-4-7" value="fail"> Fail</label> <label><input type="radio" name="s-2-4-7" value="not-applicable"> Not applicable</label></fieldset>
 <label class="field">Note (for failures: text for the accessibility statement)<textarea name="notes" rows="2"></textarea></label>
+<label class="field">Evidence: links or references, one per line<textarea name="evidence" rows="2"></textarea></label>
+<div class="field"><label>Attach a screenshot as evidence <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple class="img-input"></label><ul class="imgs"></ul></div>
 <div class="row"><label class="field">Planned fix<input type="date" name="plannedFix" value=""></label>
 <label class="field">Tested by<input type="text" name="testedBy" value=""></label></div>
 </section>
@@ -101,6 +119,8 @@ button{font:inherit;padding:.5rem 1rem;border:2px solid #1f4fa3;background:#1f4f
 
 <fieldset><legend class="sr">3.1.1</legend><label><input type="radio" name="s-3-1-1" value="untested" checked> Untested</label> <label><input type="radio" name="s-3-1-1" value="pass"> Pass</label> <label><input type="radio" name="s-3-1-1" value="fail"> Fail</label> <label><input type="radio" name="s-3-1-1" value="not-applicable"> Not applicable</label></fieldset>
 <label class="field">Note (for failures: text for the accessibility statement)<textarea name="notes" rows="2"></textarea></label>
+<label class="field">Evidence: links or references, one per line<textarea name="evidence" rows="2"></textarea></label>
+<div class="field"><label>Attach a screenshot as evidence <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple class="img-input"></label><ul class="imgs"></ul></div>
 <div class="row"><label class="field">Planned fix<input type="date" name="plannedFix" value=""></label>
 <label class="field">Tested by<input type="text" name="testedBy" value=""></label></div>
 </section>
@@ -110,6 +130,8 @@ button{font:inherit;padding:.5rem 1rem;border:2px solid #1f4fa3;background:#1f4f
 
 <fieldset><legend class="sr">3.3.2</legend><label><input type="radio" name="s-3-3-2" value="untested" checked> Untested</label> <label><input type="radio" name="s-3-3-2" value="pass"> Pass</label> <label><input type="radio" name="s-3-3-2" value="fail"> Fail</label> <label><input type="radio" name="s-3-3-2" value="not-applicable"> Not applicable</label></fieldset>
 <label class="field">Note (for failures: text for the accessibility statement)<textarea name="notes" rows="2"></textarea></label>
+<label class="field">Evidence: links or references, one per line<textarea name="evidence" rows="2"></textarea></label>
+<div class="field"><label>Attach a screenshot as evidence <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple class="img-input"></label><ul class="imgs"></ul></div>
 <div class="row"><label class="field">Planned fix<input type="date" name="plannedFix" value=""></label>
 <label class="field">Tested by<input type="text" name="testedBy" value=""></label></div>
 </section>
@@ -119,6 +141,8 @@ button{font:inherit;padding:.5rem 1rem;border:2px solid #1f4fa3;background:#1f4f
 
 <fieldset><legend class="sr">4.1.2</legend><label><input type="radio" name="s-4-1-2" value="untested" checked> Untested</label> <label><input type="radio" name="s-4-1-2" value="pass"> Pass</label> <label><input type="radio" name="s-4-1-2" value="fail"> Fail</label> <label><input type="radio" name="s-4-1-2" value="not-applicable"> Not applicable</label></fieldset>
 <label class="field">Note (for failures: text for the accessibility statement)<textarea name="notes" rows="2"></textarea></label>
+<label class="field">Evidence: links or references, one per line<textarea name="evidence" rows="2"></textarea></label>
+<div class="field"><label>Attach a screenshot as evidence <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple class="img-input"></label><ul class="imgs"></ul></div>
 <div class="row"><label class="field">Planned fix<input type="date" name="plannedFix" value=""></label>
 <label class="field">Tested by<input type="text" name="testedBy" value=""></label></div>
 </section>
@@ -151,6 +175,46 @@ button{font:inherit;padding:.5rem 1rem;border:2px solid #1f4fa3;background:#1f4f
     if (!item) continue;
     section.dataset.status = item.status;
     for (const radio of section.querySelectorAll("input[type=radio]")) radio.checked = radio.value === item.status;
+    const evidenceField = section.querySelector("[name=evidence]");
+    evidenceField.value = (item.evidence || []).join("\n");
+    evidenceField.addEventListener("change", () => {
+      const lines = evidenceField.value.split("\n").map((l) => l.trim()).filter(Boolean);
+      if (lines.length) item.evidence = lines; else delete item.evidence;
+      save();
+    });
+    const list = section.querySelector(".imgs");
+    const renderImages = () => {
+      list.replaceChildren();
+      for (const [index, image] of (item.images || []).entries()) {
+        const li = document.createElement("li");
+        const img = document.createElement("img");
+        img.src = image.data;
+        img.alt = image.name;
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.textContent = "Remove" + ": " + image.name;
+        remove.addEventListener("click", () => {
+          item.images.splice(index, 1);
+          if (!item.images.length) delete item.images;
+          renderImages(); save();
+        });
+        li.append(img, remove);
+        list.append(li);
+      }
+    };
+    renderImages();
+    section.querySelector(".img-input").addEventListener("change", (event) => {
+      for (const file of event.target.files) {
+        if (file.size > 400 * 1024) { statusEl.textContent = "Image too large (400 KB at most)" + ": " + file.name; continue; }
+        const reader = new FileReader();
+        reader.onload = () => {
+          (item.images = item.images || []).push({ name: file.name, data: reader.result });
+          renderImages(); save();
+        };
+        reader.readAsDataURL(file);
+      }
+      event.target.value = "";
+    });
     for (const name of ["notes", "plannedFix", "testedBy"]) {
       const field = section.querySelector("[name=" + name + "]");
       field.value = item[name] || "";
