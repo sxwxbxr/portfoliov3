@@ -13,20 +13,59 @@ thead th{font-size:.85rem;text-transform:uppercase;letter-spacing:.04em;color:#4
 .num{text-align:right;font-variant-numeric:tabular-nums}
 .good{color:#0a6b2d}.bad{color:#a4161a}
 .spark{color:#1f4fa3}
+.controls{display:flex;flex-wrap:wrap;gap:1rem;align-items:end;margin:1rem 0}
+.controls label{display:flex;flex-direction:column;gap:.25rem;font-size:.9rem}
+.controls label.inline{flex-direction:row;align-items:center;gap:.5rem}
+.controls input[type=search],.controls select{font:inherit;padding:.4rem;border:1px solid #767676;border-radius:.25rem}
+:focus-visible{outline:3px solid #1f4fa3;outline-offset:2px}
+[hidden]{display:none!important}
 p.note{color:#444;font-size:.9rem;margin-top:2rem}
 </style>
 </head>
 <body>
 <main>
 <h1>Accessibility: all projects</h1>
+<div class="controls" id="controls" hidden>
+<label>Search projects<input type="search" id="q"></label>
+<label class="inline"><input type="checkbox" id="worse"> Only projects that got worse</label>
+<label>Sort by<select id="sort"><option value="name">Name</option><option value="total">Most issues</option><option value="delta">Biggest increase</option></select></label>
+<p role="status" id="count"></p>
+</div>
 <table>
 <thead><tr><th scope="col">Project</th><th scope="col">Last check</th><th scope="col" class="num">Pages</th><th scope="col" class="num">Affected elements</th><th scope="col" class="num">Critical</th><th scope="col" class="num">Serious</th><th scope="col" class="num">Change</th><th scope="col">Trend</th></tr></thead>
 <tbody>
-<tr><th scope="row">Bäckerei Muster</th><td>5 October 2026</td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num"><span class="good">−2</span></td><td><svg class="spark" width="120" height="32" viewBox="0 0 120 32" role="img" aria-label="Affected elements per check: 6, 3, 1"><polyline fill="none" stroke="currentColor" stroke-width="2" points="0.0,2.0 60.0,16.0 120.0,25.3"/></svg></td></tr>
-<tr><th scope="row">Praxis Dr. Keller</th><td>5 October 2026</td><td class="num">1</td><td class="num">2</td><td class="num">2</td><td class="num">0</td><td class="num"><span class="bad">+2</span></td><td><svg class="spark" width="120" height="32" viewBox="0 0 120 32" role="img" aria-label="Affected elements per check: 0, 0, 2"><polyline fill="none" stroke="currentColor" stroke-width="2" points="0.0,30.0 60.0,30.0 120.0,2.0"/></svg></td></tr>
-<tr><th scope="row">Velo Huber</th><td>5 October 2026</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num"><span class="good">−1</span></td><td><svg class="spark" width="120" height="32" viewBox="0 0 120 32" role="img" aria-label="Affected elements per check: 5, 1, 0"><polyline fill="none" stroke="currentColor" stroke-width="2" points="0.0,2.0 60.0,24.4 120.0,30.0"/></svg></td></tr>
+<tr data-name="bäckerei muster" data-total="1" data-delta="-2"><th scope="row">Bäckerei Muster</th><td>5 October 2026</td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num"><span class="good">−2</span></td><td><svg class="spark" width="120" height="32" viewBox="0 0 120 32" role="img" aria-label="Affected elements per check: 6, 3, 1"><polyline fill="none" stroke="currentColor" stroke-width="2" points="0.0,2.0 60.0,16.0 120.0,25.3"/></svg></td></tr>
+<tr data-name="praxis dr. keller" data-total="2" data-delta="2"><th scope="row">Praxis Dr. Keller</th><td>5 October 2026</td><td class="num">1</td><td class="num">2</td><td class="num">2</td><td class="num">0</td><td class="num"><span class="bad">+2</span></td><td><svg class="spark" width="120" height="32" viewBox="0 0 120 32" role="img" aria-label="Affected elements per check: 0, 0, 2"><polyline fill="none" stroke="currentColor" stroke-width="2" points="0.0,30.0 60.0,30.0 120.0,2.0"/></svg></td></tr>
+<tr data-name="velo huber" data-total="0" data-delta="-1"><th scope="row">Velo Huber</th><td>5 October 2026</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num"><span class="good">−1</span></td><td><svg class="spark" width="120" height="32" viewBox="0 0 120 32" role="img" aria-label="Affected elements per check: 5, 1, 0"><polyline fill="none" stroke="currentColor" stroke-width="2" points="0.0,2.0 60.0,24.4 120.0,30.0"/></svg></td></tr>
 </tbody>
 </table>
+<p id="none" hidden>No projects found.</p>
+<script>
+(() => {
+  const body = document.querySelector("tbody");
+  const rows = [...body.rows];
+  const q = document.getElementById("q");
+  const worse = document.getElementById("worse");
+  const sort = document.getElementById("sort");
+  const count = document.getElementById("count");
+  const none = document.getElementById("none");
+  const label = "projects shown";
+  function apply() {
+    const term = q.value.trim().toLowerCase();
+    const key = sort.value;
+    const visible = rows.filter((r) => r.dataset.name.includes(term) && (!worse.checked || Number(r.dataset.delta) > 0));
+    const by = { name: (a, b) => a.dataset.name.localeCompare(b.dataset.name), total: (a, b) => b.dataset.total - a.dataset.total, delta: (a, b) => b.dataset.delta - a.dataset.delta };
+    visible.sort(by[key]);
+    for (const r of rows) r.hidden = !visible.includes(r);
+    for (const r of visible) body.append(r);
+    count.textContent = visible.length + "/" + rows.length + " " + label;
+    none.hidden = visible.length > 0;
+  }
+  for (const el of [q, worse, sort]) el.addEventListener("input", apply);
+  document.getElementById("controls").hidden = false;
+  apply();
+})();
+</script>
 <p class="note">Automated tests detect only part of all possible barriers.</p>
 </main>
 </body>
