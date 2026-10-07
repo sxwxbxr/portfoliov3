@@ -51,7 +51,7 @@
       "Sensors that report bodies entering and leaving a zone, for drop targets and triggers",
       "rk4() and system() for your own equations of motion",
       "Reduced motion respected: automatic motion jumps to where it would rest",
-      "React hooks: useSpringProps, useSpring, useDraggable, useWorld, useBody, plus adapters for Vue and Svelte",
+      "React hooks: useSpringProps, useSpring, useDraggable, useWorld, useBody, plus an adapter for Svelte (Vue follows)",
       "About 12 kB min+gzip for everything and tree-shakeable down to 2 kB, checked in CI"
     ],
     "pro": [
