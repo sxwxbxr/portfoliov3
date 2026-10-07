@@ -5,7 +5,7 @@ date: 2026-10-06
 author: Seya Weber
 type: release
 packages: [vector]
-tags: [Vector, Webhooks, Stability, 1.0, release]
+tags: [Vector, Webhooks, Stability, "1.0", release]
 ---
 
 Vector 0.7.0 is on npm as `@sweberdev/vector`. It adds no new options. It is the release candidate for 1.0.0, and from here on only fixes go in before 1.0.0.

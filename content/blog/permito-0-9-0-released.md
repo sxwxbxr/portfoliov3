@@ -5,7 +5,7 @@ date: 2026-10-06
 author: Seya Weber
 type: release
 packages: [permito]
-tags: [Permito, release, 1.0, WordPress, accessibility]
+tags: [Permito, release, "1.0", WordPress, accessibility]
 ---
 
 Permito 0.9.0 is out on npm. It is the release candidate for 1.0: the code is the same as 0.8, and what changed is what we promise about it.
