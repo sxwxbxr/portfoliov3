@@ -5,7 +5,7 @@ date: 2026-10-07
 author: Seya Weber
 type: release
 packages: [permito]
-tags: [Permito, Permito Pro, release, 1.0, semver]
+tags: [Permito, Permito Pro, release, "1.0", semver]
 ---
 
 Permito Pro 1.0.0 is out on GitHub Packages. The code is the same as 0.9.0. What is new is the promise, and the tests that back it.
