@@ -4,7 +4,7 @@
   "tagline": "Animation with real physics: springs that keep their momentum when interrupted, throws with friction onto snap points, and a small 2D world with gravity, collisions, joints and rolling. About 12 kB.",
   "seoTitle": "Lagrangian – physics-based animation: interruptible springs, inertia, gravity and collisions",
   "description": "Most web animation is a curve over a fixed duration. Click twice and the element stops dead and starts again; throw it and it ignores how fast you threw. Lagrangian animates with physics instead. Its springs are the exact solution of the damped oscillator, so they know their position and velocity at every moment and simply continue when the target changes, at any frame rate.\n\nDrag an element and Lagrangian measures how fast you let go, lets it glide with friction like iOS scrolling, rubber-bands past the edges and lands exactly on the nearest snap point. For playful interfaces there is a small 2D world: round, rectangular and polygonal bodies with gravity, restitution and Coulomb friction, so they bounce, slide and roll, plus springs, hinges, rods and motors between bodies, sensors for drop zones and a pointer joint for grabbing and throwing. When the user asks for reduced motion, automatic motion jumps to its end.",
-  "status": "beta",
+  "status": "stable",
   "tags": [
     "Animation",
     "Physics",
@@ -20,7 +20,6 @@
   "npm": [
     "@sweberdev/lagrangian",
     "@sweberdev/lagrangian-react",
-    "@sweberdev/lagrangian-vue",
     "@sweberdev/lagrangian-svelte"
   ],
   "code": {
