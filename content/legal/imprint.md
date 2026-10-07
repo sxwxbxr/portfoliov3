@@ -2,7 +2,8 @@
 
 Seya Weber\
 Weber Development\
-[Address to follow]\
+Längistrasse 3\
+9248 Bichwil\
 Switzerland
 
 **E-mail:** [info@sweber.dev](mailto:info@sweber.dev)
