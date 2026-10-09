@@ -4,7 +4,7 @@
   "tagline": "Validate XRechnung, ZUGFeRD and Factur-X e-invoices against EN 16931 in pure TypeScript: in Node, the browser and at the edge, without Java.",
   "seoTitle": "Summand – XRechnung, ZUGFeRD and Factur-X validator for TypeScript (EN 16931, no Java)",
   "description": "Germany requires businesses to receive e-invoices since 1 January 2025, and to send them from 2027. Checking an XRechnung or ZUGFeRD invoice has so far meant the KoSIT validator: Java, Saxon and a server. Summand runs the same official XML Schemas and rule sets in pure TypeScript, so you can check invoices in your Node backend, in a serverless function, in the browser before upload, or in CI.\n\nSummand ships its own XPath 2.0 and Schematron engine and the official EN 16931 rules from CEN (UBL and CII) and the XRechnung rules from KoSIT, including the severity changes KoSIT applies for the standard, extension and CVD profiles. It passes all 1'142 CEN rule tests and every invoice of the KoSIT test suite. It reads the XML embedded in ZUGFeRD and Factur-X PDFs, recognises the profile, checks Leitweg-IDs and reports every finding with rule, message, XPath and line. Summand checks invoices technically; it is not tax advice.",
-  "status": "beta",
+  "status": "stable",
   "tags": [
     "E-invoicing",
     "XRechnung",
