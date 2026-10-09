@@ -111,11 +111,11 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       '@sweberdev/inverse':
-        specifier: ^0.9.0
-        version: 0.9.0
+        specifier: ^1.0.0
+        version: 1.0.0
       '@sweberdev/inverse-react':
-        specifier: ^0.9.0
-        version: 0.9.0(react@19.1.2)
+        specifier: ^1.0.0
+        version: 1.0.0(react@19.1.2)
       '@sweberdev/lagrangian':
         specifier: ^0.1.0
         version: 0.1.0
@@ -2015,13 +2015,13 @@ packages:
     resolution: {integrity: sha512-OKT0FPMAiUN/I5JaoQ233rRuHuKn9ao+cuMOT1da0fSDc3EdHWWSTBPC4pYMd3kgYZhBVa3wxTFHHEAhpn6A1g==}
     hasBin: true
 
-  '@sweberdev/inverse-react@0.9.0':
-    resolution: {integrity: sha512-y6m/k78AhOIdfZAd8X1R2DfjsS7MJewwZ0ITAdjKbJI+UPapZl2GKSGfdy2UndNWRFjeF+SXDr6GgTq4OiUUQg==}
+  '@sweberdev/inverse-react@1.0.0':
+    resolution: {integrity: sha512-3pF76QOXswWScoR1flC4PIDSUNo0/BWghieDD0qusm3q3XO+KZU9FoVA9R9Zcsgb6CrievRRkkLwtSh1Z9sCDA==}
     peerDependencies:
       react: '>=18'
 
-  '@sweberdev/inverse@0.9.0':
-    resolution: {integrity: sha512-qGGWn+p8XcJAJlpg/nYXg12sKg4gr/hlhFTcNY3Cgn8LxvwqsMFToxRuY+L41K7DUvbpfGXWkVCoJ6xBYpX6wA==}
+  '@sweberdev/inverse@1.0.0':
+    resolution: {integrity: sha512-yUGVxjQU43bM37G0B0VMreZXZ+xaELSVQxbwtFfMqcnHdXKUUpYgE+k/rXIJOKxLBWcKoMnIQoqsmPNxTo4Ugg==}
     hasBin: true
 
   '@sweberdev/lagrangian@0.1.0':
@@ -6067,12 +6067,12 @@ snapshots:
 
   '@sweberdev/gradient@1.0.0': {}
 
-  '@sweberdev/inverse-react@0.9.0(react@19.1.2)':
+  '@sweberdev/inverse-react@1.0.0(react@19.1.2)':
     dependencies:
-      '@sweberdev/inverse': 0.9.0
+      '@sweberdev/inverse': 1.0.0
       react: 19.1.2
 
-  '@sweberdev/inverse@0.9.0': {}
+  '@sweberdev/inverse@1.0.0': {}
 
   '@sweberdev/lagrangian@0.1.0': {}
 

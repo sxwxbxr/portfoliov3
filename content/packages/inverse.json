@@ -4,7 +4,7 @@
   "tagline": "The withdrawal button (§ 356a BGB) and the cancellation button (§ 312k BGB) for Next.js and React, with the two-step flow, the receipt e-mail and a page check.",
   "seoTitle": "Inverse – Widerrufsbutton and Kündigungsbutton for Next.js and React",
   "description": "Since 19 June 2026, every online business that concludes contracts with consumers in the EU needs a withdrawal button labelled \"Vertrag widerrufen\". German subscription businesses have needed a cancellation button labelled \"Verträge hier kündigen\" since 2022. Shopify, Shopware and WooCommerce have plugins for this; custom shops, SaaS products and booking apps built with Next.js or React mostly don't.\n\nInverse adds both buttons to your own app. It gets the details right that courts look at: the statutory labels, a second step with \"Widerruf bestätigen\" or \"Jetzt kündigen\", the time of receipt set by your server, an acknowledgement e-mail with the content of the declaration, and a copy the consumer can download. You keep the data and send the e-mail with your own provider. A CLI checks your pages for the buttons, so a redesign can't quietly remove them.",
-  "status": "beta",
+  "status": "stable",
   "tags": [
     "Widerrufsbutton",
     "Kündigungsbutton",
@@ -49,7 +49,7 @@
       "Optional rate limit against scripted submissions, duplicate protection against double clicks, and a contract select for signed-in customers",
       "inverse check: finds missing or mislabelled buttons on a page, exit code for CI",
       "cors option for forms on another domain, and legalRevision / inverse legal: which legal state the kit reflects and what changed",
-      "inverse snippet: ready-to-paste integration for WooCommerce, Shopware, Shopify and WordPress, and example projects for the Next.js Pages Router, Remix, SvelteKit and Express, a WordPress plugin with a settings page, and axe accessibility tests for the forms, an Austria page, a stability policy and an upgrade guide"
+      "inverse snippet: ready-to-paste integration for WooCommerce, Shopware, Shopify and WordPress, and example projects for the Next.js Pages Router, Remix, SvelteKit and Express, a WordPress plugin with a settings page, and axe accessibility tests for the forms, an Austria page, a stability policy with a frozen API, and an upgrade guide"
     ],
     "pro": [
       "Evidence ledger: every declaration and receipt in a SHA-256 hash chain, evidence sheet per declaration, stored as JSON Lines, PostgreSQL or SQLite, erasure and a retention period that keep the chain verifiable, RFC 3161 time stamp anchors, and an evidence dossier for your lawyer, the ledger CLI on SQLite or PostgreSQL, the dossier as PDF, anchors on a schedule, one ledger per client for agencies, the audit report as PDF, and ending a subscription at Stripe or Paddle after a cancellation",
