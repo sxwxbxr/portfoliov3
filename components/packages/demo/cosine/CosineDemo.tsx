@@ -11,7 +11,7 @@ import { pkgPath } from "@/lib/packages/urls"
  */
 
 const t = cosineDemoCopy
-const LIB_URL = "/demos/cosine/cosine-0.3.0.js"
+const LIB_URL = "/demos/cosine/cosine-1.0.0.js"
 const INDEX_URL = "/demos/cosine/cosine-index.json"
 const TRANSFORMERS_URL = "https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.3.0"
 
@@ -185,6 +185,7 @@ export function CosineDemo() {
             lang: "en",
             label: t.search.fieldLabel,
             limit: "6",
+            facets: "",
             "load-model": "never",
             style: { "--cosine-accent": "var(--color-accent, #2563eb)" },
             suppressHydrationWarning: true,
