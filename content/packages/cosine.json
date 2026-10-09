@@ -4,7 +4,7 @@
   "tagline": "Semantic search for documentation sites that runs entirely in the browser. No search server, no API key, no query leaves the device.",
   "seoTitle": "Cosine – semantic docs search in the browser, without a server",
   "description": "Most docs search either needs a hosted service or matches only exact words: someone who types \"how do I get rid of the app\" finds nothing on a page called \"Uninstall\". Cosine closes that gap without a server. `cosine build` splits your Markdown, MDX or HTML pages at their headings and stores a small vector per section next to your site. In the browser, keyword results appear on the first keystroke, and once the embedding model has loaded (about 23 MB, cached) the ranking combines keywords and meaning.\n\nThe search field is an accessible web component in English, German, French and Italian that works in any framework, with React bindings on top. Queries are never sent anywhere, and the model can be served from your own domain.",
-  "status": "beta",
+  "status": "stable",
   "tags": [
     "Search",
     "Documentation",
@@ -211,6 +211,12 @@
   ],
   "publishedAt": "2026-10-05",
   "releases": [
+    {
+      "version": "1.0.0",
+      "date": "2026-10-09",
+      "title": "Cosine 1.0: stable API, free and Pro",
+      "url": "https://packages.sweber.dev/blog/cosine-1-0-0-released"
+    },
     {
       "version": "0.9.0",
       "date": "2026-10-09",
