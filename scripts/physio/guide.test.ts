@@ -21,6 +21,7 @@ import {
   setDatabases,
   type AnalysisResult,
   type CountRow,
+  type Filters,
   type PicoInput,
   type SearchModel,
 } from "../../lib/physio/search-string"
@@ -30,7 +31,7 @@ import { evidenceSentence, extractGoals, findDuration, ignoredParts, readCase } 
 import { readCounts } from "../../lib/physio/guide/counts"
 import { activeCriteria, resolveCriteria, suggestCriteria } from "../../lib/physio/guide/criteria"
 import { lintChecklist, lintGuide, sortFindings, explainFinding, type LintGuideCtx } from "../../lib/physio/guide/lint-guide"
-import { buildFragestellung, dativeify, resolvePico, shortLabel, suggestPico } from "../../lib/physio/guide/pico"
+import { buildFragestellung, dativeify, refineQuestion, resolvePico, shortLabel, suggestPico } from "../../lib/physio/guide/pico"
 import { EMPTY_GUIDE_STATE, guideStorageKey, loadGuideState, saveGuideState } from "../../lib/physio/guide/storage"
 import { EMPTY_EDITS, makeSuchstringCtx, suchstringGuide, worksheetOf, type SuchstringGuideCtx, type WorksheetEdits } from "../../lib/physio/guide/suchstring"
 import { anchorsOf, clampStep, resolveAction } from "../../lib/physio/guide/types"
@@ -81,15 +82,35 @@ function ctxOf(l: Loaded | null, over: Partial<Parameters<typeof makeSuchstringC
 const step = (id: string) => suchstringGuide.steps.find((s) => s.id === id)!
 const texts = (ctx: SuchstringGuideCtx, id: string) => step(id).observe(ctx).map((o) => o.text)
 
-const MUELLER_FULL = EXAMPLES.find((e) => e.id === "mueller-fall")!
-const MUELLER_SHORT = EXAMPLES.find((e) => e.id === "mueller")!
+/** A pasted case, the way the tool used to be fed. It still has to work; a notice recommends a question. */
+const MUELLER_FULL: { text: string; pico?: PicoInput; filters?: Partial<Filters> } = {
+  text: "Herr Müller, 45 Jahre, Bürokaufmann. Chronische Rückenschmerzen im unteren Rückenbereich (LWS). Mehrere kurze Krankheitsausfälle in den letzten sechs Monaten aufgrund von Rückenschmerzen. Anamnese: seit etwa einem Jahr wiederkehrende Rückenschmerzen, vor allem nach langen Sitzphasen im Büro, strahlen gelegentlich in die Beine aus. Verschiedene Schmerzmittel brachten nur kurzfristige Linderung. Ein Freund hat ihm Rückentraining empfohlen. Er sucht ein Trainingsprogramm, um seine Rückenschmerzen zu reduzieren und seine Arbeitsfähigkeit zu verbessern.",
+}
+/** A question with explicit PICO fields. */
+const MUELLER_SHORT = {
+  text: "Wie wirkt Rückentraining im Vergleich zu Schmerzmitteln bei Büroangestellten mit chronischen Rückenschmerzen im LWS-Bereich auf die Arbeitsfähigkeit?",
+  pico: {
+    population: "Mann, mittleres Alter, wiederkehrende Rückenschmerzen nach langem Sitzen, ausstrahlend in die Beine",
+    intervention: "Rückentraining",
+    comparison: "Schmerzmittel",
+    outcome: "Schmerzen, Arbeitsfähigkeit",
+  } as PicoInput,
+  filters: undefined as Partial<Filters> | undefined,
+}
+/** The shipped example: a plain research question, no PICO fields. */
+const MUELLER_Q = EXAMPLES.find((e) => e.id === "mueller")!
 
+/** `mueller`: the pasted case (still supported). `question`: the shipped example, a plain research question. */
 let mueller: Loaded
 let ctx: SuchstringGuideCtx
+let question: Loaded
+let qctx: SuchstringGuideCtx
 
 before(async () => {
   mueller = await load(MUELLER_FULL.text, MUELLER_FULL.pico ?? {}, MUELLER_FULL.filters)
   ctx = ctxOf(mueller)
+  question = await load(MUELLER_Q.text, MUELLER_Q.pico ?? {}, MUELLER_Q.filters)
+  qctx = ctxOf(question)
 })
 
 describe("framework: types and storage", () => {
@@ -144,7 +165,7 @@ describe("framework: types and storage", () => {
   })
 })
 
-describe("Fall lesen: what the tool took from the Herr Müller case", () => {
+describe("Fragestellung prüfen: what the tool takes from a pasted Herr Müller case", () => {
   it("reads person, complaint, intervention, goals, comparison", () => {
     const r = ctx.reading
     assert.equal(r.empty, false)
@@ -196,7 +217,7 @@ describe("Fall lesen: what the tool took from the Herr Müller case", () => {
   })
 
   it("observes every part of the case with the case's own words", () => {
-    const out = texts(ctx, "case").join("\n")
+    const out = texts(ctx, "question").join("\n")
     assert.match(out, /45 Jahre/)
     assert.match(out, /Middle Aged/)
     assert.match(out, /Herr/)
@@ -210,10 +231,149 @@ describe("Fall lesen: what the tool took from the Herr Müller case", () => {
 
   it("says so when nothing was analysed yet, and when it is busy", () => {
     const none = ctxOf(null)
-    assert.equal(step("case").ready!(none), false)
-    assert.equal(step("case").observe(none)[0].text, guideCopy.suchstring.obs.empty)
-    assert.equal(step("case").observe(ctxOf(null, { busy: true }))[0].text, guideCopy.suchstring.obs.busy)
-    assert.equal(step("case").ready!(ctx), true)
+    assert.equal(step("question").ready!(none), false)
+    assert.equal(step("question").observe(none)[0].text, guideCopy.suchstring.obs.empty)
+    assert.equal(step("question").observe(ctxOf(null, { busy: true }))[0].text, guideCopy.suchstring.obs.busy)
+    assert.equal(step("question").ready!(ctx), true)
+  })
+})
+
+describe("Fragestellung prüfen: a research question", () => {
+  const obsText = (c: SuchstringGuideCtx) => step("question").observe(c)
+  const labels = (c: SuchstringGuideCtx) => obsText(c).map((x) => x.label)
+
+  it("lists population, intervention, comparison and outcome of the Herr Müller question", () => {
+    const out = obsText(qctx)
+    const all = out.map((x) => x.text).join("\n")
+    assert.deepEqual(
+      labels(qctx).filter((l) => l?.includes("(")),
+      ["Intervention (I)", "Vergleich (C)", "Outcome (O)", "Outcome (O)"],
+    )
+    assert.match(all, /Büroangestellte/)
+    assert.match(all, /Unterer Rückenschmerz/)
+    assert.match(all, /Rückentraining/)
+    assert.match(all, /Schmerzmittel/)
+    assert.match(all, /«Schmerzen und Arbeitsfähigkeit»/)
+    assert.ok(out.some((x) => x.text === guideCopy.suchstring.obs.allParts && x.tone === "good"))
+    assert.ok(!out.some((x) => x.tone === "warn"))
+    assert.equal(qctx.looksCase, false)
+  })
+
+  it("states no age and no sex when the question has none, and invents nothing", () => {
+    assert.equal(qctx.reading.age, null)
+    assert.equal(qctx.reading.sex, null)
+    assert.ok(!labels(qctx).includes("Alter"))
+    assert.ok(!labels(qctx).includes("Geschlecht"))
+  })
+
+  it("flags a missing outcome with a concrete prompt and lets the student go on", async () => {
+    const l = await load("Wie wirkt Rückentraining im Vergleich zu Schmerzmitteln bei Büroangestellten mit chronischen Rückenschmerzen?")
+    const c = ctxOf(l)
+    const warn = obsText(c).filter((x) => x.tone === "warn")
+    assert.equal(warn.length, 1)
+    assert.equal(warn[0].text, "Es fehlt ein Outcome: Was soll sich verbessern? Zum Beispiel «auf die Schmerzen» oder «auf die Beweglichkeit».")
+    assert.equal(warn[0].label, "Outcome (O)")
+    assert.ok(!obsText(c).some((x) => x.text === guideCopy.suchstring.obs.allParts))
+    assert.equal(step("question").ready!(c), true)
+    // The PICO step shows the same gap.
+    assert.equal(c.resolved.cells.O.text, "")
+    assert.equal(c.resolved.complete, false)
+    assert.match(texts(c, "pico").join("\n"), /Noch leer: O, Outcome/)
+  })
+
+  it("flags a missing intervention and a missing population", async () => {
+    const noI = ctxOf(await load("Welche Wirkung hat das auf die Schmerzen bei Menschen mit Kniearthrose?"))
+    assert.ok(obsText(noI).some((x) => x.tone === "warn" && /^Es fehlt eine Intervention: Was wird gemacht/.test(x.text)))
+    const noP = ctxOf(await load("Wie wirkt Krafttraining auf die Schmerzen?"))
+    assert.ok(obsText(noP).some((x) => x.tone === "warn" && /^Es fehlt eine Population: Wer ist gemeint/.test(x.text)))
+  })
+
+  it("treats a missing comparison as allowed, not as a warning", async () => {
+    const c = ctxOf(await load("Welche Wirkung hat Krafttraining auf die Schmerzen und die Funktion bei älteren Menschen mit Kniearthrose?"))
+    const cmp = obsText(c).find((x) => x.label === "Vergleich (C)")!
+    assert.equal(cmp.tone, "info")
+    assert.match(cmp.text, /Das ist erlaubt/)
+    assert.ok(obsText(c).some((x) => x.text === guideCopy.suchstring.obs.allParts))
+  })
+
+  it("reports an age or sex only when the question states one", async () => {
+    const c = ctxOf(await load("Wie wirkt Gangtraining bei einer 72-jährigen Patientin nach einem Schlaganfall auf die Gehgeschwindigkeit?"))
+    assert.ok(labels(c).includes("Alter"))
+    assert.ok(labels(c).includes("Geschlecht"))
+  })
+
+  it("warns, but still reads, when the input is a pasted case", () => {
+    assert.equal(ctx.looksCase, true)
+    const first = obsText(ctx)[0]
+    assert.equal(first.tone, "warn")
+    assert.equal(first.text, guideCopy.suchstring.obs.caseLike)
+    assert.ok(obsText(ctx).some((x) => /45 Jahre/.test(x.text)))
+    assert.equal(ctx.resolved.question.suggested.startsWith("Wie wirkt Rückentraining"), true, "built from the table, not from the pasted case")
+  })
+
+  it("is not ready before an analysis exists", () => {
+    assert.equal(step("question").ready!(ctxOf(null)), false)
+  })
+})
+
+describe("Fragestellung as refined version of the student's question", () => {
+  it("tidies the question instead of replacing it", () => {
+    assert.equal(refineQuestion("  wie wirkt   Krafttraining bei Kniearthrose "), "Wie wirkt Krafttraining bei Kniearthrose?")
+    assert.equal(
+      refineQuestion("Wie wirkt Hydrotherapie auf die Lebensqualität bei Fibromyalgie? Nur randomisierte kontrollierte Studien."),
+      "Wie wirkt Hydrotherapie auf die Lebensqualität bei Fibromyalgie?",
+    )
+    assert.equal(refineQuestion("Krafttraining Kniearthrose"), "Krafttraining Kniearthrose")
+    assert.equal(refineQuestion(""), "")
+  })
+
+  it("starts as the student's own wording", () => {
+    assert.equal(qctx.resolved.question.suggested, MUELLER_Q.text)
+    assert.equal(qctx.resolved.question.text, MUELLER_Q.text)
+  })
+
+  it("is rebuilt from the table once a cell is edited", () => {
+    const edited = ctxOf(question, { edits: { pico: { cells: { I: "Rumpfstabilisation" } }, criteria: {} } })
+    assert.match(edited.resolved.question.suggested, /^Wie wirkt Rumpfstabilisation im Vergleich zu Schmerzmitteln bei Büroangestellten/)
+    assert.notEqual(edited.resolved.question.suggested, MUELLER_Q.text)
+  })
+
+  it("fills the table from the question, including the outcome in the student's words", () => {
+    const c = qctx.resolved.cells
+    assert.match(c.P.text, /^Büroangestellte mit chronischen Rückenschmerzen im unteren Rücken/)
+    assert.doesNotMatch(c.P.text, /Jahre/, "no age in the population when the question names none")
+    assert.equal(c.I.text, "Rückentraining")
+    assert.equal(c.C.text, "Schmerzmittel")
+    assert.equal(c.O.text, "Schmerzen, Arbeitsfähigkeit")
+    assert.equal(qctx.resolved.complete, true)
+  })
+})
+
+describe("criteria from a question", () => {
+  it("proposes no age limit and says so when the question has no age", () => {
+    const ids = qctx.suggestedCriteria.map((c) => c.id)
+    assert.ok(!ids.includes("age"))
+    assert.ok(!ids.includes("x-children"))
+    assert.ok(!ids.includes("x-retired"))
+    assert.ok(texts(qctx, "criteria").includes(guideCopy.suchstring.obs.criteriaNoAge))
+    for (const c of qctx.suggestedCriteria) assert.doesNotMatch(c.reason, /im Fall|Der Fall/, c.id)
+  })
+
+  it("takes an age group from the question text, not from an assumed age", async () => {
+    const c = ctxOf(await load("Welche Wirkung hat Krafttraining auf die Schmerzen und die Funktion bei älteren Menschen mit Kniearthrose?"))
+    const age = c.suggestedCriteria.find((x) => x.id === "age")!
+    assert.match(age.reason, /Deine Frage nennt «/)
+    assert.ok(!texts(c, "criteria").includes(guideCopy.suchstring.obs.criteriaNoAge))
+  })
+})
+
+describe("worksheet of a question", () => {
+  it("opens with the student's own Fragestellung and keeps the refined one next to the PICO table", () => {
+    const text = worksheetText(worksheetOf(qctx))
+    assert.match(text, /1\. Fragestellung\nWie wirkt Rückentraining im Vergleich zu Schmerzmitteln/)
+    assert.match(text, /Überarbeitete Fragestellung: Wie wirkt Rückentraining/)
+    assert.doesNotMatch(text, /1\. Fall/)
+    assert.match(worksheetMarkdown(worksheetOf(qctx)), /## 1\. Fragestellung/)
   })
 })
 
@@ -301,7 +461,7 @@ describe("Ein- und Ausschlusskriterien", () => {
     }
     const byId = Object.fromEntries(ctx.criteria.map((c) => [c.id, c]))
     assert.equal(byId.age.text, "Erwachsene im Erwerbsalter (18 bis 65 Jahre)")
-    assert.match(byId.age.reason, /45 Jahre alt/)
+    assert.match(byId.age.reason, /Deine Frage nennt 45 Jahre/)
     assert.match(byId.age.reason, /Bürokaufmann/)
     assert.equal(byId["condition-low-back-pain"].text, "Chronische unspezifische Rückenschmerzen im unteren Rücken (LWS)")
     assert.match(byId["condition-low-back-pain"].reason, /seit etwa einem Jahr/)
@@ -517,7 +677,7 @@ describe("Arbeitsblatt", () => {
     assert.match(text, /Herr Müller, 45 Jahre/)
     assert.match(text, /P \(Population\): Büroangestellte \(45 Jahre\) mit chronischen Rückenschmerzen/)
     assert.match(text, /Fragestellung: Wie wirkt Rückentraining im Vergleich zu Schmerzmitteln/)
-    assert.match(text, /Einschluss\n- Erwachsene im Erwerbsalter \(18 bis 65 Jahre\)\. Begründung: Die Person im Fall ist 45 Jahre alt/)
+    assert.match(text, /Einschluss\n- Erwachsene im Erwerbsalter \(18 bis 65 Jahre\)\. Begründung: Deine Frage nennt 45 Jahre/)
     assert.match(text, /Ausschluss\n- Spezifische Ursachen/)
     assert.match(text, /Suchkomponente 3: Rückentraining \/ Rumpfstabilisation \(Intervention\)\n {2}Stichworte: back exercise\*/)
     assert.match(text, /Schlagwort\(e\) \(MeSH\): Work Capacity Evaluation, Return to Work, Sick Leave, Absenteeism/)
@@ -566,17 +726,18 @@ describe("Arbeitsblatt", () => {
 describe("gating: demo versus full", () => {
   it("shows the subscription note in the demo only", () => {
     const demo = ctxOf(mueller, { mode: "demo" })
-    assert.match(suchstringGuide.notice!(demo)!, /Mit dem Abo spielst du deinen eigenen Fall/)
+    assert.match(suchstringGuide.notice!(demo)!, /Mit dem Abo spielst du deine eigene Frage/)
     assert.equal(suchstringGuide.notice!(ctx), null)
     assert.match(lintGuide.notice!({ mode: "demo", text: "", findings: [], baseline: null })!, /Abo/)
     assert.equal(lintGuide.notice!({ mode: "full", text: "", findings: [], baseline: null }), null)
   })
 
-  it("asks for an own case in the full version and points at the shipped one in the demo", () => {
-    const demoAction = resolveAction(step("case"), ctxOf(mueller, { mode: "demo" }))!
-    const fullAction = resolveAction(step("case"), ctx)!
-    assert.match(demoAction, /Herrn Müller ist geladen/)
-    assert.match(fullAction, /Füge deinen Fall/)
+  it("asks for an own question in the full version and points at the shipped one in the demo", () => {
+    const demoAction = resolveAction(step("question"), ctxOf(question, { mode: "demo" }))!
+    const fullAction = resolveAction(step("question"), qctx)!
+    assert.match(demoAction, /Beispielfrage ist geladen/)
+    assert.match(fullAction, /Schreib deine Frage bei «Fragestellung»/)
+    assert.match(resolveAction(step("question"), ctx)!, /Fallbeschreibung/)
     const lint = lintGuide.steps[0]
     assert.match(resolveAction(lint, { mode: "demo", text: "", findings: [], baseline: null })!, /Beispielstring/)
     assert.match(resolveAction(lint, { mode: "full", text: "", findings: [], baseline: null })!, /Füge deinen Suchstring/)
@@ -592,7 +753,7 @@ describe("every step", () => {
         assert.ok(!/undefined|\[object|NaN|null/.test(`${o.label ?? ""} ${o.text}`), `${s.id}: ${o.text}`)
       }
     }
-    assert.deepEqual(suchstringGuide.steps.map((s) => s.id), ["case", "pico", "criteria", "components", "terms", "string", "check", "worksheet"])
+    assert.deepEqual(suchstringGuide.steps.map((s) => s.id), ["question", "pico", "criteria", "components", "terms", "string", "check", "worksheet"])
   })
 
   it("never throws without a case", () => {

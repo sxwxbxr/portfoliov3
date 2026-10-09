@@ -41,7 +41,7 @@ export interface WorksheetCount {
 
 export interface Worksheet {
   date: string
-  caseText: string
+  questionText: string
   pico: Record<PicoKey, string>
   question: string
   include: ResolvedCriterion[]
@@ -57,7 +57,7 @@ export interface Worksheet {
 
 export interface WorksheetInput {
   date: string
-  caseText: string
+  questionText: string
   pico: ResolvedPico
   criteria: ResolvedCriterion[]
   /** One per selected database; the first is the primary one. */
@@ -86,7 +86,7 @@ export function buildWorksheet(input: WorksheetInput): Worksheet {
     : null
   return {
     date: input.date,
-    caseText: input.caseText.trim(),
+    questionText: input.questionText.trim(),
     pico: { P: input.pico.cells.P.text.trim(), I: input.pico.cells.I.text.trim(), C: input.pico.cells.C.text.trim(), O: input.pico.cells.O.text.trim() },
     question: input.pico.question.text.trim(),
     include: active.filter((c) => c.kind === "include"),
@@ -120,16 +120,16 @@ export function worksheetText(ws: Worksheet): string {
   L.push(`Datum: ${ws.date}`)
   L.push("")
   L.push(WORKSHEET_DRAFT_NOTE)
-  if (ws.caseText) {
+  if (ws.questionText) {
     L.push("")
-    L.push("1. Fall")
-    L.push(ws.caseText)
+    L.push("1. Fragestellung")
+    L.push(ws.questionText)
   }
   L.push("")
   L.push("2. PICO")
   for (const k of ["P", "I", "C", "O"] as PicoKey[]) L.push(`${k} (${PICO_LABEL[k]}): ${ws.pico[k] || "-"}`)
   L.push("")
-  L.push(`Fragestellung: ${ws.question || "-"}`)
+  L.push(`Überarbeitete Fragestellung: ${ws.question || "-"}`)
   L.push("")
   L.push("3. Ein- und Ausschlusskriterien")
   L.push("Einschluss")
@@ -176,11 +176,11 @@ export function worksheetMarkdown(ws: Worksheet): string {
   L.push(`Suchstring-Generator, Geführter Modus, physio.sweber.dev · ${ws.date}`)
   L.push("")
   L.push(`> ${WORKSHEET_DRAFT_NOTE}`)
-  if (ws.caseText) {
+  if (ws.questionText) {
     L.push("")
-    L.push("## 1. Fall")
+    L.push("## 1. Fragestellung")
     L.push("")
-    L.push(ws.caseText)
+    L.push(ws.questionText)
   }
   L.push("")
   L.push("## 2. PICO")
@@ -189,7 +189,7 @@ export function worksheetMarkdown(ws: Worksheet): string {
   L.push("|---|---|---|")
   for (const k of ["P", "I", "C", "O"] as PicoKey[]) L.push(`| ${k} | ${PICO_LABEL[k]} | ${cell(ws.pico[k])} |`)
   L.push("")
-  L.push(`**Fragestellung:** ${ws.question || "-"}`)
+  L.push(`**Überarbeitete Fragestellung:** ${ws.question || "-"}`)
   L.push("")
   L.push("## 3. Ein- und Ausschlusskriterien")
   L.push("")

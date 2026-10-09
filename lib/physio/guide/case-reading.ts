@@ -1,6 +1,7 @@
 /**
- * "Fall lesen": what the engine took out of the student's own case, and what it
- * ignored. Pure; reads the analysed model and the raw text, invents nothing.
+ * "Fragestellung prüfen": what the engine took out of the student's own question (or,
+ * for a pasted case, out of the case), and what it ignored. Pure; reads the analysed
+ * model and the raw text, invents nothing.
  */
 import { TERMINOLOGY, cleanTaskText, normalizeText, prepareUnits } from "../search-string"
 import type { AnalysisResult, Block, Concept, PicoInput } from "../search-string"
@@ -39,11 +40,13 @@ export interface CaseReading {
   outcomes: ReadConcept[]
   comparisons: ReadConcept[]
   goals: CaseGoal[]
+  /** The words after "auf …" / "for improving …": the outcome as the student wrote it ("Schmerzen und Arbeitsfähigkeit"), or null. */
+  outcomePhrase: string | null
   /** "chronisch", "akut", "subakut", or null. Only what the text says. */
   chronicity: string | null
   /** "seit etwa einem Jahr", or null. */
   duration: string | null
-  /** The case says the pain radiates ("strahlen in die Beine aus"). */
+  /** The text says the pain radiates ("strahlen in die Beine aus"). */
   radiating: boolean
   /** Lines and sentences that are task-sheet boilerplate ("Formulieren Sie ..."). */
   ignored: string[]
@@ -98,6 +101,18 @@ export function extractGoals(text: string): CaseGoal[] {
     seen.add(k)
     return true
   })
+}
+
+const OUTCOME_DE = /\bauf\s+(?:(?:die|den|das|der|dem|eine?n?)\s+)?([^?.;:]+?)(?=\s+(?:bei|von|nach|im|mit|für|in|an|beim|durch|gegenüber)\b|[?.;:,]|$)/i
+const OUTCOME_EN = /\b(?:for|on)\s+(?:improving|reducing|increasing|decreasing|improvement of|reduction of)\s+([^?.;:]+?)(?=\s+(?:in|among|after|with|compared)\b|[?.;:,]|$)/i
+
+/** "… auf die Schmerzen und die Funktion bei älteren Menschen" -> "Schmerzen und Funktion". */
+export function extractOutcomePhrase(text: string): string | null {
+  const flat = text.replace(/\s+/g, " ")
+  const m = OUTCOME_DE.exec(flat) ?? OUTCOME_EN.exec(flat)
+  if (!m) return null
+  const phrase = m[1].replace(/\b(?:die|den|das|der|dem)\s+/gi, "").trim()
+  return phrase.length >= 4 && phrase.length <= 80 ? phrase : null
 }
 
 export function findChronicity(text: string): string | null {
@@ -185,6 +200,7 @@ export function readCase({ text, pico, analysis }: CaseReadingInput): CaseReadin
     outcomes: byBlock("outcome").map(toRead),
     comparisons: byBlock("comparison").map(toRead),
     goals,
+    outcomePhrase: extractOutcomePhrase(cleanTaskText(text)),
     chronicity: findChronicity(all),
     duration: findDuration(all),
     radiating: /ausstrahl|strahl\w*\s+(?:\w+\s+){0,4}aus\b|radiat/i.test(all),

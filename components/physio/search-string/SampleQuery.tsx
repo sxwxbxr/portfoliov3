@@ -15,7 +15,7 @@ export function SampleQuery() {
 
   useEffect(() => {
     let cancelled = false
-    const ex = EXAMPLES.find((e) => e.id === "mueller-fall") ?? EXAMPLES[0]
+    const ex = EXAMPLES.find((e) => e.id === "mueller") ?? EXAMPLES[0]
     analyzeAsync({ text: ex.text, pico: ex.pico }).then(
       (a) => !cancelled && setQuery(buildQuery(createModel(a)).query),
       () => !cancelled && setFailed(true),

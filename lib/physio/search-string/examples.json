@@ -1,21 +1,9 @@
 [
   {
-    "id": "mueller-fall",
-    "title": "Herr Müller, der ganze Fall (OST Übung 3)",
-    "description": "Der Fall so, wie er im Aufgabenblatt steht, mit Anamnese und Wunsch des Patienten. Das Tool liest den ganzen Text, ignoriert Füllwörter und schlägt Alter und Geschlecht als optionale Filter vor.",
-    "text": "Herr Müller, 45 Jahre, Bürokaufmann. Chronische Rückenschmerzen im unteren Rückenbereich (LWS). Mehrere kurze Krankheitsausfälle in den letzten sechs Monaten aufgrund von Rückenschmerzen. Anamnese: seit etwa einem Jahr wiederkehrende Rückenschmerzen, vor allem nach langen Sitzphasen im Büro, strahlen gelegentlich in die Beine aus. Verschiedene Schmerzmittel brachten nur kurzfristige Linderung. Ein Freund hat ihm Rückentraining empfohlen. Er sucht ein Trainingsprogramm, um seine Rückenschmerzen zu reduzieren und seine Arbeitsfähigkeit zu verbessern."
-  },
-  {
     "id": "mueller",
-    "title": "Herr Müller, Rückenschmerzen im Büro (OST Übung 3)",
-    "description": "Herr Müller, 45, Bürokaufmann, hat seit etwa einem Jahr Rückenschmerzen im LWS-Bereich, die nach langem Sitzen stärker werden und manchmal in die Beine ausstrahlen. Schmerzmittel helfen nur kurz, in den letzten 6 Monaten war er mehrmals kurz krankgeschrieben. Er möchte ein Trainingsprogramm, um Schmerzen zu senken und wieder voll arbeiten zu können.",
-    "text": "Wie wirkt Rückentraining im Vergleich zu Schmerzmitteln bei Büroangestellten mit chronischen Rückenschmerzen im LWS-Bereich auf die Arbeitsfähigkeit?",
-    "pico": {
-      "population": "Mann, mittleres Alter, wiederkehrende Rückenschmerzen nach langem Sitzen, ausstrahlend in die Beine",
-      "intervention": "Rückentraining",
-      "comparison": "Schmerzmittel",
-      "outcome": "Schmerzen, Arbeitsfähigkeit"
-    },
+    "title": "Rückentraining bei Rückenschmerzen im Büro (OST Übung 3)",
+    "description": "Eine Frage mit allen vier PICO-Teilen: Büroangestellte mit chronischen Rückenschmerzen, Rückentraining im Vergleich zu Schmerzmitteln, Arbeitsfähigkeit als Ziel.",
+    "text": "Wie wirkt Rückentraining im Vergleich zu Schmerzmitteln bei Büroangestellten mit chronischen Rückenschmerzen im unteren Rücken auf Schmerzen und Arbeitsfähigkeit?",
     "studentSearchString": "„office Worker*“ OR „desk worker*“ OR „midlife“ OR „middle aged“ OR „adult*“ AND „back pain“ OR „lower back pain“ OR „lumbar ache“ OR „aching lower back“ OR „lumbar pain“ OR „backache“ AND „back exercise*“ OR „exercise therapy*“ OR „back pain exercise*“ OR „lumbar exercise*“e OR „therapy*“ AND „work ability“ OR „ability to work“ OR „productivity“ OR „work capacity evaluation“"
   },
   {
@@ -31,6 +19,18 @@
     "text": "Reduziert Gleichgewichtstraining das Sturzrisiko bei Menschen mit Morbus Parkinson im Vergleich zu keiner Intervention?"
   },
   {
+    "id": "schlaganfall",
+    "title": "Gangtraining nach Schlaganfall",
+    "description": "Neurologische Rehabilitation: Gangtraining im Vergleich zur üblichen Physiotherapie.",
+    "text": "Wie wirkt Gangtraining im Vergleich zu üblicher Physiotherapie auf die Gehgeschwindigkeit bei Menschen nach einem Schlaganfall?"
+  },
+  {
+    "id": "vkb",
+    "title": "Krafttraining nach Kreuzbandriss bei Sportlern",
+    "description": "Return to Sport nach einem vorderen Kreuzbandriss.",
+    "text": "Wie wirkt Krafttraining im Vergleich zu üblicher Physiotherapie auf die Rückkehr zum Sport bei Sportlerinnen und Sportlern nach einem vorderen Kreuzbandriss?"
+  },
+  {
     "id": "nacken-en",
     "title": "Neck pain, manual therapy vs exercise (English)",
     "description": "Dieselbe Logik funktioniert mit englischen Fragen.",
@@ -40,12 +40,6 @@
     "id": "fibromyalgie",
     "title": "Hydrotherapie bei Fibromyalgie, nur RCTs",
     "description": "Der Studientyp wird erkannt und als Filter vorgeschlagen, nicht als Suchbegriff.",
-    "text": "Wirkung von Hydrotherapie bei Fibromyalgie auf die Lebensqualität, nur randomisierte kontrollierte Studien"
-  },
-  {
-    "id": "vkb",
-    "title": "Krafttraining nach Kreuzbandriss bei Sportlern",
-    "description": "Mit expliziten PICO-Markierungen im Text.",
-    "text": "P: Sportler nach vorderem Kreuzbandriss. I: Krafttraining. O: Muskelkraft und Rezidiv"
+    "text": "Wie wirkt Hydrotherapie auf die Lebensqualität bei Fibromyalgie? Nur randomisierte kontrollierte Studien."
   }
 ]

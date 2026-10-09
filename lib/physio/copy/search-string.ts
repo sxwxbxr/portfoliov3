@@ -9,19 +9,19 @@ export const ssCopy = {
   name: "Suchstring-Generator",
   metaTitle: "Suchstring-Generator für PubMed, Cochrane Library, CINAHL und Embase",
   metaDescription:
-    "Baut aus deinem Patientenfall oder deiner PICO-Frage einen Suchstring für PubMed, die Cochrane Library, CINAHL und Embase: Schlagworte (MeSH), Stichworte, Klammern und Trunkierung in der Syntax der Datenbank. Regelbasiert, ohne KI. Dein Fall bleibt auf deinem Gerät.",
+    "Baut aus deiner Fragestellung, am besten nach PICO, einen Suchstring für PubMed, die Cochrane Library, CINAHL und Embase: Schlagworte (MeSH), Stichworte, Klammern und Trunkierung in der Syntax der Datenbank. Regelbasiert, ohne KI. Deine Frage bleibt auf deinem Gerät.",
 
   hero: {
     title: "Suchstring-Generator",
-    sub: "Fall rein, Suchstring raus. Für PubMed, Cochrane Library, CINAHL und Embase.",
-    lede: "Fall einfügen, Datenbank wählen, String kopieren. Anpassen kannst du danach.",
+    sub: "Frage rein, Suchstring raus. Für PubMed, Cochrane Library, CINAHL und Embase.",
+    lede: "Fragestellung einfügen, Datenbank wählen, String kopieren. Anpassen kannst du danach.",
     demoBadge: "Demo",
-    demoLede: "Probier den Generator mit einem Beispielfall aus.",
+    demoLede: "Probier den Generator mit einer Beispielfrage aus.",
   },
 
-  privacyShort: "Dein Fall bleibt auf deinem Gerät.",
+  privacyShort: "Deine Frage bleibt auf deinem Gerät.",
   privacy:
-    "Dein Fall bleibt auf deinem Gerät. Das Tool lädt nur Teile eines öffentlichen MeSH-Wörterbuchs von physio.sweber.dev nach; abgefragt wird ein Dateiname wie «terms/lo.json», nie dein Text. Die Trefferzählung ist optional und schickt nur den fertigen Suchstring an PubMed (NCBI).",
+    "Deine Frage bleibt auf deinem Gerät. Das Tool lädt nur Teile eines öffentlichen MeSH-Wörterbuchs von physio.sweber.dev nach; abgefragt wird ein Dateiname wie «terms/lo.json», nie dein Text. Die Trefferzählung ist optional und schickt nur den fertigen Suchstring an PubMed (NCBI).",
   attribution: {
     source: "MeSH: U.S. National Library of Medicine · Deutsche Bezeichnungen: Wikidata (CC0)",
     version: (version: string, descriptors: number, german: number) =>
@@ -34,6 +34,13 @@ export const ssCopy = {
     { term: "Schlagwort", text: "ein Begriff aus dem kontrollierten Vokabular der Datenbank, in PubMed MeSH ([Mesh]), in der Cochrane Library [mh …]. CINAHL Headings und Emtree sind lizenziert; dort schlägt das Tool Schlagworte aus MeSH vor." },
   ],
 
+  /** Shown above the result when the input reads like a case description (no block, the string is still built). */
+  caseNotice: {
+    title: "Das liest sich wie ein Fall, nicht wie eine Frage.",
+    body: "Aus einer Fragestellung wird der String zuverlässiger als aus einer Fallbeschreibung. Formuliere eine Frage mit Population, Intervention, Vergleich und Outcome, zum Beispiel «Wie wirkt … im Vergleich zu … bei … auf …?». Den String unten hat das Tool trotzdem aus deinem Text gebaut.",
+    action: "Frage mit dem geführten Modus formulieren",
+  },
+
   draftNote: {
     title: "Das ist ein Entwurf.",
     body: "Geh Begriffe und Schlagworte durch und schau dir die Trefferliste an, bevor du den String in einer Arbeit verwendest. Das Tool arbeitet mit festen Regeln, dem MeSH-Wörterbuch und einer eigenen Begriffstabelle. Wie es deutsche Wörter zuordnet, ist fachlich nicht geprüft.",
@@ -44,12 +51,13 @@ export const ssCopy = {
   question: {
     exampleLabel: "Beispiel",
     examplePlaceholder: "Beispiel wählen",
-    textLabel: "Fall oder Fragestellung",
-    textLabelDemo: "Fall",
-    textPlaceholder: "Wie wirkt Krafttraining auf die Schmerzen bei älteren Menschen mit Kniearthrose?",
+    textLabel: "Fragestellung",
+    textLabelDemo: "Fragestellung",
+    textPlaceholder: "Wie wirkt Krafttraining im Vergleich zu Massage auf die Schmerzen bei älteren Menschen mit Kniearthrose?",
+    hint: "Eine Frage, am besten mit Population, Intervention, Vergleich und Outcome.",
     textHint:
-      "Tipp: «bei» leitet die Population ein, «im Vergleich zu» den Vergleich, «auf die» das Outcome. Zeilen mit «P:», «I:», «C:», «O:» haben Vorrang, Arbeitsaufträge wie «Formulieren Sie …» überliest das Tool.",
-    analysing: "Fall wird ausgewertet",
+      "Tipp: «bei» leitet die Population ein, «im Vergleich zu» den Vergleich, «auf die» das Outcome. Zeilen mit «P:», «I:», «C:», «O:» haben Vorrang.",
+    analysing: "Frage wird ausgewertet",
     picoHint: "Was hier steht, landet fix im passenden Block, sobald du den String neu erstellst.",
     pico: {
       population: { label: "Population (P)", placeholder: "Wer? Person oder Erkrankung" },
@@ -61,9 +69,9 @@ export const ssCopy = {
     submit: "Suchstring erstellen",
     submitting: "Wird ausgewertet",
     resubmit: "Neu erstellen",
-    emptyError: "Füge zuerst einen Fall ein oder füll ein PICO-Feld aus.",
-    failError: "Der Fall liess sich nicht auswerten. Kürze den Text oder füll die PICO-Felder aus.",
-    lockedBody: "In der Demo wählst du ein Beispiel. Eigene Fälle gibt es mit dem Abo.",
+    emptyError: "Schreib zuerst eine Fragestellung oder füll ein PICO-Feld aus.",
+    failError: "Die Frage liess sich nicht auswerten. Kürze den Text oder füll die PICO-Felder aus.",
+    lockedBody: "In der Demo wählst du ein Beispiel. Eigene Fragen gibt es mit dem Abo.",
     editedHint: "«Suchstring erstellen» setzt deine Änderungen an den Komponenten zurück.",
     created: "Suchstring erstellt.",
   },
@@ -92,7 +100,7 @@ export const ssCopy = {
       title: "Filter",
       none: "keine Filter",
       active: (n: number) => `${n} Filter aktiv`,
-      suggestions: (n: number) => `${n} ${n === 1 ? "Vorschlag" : "Vorschläge"} aus deinem Fall`,
+      suggestions: (n: number) => `${n} ${n === 1 ? "Vorschlag" : "Vorschläge"} aus deiner Frage`,
       names: { language: "Sprache", years: "Zeitraum", studyTypes: "Studientyp", humans: "nur Menschen", age: "Alter", sex: "Geschlecht" },
     },
     mesh: { title: "MeSH-Wörterbuch", status: "Schlagwort suchen, Deutsch oder Englisch" },
@@ -258,9 +266,9 @@ export const ssCopy = {
     },
     humans: "Nur Studien am Menschen",
     humansHint: "Schliesst reine Tierstudien aus. Steht im String für PubMed und Embase; die Cochrane Library und CINAHL haben dafür keinen Filter.",
-    caseHeading: "Vorschläge aus deinem Fall",
+    caseHeading: "Vorschläge aus deiner Frage",
     caseHint:
-      "Alter und Geschlecht stehen oft im Fall. Als Filter schränken sie stark ein, weil nicht jede Studie danach verschlagwortet ist. Darum sind sie aus; schalte sie nur ein, wenn die Frage auf diese Gruppe zielt.",
+      "Alter und Geschlecht stehen manchmal in der Frage. Als Filter schränken sie stark ein, weil nicht jede Studie danach verschlagwortet ist. Darum sind sie aus; schalte sie nur ein, wenn die Frage auf diese Gruppe zielt.",
     fromCase: (evidence: string) => `aus «${evidence}»`,
     ageLabels: {
       "Infant, Newborn": "Neugeborene",
@@ -361,7 +369,7 @@ export const ssCopy = {
   pubmed: {
     heading: "Treffer in PubMed",
     hint: "Optional. Zählt die Treffer je Suchkomponente und für den ganzen String, damit du siehst, welche Komponente zu stark einschränkt.",
-    privacy: "Dein Browser schickt dafür nur den Suchstring an PubMed (NCBI, USA), nicht deinen Fall.",
+    privacy: "Dein Browser schickt dafür nur den Suchstring an PubMed (NCBI, USA), nicht deine Frage.",
     count: "Treffer in PubMed zählen",
     recount: "Noch einmal zählen",
     counting: (done: number, total: number) => `Zähle … (${done} von ${total})`,
@@ -451,13 +459,13 @@ export const ssCopy = {
   },
 
   demo: {
-    ctaHeading: "Eigene Fälle auswerten",
+    ctaHeading: "Eigene Fragen auswerten",
     ctaBody:
-      "Mit dem Abo fügst du deinen eigenen Fall ein, füllst die PICO-Felder aus, prüfst eigene Strings und spielst den geführten Modus mit deinem Fall durch. Das Abo gilt für alle Tools auf dieser Seite, auch für die, die noch dazukommen.",
+      "Mit dem Abo schreibst du deine eigene Fragestellung, füllst die PICO-Felder aus, prüfst eigene Strings und spielst den geführten Modus mit deiner Frage durch. Das Abo gilt für alle Tools auf dieser Seite, auch für die, die noch dazukommen.",
     ctaPrimary: "Abo ansehen",
     ctaSecondary: "Anmelden",
     footnote:
-      "Beispiele, Begriffstabelle und MeSH-Wörterbuch sind dieselben wie im Abo. Wörterbuch-Suche, Trefferzählung und geführter Modus laufen auch in der Demo, mit den Beispielfällen.",
+      "Beispiele, Begriffstabelle und MeSH-Wörterbuch sind dieselben wie im Abo. Wörterbuch-Suche, Trefferzählung und geführter Modus laufen auch in der Demo, mit den Beispielfragen.",
   },
 
   /**
@@ -515,10 +523,10 @@ export const ssCopy = {
   paywall: {
     title: "Suchstring-Generator",
     sub: "Mit dem Abo freigeschaltet.",
-    lede: "Fall einfügen, Suchstring kopieren, bei Bedarf anpassen.",
+    lede: "Frage einfügen, Suchstring kopieren, bei Bedarf anpassen.",
     whatHeading: "Was das Tool macht",
     points: [
-      "Verarbeitet ganze Fälle und Aufgabenblätter: erkennt «P:»-Zeilen, überliest Arbeitsaufträge und schlägt Alter und Geschlecht als Filter vor, die du selbst einschaltest.",
+      "Liest deine Fragestellung nach PICO: erkennt «P:»-Zeilen und Wörter wie «bei», «im Vergleich zu» und «auf» und schlägt Alter und Geschlecht als Filter vor, wenn sie in der Frage stehen; eingeschaltet werden sie nur von dir. Ein eingefügter Fall oder ein Aufgabenblatt wird auch gelesen, aus einer Frage wird der String aber zuverlässiger.",
       "Erkennt Suchkomponenten in deutschen und englischen Fragen, auch bei «Rueckenschmerzen» statt «Rückenschmerzen». Zusammengesetzte Wörter wie «Schultertraining» zerlegt es in zwei Komponenten und sagt dir das.",
       "Kennt rund 17'000 MeSH-Schlagworte (MeSH 2026), etwa die Hälfte davon mit deutschen Bezeichnungen aus Wikidata und einer eigenen Liste. Im Wörterbuch stöberst du von Hand und gehst breiter oder enger.",
       "Zeigt zu jeder Komponente Schlagworte (MeSH) und Stichworte, die du entfernen, ergänzen, trunkieren oder in einen anderen Block verschieben kannst. Bei mehrdeutigen Wörtern schaltest du auf ein anderes Schlagwort um.",
@@ -527,12 +535,12 @@ export const ssCopy = {
       "Zählt auf Wunsch die Treffer in PubMed, Komponente für Komponente, und sagt dir bei null oder sehr vielen Treffern, wo du lockern oder eingrenzen kannst. Für die anderen Datenbanken gibt es keine Trefferzählung; die Zahl siehst du dort selbst.",
       "Prüft eigene Strings in allen vier Syntaxen auf typische Fehler: typografische Anführungszeichen, fehlende Klammern bei AND und OR, fehlende Field Tags oder Feldcodes, falsche Zeilenbezüge. Vieles davon korrigiert es mit einem Klick.",
       "Wandelt zwischen PubMed- und Cochrane-Syntax um und PubMed-Strings in CINAHL- und Embase-Syntax, soweit das eindeutig geht, und listet auf, was es nicht übertragen konnte.",
-      "Geführter Modus: acht Schritte durch deinen eigenen Fall, von PICO und Ein- und Ausschlusskriterien über Suchkomponenten und Begriffe bis zu Treffern und Arbeitsblatt. Das Blatt ist ein Entwurf zum Prüfen, keine Musterlösung.",
+      "Geführter Modus: acht Schritte durch deine eigene Frage, von der Prüfung der Fragestellung über PICO, Ein- und Ausschlusskriterien, Suchkomponenten und Begriffe bis zu Treffern und Arbeitsblatt. Das Blatt ist ein Entwurf zum Prüfen, keine Musterlösung.",
     ],
     sampleHeading: "So sieht ein Ergebnis aus",
-    sampleCaption: "Beispiel: der ganze Fall von Herrn Müller (OST Übung 3), erzeugt mit diesem Tool. Ein Entwurf, kein fertiger String.",
+    sampleCaption: "Beispiel: Rückentraining bei Büroangestellten mit chronischen Rückenschmerzen (OST Übung 3), erzeugt mit diesem Tool. Ein Entwurf, kein fertiger String.",
     sampleLoading: "Beispiel wird berechnet",
-    privacy: "Dein Fall bleibt auf deinem Gerät. Das Tool lädt nur Teile eines öffentlichen MeSH-Wörterbuchs von physio.sweber.dev nach, nie deinen Text. Die Trefferzählung ist optional und schickt nur den fertigen String an PubMed.",
+    privacy: "Deine Frage bleibt auf deinem Gerät. Das Tool lädt nur Teile eines öffentlichen MeSH-Wörterbuchs von physio.sweber.dev nach, nie deinen Text. Die Trefferzählung ist optional und schickt nur den fertigen String an PubMed.",
     demoLink: "Kostenlose Demo ausprobieren",
     aboLink: "Abo ansehen",
     loginLink: "Anmelden",

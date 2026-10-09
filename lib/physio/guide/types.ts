@@ -12,7 +12,7 @@
 
 export type GuideTone = "info" | "good" | "warn"
 
-/** One line of the block "Bei deinem Fall:". Built from the student's own data. */
+/** One line of the block "Bei deiner Frage:". Built from the student's own data. */
 export interface GuideObservation {
   tone?: GuideTone
   /** Short label in front of the text ("Alter", "Vergleich"). */
@@ -44,7 +44,7 @@ export interface GuideDefinition<C> {
   /** Registry slug of the tool; the on/off state is remembered per tool. */
   toolSlug: string
   steps: readonly GuideStep<C>[]
-  /** Heading of the observations block. Default: "Bei deinem Fall:". */
+  /** Heading of the observations block. Default: "Bei deiner Frage:". */
   yourDataLabel?: string
   /** A note shown on the first and the last step (the demo limitation). */
   notice?(ctx: C): string | null
