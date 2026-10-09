@@ -1,16 +1,17 @@
 /**
- * The guided mode of the Suchstring-Generator, case-driven: the steps mirror the
- * OST assignment (PICO, Ein- und Ausschlusskriterien, RefHunter steps a to c) and
- * every observation is derived from the student's own case, model and counts.
+ * The guided mode of the Suchstring-Generator, driven by the student's own Fragestellung: the
+ * steps mirror the OST assignment (Frage prüfen, PICO, Ein- und Ausschlusskriterien, RefHunter
+ * steps a to c) and every observation is derived from the question, model and counts.
  * Pure: SearchStringTool builds the context, the panel renders the steps.
  *
- * Anchors (`data-guide` in components/physio/search-string): ss-case (the input), ss-result (the string
+ * Anchors (`data-guide` in components/physio/search-string): ss-question (the input), ss-result (the string
  * and the hit count), and the folded areas under it: ss-pico, ss-filters, ss-concepts, ss-mesh, ss-table.
  * A folded area opens itself while its step is the current one (Disclosure reads GuideApi.anchors).
  */
 import {
   DATABASES,
   buildQuery,
+  looksLikeCase,
   selectedDatabases,
   type AnalysisResult,
   type BuiltQuery,
@@ -64,6 +65,8 @@ export interface BuiltFor {
 
 export interface SuchstringGuideCtx extends SuchstringGuideInput {
   hasCase: boolean
+  /** The input reads like a case description, not like a question (see looksLikeCase). */
+  looksCase: boolean
   reading: CaseReading
   suggestion: PicoSuggestion
   resolved: ResolvedPico
@@ -95,13 +98,15 @@ export function buildFor(model: SearchModel | null): { databases: DatabaseId[]; 
 export function makeSuchstringCtx(input: SuchstringGuideInput): SuchstringGuideCtx {
   const reading = readCase({ text: input.text, pico: input.pico, analysis: input.analysis })
   const suggestion = suggestPico(reading, input.pico)
-  const pico = resolvePico(suggestion, input.edits.pico)
+  const looksCase = looksLikeCase(input.text)
+  const pico = resolvePico(suggestion, input.edits.pico, looksCase ? null : input.text)
   const suggestedCriteria = suggestCriteria({ reading, pico, studyTypes: input.analysis?.studyTypes ?? [], now: input.now })
   const criteria = resolveCriteria(suggestedCriteria, input.edits.criteria)
   const { databases, builds } = buildFor(input.model)
   return {
     ...input,
     hasCase: !!input.model,
+    looksCase,
     reading,
     suggestion,
     resolved: pico,
@@ -117,7 +122,7 @@ export function makeSuchstringCtx(input: SuchstringGuideInput): SuchstringGuideC
 export function worksheetOf(ctx: SuchstringGuideCtx): Worksheet {
   return buildWorksheet({
     date: ctx.now.toISOString().slice(0, 10),
-    caseText: ctx.text,
+    questionText: ctx.text,
     pico: ctx.resolved,
     criteria: ctx.criteria,
     built: ctx.builds.map((b) => ({ label: b.label, built: b.built })),
@@ -136,24 +141,36 @@ function waiting(ctx: SuchstringGuideCtx): GuideObservation[] | null {
   return [o(ctx.busy ? obs.busy : obs.empty, undefined, "info")]
 }
 
-function observeCase(ctx: SuchstringGuideCtx): GuideObservation[] {
+function observeQuestion(ctx: SuchstringGuideCtx): GuideObservation[] {
   const w = waiting(ctx)
   if (w) return w
   const r = ctx.reading
   const out: GuideObservation[] = []
+  if (ctx.looksCase) out.push(o(obs.caseLike, undefined, "warn"))
   if (r.empty) out.push(o(obs.nothingFound, undefined, "warn"))
-  if (r.age) out.push(o(obs.age(r.age.years, r.age.group, r.age.evidence), obs.ageLabel))
-  if (r.sex) out.push(o(`${obs.sex(r.sex.value, r.sex.evidence)}. ${obs.sexNote}`, obs.sexLabel))
+
+  // P: who. Group, complaint and whatever age or sex the question states.
+  const hasPopulation = !!(r.groups.length || r.conditions.length || r.otherPopulation.length || r.age)
   if (r.groups.length) out.push(o(obs.groups(r.groups), obs.groupsLabel))
   if (r.conditions.length) out.push(o(obs.conditions(r.conditions), obs.conditionsLabel))
+  if (r.age) out.push(o(obs.age(r.age.years, r.age.group, r.age.evidence), obs.ageLabel))
+  if (r.sex) out.push(o(`${obs.sex(r.sex.value, r.sex.evidence)}. ${obs.sexNote}`, obs.sexLabel))
   if (r.duration) out.push(o(obs.duration(r.duration, r.chronicity), obs.durationLabel))
   if (r.radiating) out.push(o(obs.radiating, obs.radiatingLabel))
-  if (r.interventions.length) out.push(o(obs.interventions(r.interventions), obs.interventionsLabel))
-  else out.push(o(obs.noIntervention, obs.interventionsLabel, "warn"))
+  if (!hasPopulation) out.push(o(obs.missingPopulation, obs.populationLabel, "warn"))
+
+  // I, C, O
+  if (r.interventions.length) out.push(o(obs.interventions(r.interventions), obs.interventionLabel))
+  else out.push(o(obs.missingIntervention, obs.interventionLabel, "warn"))
+  if (r.comparisons.length) out.push(o(obs.comparisons(r.comparisons), obs.comparisonLabel))
+  else out.push(o(obs.noComparison, obs.comparisonLabel))
+  const hasOutcome = !!(r.outcomes.length || r.goals.length || r.outcomePhrase)
+  if (r.outcomePhrase) out.push(o(obs.outcomePhrase(r.outcomePhrase), obs.outcomeLabel))
+  if (r.outcomes.length) out.push(o(obs.outcomes(r.outcomes), obs.outcomeLabel))
   if (r.goals.length) out.push(o(obs.goals(r.goals), obs.goalsLabel))
-  if (r.outcomes.length) out.push(o(obs.outcomes(r.outcomes), obs.outcomesLabel))
-  if (r.comparisons.length) out.push(o(obs.comparisons(r.comparisons), obs.comparisonsLabel))
-  else out.push(o(obs.noComparison, obs.comparisonsLabel))
+  if (!hasOutcome) out.push(o(obs.missingOutcome, obs.outcomeLabel, "warn"))
+
+  if (hasPopulation && r.interventions.length && hasOutcome && !ctx.looksCase) out.push(o(obs.allParts, undefined, "good"))
   if (r.ignored.length) out.push(o(obs.ignored(r.ignored), obs.ignoredLabel))
   if (r.unmapped.length) out.push(o(obs.unmapped(capitalise(r.unmapped)), obs.unmappedLabel))
   return out
@@ -167,6 +184,8 @@ function observePico(ctx: SuchstringGuideCtx): GuideObservation[] {
   const p = ctx.resolved
   const r = ctx.reading
   const out: GuideObservation[] = []
+  // A one-sentence question is its own evidence; quoting it again for every cell would only repeat it.
+  const multiSentence = /[.?!]\s+\S/.test(ctx.text.trim())
   const evidenceFor: Record<PicoKey, string | null> = {
     P: r.conditions[0] ? evidenceSentence(ctx.text, r.conditions[0].matched) : null,
     I: r.interventions[0] ? evidenceSentence(ctx.text, r.interventions[0].matched) : null,
@@ -180,7 +199,7 @@ function observePico(ctx: SuchstringGuideCtx): GuideObservation[] {
       continue
     }
     const base = obs.picoCell(c.basis, c.source, c.edited)
-    const ev = !c.edited && evidenceFor[k] ? ` ${obs.picoEvidence(evidenceFor[k]!)}` : ""
+    const ev = !c.edited && multiSentence && evidenceFor[k] ? ` ${obs.picoEvidence(evidenceFor[k]!)}` : ""
     out.push(o(`${base}${ev}`, k, c.text.trim() ? "info" : "warn"))
   }
   const missing = PICO_KEYS.filter((k) => k !== "C" && !p.cells[k].text.trim()).map((k) => guideCopy.suchstring.panels.pico.letters[k].label)
@@ -228,6 +247,8 @@ function observeCriteria(ctx: SuchstringGuideCtx): GuideObservation[] {
     if (set.length) out.push(o(obs.criteriaFilterSet(set.map((c) => FILTER_NAME[c.filter!])), undefined, "good"))
     if (unset.length) out.push(o(obs.criteriaFilterMissing(unset.map((c) => FILTER_NAME[c.filter!]))))
   }
+  const statesGroup = ctx.reading.groups.some((g) => g.termId === "older-adults" || g.termId === "children")
+  if (!ctx.reading.age && !statesGroup) out.push(o(obs.criteriaNoAge))
   const demo = ctx.analysis?.filterSuggestions ?? []
   if (demo.length) {
     const parts = demo.map((d) => (d.kind === "age" ? `Alter («${d.evidence}»)` : `Geschlecht («${d.evidence}»)`))
@@ -405,13 +426,13 @@ function observeWorksheet(ctx: SuchstringGuideCtx): GuideObservation[] {
 
 const steps: GuideStep<SuchstringGuideCtx>[] = [
   {
-    id: "case",
-    title: t.steps.case.title,
-    anchor: "ss-case",
-    body: t.steps.case.body,
-    observe: observeCase,
+    id: "question",
+    title: t.steps.question.title,
+    anchor: "ss-question",
+    body: t.steps.question.body,
+    observe: observeQuestion,
     ready: (c) => !!c.model,
-    action: (c) => (c.mode === "demo" ? t.steps.case.actionDemo : t.steps.case.actionFull),
+    action: (c) => (c.looksCase ? t.steps.question.actionCase : c.mode === "demo" ? t.steps.question.actionDemo : t.steps.question.actionFull),
   },
   {
     id: "pico",

@@ -106,11 +106,11 @@ export const siteCopy = {
   landing: {
     metaTitle: "Physio Tools: Browser-Tools für das Physiotherapie-Studium",
     metaDescription:
-      "Kleine Browser-Tools für das Physiotherapie-Studium. Der Suchstring-Generator baut aus deinem Fall einen Suchstring für PubMed, Cochrane Library, CINAHL und Embase, mit Schlagworten (MeSH) und Stichworten.",
+      "Kleine Browser-Tools für das Physiotherapie-Studium. Der Suchstring-Generator baut aus deiner Fragestellung einen Suchstring für PubMed, Cochrane Library, CINAHL und Embase, mit Schlagworten (MeSH) und Stichworten.",
     eyebrow: "Für das Physiotherapie-Studium",
-    title: "Fall rein,",
+    title: "Frage rein,",
     titleSub: "Suchstring raus.",
-    lede: "Der Suchstring-Generator zerlegt deinen Fall in Suchkomponenten, schlägt Schlagworte (MeSH) und Stichworte vor und schreibt den String für PubMed, die Cochrane Library, CINAHL und Embase. Anpassen und prüfen kannst du jeden Teil, bevor du kopierst.",
+    lede: "Der Suchstring-Generator zerlegt deine Fragestellung in Suchkomponenten, schlägt Schlagworte (MeSH) und Stichworte vor und schreibt den String für PubMed, die Cochrane Library, CINAHL und Embase. Anpassen und prüfen kannst du jeden Teil, bevor du kopierst.",
     ctaDemo: "Demo ausprobieren",
     ctaPlans: "Abo ansehen",
     ctaNote: "Die Demo braucht kein Konto.",
@@ -134,11 +134,11 @@ export const siteCopy = {
       new: "Neu",
       highlights: {
         suchstring: [
-          "Versteht deutsche und englische Fragen, auch den ganzen Fall samt Aufgabenblatt.",
+          "Versteht deutsche und englische Fragen, am besten mit Population, Intervention, Vergleich und Outcome.",
           "Schreibt den String für PubMed, Cochrane Library, CINAHL und Embase, je in der Syntax der Datenbank.",
           "Kennt rund 17'000 MeSH-Schlagworte, etwa die Hälfte davon mit deutschen Bezeichnungen.",
           "Zählt auf Wunsch die Treffer in PubMed und prüft eigene Strings auf typische Fehler.",
-          "Geführter Modus: acht Schritte durch deinen Fall, von PICO bis zum Arbeitsblatt.",
+          "Geführter Modus: acht Schritte durch deine Frage, von der Prüfung der Fragestellung bis zum Arbeitsblatt.",
         ] as string[],
       } as Record<string, string[]>,
       moreTitle: "Weitere Tools",
@@ -152,8 +152,8 @@ export const siteCopy = {
       sub: "Vier Schritte, und bei jedem entscheidest du.",
       items: [
         {
-          title: "Fall eingeben",
-          text: "Als Satz auf Deutsch oder Englisch, als PICO oder gleich der ganze Fall samt Aufgabenblatt. Dann wählst du die Datenbanken.",
+          title: "Frage eingeben",
+          text: "Als Satz auf Deutsch oder Englisch, am besten mit Population, Intervention, Vergleich und Outcome, oder als PICO. Dann wählst du die Datenbanken.",
         },
         {
           title: "String kopieren",
@@ -175,7 +175,7 @@ export const siteCopy = {
       items: [
         {
           title: "Läuft in deinem Browser",
-          text: "Dein Fall bleibt auf deinem Gerät. Das Tool lädt nur Teile des MeSH-Wörterbuchs nach, und die Trefferzählung in PubMed startest du selbst; sie schickt nur den fertigen String.",
+          text: "Deine Frage bleibt auf deinem Gerät. Das Tool lädt nur Teile des MeSH-Wörterbuchs nach, und die Trefferzählung in PubMed startest du selbst; sie schickt nur den fertigen String.",
         },
         {
           title: "Regelbasiert, ohne KI",

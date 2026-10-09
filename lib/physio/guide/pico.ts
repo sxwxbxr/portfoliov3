@@ -1,9 +1,10 @@
 /**
- * "PICO formulieren": a PICO table pre-filled from the student's case, and a
- * Fragestellung built from it. Rule-based. The student edits everything; an edit
- * is stored as an override, so a new analysis of the same case never clobbers it.
+ * "PICO formulieren": a PICO table pre-filled from the student's question, and a
+ * Fragestellung: the student's own question in a tidy form, or built from the table once a
+ * cell was edited. The student edits everything; an edit is stored as an override, so a new
+ * analysis of the same question never clobbers it.
  */
-import type { PicoInput } from "../search-string"
+import { caseSignals, type PicoInput } from "../search-string"
 import type { CaseReading, ReadConcept } from "./case-reading"
 
 export type PicoKey = "P" | "I" | "C" | "O"
@@ -19,9 +20,9 @@ export const PICO_FIELD: Record<PicoKey, keyof PicoInput> = {
 export interface PicoCell {
   /** Text for the table cell. */
   text: string
-  /** "typed": the student's own PICO field. "case": built from the case. "none": nothing found. */
-  source: "typed" | "case" | "none"
-  /** Parts the text was built from, for the "Bei deinem Fall" lines. */
+  /** "typed": the student's own PICO field. "question": built from the question. "none": nothing found. */
+  source: "typed" | "question" | "none"
+  /** Parts the text was built from, for the "Bei deiner Frage" lines. */
   basis: string[]
 }
 
@@ -119,19 +120,24 @@ function outcomeFromCase(r: CaseReading): { text: string; basis: string[] } {
     seen.add(k)
     items.push(s)
   }
+  // The student's own words first ("auf Schmerzen und Arbeitsfähigkeit"), then what the engine recognised.
+  if (r.outcomePhrase) for (const part of r.outcomePhrase.split(/\s*(?:,|;|\bund\b|\band\b)\s*/i)) if (part.trim().length >= 3) add(goalToOutcome(part.trim()))
   for (const g of r.goals) add(goalToOutcome(g.noun))
   for (const o of r.outcomes) add(shortLabel(o.label))
-  return { text: items.join(", "), basis: [...r.goals.map((g) => `${g.noun} ${g.verb}`), ...r.outcomes.map((o) => o.label)] }
+  return {
+    text: items.join(", "),
+    basis: [...(r.outcomePhrase ? [`«${r.outcomePhrase}»`] : []), ...r.goals.map((g) => `${g.noun} ${g.verb}`), ...r.outcomes.map((o) => o.label)],
+  }
 }
 
 export function suggestPico(reading: CaseReading, typed: PicoInput = {}): PicoSuggestion {
   const cell = (field: keyof PicoInput, built: { text: string; basis: string[] }): PicoCell => {
     const t = (typed[field] ?? "").trim()
     if (t) return { text: t, source: "typed", basis: [] }
-    return built.text ? { text: built.text, source: "case", basis: built.basis } : { text: "", source: "none", basis: [] }
+    return built.text ? { text: built.text, source: "question", basis: built.basis } : { text: "", source: "none", basis: [] }
   }
-  const intervention = reading.interventions.map(caseWord)
-  const comparison = reading.comparisons.map(caseWord)
+  const intervention = reading.interventions.map((c) => nominative(caseWord(c)))
+  const comparison = reading.comparisons.map((c) => nominative(caseWord(c)))
   return {
     P: cell("population", populationFromCase(reading)),
     I: cell("intervention", { text: joinUnd(intervention), basis: reading.interventions.map((c) => c.label) }),
@@ -164,6 +170,15 @@ export function dativeify(text: string): string {
   let out = text
   for (const [nom, dat] of DATIVE_WORDS) {
     out = out.replace(new RegExp(`(?<![\\p{L}])${nom}(?![\\p{L}])`, "gu"), dat)
+  }
+  return out
+}
+
+/** The reverse for the table cells: a question says "im Vergleich zu Schmerzmitteln", the cell says "Schmerzmittel". */
+export function nominative(text: string): string {
+  let out = text
+  for (const [nom, dat] of DATIVE_WORDS) {
+    out = out.replace(new RegExp(`(?<![\\p{L}])${dat}(?![\\p{L}])`, "gu"), nom)
   }
   return out
 }
@@ -217,14 +232,36 @@ export interface PicoEdits {
   question?: string
 }
 
-export function resolvePico(suggestion: PicoSuggestion, edits: PicoEdits = {}): ResolvedPico {
+/**
+ * The student's own question, tidied: whitespace collapsed, first letter capital, one question mark at
+ * the end. Wording stays as written. Returns "" for empty input.
+ */
+export function refineQuestion(text: string): string {
+  const flat = text.replace(/\s+/g, " ").trim()
+  if (!flat) return ""
+  // Several sentences: the question is the one with the question mark ("Wie wirkt …? Nur RCTs." -> the first).
+  const sentences = flat.split(/(?<=[.?!])\s+/)
+  const pick = (sentences.find((s) => s.endsWith("?")) ?? sentences[0]).replace(/[.!:;,\s]+$/, "")
+  const body = pick.replace(/\?+$/, "").trim()
+  if (!body) return ""
+  const capped = `${body.charAt(0).toUpperCase()}${body.slice(1)}`
+  return caseSignals(pick).question ? `${capped}?` : capped
+}
+
+/**
+ * `own`: the student's question when it is a real question (not a pasted case). While no cell is
+ * edited, the Fragestellung is this question in tidy form; an edited cell rebuilds it from the table.
+ */
+export function resolvePico(suggestion: PicoSuggestion, edits: PicoEdits = {}, own?: string | null): ResolvedPico {
   const cells = {} as Record<PicoKey, ResolvedCell>
   for (const k of PICO_KEYS) {
     const edit = edits.cells?.[k]
     const s = suggestion[k]
     cells[k] = { text: edit !== undefined ? edit : s.text, suggested: s.text, edited: edit !== undefined, source: s.source, basis: s.basis }
   }
-  const suggestedQuestion = buildFragestellung({ P: cells.P.text, I: cells.I.text, C: cells.C.text, O: cells.O.text })
+  const anyEdited = PICO_KEYS.some((k) => cells[k].edited)
+  const refined = own ? refineQuestion(own) : ""
+  const suggestedQuestion = refined && !anyEdited ? refined : buildFragestellung({ P: cells.P.text, I: cells.I.text, C: cells.C.text, O: cells.O.text })
   const q = edits.question
   return {
     cells,

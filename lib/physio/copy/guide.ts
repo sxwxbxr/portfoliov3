@@ -11,13 +11,13 @@ export const guideCopy = {
 
   toggle: {
     label: "Geführter Modus",
-    hintOff: "Führt dich in acht Schritten durch deinen Fall.",
+    hintOff: "Führt dich in acht Schritten von der Fragestellung bis zum Arbeitsblatt.",
     hintOn: "Läuft. Du arbeitest normal im Tool weiter.",
   },
 
   invite: {
-    title: "Neu hier? Spiel deinen Fall Schritt für Schritt durch.",
-    body: "Acht Schritte vom Fall bis zum Arbeitsblatt: PICO, Ein- und Ausschlusskriterien, Suchkomponenten, Begriffe, Suchstring, Treffer. Die Hinweise beziehen sich auf deinen Fall, und du arbeitest dabei normal im Tool.",
+    title: "Neu hier? Geh deine Fragestellung Schritt für Schritt durch.",
+    body: "Acht Schritte von der Fragestellung bis zum Arbeitsblatt: Frage prüfen, PICO, Ein- und Ausschlusskriterien, Suchkomponenten, Begriffe, Suchstring, Treffer. Die Hinweise beziehen sich auf deine Frage, und du arbeitest dabei normal im Tool.",
     start: "Anleitung starten",
     later: "Nicht jetzt",
   },
@@ -25,7 +25,7 @@ export const guideCopy = {
   panel: {
     label: "Geführter Modus",
     stepOf: (i: number, n: number) => `Schritt ${i} von ${n}`,
-    yourCase: "Bei deinem Fall:",
+    yourCase: "Bei deiner Frage:",
     yourTurn: "Jetzt du:",
     next: "Weiter",
     prev: "Zurück",
@@ -40,11 +40,11 @@ export const guideCopy = {
     jumpTo: (i: number, title: string) => `Schritt ${i}: ${title}`,
     progress: "Fortschritt",
     announce: (i: number, n: number, title: string) => `Schritt ${i} von ${n}: ${title}`,
-    noObservations: "Sobald der Fall ausgewertet ist, stehen hier Beobachtungen dazu.",
+    noObservations: "Sobald die Frage ausgewertet ist, stehen hier Beobachtungen dazu.",
     privacy:
-      "Fall, Angaben und Arbeitsblatt bleiben in deinem Browser. Gemerkt werden nur der aktuelle Schritt und ob die Anleitung an ist.",
+      "Frage, Angaben und Arbeitsblatt bleiben in deinem Browser. Gemerkt werden nur der aktuelle Schritt und ob die Anleitung an ist.",
     demoNotice:
-      "Demo: Der geführte Modus läuft hier mit den Beispielfällen. Mit dem Abo spielst du deinen eigenen Fall und deinen eigenen String durch.",
+      "Demo: Der geführte Modus läuft hier mit den Beispielfragen. Mit dem Abo spielst du deine eigene Frage und deinen eigenen String durch.",
     demoLink: "Mit dem Abo freischalten",
   },
 
@@ -54,20 +54,21 @@ export const guideCopy = {
 
   suchstring: {
     steps: {
-      case: {
-        title: "Fall lesen",
+      question: {
+        title: "Fragestellung prüfen",
         body: [
-          "Lies den Fall zuerst selbst und markiere, was für die Suche zählt: Wer ist die Person, was fehlt ihr, was soll sich ändern?",
-          "Das Tool liest mit und zeigt dir im Ergebnis, was es erkannt hat. Stimmt etwas nicht, ändere den Text oder korrigiere die Komponenten später.",
+          "Eine gute Frage nennt vier Dinge: Population (wer?), Intervention (was wird gemacht?), Vergleich (womit wird verglichen?) und Outcome (was soll sich ändern?). Der Vergleich darf fehlen, die anderen drei nicht.",
+          "Das Tool liest deine Frage und zeigt dir hier, was es erkannt hat. Fehlt ein Teil, schreib die Frage um und erstelle den String neu.",
         ],
-        actionDemo: "Der Fall von Herrn Müller ist geladen. Lies ihn und vergleiche ihn mit der Liste. Unter «Beispiel» wählst du einen anderen Fall.",
-        actionFull: "Füge deinen Fall (oder das ganze Aufgabenblatt) bei «Fall oder Fragestellung» ein und klick auf «Suchstring erstellen».",
+        actionDemo: "Die Beispielfrage ist geladen. Vergleiche sie mit der Liste: Hat das Tool alle Teile gefunden? Unter «Beispiel» wählst du eine andere Frage.",
+        actionFull: "Schreib deine Frage bei «Fragestellung» und klick auf «Suchstring erstellen». Fehlt in der Liste ein Teil, ergänze ihn in der Frage.",
+        actionCase: "Dein Text liest sich wie eine Fallbeschreibung. Formuliere daraus im nächsten Schritt eine Frage und erstelle den String damit neu.",
       },
       pico: {
         title: "PICO formulieren",
         body: [
           "PICO zerlegt die Frage in vier Teile: Population (wer?), Intervention (was wird gemacht?), Comparison (womit wird verglichen?) und Outcome (was soll sich ändern?).",
-          "Die Tabelle ist aus deinem Fall vorausgefüllt. Das sind Vorschläge: Ändere jede Zelle, bis sie stimmt. Die Fragestellung baut sich aus der Tabelle auf und lässt sich ebenfalls ändern.",
+          "Die Tabelle ist aus deiner Frage vorausgefüllt. Das sind Vorschläge: Ändere jede Zelle, bis sie stimmt. Die Fragestellung ist deine eigene Frage in sauberer Form. Änderst du eine Zelle, baut sie sich aus der Tabelle neu auf.",
         ],
         action: "Prüfe jede Zelle und die Fragestellung. Population, Intervention und Outcome müssen ausgefüllt sein.",
       },
@@ -124,10 +125,22 @@ export const guideCopy = {
 
     obs: {
       empty: "Noch keine Auswertung. Starte sie mit «Suchstring erstellen».",
-      busy: "Dein Fall wird gerade ausgewertet.",
+      busy: "Deine Frage wird gerade ausgewertet.",
 
-      // case
-      person: (parts: string[]) => parts.join(", "),
+      // question
+      caseLike:
+        "Dein Text liest sich wie eine Fallbeschreibung. Das Tool wertet ihn trotzdem aus, aus einer Frage wird der String aber zuverlässiger. Formuliere im nächsten Schritt eine Frage nach PICO und erstelle den String damit neu.",
+      allParts: "Population, Intervention und Outcome stehen in der Frage. Das ist die Grundlage für einen brauchbaren String.",
+      missingPopulation: "Es fehlt eine Population: Wer ist gemeint? Nenne die Personengruppe oder die Erkrankung, zum Beispiel «Menschen mit Kniearthrose».",
+      missingIntervention: "Es fehlt eine Intervention: Was wird gemacht oder untersucht? Zum Beispiel «Krafttraining» oder «Manuelle Therapie».",
+      missingOutcome: "Es fehlt ein Outcome: Was soll sich verbessern? Zum Beispiel «auf die Schmerzen» oder «auf die Beweglichkeit».",
+      populationLabel: "Population (P)",
+      interventionLabel: "Intervention (I)",
+      comparisonLabel: "Vergleich (C)",
+      outcomeLabel: "Outcome (O)",
+      outcomePhrase: (phrase: string) => `In der Frage: «${phrase}»`,
+      noAgeStated: "In der Frage steht kein Alter. Das Tool nimmt deshalb keines an und schlägt keinen Altersfilter vor.",
+      person:  (parts: string[]) => parts.join(", "),
       personLabel: "Person",
       age: (years: number | null, group: string | null, evidence: string) =>
         years !== null ? `${years} Jahre («${evidence}»), im MeSH die Altersgruppe «${group}»` : `«${evidence}», im MeSH die Altersgruppe «${group}»`,
@@ -136,52 +149,49 @@ export const guideCopy = {
       sexLabel: "Geschlecht",
       sexNote: "Alter und Geschlecht sind im Tool nur als optionale Filter vorgeschlagen, weil sie die Treffer stark einschränken.",
       groups: (items: Array<{ matched: string; label: string }>) => items.map((i) => (i.matched && i.matched !== i.label ? `«${i.matched}» als ${i.label}` : i.label)).join(", "),
-      groupsLabel: "Beruf / Gruppe",
+      groupsLabel: "Gruppe",
       conditions: (items: Array<{ matched: string; label: string }>) => items.map((i) => (i.matched && i.matched !== i.label ? `${i.label} (aus «${i.matched}»)` : i.label)).join(", "),
-      conditionsLabel: "Beschwerden",
+      conditionsLabel: "Erkrankung",
       duration: (d: string, q: string | null) => `«${d}»${q ? `, im Text steht «${q}»` : ""}`,
       durationLabel: "Dauer",
       radiatingLabel: "Ausstrahlung",
       radiating: "Die Schmerzen strahlen aus. Das kann für die Population wichtig sein, das Tool wertet es aber nicht aus.",
       interventions: (items: Array<{ matched: string; label: string }>) => items.map((i) => `${i.label}${i.matched && i.matched !== i.label ? ` (aus «${i.matched}»)` : ""}`).join(", "),
-      interventionsLabel: "Interventionsidee",
-      noIntervention: "Das Tool hat keine Intervention erkannt. Schreib sie im Fall deutlicher hin («Wirkung von …») oder füg sie später als Komponente hinzu.",
       goals: (items: Array<{ noun: string; verb: string }>) => items.map((g) => `${g.noun} ${g.verb}`).join(", "),
       goalsLabel: "Ziele",
       outcomes: (items: Array<{ matched: string; label: string }>) => items.map((i) => `${i.label}${i.matched ? ` (aus «${i.matched}»)` : ""}`).join(", "),
-      outcomesLabel: "Outcome-Komponenten",
       comparisons: (items: Array<{ matched: string; label: string }>) => items.map((i) => `${i.label}${i.matched && i.matched !== i.label ? ` (aus «${i.matched}»)` : ""}`).join(", "),
-      comparisonsLabel: "Vergleichshinweis",
-      noComparison: "Im Fall steht kein Vergleich. Du entscheidest selbst, womit du vergleichst (zum Beispiel übliche Behandlung oder keine Behandlung).",
-      ignored: (items: string[]) => `${items.map((i) => `«${i.length > 70 ? `${i.slice(0, 69)}…` : i}»`).join(", ")}. Aufgabenanweisungen liest das Tool nicht als Fall.`,
+      noComparison: "Kein Vergleich genannt. Das ist erlaubt, die Frage wirkt dann offener. Willst du vergleichen, nenne womit, zum Beispiel «im Vergleich zu üblicher Behandlung».",
+      ignored: (items: string[]) => `${items.map((i) => `«${i.length > 70 ? `${i.slice(0, 69)}…` : i}»`).join(", ")}. Aufgabenanweisungen liest das Tool nicht als Teil der Frage.`,
       ignoredLabel: "Überlesen",
       unmapped: (words: string[]) => `${words.join(", ")}. Wenn sie dir wichtig sind, übernimm sie unter «Nicht übernommene Wörter» auf Englisch als Stichwort.`,
       unmappedLabel: "Nicht übernommen",
       nothingFound: "Aus dem Text konnte das Tool keine Komponente erkennen. Schreib die Fragestellung mit Hauptwörtern oder füll die PICO-Felder aus.",
 
       // pico
-      picoCell: (basis: string[], source: "typed" | "case" | "none", edited: boolean) =>
+      picoCell: (basis: string[], source: "typed" | "question" | "none", edited: boolean) =>
         edited
           ? "Von dir geändert."
           : source === "typed"
             ? "Aus deiner eigenen PICO-Angabe."
-            : source === "case" && basis.length
+            : source === "question" && basis.length
               ? `Aus: ${basis.join("; ")}.`
-              : "Im Fall nicht gefunden. Schreib es selbst in die Tabelle.",
-      picoEvidence: (sentence: string) => `Im Fall: «${sentence}»`,
-      picoCMissing: "Der Vergleich ist leer. Im Fall steht keiner: Entscheide, womit du vergleichst. Die Frage geht auch ohne, dann wirkt sie offener.",
+              : "In der Frage nicht gefunden. Schreib es selbst in die Tabelle.",
+      picoEvidence: (sentence: string) => `In der Frage: «${sentence}»`,
+      picoCMissing: "Der Vergleich ist leer. In der Frage steht keiner: Entscheide, womit du vergleichst. Die Frage geht auch ohne, dann wirkt sie offener.",
       picoMissing: (keys: string[]) => `Noch leer: ${keys.join(", ")}. Ohne diese Teile ist die Frage nicht vollständig.`,
       picoOk: "Population, Intervention und Outcome sind ausgefüllt.",
       picoQuestionEdited: "Du hast die Fragestellung selbst geschrieben. Sie folgt der Tabelle nicht mehr automatisch.",
       picoGrammar: "Die Grammatik der Fragestellung prüfst du selbst: Das Tool setzt nur die Wörter aus der Tabelle ein.",
 
       // criteria
-      criteriaCount: (inc: number, exc: number) => `${inc} Einschluss- und ${exc} Ausschlusskriterien aus deinem Fall vorgeschlagen.`,
+      criteriaCount: (inc: number, exc: number) => `${inc} Einschluss- und ${exc} Ausschlusskriterien aus deiner Frage vorgeschlagen.`,
       criteriaScreeningOnly: (n: number) => `${n} Kriterien wendest du erst beim Screening an, weil kein Filter dafür taugt.`,
       criteriaFilterMissing: (items: string[]) => `Als Kriterium behalten, aber im Filter nicht gesetzt: ${items.join(", ")}.`,
       criteriaFilterSet: (items: string[]) => `Im Filter gesetzt: ${items.join(", ")}.`,
       criteriaNone: "Alle Kriterien sind gestrichen. Behalte mindestens eines und begründe es.",
-      criteriaDemographics: (parts: string[]) => `Das Tool schlägt ${parts.join(" und ")} als Filter vor (aus dem Fall), standardmässig aus. Das schliesst Studien ohne diese Angaben aus.`,
+      criteriaNoAge: "In der Frage steht kein Alter, deshalb schlägt das Tool keine Altersgrenze vor. Entscheide selbst, ob du die Altersgruppe einschränkst, und begründe es.",
+      criteriaDemographics: (parts: string[]) => `Das Tool schlägt ${parts.join(" und ")} als Filter vor (aus deiner Frage), standardmässig aus. Das schliesst Studien ohne diese Angaben aus.`,
       criteriaDatabases: (labels: string[]) => `Gesucht wird in: ${labels.join(", ")}.`,
 
       // components

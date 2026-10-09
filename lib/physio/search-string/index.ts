@@ -2,7 +2,7 @@
  * Public surface of the search-string engine (pure TypeScript, runs in the
  * browser, nothing here talks to a server).
  *
- *   analyzeAsync(input)       question, whole case or task sheet -> concepts (curated + MeSH index), candidates, notices
+ *   analyzeAsync(input)       question (a pasted case or task sheet still works) -> concepts (curated + MeSH index), candidates, notices
  *   analyze(input)            the same with the curated terminology only (synchronous, offline)
  *   createModel(analysis)     editable model
  *   edit.*                    removeConcept, moveConcept, toggleExplode, addFreeText, ...
@@ -31,6 +31,8 @@ export {
   treeLetters,
 } from "./mesh-concepts"
 export { extractDemographics, ageGroupFor } from "./demographics"
+export { looksLikeCase, caseSignals } from "./question"
+export type { CaseSignals } from "./question"
 export { germanForms, isNoiseWord } from "./german"
 export { PUBMED_TOOL, createPubMedCounter, countRows, getPubMedCounter, pubmedSearchUrl, PubMedError } from "./pubmed"
 export type { CountRow, PubMedCounter, PubMedErrorCode } from "./pubmed"
@@ -88,5 +90,5 @@ export interface ExampleTask {
 
 export const EXAMPLES = examplesJson as ExampleTask[]
 
-/** The OST student string with typical errors (Herr Müller case). */
+/** The OST student string with typical errors (Herr Müller example). */
 export const STUDENT_SEARCH_STRING = EXAMPLES.find((e) => e.id === "mueller")?.studentSearchString ?? ""

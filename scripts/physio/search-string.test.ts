@@ -33,6 +33,8 @@ import {
   applyEdits,
   autoFix,
   buildQuery,
+  looksLikeCase,
+  caseSignals,
   checkFreeText,
   createModel,
   exportJson,
@@ -50,10 +52,23 @@ import {
   toggleExplode,
   toggleStudyType,
   type LintFinding,
+  type PicoInput,
 } from "../../lib/physio/search-string"
 import { createMeshIndex, type MeshIndex } from "../../lib/physio/search-string/mesh-index"
 
-const MUELLER = EXAMPLES.find((e) => e.id === "mueller")!
+/**
+ * Engine regression fixture: the question with explicit PICO fields that the exact-string tests below
+ * (Cochrane, CINAHL, Embase, export) are pinned to. Independent of the shipped examples.
+ */
+const MUELLER: { text: string; pico: PicoInput } = {
+  text: "Wie wirkt Rückentraining im Vergleich zu Schmerzmitteln bei Büroangestellten mit chronischen Rückenschmerzen im LWS-Bereich auf die Arbeitsfähigkeit?",
+  pico: {
+    population: "Mann, mittleres Alter, wiederkehrende Rückenschmerzen nach langem Sitzen, ausstrahlend in die Beine",
+    intervention: "Rückentraining",
+    comparison: "Schmerzmittel",
+    outcome: "Schmerzen, Arbeitsfähigkeit",
+  },
+}
 
 function balanced(s: string): boolean {
   let depth = 0
@@ -289,9 +304,46 @@ describe("every example", () => {
     })
   }
 
-  it("ships 4 to 8 examples, the whole Herr Müller case first", () => {
+  it("ships 4 to 8 examples, the Herr Müller question first", () => {
     assert.ok(EXAMPLES.length >= 4 && EXAMPLES.length <= 8)
-    assert.equal(EXAMPLES[0].id, "mueller-fall")
+    assert.equal(EXAMPLES[0].id, "mueller")
+    assert.equal(EXAMPLES.find((e) => e.id === "mueller-fall"), undefined)
+  })
+
+  it("every example is a question, not a case, and none needs PICO fields", () => {
+    for (const ex of EXAMPLES) {
+      assert.equal(looksLikeCase(ex.text), false, ex.id)
+      assert.ok(ex.text.length <= 220, `${ex.id}: a question, not a paragraph`)
+      assert.ok(/[?]|Wirkung von|nur randomisierte/i.test(ex.text), `${ex.id}: formulated as a question`)
+      assert.ok(!/(?:Herr|Frau) [A-ZÄÖÜ]|Jahre alt|Anamnese/.test(ex.text), `${ex.id}: no case wording`)
+      assert.equal(ex.pico, undefined, `${ex.id}: the question stands alone`)
+    }
+  })
+
+  it("the Herr Müller question finds all four PICO parts and a string with four components", () => {
+    const ex = EXAMPLES[0]
+    const a = analyze({ text: ex.text })
+    const blocks = new Set(a.concepts.map((c) => c.block))
+    for (const b of ["population", "intervention", "comparison", "outcome"] as const) assert.ok(blocks.has(b), b)
+    const built = buildQuery(createModel(a))
+    assert.equal(built.components.length, 4, "office workers, back pain, exercise, work ability; the comparison is off by default")
+    assert.ok(built.query.includes('"Low Back Pain"[Mesh]') && built.query.includes('"Exercise Therapy"[Mesh]'))
+    assert.ok(built.query.includes('"Work Capacity Evaluation"[Mesh]') && built.query.includes('"office worker*"[tiab]'))
+  })
+
+  it("the new questions produce sensible components", () => {
+    const want: Record<string, string[]> = {
+      schlaganfall: ["Stroke", "Walking Speed"],
+      vkb: ["Anterior Cruciate Ligament Injuries", "Resistance Training", "Return to Sport", "Athletes"],
+      fibromyalgie: ["Fibromyalgia", "Hydrotherapy", "Quality of Life"],
+    }
+    for (const [id, headings] of Object.entries(want)) {
+      const ex = EXAMPLES.find((e) => e.id === id)!
+      const q = buildQuery(createModel(analyze({ text: ex.text }), ex.filters)).query
+      for (const h of headings) assert.ok(q.includes(`"${h}"[Mesh]`) || q.includes(`${h}[Mesh]`), `${id}: ${h}`)
+    }
+    const stroke = buildQuery(createModel(analyze({ text: EXAMPLES.find((e) => e.id === "schlaganfall")!.text }))).query
+    assert.ok(!stroke.includes("Adult"), "no age group invented from the question")
   })
 })
 
@@ -601,7 +653,9 @@ function diskIndex(log: string[] = []): MeshIndex {
   return createMeshIndex({ fetch: fetchFromDisk })
 }
 
-const FULL_CASE = EXAMPLES.find((e) => e.id === "mueller-fall")!.text
+/** A pasted case (not shipped as an example any more): the pipeline still cleans and reads it. */
+const FULL_CASE =
+  "Herr Müller, 45 Jahre, Bürokaufmann. Chronische Rückenschmerzen im unteren Rückenbereich (LWS). Mehrere kurze Krankheitsausfälle in den letzten sechs Monaten aufgrund von Rückenschmerzen. Anamnese: seit etwa einem Jahr wiederkehrende Rückenschmerzen, vor allem nach langen Sitzphasen im Büro, strahlen gelegentlich in die Beine aus. Verschiedene Schmerzmittel brachten nur kurzfristige Linderung. Ein Freund hat ihm Rückentraining empfohlen. Er sucht ein Trainingsprogramm, um seine Rückenschmerzen zu reduzieren und seine Arbeitsfähigkeit zu verbessern."
 const EMPTY_TERMINOLOGY: Terminology = { version: "test", reviewed: false, concepts: [] }
 
 async function run(text: string, log: string[] = []): Promise<AnalysisResult> {
@@ -905,6 +959,65 @@ describe("every example, with the index", () => {
       assert.deepEqual(lintQuery(built.query).filter((f) => f.severity !== "info"), [])
     })
   }
+})
+
+describe("looksLikeCase", () => {
+  const CASE =
+    "Herr Müller, 45 Jahre, Bürokaufmann. Chronische Rückenschmerzen im unteren Rückenbereich (LWS). Mehrere kurze Krankheitsausfälle in den letzten sechs Monaten aufgrund von Rückenschmerzen. Anamnese: seit etwa einem Jahr wiederkehrende Rückenschmerzen, vor allem nach langen Sitzphasen im Büro, strahlen gelegentlich in die Beine aus. Verschiedene Schmerzmittel brachten nur kurzfristige Linderung. Ein Freund hat ihm Rückentraining empfohlen. Er sucht ein Trainingsprogramm, um seine Rückenschmerzen zu reduzieren und seine Arbeitsfähigkeit zu verbessern."
+
+  it("recognises a whole case", () => {
+    assert.equal(looksLikeCase(CASE), true)
+    assert.deepEqual(caseSignals(CASE).markers.sort(), ["age", "anamnese", "patient"])
+  })
+
+  it("recognises short cases by their patient markers", () => {
+    assert.equal(looksLikeCase("Frau Meier, 70 Jahre alt. Kniearthrose."), true)
+    assert.equal(looksLikeCase("Eine 72-jährige Patientin mit Kniearthrose. Sie möchte wieder gehen können."), true)
+  })
+
+  it("recognises a task sheet around a case", () => {
+    const sheet = `Übung 3
+1. Formulieren Sie eine Fragestellung nach dem PICO-Schema.
+Herr Müller hat seit einem Jahr Rückenschmerzen.`
+    assert.equal(looksLikeCase(sheet), true)
+  })
+
+  it("recognises a long text without any question", () => {
+    const prose = "Die Patienten kommen mit Schmerzen in die Praxis. Manche haben schon viel ausprobiert. Andere wollen etwas Neues. Es gibt viele Möglichkeiten, aber wenig Klarheit über die Wirkung. " + "Die Beschwerden dauern oft lange an und schränken den Alltag ein. ".repeat(3)
+    assert.equal(looksLikeCase(prose), true)
+  })
+
+  it("lets every kind of question through", () => {
+    for (const q of [
+      "Wie wirkt Rückentraining im Vergleich zu Schmerzmitteln bei Büroangestellten mit chronischen Rückenschmerzen im unteren Rücken auf Schmerzen und Arbeitsfähigkeit?",
+      "Reduziert Gleichgewichtstraining das Sturzrisiko bei Menschen mit Morbus Parkinson im Vergleich zu keiner Intervention?",
+      "In patients with chronic neck pain, is manual therapy more effective than exercise therapy for improving range of motion?",
+      "Wie wirkt Krafttraining bei Patienten mit Kniearthrose?",
+      "Wirkung von Hydrotherapie bei Fibromyalgie, nur randomisierte kontrollierte Studien",
+      "Krafttraining Kniearthrose",
+      "P: Sportler nach vorderem Kreuzbandriss. I: Krafttraining. O: Muskelkraft und Rezidiv",
+      "Bei Kindern von 6 bis 12 Jahren mit Asthma: Welche Wirkung hat Schwimmen auf die Lungenfunktion? Ich suche systematische Reviews.",
+    ]) {
+      assert.equal(looksLikeCase(q), false, q)
+    }
+  })
+
+  it("does not read a duration as an age and ignores empty input", () => {
+    assert.equal(looksLikeCase("Seit 3 Jahren Schmerzen, vor 2 Jahren operiert. Was hilft?"), false)
+    assert.equal(looksLikeCase(""), false)
+    assert.equal(looksLikeCase("   "), false)
+  })
+
+  it("never claims a shipped example is a case", () => {
+    for (const ex of EXAMPLES) assert.equal(looksLikeCase(ex.text), false, ex.id)
+  })
+
+  it("still analyses a pasted case into the same components as before", () => {
+    const a = analyze({ text: CASE })
+    const ids = a.concepts.map((c) => c.id)
+    for (const id of ["low-back-pain", "back-exercise", "work-ability", "office-workers"]) assert.ok(ids.includes(id), id)
+    assert.ok(a.filterSuggestions.some((f) => f.kind === "age"))
+  })
 })
 
 describe("demographics", () => {

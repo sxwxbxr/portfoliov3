@@ -341,10 +341,10 @@ function PrintSheet({ ws }: { ws: Worksheet }) {
       <p className="meta">Suchstring-Generator, Geführter Modus, physio.sweber.dev · {ws.date}</p>
       <p className="draft">{WORKSHEET_DRAFT_NOTE}</p>
 
-      {ws.caseText && (
+      {ws.questionText && (
         <>
-          <h2>1. Fall</h2>
-          <p>{ws.caseText}</p>
+          <h2>1. Fragestellung</h2>
+          <p>{ws.questionText}</p>
         </>
       )}
 
@@ -362,7 +362,7 @@ function PrintSheet({ ws }: { ws: Worksheet }) {
         </tbody>
       </table>
       <p>
-        <strong>Fragestellung:</strong> {ws.question || "–"}
+        <strong>Überarbeitete Fragestellung:</strong> {ws.question || "–"}
       </p>
 
       <h2>3. Ein- und Ausschlusskriterien</h2>

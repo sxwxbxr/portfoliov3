@@ -1,8 +1,9 @@
 /**
- * "Ein- und Ausschlusskriterien": rule-based suggestions from the student's case,
+ * "Ein- und Ausschlusskriterien": rule-based suggestions from the student's question,
  * each with a one-line reason and a note whether it can become a filter in the
  * search or is applied when screening the hits. Nothing here claims anything about
- * the literature; the reasons point back to the case or to the question.
+ * the literature; the reasons point back to the question. Nothing is assumed that the question does not state (no age
+ * limit without an age or an age group in the question).
  */
 import type { StudyTypeId } from "../search-string"
 import type { CaseReading } from "./case-reading"
@@ -63,13 +64,13 @@ export function suggestCriteria({ reading: r, pico, studyTypes, now }: CriteriaI
 
   // Population: age
   if (years !== null) {
-    const who = occupation ? `${years} Jahre alt und arbeitet als «${occupation.matched || occupation.label}»` : `${years} Jahre alt`
+    const who = occupation ? `Deine Frage nennt ${years} Jahre und «${occupation.matched || occupation.label}»` : `Deine Frage nennt ${years} Jahre`
     if (adultWorking) {
       out.push({
         id: "age",
         kind: "include",
         text: "Erwachsene im Erwerbsalter (18 bis 65 Jahre)",
-        reason: `Die Person im Fall ist ${who}. Studien mit Kindern oder Hochbetagten passen schlecht zu ihr.`,
+        reason: `${who}. Studien mit Kindern oder Hochbetagten passen schlecht dazu.`,
         where: "both",
         filter: "age",
         note: "Als Altersfilter schränkt das die Treffer stark ein, weil nicht jede Studie ein Alter verschlagwortet. Meist prüfst du es besser beim Screening.",
@@ -79,7 +80,7 @@ export function suggestCriteria({ reading: r, pico, studyTypes, now }: CriteriaI
         id: "age",
         kind: "include",
         text: "Personen ab 65 Jahren",
-        reason: `Die Person im Fall ist ${who}.`,
+        reason: `${who}.`,
         where: "both",
         filter: "age",
       })
@@ -88,7 +89,7 @@ export function suggestCriteria({ reading: r, pico, studyTypes, now }: CriteriaI
         id: "age",
         kind: "include",
         text: years < 13 ? "Kinder (bis 12 Jahre)" : "Jugendliche (13 bis 18 Jahre)",
-        reason: `Die Person im Fall ist ${who}.`,
+        reason: `${who}.`,
         where: "both",
         filter: "age",
       })
@@ -99,7 +100,7 @@ export function suggestCriteria({ reading: r, pico, studyTypes, now }: CriteriaI
       id: "age",
       kind: "include",
       text: g.label,
-      reason: `Der Fall nennt «${g.matched || g.label}».`,
+      reason: `Deine Frage nennt «${g.matched || g.label}».`,
       where: "both",
       filter: "age",
     })
@@ -115,24 +116,24 @@ export function suggestCriteria({ reading: r, pico, studyTypes, now }: CriteriaI
     if (plural) text = [qNom, nonspecific ? (qNom ? "unspezifische" : "Unspezifische") : null, plural].filter(Boolean).join(" ")
     else text = q ? `${c.label}, ${q}` : c.label
     const parts: string[] = []
-    if (r.duration) parts.push(`Der Fall nennt Beschwerden «${r.duration}»${q ? ` und das Wort «${q}»` : ""}.`)
-    else if (q) parts.push(`Der Fall nennt «${q}».`)
-    else parts.push(`Der Fall nennt «${c.matched || c.label}».`)
-    if (nonspecific) parts.push("Eine spezifische Diagnose steht nicht im Fall.")
+    if (r.duration) parts.push(`Deine Frage nennt Beschwerden «${r.duration}»${q ? ` und das Wort «${q}»` : ""}.`)
+    else if (q) parts.push(`Deine Frage nennt «${q}».`)
+    else parts.push(`Deine Frage nennt «${c.matched || c.label}».`)
+    if (nonspecific) parts.push("Eine spezifische Diagnose steht nicht in der Frage.")
     out.push({
       id: `condition-${c.id}`,
       kind: "include",
       text,
       reason: parts.join(" "),
       where: "screening",
-      note: nonspecific && r.radiating ? "Im Fall strahlen die Schmerzen in die Beine aus. Entscheide selbst, ob du Studien mit Nervenwurzelbeschwerden einschliesst oder ausschliesst, und begründe es." : undefined,
+      note: nonspecific && r.radiating ? "Die Schmerzen strahlen in die Beine aus. Entscheide selbst, ob du Studien mit Nervenwurzelbeschwerden einschliesst oder ausschliesst, und begründe es." : undefined,
     })
     if (nonspecific) {
       out.push({
         id: `x-specific-${c.id}`,
         kind: "exclude",
         text: "Spezifische Ursachen (zum Beispiel Fraktur, Tumor, Infektion)",
-        reason: "Im Fall steht keine solche Diagnose, und bei einer spezifischen Ursache stellt sich eine andere Behandlungsfrage.",
+        reason: "In der Frage steht keine solche Diagnose, und bei einer spezifischen Ursache stellt sich eine andere Behandlungsfrage.",
         where: "screening",
       })
     }
@@ -144,7 +145,7 @@ export function suggestCriteria({ reading: r, pico, studyTypes, now }: CriteriaI
       id: "x-children",
       kind: "exclude",
       text: "Kinder und Jugendliche (unter 18 Jahre)",
-      reason: `Die Person im Fall ist ${years} Jahre alt, Studien mit Kindern passen nicht zur Population.`,
+      reason: `Deine Frage nennt ${years} Jahre, Studien mit Kindern passen nicht zur Population.`,
       where: "screening",
     })
     if (hasWork) {
@@ -166,7 +167,7 @@ export function suggestCriteria({ reading: r, pico, studyTypes, now }: CriteriaI
       id: "intervention",
       kind: "include",
       text: active ? `Aktive Intervention: ${iText}` : `Intervention: ${iText}`,
-      reason: `Das ist die Intervention aus deiner PICO-Frage${r.interventions.length ? ", und im Fall wird sie genannt" : ""}.`,
+      reason: `Das ist die Intervention aus deiner PICO-Tabelle${r.interventions.length ? ", und sie steht in deiner Frage" : ""}.`,
       where: "screening",
     })
     if (active) {
@@ -187,7 +188,7 @@ export function suggestCriteria({ reading: r, pico, studyTypes, now }: CriteriaI
       id: "comparison",
       kind: "include",
       text: `Vergleichsgruppe: ${cText}`,
-      reason: `Deine PICO-Frage vergleicht mit ${dativeify(cText)}. Studien ohne diese Vergleichsgruppe beantworten sie nicht direkt.`,
+      reason: `Deine Frage vergleicht mit ${dativeify(cText)}. Studien ohne diese Vergleichsgruppe beantworten sie nicht direkt.`,
       where: "screening",
       note: "Der Vergleich steht meist nicht im Suchstring, weil er die Treffer zu stark einschränkt. Du prüfst ihn beim Screening.",
     })
@@ -200,7 +201,7 @@ export function suggestCriteria({ reading: r, pico, studyTypes, now }: CriteriaI
       id: "outcome",
       kind: "include",
       text: `Zielgrössen: ${oText}`,
-      reason: r.goals.length ? "Das sind die Ziele, die der Fall nennt." : "Das sind die Zielgrössen aus deiner PICO-Frage.",
+      reason: "Das sind die Zielgrössen aus deiner Frage.",
       where: "screening",
     })
   }
@@ -245,7 +246,7 @@ export function suggestCriteria({ reading: r, pico, studyTypes, now }: CriteriaI
     id: "humans",
     kind: "include",
     text: "Studien an Menschen",
-    reason: "Der Fall ist eine Person, Tierstudien beantworten die Frage nicht.",
+    reason: "Deine Frage gilt Menschen, Tierstudien beantworten sie nicht.",
     where: "filter",
     filter: "humans",
   })

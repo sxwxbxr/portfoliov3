@@ -9,7 +9,7 @@ import { DatabaseChips } from "./DatabasePanel"
 
 const t = ssCopy.question
 
-/** Long enough for a whole task sheet. */
+/** Generous, so a pasted task sheet still fits. */
 export const MAX_TEXT_LENGTH = 6000
 
 export const PICO_KEYS = ["population", "intervention", "comparison", "outcome", "studyType"] as const
@@ -19,7 +19,7 @@ export function picoFilledCount(pico: PicoInput): number {
 }
 
 interface CaseProps {
-  /** Demo: the case comes from the shipped examples and cannot be typed over. */
+  /** Demo: the question comes from the shipped examples and cannot be typed over. */
   locked: boolean
   exampleId: string
   onExample: (id: string) => void
@@ -64,7 +64,7 @@ export function QuestionPanel({ locked, exampleId, onExample, text, onText, data
   )
 
   return (
-    <section aria-label={t.textLabel} data-guide="ss-case" className="cast p-4 md:p-6">
+    <section aria-label={t.textLabel} data-guide="ss-question" className="cast p-4 md:p-6">
       <form onSubmit={submit} className="flex flex-col gap-4" noValidate>
         {locked ? (
           <div className="flex flex-col gap-1.5">
@@ -97,10 +97,15 @@ export function QuestionPanel({ locked, exampleId, onExample, text, onText, data
             rows={locked ? 3 : 5}
             maxLength={MAX_TEXT_LENGTH}
             placeholder={t.textPlaceholder}
-            aria-describedby={error ? `${uid}-error` : locked ? `${uid}-locked` : undefined}
+            aria-describedby={error ? `${uid}-error` : locked ? `${uid}-locked` : `${uid}-hint`}
             aria-invalid={error ? true : undefined}
             className="field w-full resize-y px-4 py-3 text-base leading-relaxed"
           />
+          {!locked && (
+            <p id={`${uid}-hint`} className="text-sm text-fg-muted">
+              {t.hint}
+            </p>
+          )}
           {locked && (
             <p id={`${uid}-locked`} className="text-sm text-fg-muted">
               {t.lockedBody}{" "}

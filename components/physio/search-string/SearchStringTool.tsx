@@ -10,6 +10,7 @@ import {
   STUDENT_SEARCH_STRING,
   analyzeAsync,
   createModel,
+  looksLikeCase,
   setDatabases,
   type AnalysisResult,
   type BuiltQuery,
@@ -25,6 +26,7 @@ import { getMeshIndex, type MeshMeta } from "@/lib/physio/search-string/mesh-ind
 import { GuideInvite, GuideToggle } from "@/components/physio/guide/GuideToggle"
 import { GuideProvider } from "@/components/physio/guide/GuideProvider"
 import { CriteriaPanel, LintFindingsPanel, PicoPanel, TermsPanel, WorksheetPanel } from "@/components/physio/guide/suchstring-panels"
+import { CaseNotice } from "./CaseNotice"
 import { ConceptsPanel } from "./ConceptsPanel"
 import { FilterPanel, activeFilterNames } from "./DatabasePanel"
 import { Disclosure, SectionsProvider } from "./Disclosure"
@@ -36,7 +38,7 @@ import { ComponentTables, Differences, ExportList, otherDatabases } from "./Resu
 import { joinNames } from "./result-utils"
 
 interface Run {
-  /** The case as it was analysed (the guided mode reads this, not what is typed right now). */
+  /** The question as it was analysed (the guided mode reads this, not what is typed right now). */
   text: string
   pico: PicoInput
   analysis: AnalysisResult
@@ -59,7 +61,7 @@ async function makeRun(text: string, pico: PicoInput, databases: DatabaseId[], f
   }
 }
 
-/** Quiet tabs: the case is the main thing on the page, the second tab is a side door. */
+/** Quiet tabs: the question is the main thing on the page, the second tab is a side door. */
 const TAB_CLASS =
   "-mb-px min-h-11 rounded-none border-0 border-b-2 border-transparent bg-transparent px-1 text-sm text-fg-muted shadow-none hover:text-fg data-[state=active]:border-signal data-[state=active]:bg-transparent data-[state=active]:text-fg data-[state=active]:shadow-none"
 
@@ -207,12 +209,12 @@ export function SearchStringTool({ mode }: { mode: "full" | "demo" }) {
   const [editsState, setEditsState] = useState<{ key: string; edits: WorksheetEdits }>({ key: "", edits: EMPTY_EDITS })
   const now = useMemo(() => new Date(), [])
 
-  const caseKey = run?.question ?? ""
-  const edits = editsState.key === caseKey ? editsState.edits : EMPTY_EDITS
+  const questionKey = run?.question ?? ""
+  const edits = editsState.key === questionKey ? editsState.edits : EMPTY_EDITS
   const setEdits = useCallback(
     (update: (e: WorksheetEdits) => WorksheetEdits) =>
-      setEditsState((prev) => ({ key: caseKey, edits: update(prev.key === caseKey ? prev.edits : EMPTY_EDITS) })),
-    [caseKey],
+      setEditsState((prev) => ({ key: questionKey, edits: update(prev.key === questionKey ? prev.edits : EMPTY_EDITS) })),
+    [questionKey],
   )
   const resetEdits = useCallback(() => setEditsState({ key: "", edits: EMPTY_EDITS }), [])
   const onLintState = useCallback((state: { text: string; findings: LintFinding[] }) => {
@@ -283,6 +285,7 @@ export function SearchStringTool({ mode }: { mode: "full" | "demo" }) {
           {run && sectionStatus ? (
             <>
               <div aria-busy={busy} className={busy ? "flex flex-col gap-6 opacity-60 transition-opacity" : "flex flex-col gap-6 transition-opacity"}>
+                {looksLikeCase(run.text) && <CaseNotice />}
                 <ResultPanel model={run.model} builds={builds} notices={notices} onCountsChange={setCounts} headingRef={resultHeading} onChange={updateModel} />
               </div>
 
