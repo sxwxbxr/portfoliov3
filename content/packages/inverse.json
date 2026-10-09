@@ -49,10 +49,10 @@
       "Optional rate limit against scripted submissions, duplicate protection against double clicks, and a contract select for signed-in customers",
       "inverse check: finds missing or mislabelled buttons on a page, exit code for CI",
       "cors option for forms on another domain, and legalRevision / inverse legal: which legal state the kit reflects and what changed",
-      "inverse snippet: ready-to-paste integration for WooCommerce, Shopware, Shopify and WordPress, and example projects for the Next.js Pages Router, Remix, SvelteKit and Express, a WordPress plugin with a settings page, and axe accessibility tests for the forms"
+      "inverse snippet: ready-to-paste integration for WooCommerce, Shopware, Shopify and WordPress, and example projects for the Next.js Pages Router, Remix, SvelteKit and Express, a WordPress plugin with a settings page, and axe accessibility tests for the forms, an Austria page, a stability policy and an upgrade guide"
     ],
     "pro": [
-      "Evidence ledger: every declaration and receipt in a SHA-256 hash chain, evidence sheet per declaration, stored as JSON Lines, PostgreSQL or SQLite, erasure and a retention period that keep the chain verifiable, RFC 3161 time stamp anchors, and an evidence dossier for your lawyer, the ledger CLI on SQLite or PostgreSQL, the dossier as PDF, anchors on a schedule, and one ledger per client for agencies",
+      "Evidence ledger: every declaration and receipt in a SHA-256 hash chain, evidence sheet per declaration, stored as JSON Lines, PostgreSQL or SQLite, erasure and a retention period that keep the chain verifiable, RFC 3161 time stamp anchors, and an evidence dossier for your lawyer, the ledger CLI on SQLite or PostgreSQL, the dossier as PDF, anchors on a schedule, one ledger per client for agencies, the audit report as PDF, and ending a subscription at Stripe or Paddle after a cancellation",
       "Site audit: every page from the sitemap, buttons followed to the form without login, HTML report for clients that prints to PDF, a CSV overview of all sites, many sites in one run, and a comparison with the last run that flags what got worse",
       "Branded receipts, a team notification with the refund or end date, a weekly digest of refunds and contract ends that are due, one reminder per case before a deadline, and transports for Resend, Postmark, SendGrid, Brevo, Mailgun and SMTP"
     ]
