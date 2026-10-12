@@ -13,6 +13,10 @@ import type { SiteSettings } from "@/lib/data"
 import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
 import { useCopy, useLocale } from "@/components/LocaleProvider"
 import { localizePath } from "@/lib/i18n"
+import { FaqList } from "./site/FaqList"
+import { home as homeEn } from "@/content/home/en"
+import { home as homeDe } from "@/content/home/de"
+import { servicePath, servicesOverview, servicesLabels } from "@/lib/services"
 
 // ── Types ────────────────────────────────────────────
 interface Project {
@@ -129,6 +133,9 @@ export default function HomeContent({
   const copy = useCopy()
   const locale = useLocale()
   const expertise = copy.common.expertiseAreas
+  const homeCopy = locale === "de" ? homeDe : homeEn
+  const services = servicesOverview(locale)
+  const serviceLabels = servicesLabels(locale)
   const selectedProjects = projects.slice(0, 6)
 
   const featuredPosts = blogPosts.filter((p) => p.featured)
@@ -209,6 +216,35 @@ export default function HomeContent({
       <Hero settings={settings} metrics={heroMetrics} years={years} skills={skills} />
 
       <div className="mt-24 md:mt-32">
+        {/* ─── Services: what is offered, to whom, where. The hero carries the
+            first two sentences of the opening paragraph, so this adds the rest. ─── */}
+        <Block
+          label={copy.nav.services}
+          title={services.servicesHeading}
+          lede={
+            <>
+              <p>{homeCopy.complement}</p>
+              <p>{homeCopy.serviceArea}</p>
+            </>
+          }
+        >
+          <ul className="border-t border-edge-soft">
+            {services.services.map((service) => (
+              <li key={service.key} className="def-grid border-b border-edge-soft py-5">
+                <h3 className="text-lg tracking-tight">
+                  <Link
+                    href={servicePath(service.key, locale)}
+                    className="link-underline hover:text-fg-muted"
+                  >
+                    {service.title}
+                  </Link>
+                </h3>
+                <p className="text-sm leading-relaxed text-fg-muted">{service.text}</p>
+              </li>
+            ))}
+          </ul>
+        </Block>
+
         {/* ─── Introduction ─── */}
         <Block
           label={copy.home.introLabel}
@@ -381,6 +417,14 @@ export default function HomeContent({
                 </motion.div>
               ))}
             </Stagger>
+          </Block>
+        )}
+
+        {/* ─── FAQ: only questions with a finished answer. Pricing, prototype
+            time and code ownership wait for TODO(Seya) in content/home. ─── */}
+        {homeCopy.faq.length > 0 && (
+          <Block label="FAQ" title={serviceLabels.faq}>
+            <FaqList items={homeCopy.faq} />
           </Block>
         )}
 

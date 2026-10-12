@@ -11,6 +11,10 @@ import { resolveImage } from "@/lib/project-image"
 import { localizeExperience, localizeProject, localizeSettings } from "@/lib/i18n-data"
 import { derivePeriodRange } from "@/lib/period-range"
 import type { Locale } from "@/lib/i18n"
+import { JsonLd } from "@/components/JsonLd"
+import { faqPage } from "@/lib/structured-data"
+import { home as homeEn } from "@/content/home/en"
+import { home as homeDe } from "@/content/home/de"
 
 export async function HomeView({ locale = "en" }: { locale?: Locale }) {
   const [projects, experience, blogPosts, caseStudies, settings] = await Promise.all([
@@ -28,7 +32,11 @@ export async function HomeView({ locale = "en" }: { locale?: Locale }) {
     imageSrc: resolveImage(p.image),
   }))
 
+  const { faq } = locale === "de" ? homeDe : homeEn
+
   return (
+    <>
+    {faq.length > 0 && <JsonLd data={faqPage(faq, locale === "de" ? "/de" : "/", locale)} />}
     <HomeContent
       projects={withImages}
       experience={experience.map((e) => {
@@ -41,5 +49,6 @@ export async function HomeView({ locale = "en" }: { locale?: Locale }) {
       caseStudies={caseStudies}
       settings={localizeSettings(settings, locale)}
     />
+    </>
   )
 }
