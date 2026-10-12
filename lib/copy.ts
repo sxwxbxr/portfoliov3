@@ -8,19 +8,17 @@
  *
  * ## Why a file instead of inline JSX
  *
- * The site currently ships English only, matching the database content, the
- * metadata and the JSON-LD. A German edition is wanted later. Centralising the
- * strings now means that edition costs a second object and a locale switch,
- * rather than a pass over every component.
+ * The site ships in English (default, existing URLs) and German (/de/...).
+ * `lib/copy.de.ts` holds the German edition, typed as `Copy` so a missing key is
+ * a compile error. `lib/i18n.ts#getCopy(locale)` picks one; client components
+ * read it with `useCopy()` (components/LocaleProvider.tsx), server components
+ * call `getCopy(locale)` with the locale their page passes down.
  *
- * ## Adding German later
+ * Packages, physio, admin, pitch and login stay English / their own copy and
+ * keep importing `copy` from here directly.
  *
- * 1. Copy this file to `lib/copy.de.ts`, translate the values, keep the keys.
- * 2. Type it against `Copy` so a missing key is a compile error, not a blank.
- * 3. Replace the `copy` export with a resolver that picks by locale.
- *
- * Components must import `copy` and never inline a user-visible string, so
- * step 3 stays a one-file change.
+ * Components must never inline a user-visible string, so adding a language
+ * stays a one-file change.
  *
  * ## Rules for values here
  *
@@ -1287,4 +1285,25 @@ export const copy = {
   },
 } as const
 
-export type Copy = typeof copy
+/**
+ * `copy` is `as const`, so its own type has literal strings ("Work") and
+ * readonly tuples. A translation can't satisfy that, so this widens every
+ * string to `string` and keeps the key structure, function signatures and
+ * nesting. `lib/copy.de.ts` is typed against it: a missing key is a compile
+ * error.
+ */
+type Widen<T> = T extends string
+  ? string
+  : T extends number
+    ? number
+    : T extends boolean
+      ? boolean
+      : T extends (...args: infer A) => infer R
+        ? (...args: A) => Widen<R>
+        : T extends readonly (infer U)[]
+          ? readonly Widen<U>[]
+          : T extends object
+            ? { -readonly [K in keyof T]: Widen<T[K]> }
+            : T
+
+export type Copy = Widen<typeof copy>

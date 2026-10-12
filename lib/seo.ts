@@ -3,14 +3,24 @@ import type { Metadata } from "next"
 export const SITE_URL = "https://sweber.dev"
 export const BRAND = "Weber Development"
 
-const OG_IMAGE = {
-  url: "/opengraph-image",
-  width: 1200,
-  height: 630,
-  alt: "Weber Development: custom software and automation for SMEs in Eastern Switzerland",
-}
+export type { Locale } from "@/lib/i18n"
+import type { Locale } from "@/lib/i18n"
 
-export type Locale = "en" | "de"
+/** Each edition has its own file-convention image: app/(en)/opengraph-image, app/(de)/de/opengraph-image. */
+const OG_IMAGE: Record<Locale, { url: string; width: number; height: number; alt: string }> = {
+  en: {
+    url: "/opengraph-image",
+    width: 1200,
+    height: 630,
+    alt: "Weber Development: custom software and automation for SMEs in Eastern Switzerland",
+  },
+  de: {
+    url: "/de/opengraph-image",
+    width: 1200,
+    height: 630,
+    alt: "Weber Development: Individualsoftware und Automatisierung für KMU in der Ostschweiz",
+  },
+}
 
 interface PageSeo {
   /** Topic only; the brand suffix is appended here. */
@@ -62,10 +72,59 @@ export function pageMetadata({
       type: "website",
       // Explicit: a page-level openGraph block does not reliably keep the
       // image from the root opengraph-image file convention.
-      images: [OG_IMAGE],
+      images: [OG_IMAGE[locale]],
     },
-    twitter: { card: "summary_large_image", title: fullTitle, description, images: [OG_IMAGE] },
+    twitter: {
+      card: "summary_large_image",
+      title: fullTitle,
+      description,
+      images: [OG_IMAGE[locale]],
+    },
     ...(noindex && { robots: { index: false, follow: true } }),
+  }
+}
+
+/**
+ * Root-layout metadata of an edition. Pages override title, description,
+ * canonical and og:url through pageMetadata(); this is the fallback for routes
+ * that don't (404, noindex pages).
+ */
+export function rootMetadata(locale: Locale): Metadata {
+  const de = locale === "de"
+  return {
+    metadataBase: new URL(SITE_URL),
+    // Nothing URL-specific may live here: every route inherits it, and a
+    // root-level canonical turned all subpages into duplicates of the home page.
+    title: {
+      default: de
+        ? `Software und Automatisierung für KMU | ${BRAND}`
+        : `Software and automation for SMEs | ${BRAND}`,
+      template: `%s | ${BRAND}`,
+    },
+    description: de
+      ? "Weber Development entwickelt Individualsoftware und Prozessautomatisierung für KMU in der Ostschweiz, persönlich umgesetzt von Seya Weber in Bichwil SG."
+      : "Weber Development builds custom software and process automation for SMEs in Eastern Switzerland, delivered personally by Seya Weber in Bichwil SG.",
+    authors: [{ name: "Seya Weber", url: SITE_URL }],
+    creator: "Seya Weber",
+    publisher: BRAND,
+    formatDetection: { email: false, address: false, telephone: false },
+    openGraph: {
+      type: "website",
+      locale: de ? "de_CH" : "en_US",
+      siteName: BRAND,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
+    category: "technology",
   }
 }
 

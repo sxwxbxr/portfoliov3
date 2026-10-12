@@ -13,12 +13,31 @@ const MONTH_LABELS = [
   "Dec",
 ]
 
+const MONTH_LABELS_DE = [
+  "Jan",
+  "Feb",
+  "Mär",
+  "Apr",
+  "Mai",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Okt",
+  "Nov",
+  "Dez",
+]
+
+/** Word for an open-ended range, per language. */
+export const PRESENT_LABEL = { en: "Present", de: "heute" } as const
+
 const MONTH_RE = /^(\d{4})-(0[1-9]|1[0-2])$/
 
-export function formatMonthYear(value: string): string {
+export function formatMonthYear(value: string, locale: "en" | "de" = "en"): string {
   const m = MONTH_RE.exec(value)
   if (!m) return value
-  return `${MONTH_LABELS[parseInt(m[2], 10) - 1]} ${m[1]}`
+  const labels = locale === "de" ? MONTH_LABELS_DE : MONTH_LABELS
+  return `${labels[parseInt(m[2], 10) - 1]} ${m[1]}`
 }
 
 function currentYearMonth(): string {
@@ -54,12 +73,13 @@ export function isFutureRange(startDate: string): boolean {
 export function derivePeriodRange(
   startDate: string,
   endDate: string,
+  locale: "en" | "de" = "en",
 ): { period: string; current: boolean } {
   const current = isCurrentRange(endDate, startDate)
   if (!startDate || !MONTH_RE.test(startDate)) {
     return { period: "", current }
   }
-  const start = formatMonthYear(startDate)
-  const end = current ? "Present" : formatMonthYear(endDate)
+  const start = formatMonthYear(startDate, locale)
+  const end = current ? PRESENT_LABEL[locale] : formatMonthYear(endDate, locale)
   return { period: `${start} -- ${end}`, current }
 }

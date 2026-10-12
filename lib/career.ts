@@ -16,7 +16,7 @@
  *    never be parsed back.
  */
 
-import { formatMonthYear } from "./period-range"
+import { formatMonthYear, PRESENT_LABEL } from "./period-range"
 
 export type CareerLane = "work" | "education"
 
@@ -68,13 +68,14 @@ function displayPeriod(
   startDate: string,
   endDate: string,
   current: boolean,
-  fallback: string
+  fallback: string,
+  locale: "en" | "de" = "en"
 ): string {
   if (!MONTH_RE.test(startDate)) return fallback
-  const start = formatMonthYear(startDate)
-  if (current) return `${start} -- Present`
+  const start = formatMonthYear(startDate, locale)
+  if (current) return `${start} -- ${PRESENT_LABEL[locale]}`
   if (!MONTH_RE.test(endDate)) return start
-  return `${start} -- ${formatMonthYear(endDate)}`
+  return `${start} -- ${formatMonthYear(endDate, locale)}`
 }
 
 /** Months since year 0. Comparable, and cheap to subtract. */
@@ -117,7 +118,8 @@ interface EduRow {
 export function buildCareerTimeline(
   work: WorkRow[],
   education: EduRow[],
-  now: Date = new Date()
+  now: Date = new Date(),
+  locale: "en" | "de" = "en"
 ): CareerTimeline {
   const today = nowMonths(now)
 
@@ -140,7 +142,7 @@ export function buildCareerTimeline(
       subtitle: w.role,
       description: w.description,
       bullets: w.responsibilities ?? [],
-      period: displayPeriod(w.startDate, w.endDate, current, w.period),
+      period: displayPeriod(w.startDate, w.endDate, current, w.period, locale),
       startDate: w.startDate,
       endDate: w.endDate,
       current,
@@ -164,7 +166,7 @@ export function buildCareerTimeline(
       subtitle: e.institution ? e.title : "",
       description: e.description,
       bullets: [],
-      period: displayPeriod(e.startDate, e.endDate, current, e.period),
+      period: displayPeriod(e.startDate, e.endDate, current, e.period, locale),
       startDate: e.startDate,
       endDate: e.endDate,
       current,

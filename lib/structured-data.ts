@@ -49,7 +49,9 @@ export function siteGraph(settings: SiteSettings, locale: Locale = "en") {
     name: BRAND,
     url: SITE_URL,
     description:
-      "Weber Development builds custom software and automation for SMEs in Eastern Switzerland, delivered personally by Seya Weber in Bichwil SG.",
+      locale === "de"
+        ? "Weber Development entwickelt Individualsoftware und Automatisierung für KMU in der Ostschweiz, persönlich umgesetzt von Seya Weber in Bichwil SG."
+        : "Weber Development builds custom software and automation for SMEs in Eastern Switzerland, delivered personally by Seya Weber in Bichwil SG.",
     email,
     // Only when the admin has set a number; never a hardcoded one.
     ...(settings.contactPhone.trim() && { telephone: settings.contactPhone.trim() }),
@@ -77,8 +79,12 @@ export function siteGraph(settings: SiteSettings, locale: Locale = "en") {
     "@type": "Person",
     "@id": ID.person,
     name: "Seya Weber",
-    jobTitle: "Software Developer & Project Manager",
-    url: `${SITE_URL}/about`,
+    // TODO(Seya): confirm the German job title (gender-neutral placeholder).
+    jobTitle:
+      locale === "de"
+        ? "Softwareentwicklung und Projektleitung"
+        : "Software Developer & Project Manager",
+    url: `${SITE_URL}${locale === "de" ? "/de/ueber-mich" : "/about"}`,
     worksFor: { "@id": ID.business },
     ...(settings.knowsAbout.length > 0 && { knowsAbout: settings.knowsAbout }),
     ...(settings.alumniOf && {
@@ -87,7 +93,6 @@ export function siteGraph(settings: SiteSettings, locale: Locale = "en") {
     ...(sameAs.length > 0 && { sameAs }),
   }
 
-  void locale // reserved: the /de edition will localise description strings here
   return { "@context": CONTEXT, "@graph": [website, business, person] }
 }
 
@@ -99,7 +104,10 @@ export interface Crumb {
 
 /** Home is prepended; pass the trail below it. */
 export function breadcrumbList(items: Crumb[], locale: Locale = "en") {
-  const trail: Crumb[] = [{ name: "Home", path: locale === "de" ? "/de" : "/" }, ...items]
+  const trail: Crumb[] = [
+    { name: locale === "de" ? "Startseite" : "Home", path: locale === "de" ? "/de" : "/" },
+    ...items,
+  ]
   return {
     "@context": CONTEXT,
     "@type": "BreadcrumbList",
@@ -119,7 +127,7 @@ export function profilePage(locale: Locale = "en") {
     "@type": "ProfilePage",
     "@id": `${url}#profile`,
     url,
-    name: `About Seya Weber | ${BRAND}`,
+    name: `${locale === "de" ? "Über Seya Weber" : "About Seya Weber"} | ${BRAND}`,
     inLanguage: pageLanguage(locale),
     isPartOf: { "@id": ID.website },
     mainEntity: { "@id": ID.person },
@@ -136,7 +144,9 @@ export interface CreativeWorkInput {
 }
 
 export function creativeWork(project: CreativeWorkInput, locale: Locale = "en") {
-  const pageUrl = absolute(`/projects/${project.slug}`)
+  const pageUrl = absolute(
+    locale === "de" ? `/de/projekte/${project.slug}` : `/projects/${project.slug}`
+  )
   const description = (project.shortDescription || project.description || "").trim()
   const tags = (project.tags ?? []).filter(Boolean)
   return {
