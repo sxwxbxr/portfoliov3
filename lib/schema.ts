@@ -138,7 +138,8 @@ export const siteSettings = pgTable("site_settings", {
   contactPhone: text("contact_phone").notNull().default(""),
   contactLocation: text("contact_location")
     .notNull()
-    .default("St. Gallen, Switzerland"),
+    // TODO(Seya): set contact_location in /admin to "Bichwil SG, Ostschweiz" (the default only applies to new rows).
+    .default("Bichwil SG, Ostschweiz"),
   // Social URLs (single source of truth for footer + JSON-LD)
   linkedinUrl: text("linkedin_url").notNull().default(""),
   githubUrl: text("github_url").notNull().default(""),

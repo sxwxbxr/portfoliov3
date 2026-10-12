@@ -9,7 +9,7 @@ import {
 
 // Narrative facts that don't live in the database. Keep this short and current.
 export const SEYA_NARRATIVE = `- Seya is male and uses he/him pronouns.
-- Based in St. Gallen, Switzerland.
+- Based in Bichwil SG, Eastern Switzerland.
 - Availability: limited until Aug 2026 (finishing current role); from Sep 2026 focused full-time on a BSc Data Science at ZHAW Winterthur — freelance/part-time projects possible depending on scope.
 - Languages: German (native), English (fluent), French (basic).
 - Preferred contact: info@sweber.dev`

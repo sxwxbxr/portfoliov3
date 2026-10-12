@@ -69,6 +69,7 @@ export default async function Contact() {
                 <span className="flex flex-col gap-0.5">
                   <span className="annotate">{copy.contact.location}</span>
                   <span className="text-sm text-fg-muted">{location}</span>
+                  <span className="text-sm text-fg-muted">{copy.contact.serviceArea}</span>
                 </span>
               </div>
 

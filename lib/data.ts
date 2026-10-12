@@ -37,7 +37,8 @@ const DEFAULT_SETTINGS: SiteSettings = {
   heroMetrics: [],
   contactEmail: "info@sweber.dev",
   contactPhone: "",
-  contactLocation: "St. Gallen, Switzerland",
+  // TODO(Seya): set contact_location in /admin to "Bichwil SG, Ostschweiz".
+  contactLocation: "Bichwil SG, Ostschweiz",
   linkedinUrl: "https://ch.linkedin.com/in/seya-weber-06a592256",
   githubUrl: "https://github.com/sxwxbxr",
   twitterUrl: "",
