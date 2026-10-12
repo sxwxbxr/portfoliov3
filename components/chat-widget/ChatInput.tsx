@@ -2,7 +2,7 @@
 
 import { useState, type KeyboardEvent } from "react"
 import { ArrowUp } from "lucide-react"
-import { copy } from "@/lib/copy"
+import { useCopy } from "@/components/LocaleProvider"
 
 interface ChatInputProps {
   onSend: (text: string) => void
@@ -12,6 +12,7 @@ interface ChatInputProps {
 const MAX_LENGTH = 500
 
 export function ChatInput({ onSend, disabled }: ChatInputProps) {
+  const copy = useCopy()
   const [value, setValue] = useState("")
 
   function submit() {

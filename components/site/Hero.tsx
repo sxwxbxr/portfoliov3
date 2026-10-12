@@ -4,7 +4,8 @@ import Link from "next/link"
 import { ChevronRight } from "lucide-react"
 import { motion, useReducedMotion } from "framer-motion"
 import type { SiteSettings } from "@/lib/data"
-import { copy } from "@/lib/copy"
+import { useCopy, useLocale } from "@/components/LocaleProvider"
+import { localizePath } from "@/lib/i18n"
 import { Ruler } from "./Ruler"
 
 const EASE = [0.23, 1, 0.32, 1] as const
@@ -24,6 +25,8 @@ interface HeroProps {
  * strips are decoration and carry nothing the copy does not also say.
  */
 export default function Hero({ settings, metrics, years, skills }: HeroProps) {
+  const copy = useCopy()
+  const locale = useLocale()
   const reduce = useReducedMotion()
   const rise = (delay: number) => ({
     initial: reduce ? false : { opacity: 0, y: 8 },
@@ -45,25 +48,24 @@ export default function Hero({ settings, metrics, years, skills }: HeroProps) {
         )}
 
         <div className="flex flex-col gap-1">
-          <h1 className="display">Seya Weber</h1>
-          <p className="display text-fg-muted">
-            {settings.currentRole || copy.home.roleFallback}
-          </p>
+          <h1 className="display">
+            {copy.home.heroHeadline}
+            <span className="sr-only">: </span>
+            <span className="display block text-fg-muted">{copy.home.heroOffer}</span>
+          </h1>
         </div>
 
-        <p className="measure lede">
-          {copy.home.locationLead(settings.contactLocation || copy.common.locationFallback)}
-        </p>
+        <p className="measure lede">{copy.home.heroPerson}</p>
 
         <div className="flex flex-wrap gap-3">
           <Link
-            href="/contact"
+            href={localizePath("/contact", locale)}
             className="control control-primary inline-flex items-center gap-1 py-2.5 pr-4 pl-5 text-sm"
           >
             {copy.nav.contact}
             <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
-          <Link href="/projects" className="control inline-flex items-center px-5 py-2.5 text-sm">
+          <Link href={localizePath("/projects", locale)} className="control inline-flex items-center px-5 py-2.5 text-sm">
             {copy.projects.allProjects}
           </Link>
         </div>
@@ -80,6 +82,9 @@ export default function Hero({ settings, metrics, years, skills }: HeroProps) {
         <Ruler labels={skills} labelSide="top" interval={2000} />
       </motion.div>
 
+      {/* TODO(Seya): tiles render settings.heroMetrics (DB). Labels that need
+          context, e.g. "Properties managed 150+", should be reworded in /admin/settings
+          so a stranger understands them (what, for whom, over what period). */}
       {metrics.length > 0 && (
         <motion.div className="sheet mt-20 md:mt-28" {...rise(0.3)}>
           <dl className="grid grid-cols-1 divide-y divide-edge-soft border-y border-edge-soft sm:grid-cols-3 sm:divide-x sm:divide-y-0">

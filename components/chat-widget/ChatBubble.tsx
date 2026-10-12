@@ -1,13 +1,14 @@
 "use client"
 
 import { Sparkles } from "lucide-react"
-import { copy } from "@/lib/copy"
+import { useCopy } from "@/components/LocaleProvider"
 
 interface ChatBubbleProps {
   onClick: () => void
 }
 
 export function ChatBubble({ onClick }: ChatBubbleProps) {
+  const copy = useCopy()
   return (
     <button
       type="button"

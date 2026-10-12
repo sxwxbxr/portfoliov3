@@ -4,7 +4,7 @@ import { useCallback, useRef, useState } from "react"
 import { motion, useReducedMotion } from "framer-motion"
 import { CareerTimeline } from "./CareerTimeline"
 import type { CareerEntry, CareerTimeline as Timeline } from "@/lib/career"
-import { copy } from "@/lib/copy"
+import { useCopy } from "@/components/LocaleProvider"
 
 const EASE = [0.23, 1, 0.32, 1] as const
 
@@ -17,6 +17,7 @@ const EASE = [0.23, 1, 0.32, 1] as const
  * keyboard path and the pointer path end in the same place.
  */
 export function CareerExplorer({ timeline }: { timeline: Timeline }) {
+  const copy = useCopy()
   const [activeId, setActiveId] = useState<string | null>(null)
   const cards = useRef(new Map<string, HTMLElement>())
   const reduce = useReducedMotion()
@@ -102,6 +103,7 @@ function EntryCard({
   register: (id: string, el: HTMLElement | null) => void
   onActivate: (id: string | null) => void
 }) {
+  const copy = useCopy()
   return (
     <motion.article
       ref={(el) => register(entry.id, el)}

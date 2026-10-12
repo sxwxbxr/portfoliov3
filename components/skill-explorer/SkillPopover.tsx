@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { ChevronDown, X } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { copy } from "@/lib/copy"
+import { useCopy } from "@/components/LocaleProvider"
 
 type SkillDetail = { description: string; relatedProjects: string[] }
 
@@ -16,15 +16,15 @@ interface SkillPopoverProps {
   isFirst: boolean
 }
 
-const FALLBACK: SkillDetail = {
-  description: copy.about.skillDetailFallback,
-  relatedProjects: [],
-}
-
 // Session cache so re-opening a skill never re-hits the API.
 const cache = new Map<string, SkillDetail>()
 
 export function SkillPopover({ skill }: SkillPopoverProps) {
+  const copy = useCopy()
+  const FALLBACK: SkillDetail = {
+    description: copy.about.skillDetailFallback,
+    relatedProjects: [],
+  }
   const [open, setOpen] = useState(false)
   const [detail, setDetail] = useState<SkillDetail | null>(
     () => cache.get(skill.name) ?? null

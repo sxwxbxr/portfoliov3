@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react"
 
-import { copy } from "@/lib/copy"
+import { useCopy } from "@/components/LocaleProvider"
 
 export function TimeDisplay() {
+  const copy = useCopy()
   const [time, setTime] = useState<string>("")
 
   useEffect(() => {

@@ -6,45 +6,20 @@ import { useEffect, useRef } from "react"
 import { X, ExternalLink, Github, Linkedin } from "lucide-react"
 import { motion, AnimatePresence, useReducedMotion, type MotionProps } from "framer-motion"
 import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
-import { copy } from "@/lib/copy"
+import { useCopy, useLocale } from "@/components/LocaleProvider"
+import { LanguageSwitcher } from "@/components/LanguageSwitcher"
+import { localizePath } from "@/lib/i18n"
 import { PACKAGES_ENTRY } from "@/lib/packages/urls"
 import { useOnPackagesHost } from "@/lib/packages/useOnPackagesHost"
 
 const EASE = [0.23, 1, 0.32, 1] as const
 
-const menuLinks = [
-  { name: copy.nav.work, href: "/projects" },
-  { name: copy.nav.about, href: "/about" },
-  { name: copy.nav.contact, href: "/contact" },
-]
-
-const subLinks = [
-  CASE_STUDIES_ENABLED && { name: copy.nav.caseStudies, href: "/case-studies" },
-  { name: copy.nav.services, href: "/services" },
-  {
-    name: copy.nav.packages,
-    href: PACKAGES_ENTRY,
-    // Absolute in production (packages.sweber.dev): a plain same-tab link, not next/link.
-    absolute: PACKAGES_ENTRY.startsWith("http"),
-  },
-  { name: copy.nav.career, href: "/career" },
-  BLOG_ENABLED && { name: copy.nav.blog, href: "/blog" },
-  { name: copy.nav.skills, href: "/about#skills" },
-].filter(Boolean) as {
+type SubLink = {
   name: string
   href: string
   external?: boolean
   absolute?: boolean
-}[]
-
-const socialLinks = [
-  { icon: Github, label: copy.nav.github, href: "https://github.com/sxwxbxr" },
-  {
-    icon: Linkedin,
-    label: copy.nav.linkedin,
-    href: "https://ch.linkedin.com/in/seya-weber-06a592256",
-  },
-]
+}
 
 interface FullscreenMenuProps {
   isOpen: boolean
@@ -52,6 +27,34 @@ interface FullscreenMenuProps {
 }
 
 export function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps) {
+  const copy = useCopy()
+  const locale = useLocale()
+  const menuLinks = [
+    { name: copy.nav.work, href: localizePath("/projects", locale) },
+    { name: copy.nav.about, href: localizePath("/about", locale) },
+    { name: copy.nav.contact, href: localizePath("/contact", locale) },
+  ]
+  const subLinks = [
+    CASE_STUDIES_ENABLED && { name: copy.nav.caseStudies, href: "/case-studies" },
+    { name: copy.nav.services, href: localizePath("/services", locale) },
+    {
+      name: copy.nav.packages,
+      href: PACKAGES_ENTRY,
+      // Absolute in production (packages.sweber.dev): a plain same-tab link, not next/link.
+      absolute: PACKAGES_ENTRY.startsWith("http"),
+    },
+    { name: copy.nav.career, href: localizePath("/career", locale) },
+    BLOG_ENABLED && { name: copy.nav.blog, href: "/blog" },
+    { name: copy.nav.skills, href: localizePath("/about#skills", locale) },
+  ].filter(Boolean) as SubLink[]
+  const socialLinks = [
+    { icon: Github, label: copy.nav.github, href: "https://github.com/sxwxbxr" },
+    {
+      icon: Linkedin,
+      label: copy.nav.linkedin,
+      href: "https://ch.linkedin.com/in/seya-weber-06a592256",
+    },
+  ]
   const pathname = usePathname()
   const menuRef = useRef<HTMLDivElement>(null)
   const closeButtonRef = useRef<HTMLButtonElement>(null)
@@ -244,6 +247,7 @@ export function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps) {
                   )
                 })}
               </div>
+              <LanguageSwitcher className="ml-auto inline-flex py-2 text-sm text-fg-muted transition-colors duration-150 hover:text-fg" />
             </motion.div>
           </div>
         </motion.div>

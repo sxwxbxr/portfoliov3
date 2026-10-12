@@ -52,6 +52,12 @@ export async function PUT(request: Request) {
     alumniOf: String(body.alumniOf ?? ""),
     knowsAbout: Array.isArray(body.knowsAbout) ? body.knowsAbout : [],
     privacyContent: String(body.privacyContent ?? ""),
+    heroAvailabilityLabelDe: String(body.heroAvailabilityLabelDe ?? ""),
+    heroMetricsDe: Array.isArray(body.heroMetricsDe) ? body.heroMetricsDe : [],
+    contactLocationDe: String(body.contactLocationDe ?? ""),
+    currentRoleDe: String(body.currentRoleDe ?? ""),
+    knowsAboutDe: Array.isArray(body.knowsAboutDe) ? body.knowsAboutDe : [],
+    privacyContentDe: String(body.privacyContentDe ?? ""),
     updatedAt: new Date(),
   }
 

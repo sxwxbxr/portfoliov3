@@ -13,6 +13,8 @@ const nextConfig = {
     "/api/revalidate": ["./content/**/*"],
     "/imprint": ["./content/**/*"],
     "/privacy": ["./content/**/*"],
+    "/de/impressum": ["./content/**/*"],
+    "/de/datenschutz": ["./content/**/*"],
   },
   images: {
     remotePatterns: [

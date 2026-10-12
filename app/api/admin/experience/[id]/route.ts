@@ -59,6 +59,9 @@ export async function PUT(
       current,
       description: body.description,
       responsibilities: body.responsibilities,
+      roleDe: body.roleDe ?? "",
+      descriptionDe: body.descriptionDe ?? "",
+      responsibilitiesDe: body.responsibilitiesDe ?? [],
       sortOrder: body.sortOrder,
     })
     .where(eq(experienceEntries.id, parseInt(id)))

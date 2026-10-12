@@ -1,7 +1,8 @@
 import { ChevronRight } from "lucide-react"
 import { certificates } from "@/lib/schema"
 import { formatMonth } from "@/lib/utils"
-import { copy } from "@/lib/copy"
+import { getCopy, type Locale } from "@/lib/i18n"
+import type { Copy } from "@/lib/copy"
 import type { InferSelectModel } from "drizzle-orm"
 
 export type Certificate = InferSelectModel<typeof certificates>
@@ -13,10 +14,10 @@ export type Certificate = InferSelectModel<typeof certificates>
  * that is actually in motion, so a page full of planned credentials does not
  * read as a page full of alerts.
  */
-const STATUS_META: Record<
+const statusMeta = (copy: Copy): Record<
   string,
   { label: string; dot: string; text: string }
-> = {
+> => ({
   completed: {
     label: copy.education.statusCompleted,
     dot: "bg-fg-muted",
@@ -32,9 +33,17 @@ const STATUS_META: Record<
     dot: "bg-edge",
     text: "",
   },
-}
+})
 
-export default function CertificateCard({ cert }: { cert: Certificate }) {
+export default function CertificateCard({
+  cert,
+  locale = "en",
+}: {
+  cert: Certificate
+  locale?: Locale
+}) {
+  const copy = getCopy(locale)
+  const STATUS_META = statusMeta(copy)
   const status = STATUS_META[cert.status] ?? STATUS_META.planned
   const isLifetime =
     cert.status === "completed" && Boolean(cert.issueDate) && !cert.expiryDate
@@ -88,8 +97,8 @@ export default function CertificateCard({ cert }: { cert: Certificate }) {
               <dt className="annotate">{copy.education.certWindow}</dt>
               <dd className="text-sm tabular">
                 {copy.education.certWindowValue(
-                  formatMonth(cert.plannedStart),
-                  cert.plannedEnd ? formatMonth(cert.plannedEnd) : ""
+                  formatMonth(cert.plannedStart, locale),
+                  cert.plannedEnd ? formatMonth(cert.plannedEnd, locale) : ""
                 )}
               </dd>
             </div>
@@ -176,7 +185,7 @@ export default function CertificateCard({ cert }: { cert: Certificate }) {
             </a>
           ) : (
             <p className="annotate">
-              {copy.education.certIssued(formatMonth(cert.issueDate))}
+              {copy.education.certIssued(formatMonth(cert.issueDate, locale))}
             </p>
           )}
         </div>

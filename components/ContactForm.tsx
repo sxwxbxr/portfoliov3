@@ -12,9 +12,9 @@ import {
 } from "@/components/ui/select"
 import { AlertCircle, ChevronRight, Loader2, Sparkles } from "lucide-react"
 import { CheckmarkAnimation } from "@/components/CheckmarkAnimation"
-import { copy } from "@/lib/copy"
+import { useCopy, useLocale } from "@/components/LocaleProvider"
+import { localizePath } from "@/lib/i18n"
 
-const form = copy.contact.form
 const MAX_MESSAGE_LENGTH = 5000
 
 interface FormData {
@@ -73,6 +73,9 @@ export function ContactForm({
   /** Only link the privacy notice when the page actually exists. */
   privacyAvailable?: boolean
 }) {
+  const copy = useCopy()
+  const locale = useLocale()
+  const form = copy.contact.form
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
@@ -396,7 +399,7 @@ export function ContactForm({
             <>
               {" "}
               {form.privacyTail}{" "}
-              <a href="/privacy" className="link-underline text-fg">
+              <a href={localizePath("/privacy", locale)} className="link-underline text-fg">
                 {form.privacyLink}
               </a>
               .

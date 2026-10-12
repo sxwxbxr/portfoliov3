@@ -29,6 +29,12 @@ export type SiteSettings = {
   alumniOf: string
   knowsAbout: string[]
   privacyContent: string
+  heroAvailabilityLabelDe: string
+  heroMetricsDe: HeroMetric[]
+  contactLocationDe: string
+  currentRoleDe: string
+  knowsAboutDe: string[]
+  privacyContentDe: string
 }
 
 const DEFAULT_SETTINGS: SiteSettings = {
@@ -37,7 +43,8 @@ const DEFAULT_SETTINGS: SiteSettings = {
   heroMetrics: [],
   contactEmail: "info@sweber.dev",
   contactPhone: "",
-  contactLocation: "St. Gallen, Switzerland",
+  // TODO(Seya): set contact_location in /admin to "Bichwil SG, Ostschweiz".
+  contactLocation: "Bichwil SG, Ostschweiz",
   linkedinUrl: "https://ch.linkedin.com/in/seya-weber-06a592256",
   githubUrl: "https://github.com/sxwxbxr",
   twitterUrl: "",
@@ -54,6 +61,12 @@ const DEFAULT_SETTINGS: SiteSettings = {
     "Agile Methodologies",
   ],
   privacyContent: "",
+  heroAvailabilityLabelDe: "",
+  heroMetricsDe: [],
+  contactLocationDe: "",
+  currentRoleDe: "",
+  knowsAboutDe: [],
+  privacyContentDe: "",
 }
 
 /**
@@ -90,6 +103,12 @@ export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
     alumniOf: row.alumniOf,
     knowsAbout: row.knowsAbout ?? [],
     privacyContent: row.privacyContent,
+    heroAvailabilityLabelDe: row.heroAvailabilityLabelDe,
+    heroMetricsDe: row.heroMetricsDe ?? [],
+    contactLocationDe: row.contactLocationDe,
+    currentRoleDe: row.currentRoleDe,
+    knowsAboutDe: row.knowsAboutDe ?? [],
+    privacyContentDe: row.privacyContentDe,
   }
 })
 
@@ -99,6 +118,7 @@ export const getProjects = cache(async () => {
 })
 
 export const getProjectBySlug = cache(async (slug: string) => {
+  if (!hasDb()) return null
   const results = await db.select().from(projects).where(eq(projects.slug, slug))
   return results[0] ?? null
 })
@@ -114,6 +134,7 @@ export const getBlogPosts = cache(async () => {
 })
 
 export const getBlogPostBySlug = cache(async (slug: string) => {
+  if (!hasDb()) return null
   const results = await db.select().from(blogPosts).where(eq(blogPosts.slug, slug))
   return results[0] ?? null
 })
@@ -124,6 +145,7 @@ export const getCaseStudies = cache(async () => {
 })
 
 export const getCaseStudyBySlug = cache(async (slug: string) => {
+  if (!hasDb()) return null
   const results = await db.select().from(caseStudies).where(eq(caseStudies.slug, slug))
   return results[0] ?? null
 })

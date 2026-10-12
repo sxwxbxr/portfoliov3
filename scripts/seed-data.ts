@@ -342,7 +342,7 @@ export const siteSettings = {
   ],
   contactEmail: "info@sweber.dev",
   contactPhone: "+41 79 899 11 12",
-  contactLocation: "St. Gallen, Switzerland",
+  contactLocation: "Bichwil SG, Ostschweiz",
   linkedinUrl: "https://ch.linkedin.com/in/seya-weber-06a592256",
   githubUrl: "https://github.com/sxwxbxr",
   twitterUrl: "",

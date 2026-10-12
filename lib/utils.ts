@@ -5,13 +5,13 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function formatMonth(value: string): string {
+export function formatMonth(value: string, locale: "en" | "de" = "en"): string {
   if (!value) return ""
   const [year, month] = value.split("-")
   if (!year || !month) return value
   const date = new Date(Number(year), Number(month) - 1, 1)
   if (isNaN(date.getTime())) return value
-  return date.toLocaleString("en-US", { month: "short", year: "numeric" })
+  return date.toLocaleString(locale === "de" ? "de-CH" : "en-US", { month: "short", year: "numeric" })
 }
 
 // WCAG-style readable text color picker for arbitrary hex backgrounds.

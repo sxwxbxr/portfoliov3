@@ -1,7 +1,10 @@
+"use client"
+
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowUpRight } from "lucide-react"
-import { copy } from "@/lib/copy"
+import { useCopy, useLocale } from "@/components/LocaleProvider"
+import { localizePath } from "@/lib/i18n"
 
 interface Project {
   title: string
@@ -30,12 +33,14 @@ export function ProjectListItem({
   imageSrc = null,
   priority = false,
 }: ProjectListItemProps) {
+  const copy = useCopy()
+  const locale = useLocale()
   const indexLabel = String(index + 1).padStart(2, "0")
   const category = project.tags[0] ?? ""
 
   return (
     <Link
-      href={`/projects/${project.slug}`}
+      href={localizePath(`/projects/${project.slug}`, locale)}
       className="cast card-link group flex flex-col gap-6 p-5 md:p-6"
     >
       <div className="relative aspect-[16/10] overflow-hidden rounded-sm bg-well">

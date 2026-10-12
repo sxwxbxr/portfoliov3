@@ -4,7 +4,7 @@ import { useId, useState } from "react"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { Terminal, ChevronDown } from "lucide-react"
 import { DeepDiveContent } from "./DeepDiveContent"
-import { copy } from "@/lib/copy"
+import { useCopy } from "@/components/LocaleProvider"
 
 const EASE = [0.16, 1, 0.3, 1] as const
 
@@ -21,6 +21,7 @@ export function ProjectDeepDive({
   description,
   techStack,
 }: ProjectDeepDiveProps) {
+  const copy = useCopy()
   const [open, setOpen] = useState(false)
   const [content, setContent] = useState("")
   const [loading, setLoading] = useState(false)

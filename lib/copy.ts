@@ -8,19 +8,17 @@
  *
  * ## Why a file instead of inline JSX
  *
- * The site currently ships English only, matching the database content, the
- * metadata and the JSON-LD. A German edition is wanted later. Centralising the
- * strings now means that edition costs a second object and a locale switch,
- * rather than a pass over every component.
+ * The site ships in English (default, existing URLs) and German (/de/...).
+ * `lib/copy.de.ts` holds the German edition, typed as `Copy` so a missing key is
+ * a compile error. `lib/i18n.ts#getCopy(locale)` picks one; client components
+ * read it with `useCopy()` (components/LocaleProvider.tsx), server components
+ * call `getCopy(locale)` with the locale their page passes down.
  *
- * ## Adding German later
+ * Packages, physio, admin, pitch and login stay English / their own copy and
+ * keep importing `copy` from here directly.
  *
- * 1. Copy this file to `lib/copy.de.ts`, translate the values, keep the keys.
- * 2. Type it against `Copy` so a missing key is a compile error, not a blank.
- * 3. Replace the `copy` export with a resolver that picks by locale.
- *
- * Components must import `copy` and never inline a user-visible string, so
- * step 3 stays a one-file change.
+ * Components must never inline a user-visible string, so adding a language
+ * stays a one-file change.
  *
  * ## Rules for values here
  *
@@ -77,7 +75,13 @@ export const copy = {
     current: "Current",
     recommended: "Recommended",
     /** Shown when site_settings has no location on record. */
-    locationFallback: "St. Gallen, Switzerland",
+    locationFallback: "Bichwil SG, Eastern Switzerland",
+    /** The positioning sentence. Footer, /about and the hero lede derive from it. */
+    coreSentence:
+      "Weber Development builds custom software and automation for SMEs in Eastern Switzerland. Behind it is Seya Weber, software development and project leadership from Bichwil SG.",
+    /** Short form for the footer. */
+    coreSentenceShort:
+      "Custom software and automation for SMEs in Eastern Switzerland.",
     /** Locale for every date the UI formats itself. */
     dateLocale: "en-GB",
     /** Wall clock in Seya's timezone, e.g. "14:05 CET". */
@@ -136,14 +140,17 @@ export const copy = {
 
   home: {
     availabilityFallback: "Available for projects",
-    roleFallback: "Project Manager & Software Developer",
+    /** h1: the offer (what, for whom, where). */
+    heroHeadline: "Weber Development",
+    heroOffer: "Custom software and automation for SMEs in Eastern Switzerland.",
+    /** Lede under the h1: the person behind the offer. */
+    heroPerson:
+      "Behind it is Seya Weber, software development and project leadership from Bichwil SG.",
     introEyebrow: "In short",
     introLead:
       "I turn complex operational requirements into lean, maintainable software — and because I trained on both sides, I understand the requirement as well as the system that has to satisfy it.",
     introBody:
       "My path ran through electrical planning, energy optimisation, healthcare technology and SaaS development. That breadth is why I usually end up doing the translation work between the business side and the engineering side.",
-    locationLead: (location: string) =>
-      `I build lean digital solutions in ${location} — from automation workflows to full-stack applications.`,
     currentRole: (role: string, company: string) => `Current · ${role} at ${company}`,
     selectedWork: "Selected Work",
     selectedWorkEyebrow: "Selected work",
@@ -265,7 +272,7 @@ export const copy = {
     label: "About me",
     title: "About",
     subtitle:
-      "Project manager, developer and builder of lean digital solutions in St. Gallen.",
+      "Weber Development builds custom software and automation for SMEs in Eastern Switzerland. Behind it is Seya Weber, software development and project leadership from Bichwil SG.",
     factLocation: "Location",
     factExperience: "Experience",
     factFocus: "Focus",
@@ -289,7 +296,7 @@ export const copy = {
     // an opt-in checkbox on the contact form, specified in docs/CV_DELIVERY.md
     // and not yet built; its strings belong under `contact.form` when it is.
     portraitAlt: "Seya Weber, project manager and software developer",
-    factLocationValue: "St. Gallen, CH",
+    factLocationValue: "Bichwil SG, CH",
     factExperienceValue: "3+ years",
     factFocusValue: "Automation & PM",
     factLanguagesValue: "DE, EN, FR",
@@ -382,6 +389,9 @@ export const copy = {
     email: "Email",
     phone: "Phone",
     location: "Location",
+    // TODO(Seya): confirm the service area before launch.
+    serviceArea:
+      "Wil, Uzwil, Gossau, St. Gallen and all of Eastern Switzerland, remotely across Switzerland.",
     responseTime: "Response time",
     responseValue: "Within 24 hours",
     form: {
@@ -1275,4 +1285,25 @@ export const copy = {
   },
 } as const
 
-export type Copy = typeof copy
+/**
+ * `copy` is `as const`, so its own type has literal strings ("Work") and
+ * readonly tuples. A translation can't satisfy that, so this widens every
+ * string to `string` and keeps the key structure, function signatures and
+ * nesting. `lib/copy.de.ts` is typed against it: a missing key is a compile
+ * error.
+ */
+type Widen<T> = T extends string
+  ? string
+  : T extends number
+    ? number
+    : T extends boolean
+      ? boolean
+      : T extends (...args: infer A) => infer R
+        ? (...args: A) => Widen<R>
+        : T extends readonly (infer U)[]
+          ? readonly Widen<U>[]
+          : T extends object
+            ? { -readonly [K in keyof T]: Widen<T[K]> }
+            : T
+
+export type Copy = Widen<typeof copy>

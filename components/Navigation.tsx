@@ -6,27 +6,32 @@ import { usePathname } from "next/navigation"
 import { ArrowRight, ChevronRight, Menu } from "lucide-react"
 import { FullscreenMenu } from "./FullscreenMenu"
 import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
-import { copy } from "@/lib/copy"
+import { useCopy, useLocale } from "@/components/LocaleProvider"
+import { LanguageSwitcher } from "@/components/LanguageSwitcher"
+import { localizePath } from "@/lib/i18n"
 import { MAIN_ORIGIN, PACKAGES_ENTRY } from "@/lib/packages/urls"
 import { useOnPackagesHost } from "@/lib/packages/useOnPackagesHost"
-
-/** Browse destinations, all visible. */
-const navLinks = [
-  { name: copy.nav.work, href: "/projects" },
-  { name: copy.nav.about, href: "/about" },
-  { name: copy.nav.services, href: "/services" },
-  { name: copy.nav.packages, href: PACKAGES_ENTRY },
-  { name: copy.nav.career, href: "/career" },
-  ...(CASE_STUDIES_ENABLED
-    ? [{ name: copy.nav.caseStudies, href: "/case-studies" }]
-    : []),
-  ...(BLOG_ENABLED ? [{ name: copy.nav.blog, href: "/blog" }] : []),
-]
 
 /** Height of the announcement strip plus the nav row, for page offsets. */
 export const NAV_OFFSET = "pt-36"
 
 export default function Navigation() {
+  const copy = useCopy()
+  const locale = useLocale()
+  /** Browse destinations, all visible. */
+  const navLinks = [
+    { name: copy.nav.work, href: localizePath("/projects", locale) },
+    { name: copy.nav.about, href: localizePath("/about", locale) },
+    { name: copy.nav.services, href: localizePath("/services", locale) },
+    { name: copy.nav.packages, href: PACKAGES_ENTRY },
+    { name: copy.nav.career, href: localizePath("/career", locale) },
+    ...(CASE_STUDIES_ENABLED
+      ? [{ name: copy.nav.caseStudies, href: "/case-studies" }]
+      : []),
+    ...(BLOG_ENABLED ? [{ name: copy.nav.blog, href: "/blog" }] : []),
+  ]
+  const homeHref = localizePath("/", locale)
+  const contactHref = localizePath("/contact", locale)
   const [menuOpen, setMenuOpen] = useState(false)
   const [visible, setVisible] = useState(true)
   const [seated, setSeated] = useState(false)
@@ -100,7 +105,7 @@ export default function Navigation() {
                   {copy.nav.brand}
                 </a>
               ) : (
-                <Link href="/" className={brandClass}>
+                <Link href={homeHref} className={brandClass}>
                   {copy.nav.brand}
                 </Link>
               )}
@@ -131,9 +136,11 @@ export default function Navigation() {
             </div>
 
             <div className="flex items-center gap-2">
+              <LanguageSwitcher className="hidden px-2 text-sm text-fg-muted transition-colors duration-150 hover:text-fg lg:inline-flex" />
+
               <Link
-                href="/contact"
-                aria-current={pathname === "/contact" ? "page" : undefined}
+                href={contactHref}
+                aria-current={pathname === contactHref ? "page" : undefined}
                 className="control control-primary hidden items-center gap-1 py-2 pr-3 pl-4 text-sm lg:inline-flex"
               >
                 {copy.nav.contact}
