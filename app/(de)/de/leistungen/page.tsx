@@ -4,5 +4,5 @@ import { staticPageMetadata } from "@/lib/page-meta"
 export const metadata = staticPageMetadata("services", "de")
 
 export default function ServicesDe() {
-  return <ServicesView />
+  return <ServicesView locale="de" />
 }

@@ -4,6 +4,7 @@ import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
 import { SITE_URL } from "@/lib/seo"
 import { localizePath } from "@/lib/i18n"
 import { hasGermanProject } from "@/lib/i18n-data"
+import { SERVICE_KEYS, getService } from "@/lib/services"
 
 export const revalidate = 3600
 
@@ -23,15 +24,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Both language versions of every page, each entry listing the whole set so
   // the sitemap and the on-page hreflang agree. Only English paths are listed
   // here; localizePath derives the German twin.
-  const entry = (enPath: string, withGerman = true): MetadataRoute.Sitemap => {
+  const entry = (enPath: string, withGerman = true, lastModified?: Date): MetadataRoute.Sitemap => {
     const en = `${SITE_URL}${enPath === "/" ? "" : enPath}`
-    if (!withGerman) return [{ url: en, alternates: { languages: { en, "x-default": en } } }]
+    if (!withGerman) return [{ url: en, ...(lastModified && { lastModified }), alternates: { languages: { en, "x-default": en } } }]
     const deRaw = localizePath(enPath, "de")
     const de = `${SITE_URL}${deRaw}`
     const languages = { en, de, "x-default": en }
     return [
-      { url: en, alternates: { languages } },
-      { url: de, alternates: { languages } },
+      { url: en, ...(lastModified && { lastModified }), alternates: { languages } },
+      { url: de, ...(lastModified && { lastModified }), alternates: { languages } },
     ]
   }
 
@@ -51,6 +52,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     ...staticPaths.flatMap((path) => entry(path)),
+    // Service pages carry a visible "last updated" date, which is also their lastmod.
+    ...SERVICE_KEYS.flatMap((key) =>
+      entry(`/services/${key}`, true, new Date(getService(key, "en").updatedAt))
+    ),
     // A project's German page is indexable only once it has a German
     // description; until then it is noindex and absent here, and the English
     // page lists no `de` alternate.

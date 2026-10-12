@@ -30,6 +30,12 @@ const absolute = (path: string) => (path.startsWith("http") ? path : `${SITE_URL
 const isRealUrl = (value: string | undefined | null): value is string =>
   Boolean(value) && /^https?:\/\/\S+$/.test(value as string)
 
+const AREA_SERVED = [
+  { "@type": "AdministrativeArea", name: "Kanton St. Gallen" },
+  { "@type": "AdministrativeArea", name: "Kanton Thurgau" },
+  { "@type": "Country", name: "Schweiz" },
+]
+
 export function siteGraph(settings: SiteSettings, locale: Locale = "en") {
   const email = settings.contactEmail || "info@sweber.dev"
   const sameAs = [settings.linkedinUrl, settings.githubUrl, settings.twitterUrl].filter(Boolean)
@@ -65,11 +71,7 @@ export function siteGraph(settings: SiteSettings, locale: Locale = "en") {
       addressCountry: "CH",
     },
     // TODO(Seya): confirm areaServed (cantons and country) before relying on it.
-    areaServed: [
-      { "@type": "AdministrativeArea", name: "Kanton St. Gallen" },
-      { "@type": "AdministrativeArea", name: "Kanton Thurgau" },
-      { "@type": "Country", name: "Schweiz" },
-    ],
+    areaServed: AREA_SERVED,
     knowsLanguage: ["de", "en", "fr"],
     founder: { "@id": ID.person },
     ...(sameAs.length > 0 && { sameAs }),
@@ -160,5 +162,60 @@ export function creativeWork(project: CreativeWorkInput, locale: Locale = "en") 
     inLanguage: pageLanguage(locale),
     creator: { "@id": ID.person },
     ...(tags.length > 0 && { keywords: tags.join(", ") }),
+  }
+}
+
+export interface ServiceInput {
+  /** Short noun phrase, e.g. "Custom software". */
+  serviceType: string
+  name: string
+  description: string
+  /** Path relative to SITE_URL. */
+  path: string
+}
+
+/** A service offered by the sitewide business node. */
+export function serviceSchema(service: ServiceInput, locale: Locale = "en") {
+  const url = absolute(service.path)
+  return {
+    "@context": CONTEXT,
+    "@type": "Service",
+    "@id": `${url}#service`,
+    serviceType: service.serviceType,
+    name: service.name,
+    description: service.description,
+    url,
+    inLanguage: pageLanguage(locale),
+    provider: { "@id": ID.business },
+    areaServed: AREA_SERVED,
+  }
+}
+
+/** FAQPage; pass exactly the questions that are rendered on the page. */
+export function faqPage(faq: readonly { q: string; a: string }[], pagePath: string, locale: Locale = "en") {
+  return {
+    "@context": CONTEXT,
+    "@type": "FAQPage",
+    "@id": `${absolute(pagePath)}#faq`,
+    inLanguage: pageLanguage(locale),
+    mainEntity: faq.map(({ q, a }) => ({
+      "@type": "Question",
+      name: q,
+      acceptedAnswer: { "@type": "Answer", text: a },
+    })),
+  }
+}
+
+/** ItemList of pages, e.g. the three services on the overview. */
+export function itemList(items: readonly { name: string; path: string }[]) {
+  return {
+    "@context": CONTEXT,
+    "@type": "ItemList",
+    itemListElement: items.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: item.name,
+      url: absolute(item.path),
+    })),
   }
 }

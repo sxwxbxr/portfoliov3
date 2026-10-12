@@ -1,25 +1,21 @@
 import type { Metadata } from "next"
 import { localizePath, type Locale } from "@/lib/i18n"
 import { pageMetadata } from "@/lib/seo"
+import { overview as overviewEn } from "@/content/services/en"
+import { overview as overviewDe } from "@/content/services/de"
+import { home as homeEn } from "@/content/home/en"
+import { home as homeDe } from "@/content/home/de"
 
 /**
  * Title and description of every page that exists in both editions, keyed by
- * the English path. The German values are a first pass; the copywriter returns
- * them through the flat JSON export under `pageMeta.<key>.{title,description}`.
+ * the English path. Home and services are read from content/home and
+ * content/services, the other pages are set here.
  */
 export const PAGE_META = {
   home: {
     path: "/",
-    en: {
-      title: "Software and automation for SMEs",
-      description:
-        "Weber Development builds custom software and process automation for SMEs in Eastern Switzerland, delivered personally by Seya Weber in Bichwil SG.",
-    },
-    de: {
-      title: "Software und Automatisierung für KMU",
-      description:
-        "Weber Development entwickelt Individualsoftware und Prozessautomatisierung für KMU in der Ostschweiz, persönlich umgesetzt von Seya Weber in Bichwil SG.",
-    },
+    en: { title: homeEn.metaTitle, description: homeEn.metaDescription },
+    de: { title: homeDe.metaTitle, description: homeDe.metaDescription },
   },
   about: {
     path: "/about",
@@ -62,16 +58,8 @@ export const PAGE_META = {
   },
   services: {
     path: "/services",
-    en: {
-      title: "Services for SMEs",
-      description:
-        "Custom software, process automation with AI and digital project leadership for SMEs in Eastern Switzerland: what each service covers and how it works.",
-    },
-    de: {
-      title: "Leistungen für KMU",
-      description:
-        "Individualsoftware, Prozessautomatisierung mit KI und Projektleitung in der Digitalisierung für KMU in der Ostschweiz: was jede Leistung umfasst und wie sie abläuft.",
-    },
+    en: { title: overviewEn.metaTitle, description: overviewEn.metaDescription },
+    de: { title: overviewDe.metaTitle, description: overviewDe.metaDescription },
   },
   contact: {
     path: "/contact",
