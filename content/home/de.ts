@@ -22,7 +22,6 @@ export const home: HomeContent = {
     },
     {
       q: "Arbeiten Sie auch remote?",
-      // TODO(Seya): bestätigen, ob Reisekosten in der Ostschweiz inbegriffen sind
       a: "Ja. Erstgespräch, Zwischenstände und Schulungen laufen per Video, wenn Sie das bevorzugen. Vor Ort in der Ostschweiz, in der übrigen Schweiz nach Absprache.",
     },
     {

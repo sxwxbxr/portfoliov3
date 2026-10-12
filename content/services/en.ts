@@ -383,7 +383,7 @@ export const services: Record<ServiceContent["key"], ServiceContent> = {
         },
       ],
       // TODO(Seya): confirm
-      note: "Travel within Eastern Switzerland is included; beyond that, at cost.",
+      note: "Travel time and expenses are not included and are charged separately.",
     },
     references: [
       {
@@ -423,9 +423,8 @@ export const services: Record<ServiceContent["key"], ServiceContent> = {
         a: "Then the mandate starts with a stocktake of two to three weeks: what was agreed, what was delivered, where it is stuck. The result is a cleaned-up plan that vendor and management sign off together.",
       },
       {
-        q: "Do you work with French-speaking or international vendors?",
-        // TODO(Seya): confirm how far French is used in day-to-day project work
-        a: "German is the native language, English at C1 level, French at B2. Project meetings and documentation in English are no problem; French for meetings and correspondence.",
+        q: "Do you work with international vendors?",
+        a: "Yes, in English. German is the native language, English is at C1 level. Project meetings and documentation in English are no problem.",
       },
     ],
     cta: {

@@ -22,7 +22,6 @@ export const home: HomeContent = {
     },
     {
       q: "Do you also work remotely?",
-      // TODO(Seya): confirm whether travel within Eastern Switzerland is included
       a: "Yes. First call, interim reviews and training run over video if you prefer. On site in Eastern Switzerland, elsewhere in Switzerland by arrangement.",
     },
     {

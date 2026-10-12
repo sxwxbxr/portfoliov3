@@ -382,8 +382,7 @@ export const services: Record<ServiceContent["key"], ServiceContent> = {
           text: "für Projekte mit längerer Laufzeit und gleichmässigem Pensum.",
         },
       ],
-      // TODO(Seya): bestätigen
-      note: "Reisekosten innerhalb der Ostschweiz sind inbegriffen; ausserhalb nach Aufwand.",
+      note: "Reisezeit und Reisekosten sind nicht inbegriffen und werden separat verrechnet.",
     },
     references: [
       {
@@ -423,9 +422,8 @@ export const services: Record<ServiceContent["key"], ServiceContent> = {
         a: "Dann beginnt das Mandat mit einer Bestandsaufnahme von zwei bis drei Wochen: Was ist vereinbart, was ist geliefert, wo klemmt es. Daraus entsteht ein bereinigter Plan, den Lieferant und Geschäftsleitung gemeinsam verabschieden.",
       },
       {
-        q: "Sprechen Sie mit französischsprachigen oder internationalen Lieferanten?",
-        // TODO(Seya): bestätigen, wie weit Französisch im Projektalltag eingesetzt wird
-        a: "Deutsch ist Muttersprache, Englisch auf Niveau C1, Französisch auf Niveau B2. Projektgespräche und Dokumentation auf Englisch sind kein Problem; Französisch für Sitzungen und Korrespondenz.",
+        q: "Arbeiten Sie auch mit internationalen Lieferanten?",
+        a: "Ja, auf Englisch. Deutsch ist Muttersprache, Englisch auf Niveau C1. Projektgespräche und Dokumentation auf Englisch sind kein Problem.",
       },
     ],
     cta: {
