@@ -47,7 +47,8 @@
       "Drop-in script tag for WordPress, static sites and CMS templates, with the same banner and preference dialog, no React needed",
       "Starting points for 15 common services (YouTube, Google Analytics 4, Meta Pixel, HubSpot and more) with provider and privacy policy URL, without cookie claims, and a size check that keeps the bundle in bounds",
       "Vue 3 composables and plugin and Svelte stores on top of the same core engine, plus guides for Nuxt, SvelteKit, Remix and Astro that read the stored decision on the server",
-      "Checked accessibility: automated WCAG 2.2 AA scans of banner, preference center and embed placeholder plus keyboard tests in Chromium, Firefox and WebKit on every change, and guides for strict Content Security Policy and Subresource Integrity"
+      "Checked accessibility: automated WCAG 2.2 AA scans of banner, preference center and embed placeholder plus keyboard tests in Chromium, Firefox and WebKit on every change, and guides for strict Content Security Policy and Subresource Integrity",
+      "Purposes with stable ids and a webhook that tells your own backend about every change, so a withdrawal can reach CRM and e-mail tool (since 2.0)"
     ],
     "pro": [
       "Service catalog with 71 providers, each entry sourced from the provider's own documentation with a retrieval date",
@@ -63,7 +64,8 @@
       "Audit report in German or English as Markdown and HTML: configuration, site scan, catalog freshness and the evidence manifest in one document, with missing parts marked as not checked",
       "Seals for the consent log: a keyed hash chain over the entries of a period, linked from period to period, so later changes, removals and additions are detectable; seals hold only entry IDs and hashes",
       "Catalog texts and cookie table headings in German, English, French, Italian and Spanish, and a freshness check for CI that lists catalog entries older than a limit",
-      "WordPress plugin generator: one JSON file becomes a plugin that loads the banner, blocks scripts that other plugins enqueue by handle (also WooCommerce) and adds shortcodes for the settings link and the cookie table"
+      "WordPress plugin generator: one JSON file becomes a plugin that loads the banner, blocks scripts that other plugins enqueue by handle (also WooCommerce) and adds shortcodes for the settings link and the cookie table",
+      "Receiver for the Permito 2.0 consent webhook: writes each change to the consent log, passes withdrawals on to connected systems with retries, and keeps proof of which system confirmed what (since 2.0)"
     ]
   },
   "comparison": [
@@ -192,7 +194,7 @@
       },
       {
         "name": "@weber-development/permito-log",
-        "description": "Self-hosted consent log for documenting given consent."
+        "description": "Self-hosted consent log, with a receiver that passes withdrawals on to your systems and keeps the proof."
       },
       {
         "name": "@weber-development/permito-scanner",
@@ -289,6 +291,12 @@
   "videos": [],
   "articles": [],
   "releases": [
+    {
+      "version": "2.0.0",
+      "date": "2026-10-12",
+      "title": "Permito 2.0: consent across systems",
+      "url": "https://www.npmjs.com/package/@permitojs/core/v/2.0.0"
+    },
     {
       "version": "1.0.0",
       "date": "2026-10-06",
