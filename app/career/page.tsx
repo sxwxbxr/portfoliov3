@@ -11,11 +11,14 @@ import CertificatesRoadmap from "@/components/certificates/CertificatesRoadmap"
 import { getCertificates, getEducationEntries, getExperience } from "@/lib/data"
 import { buildCareerTimeline } from "@/lib/career"
 import { copy } from "@/lib/copy"
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata = {
-  title: copy.career.title,
-  description: copy.career.subtitle,
-}
+export const metadata = pageMetadata({
+  title: "Career and education",
+  description:
+    "Career of Seya Weber: apprenticeships, roles in operations and software development, education and certificates, shown as one timeline.",
+  path: "/career",
+})
 
 export default async function Career() {
   const [work, education, certificates] = await Promise.all([

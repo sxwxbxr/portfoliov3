@@ -7,8 +7,16 @@ import { SkillGroups, groupByCategory, type SkillRow } from "../../components/Sk
 import { getEducationEntries, getSkills } from "@/lib/data"
 import { resolveImage } from "@/lib/project-image"
 import { copy } from "@/lib/copy"
+import { pageMetadata } from "@/lib/seo"
 
 export const revalidate = 86400
+
+export const metadata = pageMetadata({
+  title: "About Seya Weber",
+  description:
+    "Seya Weber runs Weber Development in Bichwil SG: software developer and project manager building custom software and automation for Swiss SMEs.",
+  path: "/about",
+})
 
 const expertise = copy.common.expertiseAreas
 

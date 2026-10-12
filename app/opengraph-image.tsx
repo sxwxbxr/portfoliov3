@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og"
 
 export const runtime = "edge"
-export const alt = "Seya Weber - Project Manager & Software Developer"
+export const alt = "Weber Development: custom software and automation for SMEs in Eastern Switzerland"
 export const size = { width: 1200, height: 630 }
 export const contentType = "image/png"
 
@@ -45,7 +45,7 @@ export default async function OpenGraphImage() {
               margin: 0,
             }}
           >
-            Seya Weber
+            Weber Development
           </h1>
           <p
             style={{
@@ -56,8 +56,8 @@ export default async function OpenGraphImage() {
               maxWidth: 900,
             }}
           >
-            Project Manager &amp; Software Developer building lean digital
-            solutions in St. Gallen, Switzerland.
+            Custom software and automation for SMEs in Eastern
+            Switzerland. By Seya Weber.
           </p>
         </div>
 
@@ -73,7 +73,7 @@ export default async function OpenGraphImage() {
           }}
         >
           <span>Automation · .NET · Next.js</span>
-          <span>St. Gallen, CH</span>
+          <span>Bichwil SG, CH</span>
         </div>
       </div>
     ),

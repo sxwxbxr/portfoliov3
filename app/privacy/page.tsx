@@ -4,14 +4,16 @@ import PageLayout, { Section } from "../../components/PageLayout"
 import { ProseMarkdown } from "../../components/ProseMarkdown"
 import { getSiteSettings } from "@/lib/data"
 import { copy } from "@/lib/copy"
+import { pageMetadata } from "@/lib/seo"
 
 export const revalidate = 86400
 
-export const metadata = {
-  title: "Privacy",
+export const metadata = pageMetadata({
+  title: "Privacy policy",
   description:
-    "How personal data submitted via this site is processed and stored.",
-}
+    "How Weber Development processes and stores personal data submitted through sweber.dev, for example via the contact form, and whom to contact about it.",
+  path: "/privacy",
+})
 
 export default async function Privacy() {
   const settings = await getSiteSettings()

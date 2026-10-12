@@ -4,14 +4,16 @@ import path from "path"
 import PageLayout, { Section } from "@/components/PageLayout"
 import { ProseMarkdown } from "@/components/ProseMarkdown"
 import { copy } from "@/lib/copy"
+import { pageMetadata } from "@/lib/seo"
 
 export const revalidate = 3600
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Imprint",
-  description: copy.packages.imprintSubtitle,
-  alternates: { canonical: "https://sweber.dev/imprint" },
-}
+  description:
+    "Legal notice for sweber.dev and its subdomains: Weber Development, Seya Weber, Bichwil SG, Switzerland, with postal address and contact details.",
+  path: "/imprint",
+})
 
 export default function Imprint() {
   const body = fs.readFileSync(

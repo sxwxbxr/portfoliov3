@@ -7,8 +7,16 @@ import { getProjects } from "@/lib/data"
 import { CASE_STUDIES_ENABLED } from "@/lib/features"
 import { resolveImage } from "@/lib/project-image"
 import { copy } from "@/lib/copy"
+import { pageMetadata } from "@/lib/seo"
 
 export const revalidate = 86400
+
+export const metadata = pageMetadata({
+  title: "Projects and case studies",
+  description:
+    "Selected projects by Weber Development: web applications, automation and AI integrations, each with the problem, the solution and the results.",
+  path: "/projects",
+})
 
 export default async function Projects() {
   const projects = await getProjects()

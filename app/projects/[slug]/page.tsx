@@ -9,6 +9,7 @@ import { ProjectDeepDive } from "@/components/project-deepdive/DeepDiveButton"
 import { AI_FEATURES_ENABLED } from "@/lib/features"
 import { resolveImage } from "@/lib/project-image"
 import { copy } from "@/lib/copy"
+import { clipDescription, pageMetadata } from "@/lib/seo"
 
 export const revalidate = 86400
 
@@ -21,6 +22,17 @@ export async function generateStaticParams() {
 
 interface ProjectPageProps {
   params: Promise<{ slug: string }>
+}
+
+export async function generateMetadata({ params }: ProjectPageProps) {
+  const { slug } = await params
+  const project = await getProjectBySlug(slug)
+  if (!project) return {}
+  return pageMetadata({
+    title: project.title,
+    description: clipDescription(project.shortDescription || project.description),
+    path: `/projects/${project.slug}`,
+  })
 }
 
 export default async function ProjectDetails({ params }: ProjectPageProps) {

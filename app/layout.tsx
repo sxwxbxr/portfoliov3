@@ -13,6 +13,7 @@ import { ChatWidget } from "@/components/chat-widget/ChatWidget"
 import { AI_FEATURES_ENABLED } from "@/lib/features"
 import { getSiteSettings, type SiteSettings } from "@/lib/data"
 import { copy } from "@/lib/copy"
+import { BRAND, SITE_URL } from "@/lib/seo"
 
 /**
  * Self-hosted rather than fetched from Google at build time.
@@ -54,31 +55,20 @@ const jetbrainsMono = localFont({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://sweber.dev"),
+  metadataBase: new URL(SITE_URL),
+  // Pages set their own title, description, canonical and og:url through
+  // pageMetadata() in lib/seo.ts. Nothing URL-specific may live here: every
+  // route inherits it, and a root-level canonical turned all subpages into
+  // duplicates of the home page.
   title: {
-    default: "Seya Weber - Project Manager & Software Developer",
-    template: "%s | Seya Weber",
+    default: `Software and automation for SMEs | ${BRAND}`,
+    template: `%s | ${BRAND}`,
   },
   description:
-    "Experienced Project Manager specializing in software development and digital transformation in St. Gallen, Switzerland. Expert in C#, .NET, automation workflows, and agile methodologies.",
-  keywords: [
-    "Seya Weber",
-    "Project Manager",
-    "Software Developer",
-    "Digital Transformation",
-    "C# Developer",
-    ".NET Developer",
-    "Automation Workflows",
-    "St. Gallen",
-    "Switzerland",
-    "Agile Methodologies",
-    "Process Automation",
-    "Healthcare Technology",
-    "Manufacturing Software",
-  ],
-  authors: [{ name: "Seya Weber", url: "https://sweber.dev" }],
+    "Weber Development builds custom software and process automation for SMEs in Eastern Switzerland, delivered personally by Seya Weber in Bichwil SG.",
+  authors: [{ name: "Seya Weber", url: SITE_URL }],
   creator: "Seya Weber",
-  publisher: "Seya Weber",
+  publisher: BRAND,
   formatDetection: {
     email: false,
     address: false,
@@ -87,11 +77,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://sweber.dev",
-    siteName: "Seya Weber Portfolio",
-    title: "Seya Weber - Project Manager & Software Developer",
-    description:
-      "Experienced Project Manager specializing in software development and digital transformation in St. Gallen, Switzerland.",
+    siteName: BRAND,
   },
   robots: {
     index: true,
@@ -103,9 +89,6 @@ export const metadata: Metadata = {
       "max-image-preview": "large",
       "max-snippet": -1,
     },
-  },
-  alternates: {
-    canonical: "https://sweber.dev",
   },
   category: "technology",
 }

@@ -8,10 +8,18 @@ import {
 import HomeContent from "@/components/HomeContent"
 import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
 import { resolveImage } from "@/lib/project-image"
+import { pageMetadata } from "@/lib/seo"
 
 // Static-first: admin writes invalidate on demand via revalidatePublic().
 // The 24h value is only a self-healing fallback, not the primary refresh path.
 export const revalidate = 86400
+
+export const metadata = pageMetadata({
+  title: "Software and automation for SMEs",
+  description:
+    "Weber Development builds custom software and process automation for SMEs in Eastern Switzerland, delivered personally by Seya Weber in Bichwil SG.",
+  path: "/",
+})
 
 export default async function Home() {
   const [projects, experience, blogPosts, caseStudies, settings] = await Promise.all([

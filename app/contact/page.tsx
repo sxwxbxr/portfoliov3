@@ -3,8 +3,16 @@ import PageLayout, { Section } from "../../components/PageLayout"
 import { ContactForm } from "../../components/ContactForm"
 import { getSiteSettings } from "@/lib/data"
 import { copy } from "@/lib/copy"
+import { pageMetadata } from "@/lib/seo"
 
 export const revalidate = 86400
+
+export const metadata = pageMetadata({
+  title: "Contact",
+  description:
+    "Contact Weber Development for a first call about custom software, automation or project leadership. Based in Bichwil SG, working across Switzerland.",
+  path: "/contact",
+})
 
 export default async function Contact() {
   const settings = await getSiteSettings()
