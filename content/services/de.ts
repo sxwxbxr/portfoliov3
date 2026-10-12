@@ -52,7 +52,6 @@ export const overview: ServicesOverviewContent = {
   start: [
     {
       step: "Erstgespräch",
-      // TODO(Seya): bestätigen
       text: "Sie schildern das Problem, ich frage nach. Etwa 30 bis 45 Minuten, telefonisch, per Video oder vor Ort in der Ostschweiz. Kostenlos.",
     },
     {
@@ -108,22 +107,18 @@ export const services: Record<ServiceContent["key"], ServiceContent> = {
     process: [
       {
         step: "Erstgespräch",
-        // TODO(Seya): bestätigen
         text: "Sie schildern den Ablauf, der Mühe macht. Ich frage nach, wo Zeit und Fehler entstehen. Dauer etwa 30 bis 45 Minuten, kostenlos.",
       },
       {
         step: "Anforderungen und Offerte",
-        // TODO(Seya): bestätigen
         text: "Ein bis zwei Gespräche mit den Nutzenden, danach eine schriftliche Offerte mit Umfang, Etappen und Preis. Typisch 1 bis 2 Wochen.",
       },
       {
         step: "Prototyp",
-        // TODO(Seya): bestätigen
         text: "Eine klickbare Version mit Ihren echten Begriffen und Beispieldaten. Typisch 2 bis 4 Wochen.",
       },
       {
         step: "Entwicklung in Etappen",
-        // TODO(Seya): Rhythmus bestätigen
         text: "Alle zwei Wochen ein Stand, den Sie ausprobieren können. Rückmeldungen fliessen direkt in die nächste Etappe.",
       },
       {
@@ -221,17 +216,14 @@ export const services: Record<ServiceContent["key"], ServiceContent> = {
     process: [
       {
         step: "Erstgespräch",
-        // TODO(Seya): bestätigen
         text: "Sie zeigen den Ablauf, der am meisten nervt, am besten direkt am Bildschirm. Etwa 30 bis 45 Minuten, kostenlos.",
       },
       {
         step: "Prozessaufnahme und Machbarkeit",
-        // TODO(Seya): bestätigen
         text: "Ich schaue zu, zähle mit und prüfe mit echten Beispielen, ob eine Regel reicht oder ein Sprachmodell nötig ist. Typisch 1 bis 2 Wochen.",
       },
       {
         step: "Pilot auf einem Prozess",
-        // TODO(Seya): bestätigen
         text: "Eine Automatisierung läuft parallel zum bisherigen Weg, Ergebnisse werden verglichen. Typisch 2 bis 6 Wochen.",
       },
       {
@@ -340,22 +332,18 @@ export const services: Record<ServiceContent["key"], ServiceContent> = {
     process: [
       {
         step: "Erstgespräch",
-        // TODO(Seya): bestätigen
         text: "Sie beschreiben das Vorhaben und den Stand. Etwa 45 Minuten, kostenlos.",
       },
       {
         step: "Standortbestimmung",
-        // TODO(Seya): bestätigen
         text: "Interviews, Prozessaufnahme, Risikobild, Empfehlung zum weiteren Vorgehen in einem kurzen Bericht. Typisch 2 bis 4 Wochen.",
       },
       {
         step: "Anforderungen und Ausschreibung",
-        // TODO(Seya): bestätigen
         text: "Anforderungskatalog, Anbieterauswahl, Offertvergleich, Entscheid. Typisch 4 bis 8 Wochen.",
       },
       {
         step: "Umsetzungsbegleitung",
-        // TODO(Seya): bestätigen
         text: "Steuerung des Lieferanten über die Dauer der Einführung, mit einem festen Pensum, typisch 1 bis 2 Tage pro Woche.",
       },
       {
@@ -400,7 +388,6 @@ export const services: Record<ServiceContent["key"], ServiceContent> = {
     faq: [
       {
         q: "Sind Sie neutral gegenüber Anbietern?",
-        // TODO(Seya): bestätigen
         a: "Ja. Weber Development verkauft keine Lizenzen und hat keine Wiederverkaufsverträge mit Softwareherstellern. Die Empfehlung richtet sich nach Ihrem Anforderungskatalog, und der Offertvergleich liegt offen auf dem Tisch.",
       },
       {
@@ -418,7 +405,6 @@ export const services: Record<ServiceContent["key"], ServiceContent> = {
       },
       {
         q: "Was, wenn das Projekt schon läuft und hängt?",
-        // TODO(Seya): bestätigen
         a: "Dann beginnt das Mandat mit einer Bestandsaufnahme von zwei bis drei Wochen: Was ist vereinbart, was ist geliefert, wo klemmt es. Daraus entsteht ein bereinigter Plan, den Lieferant und Geschäftsleitung gemeinsam verabschieden.",
       },
       {

@@ -52,7 +52,6 @@ export const overview: ServicesOverviewContent = {
   start: [
     {
       step: "First call",
-      // TODO(Seya): confirm
       text: "You describe the problem, I ask questions. About 30 to 45 minutes, by phone, video or on site in Eastern Switzerland. Free of charge.",
     },
     {
@@ -108,22 +107,18 @@ export const services: Record<ServiceContent["key"], ServiceContent> = {
     process: [
       {
         step: "First call",
-        // TODO(Seya): confirm
         text: "You describe the workflow that causes trouble; I ask where time and errors are lost. About 30 to 45 minutes, free of charge.",
       },
       {
         step: "Requirements and quote",
-        // TODO(Seya): confirm
         text: "One or two conversations with the users, then a written quote with scope, stages and price. Typically 1 to 2 weeks.",
       },
       {
         step: "Prototype",
-        // TODO(Seya): confirm
         text: "A clickable version using your real terminology and sample data. Typically 2 to 4 weeks.",
       },
       {
         step: "Development in stages",
-        // TODO(Seya): confirm cadence
         text: "Every two weeks a version you can try out; feedback flows straight into the next stage.",
       },
       {
@@ -221,17 +216,14 @@ export const services: Record<ServiceContent["key"], ServiceContent> = {
     process: [
       {
         step: "First call",
-        // TODO(Seya): confirm
         text: "You show the workflow that annoys you most, ideally on screen. About 30 to 45 minutes, free of charge.",
       },
       {
         step: "Process analysis and feasibility",
-        // TODO(Seya): confirm
         text: "I watch, count and test with real examples whether a rule is enough or a language model is needed. Typically 1 to 2 weeks.",
       },
       {
         step: "Pilot on one process",
-        // TODO(Seya): confirm
         text: "The automation runs alongside the current way of working, and the results are compared. Typically 2 to 6 weeks.",
       },
       {
@@ -340,22 +332,18 @@ export const services: Record<ServiceContent["key"], ServiceContent> = {
     process: [
       {
         step: "First call",
-        // TODO(Seya): confirm
         text: "You describe the project and where it stands. About 45 minutes, free of charge.",
       },
       {
         step: "Assessment",
-        // TODO(Seya): confirm
         text: "Interviews, process analysis, risk picture, recommendation on how to proceed in a short report. Typically 2 to 4 weeks.",
       },
       {
         step: "Requirements and tendering",
-        // TODO(Seya): confirm
         text: "Requirements catalogue, vendor selection, quote comparison, decision. Typically 4 to 8 weeks.",
       },
       {
         step: "Implementation support",
-        // TODO(Seya): confirm
         text: "Steering the vendor over the duration of the rollout at an agreed workload, typically 1 to 2 days per week.",
       },
       {
@@ -382,7 +370,6 @@ export const services: Record<ServiceContent["key"], ServiceContent> = {
           text: "for longer projects with a steady workload.",
         },
       ],
-      // TODO(Seya): confirm
       note: "Travel time and expenses are not included and are charged separately.",
     },
     references: [
@@ -401,7 +388,6 @@ export const services: Record<ServiceContent["key"], ServiceContent> = {
     faq: [
       {
         q: "Are you neutral towards vendors?",
-        // TODO(Seya): confirm
         a: "Yes. Weber Development sells no licences and has no reseller agreements with software vendors. The recommendation follows your requirements catalogue, and the quote comparison is laid out in the open.",
       },
       {
@@ -419,7 +405,6 @@ export const services: Record<ServiceContent["key"], ServiceContent> = {
       },
       {
         q: "What if the project is already running and stuck?",
-        // TODO(Seya): confirm
         a: "Then the mandate starts with a stocktake of two to three weeks: what was agreed, what was delivered, where it is stuck. The result is a cleaned-up plan that vendor and management sign off together.",
       },
       {
