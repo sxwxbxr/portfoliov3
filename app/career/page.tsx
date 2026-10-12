@@ -12,6 +12,8 @@ import { getCertificates, getEducationEntries, getExperience } from "@/lib/data"
 import { buildCareerTimeline } from "@/lib/career"
 import { copy } from "@/lib/copy"
 import { pageMetadata } from "@/lib/seo"
+import { JsonLd } from "@/components/JsonLd"
+import { breadcrumbList } from "@/lib/structured-data"
 
 export const metadata = pageMetadata({
   title: "Career and education",
@@ -49,6 +51,7 @@ export default async function Career() {
       title={copy.career.title}
       subtitle={copy.career.subtitle}
     >
+      <JsonLd data={breadcrumbList([{ name: "Career", path: "/career" }])} />
       {/* ─── Timeline + entries ────────────────────────────────────────
           One component, because the chart and the entries share a selection:
           the chart is an index into the page rather than a picture of it. */}

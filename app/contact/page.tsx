@@ -4,6 +4,8 @@ import { ContactForm } from "../../components/ContactForm"
 import { getSiteSettings } from "@/lib/data"
 import { copy } from "@/lib/copy"
 import { pageMetadata } from "@/lib/seo"
+import { JsonLd } from "@/components/JsonLd"
+import { breadcrumbList } from "@/lib/structured-data"
 
 export const revalidate = 86400
 
@@ -28,6 +30,7 @@ export default async function Contact() {
       title={copy.contact.title}
       subtitle={copy.contact.subtitle}
     >
+      <JsonLd data={breadcrumbList([{ name: "Contact", path: "/contact" }])} />
       <section className="sheet pb-24 md:pb-32">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_1.6fr]">
           {/* Left: the facts, as hairline rows */}

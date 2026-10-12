@@ -8,6 +8,8 @@ import { getEducationEntries, getSkills } from "@/lib/data"
 import { resolveImage } from "@/lib/project-image"
 import { copy } from "@/lib/copy"
 import { pageMetadata } from "@/lib/seo"
+import { JsonLd } from "@/components/JsonLd"
+import { breadcrumbList, profilePage } from "@/lib/structured-data"
 
 export const revalidate = 86400
 
@@ -45,6 +47,8 @@ export default async function About() {
       title={copy.about.title}
       subtitle={copy.about.subtitle}
     >
+      <JsonLd data={breadcrumbList([{ name: "About", path: "/about" }])} />
+      <JsonLd data={profilePage()} />
       {/* ─── Bio ─── */}
       <Section className="sheet pb-18 md:pb-24">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-[1.6fr_1fr]">

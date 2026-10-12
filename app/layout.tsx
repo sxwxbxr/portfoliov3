@@ -11,9 +11,10 @@ import SmoothScroll from "@/components/SmoothScroll"
 import { ScrollProgress } from "@/components/ScrollProgress"
 import { ChatWidget } from "@/components/chat-widget/ChatWidget"
 import { AI_FEATURES_ENABLED } from "@/lib/features"
-import { getSiteSettings, type SiteSettings } from "@/lib/data"
+import { getSiteSettings } from "@/lib/data"
 import { copy } from "@/lib/copy"
 import { BRAND, SITE_URL } from "@/lib/seo"
+import { siteGraph } from "@/lib/structured-data"
 
 /**
  * Self-hosted rather than fetched from Google at build time.
@@ -93,52 +94,13 @@ export const metadata: Metadata = {
   category: "technology",
 }
 
-function buildStructuredData(settings: SiteSettings) {
-  const sameAs = [settings.linkedinUrl, settings.githubUrl, settings.twitterUrl].filter(
-    Boolean
-  )
-
-  const [city, country = "Switzerland"] = (settings.contactLocation || "St. Gallen, Switzerland")
-    .split(",")
-    .map((s) => s.trim())
-
-  return {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    name: "Seya Weber",
-    jobTitle: settings.currentRole || "Project Manager & Software Developer",
-    description:
-      "Experienced Project Manager specializing in software development and digital transformation in St. Gallen, Switzerland.",
-    url: "https://sweber.dev",
-    ...(sameAs.length > 0 && { sameAs }),
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: city,
-      addressCountry: country,
-    },
-    ...(settings.knowsAbout.length > 0 && { knowsAbout: settings.knowsAbout }),
-    ...(settings.alumniOf && {
-      alumniOf: {
-        "@type": "Organization",
-        name: settings.alumniOf,
-      },
-    }),
-    ...(settings.currentEmployer && {
-      worksFor: {
-        "@type": "Organization",
-        name: settings.currentEmployer,
-      },
-    }),
-  }
-}
-
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
   const settings = await getSiteSettings()
-  const structuredData = buildStructuredData(settings)
+  const structuredData = siteGraph(settings)
 
   return (
     <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} dark antialiased`} suppressHydrationWarning>

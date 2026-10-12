@@ -10,6 +10,8 @@ import { AI_FEATURES_ENABLED } from "@/lib/features"
 import { resolveImage } from "@/lib/project-image"
 import { copy } from "@/lib/copy"
 import { clipDescription, pageMetadata } from "@/lib/seo"
+import { JsonLd } from "@/components/JsonLd"
+import { breadcrumbList, creativeWork } from "@/lib/structured-data"
 
 export const revalidate = 86400
 
@@ -77,6 +79,13 @@ export default async function ProjectDetails({ params }: ProjectPageProps) {
 
   return (
     <div className="min-h-screen bg-ground">
+      <JsonLd
+        data={breadcrumbList([
+          { name: "Projects", path: "/projects" },
+          { name: project.title, path: `/projects/${project.slug}` },
+        ])}
+      />
+      <JsonLd data={creativeWork({ ...project, tags })} />
       <Navigation />
 
       <div className="flex flex-col gap-14 pt-32 md:gap-20">

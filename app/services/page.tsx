@@ -5,6 +5,8 @@ import { ChevronRight } from "lucide-react"
 import PageLayout, { Section } from "../../components/PageLayout"
 import { Block } from "../../components/site/Block"
 import { copy } from "@/lib/copy"
+import { JsonLd } from "@/components/JsonLd"
+import { breadcrumbList } from "@/lib/structured-data"
 
 const servicePackages = copy.services.packages
 const engagementModels = copy.services.engagementModels
@@ -16,6 +18,7 @@ export default function Services() {
       title={copy.services.title}
       subtitle={copy.services.subtitle}
     >
+      <JsonLd data={breadcrumbList([{ name: "Services", path: "/services" }])} />
       {/* ─── Packages: a three-up of flat cards ─── */}
       <section className="sheet-wide pb-18 md:pb-24">
         <div className="grid gap-3 lg:grid-cols-3">

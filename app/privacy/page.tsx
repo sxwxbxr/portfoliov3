@@ -5,6 +5,8 @@ import { ProseMarkdown } from "../../components/ProseMarkdown"
 import { getSiteSettings } from "@/lib/data"
 import { copy } from "@/lib/copy"
 import { pageMetadata } from "@/lib/seo"
+import { JsonLd } from "@/components/JsonLd"
+import { breadcrumbList } from "@/lib/structured-data"
 
 export const revalidate = 86400
 
@@ -33,6 +35,7 @@ export default async function Privacy() {
       title={copy.privacy.title}
       subtitle={copy.privacy.subtitle}
     >
+      <JsonLd data={breadcrumbList([{ name: "Privacy policy", path: "/privacy" }])} />
       <section className="sheet pb-24 md:pb-32">
         <Section>
           {/* Long-form legal text: one plain column under a hairline. */}

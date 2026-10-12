@@ -5,6 +5,8 @@ import PageLayout, { Section } from "@/components/PageLayout"
 import { ProseMarkdown } from "@/components/ProseMarkdown"
 import { copy } from "@/lib/copy"
 import { pageMetadata } from "@/lib/seo"
+import { JsonLd } from "@/components/JsonLd"
+import { breadcrumbList } from "@/lib/structured-data"
 
 export const revalidate = 3600
 
@@ -26,6 +28,7 @@ export default function Imprint() {
       title={copy.packages.imprintTitle}
       subtitle={copy.packages.imprintSubtitle}
     >
+      <JsonLd data={breadcrumbList([{ name: "Imprint", path: "/imprint" }])} />
       <section className="sheet pb-24 md:pb-32">
         <Section>
           <article className="border-t border-edge-soft pt-10">
