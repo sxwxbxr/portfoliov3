@@ -8,7 +8,7 @@ import { useEffect, useState } from "react"
  * the package. Same code as on npm, bundled into one file.
  */
 
-export const DERIVATIVE_URL = "/demos/derivative/derivative-1.0.0.min.js"
+export const DERIVATIVE_URL = "/demos/derivative/derivative-2.0.0.min.js"
 
 export type EntryType =
   | "feature"
@@ -27,11 +27,15 @@ export interface Release {
   package?: string
   title?: string
   summary?: string
+  media?: { type: "image" | "video"; url: string; alt?: string }[]
+  links?: { label: string; url: string }[]
+  importance?: "major" | "normal"
+  audience?: string[]
   entries: { type: EntryType; text: string; details?: string; scope?: string; link?: string }[]
 }
 
 export interface Feed {
-  version: 1
+  version: 2
   title?: string
   link?: string
   releases: Release[]

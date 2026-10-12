@@ -39,19 +39,20 @@
   "demoUrl": "/derivative/demo",
   "features": {
     "free": [
-      "Reads Changesets (default and GitHub formats), Keep a Changelog, conventional-changelog, conventional commits with tags, GitHub Releases and GitLab Releases (self-managed too); monorepo feeds can be limited to chosen packages",
+      "Reads Changesets (default and GitHub formats), Keep a Changelog, conventional-changelog, conventional commits with tags, GitHub Releases and GitLab Releases (self-managed too); monorepo feeds can be limited to chosen packages; Linear cycles, Jira versions and Notion pages as sources (beta)",
       "derivative build writes changelog.json, an Atom feed, a JSON Feed and a standalone changelog page; derivative init sets it all up in one step",
       "<derivative-widget>: popover or inline, unread badge, optional search field, about 6 kB gzipped, no dependencies",
-      "Announcement toast for the newest titled release, shown once per reader, and a filter for the entry types users see",
+      "Highlights shown as a toast, banner or modal for the newest release, once per reader; major releases come first, the modal traps focus and closes with Escape",
       "Accessible: labelled dialog, focus handling, Escape to close, reduced motion respected, a correct heading outline, and axe and real-Chromium checks (contrast, RTL, phone width) in the test suite",
       "Labels and dates in English, German, French and Italian; dark mode, right-to-left pages, a dozen CSS custom properties and styleable parts",
-      "Highlights: a title, summary and image for the releases that matter",
-      "A frozen API with a written stability promise, deprecation policy and upgrade guide, checked by tests and by installing the packed release into example projects",
+      "Release communication: a title, summary, images or video, call-to-action links and an importance per release; translations inside the feed; entries and releases for chosen audiences; \"new\" hints on your own UI elements",
+      "A frozen API with a written stability promise, deprecation policy, migration guide and upgrade guide, checked by tests and by installing the packed release into example projects; feed format 2 is a superset, version 1 feeds are still read",
       "Bindings for React (<WhatsNew>, useChangelog, an unstyled <ChangelogList>) and Vue 3 (<WhatsNew>, useChangelog); Svelte, Astro and plain HTML use the element directly"
     ],
     "pro": [
       "Read statistics without cookies or visitor IDs: opens, reads and link clicks per release, plus a \"Was this helpful?\" vote under each release, with an HTML report, a password-protected dashboard route for your own backend, CSV export and storage in a file, Postgres or SQLite",
-      "Audience segments and languages: entries only for certain plans or roles, scheduled releases, and a feed per language translated with DeepL, an OpenAI-compatible model or Anthropic, with a cache so only changed texts cost anything; entries can also follow your feature flags (Unleash, LaunchDarkly)",
+      "Audience segments and languages: entries only for certain plans or roles, scheduled releases, feature-flag audiences (Unleash, LaunchDarkly), translations written into the feed with DeepL, an OpenAI-compatible model or Anthropic, and a cache so only changed texts cost anything",
+      "Release notes with approval: drafts as JSON files in your repository (draft, review, approved, publish date), a CI check, and optional AI-written first drafts with your own key that always need a person's approval",
       "Announcements: a subscriber list with double opt-in and e-mail digests sent through Resend, Postmark, Amazon SES or any SMTP server (one-click unsubscribe, consent evidence), plus posts to Slack, Teams, Discord, Mattermost, Google Chat, Mastodon, Bluesky and LinkedIn"
     ]
   },
@@ -62,7 +63,7 @@
       "pro": true
     },
     {
-      "feature": "Widget, React and Vue bindings, highlights",
+      "feature": "Widget, React and Vue bindings, highlights (toast, banner, modal), media, links and translations in the feed",
       "free": true,
       "pro": true
     },
@@ -72,7 +73,7 @@
       "pro": true
     },
     {
-      "feature": "Audience segments, feature-flag audiences, scheduled releases, translated feeds",
+      "feature": "Audience segments, feature-flag audiences, scheduled releases, translated feeds, drafts with approval, AI-written drafts",
       "free": false,
       "pro": true
     },
@@ -102,11 +103,11 @@
       },
       {
         "name": "@weber-development/derivative-segments",
-        "description": "Shows entries only to the plans or roles they are meant for, publishes releases on a schedule and translates the feed into more languages with DeepL, an OpenAI-compatible model or Anthropic. Entries can follow your Unleash or LaunchDarkly feature flags."
+        "description": "Shows entries only to the plans or roles they are meant for, publishes releases on a schedule, translates the feed into more languages (inside the feed or one file per language) with DeepL, an OpenAI-compatible model or Anthropic, and manages drafts with an approval step, including AI-written first drafts. Entries can follow your Unleash or LaunchDarkly feature flags."
       },
       {
         "name": "@weber-development/derivative-announce",
-        "description": "Keeps a subscriber list with double opt-in, sends new releases as an e-mail digest through Resend, Postmark, Amazon SES or your own SMTP server, and posts them to Slack, Teams, Discord, Mattermost, Google Chat, Mastodon, Bluesky and LinkedIn."
+        "description": "Keeps a subscriber list with double opt-in, sends new releases, with image and links, as an e-mail digest in the reader's language through Resend, Postmark, Amazon SES or your own SMTP server, and posts them to Slack, Teams, Discord, Mattermost, Google Chat, Mastodon, Bluesky and LinkedIn."
       }
     ],
     "waitlistUrl": "mailto:info@sweber.dev?subject=Derivative%20Pro%20waitlist"
@@ -177,7 +178,7 @@
     },
     {
       "q": "Can I write friendlier release notes than my commit messages?",
-      "a": "Yes. Highlights in derivative.config.json add a title, a summary and an image to any release, while the generated entries stay as they are."
+      "a": "Yes. Highlights in derivative.config.json add a title, a summary, images, links and an importance to any release, while the generated entries stay as they are. With Pro you can also keep drafts in your repository and have them approved before they are published."
     },
     {
       "q": "Does it work without React?",
@@ -186,6 +187,10 @@
     {
       "q": "Can I use the open-source part on its own?",
       "a": "Yes. @sweberdev/derivative and @sweberdev/derivative-react are MIT-licensed and complete without Pro. Pro adds statistics, segments and announcements on top of the same changelog.json."
+    },
+    {
+      "q": "I use Derivative 1.x. What changes with 2.0?",
+      "a": "The feed format grows to version 2 and the widget's announce attribute becomes highlight; version 1 feeds are still read, and the CLI can write the old format with --feed-format 1. Node 22 is required. The migration guide in the documentation lists every change. Version 1.x keeps getting fixes for 12 months."
     }
   ],
   "publishedAt": "2026-10-05"

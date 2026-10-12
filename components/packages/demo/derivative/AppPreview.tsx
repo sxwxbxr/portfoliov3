@@ -143,7 +143,7 @@ export function AppPreview({ feed }: { feed: Feed }) {
                   lang,
                   theme,
                   types,
-                  announce: announce ? "" : undefined,
+                  highlight: announce ? "toast" : undefined,
                   search: search ? "" : undefined,
                   "storage-key": STORAGE_KEY,
                   href: "#playground",
