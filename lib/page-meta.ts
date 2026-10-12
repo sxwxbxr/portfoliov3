@@ -27,7 +27,7 @@ export const PAGE_META = {
     de: {
       title: "Über Seya Weber",
       description:
-        "Seya Weber führt Weber Development in Bichwil SG: Softwareentwicklung und Projektleitung für Individualsoftware und Automatisierung bei Schweizer KMU.",
+        "Seya Weber führt Weber Development in Bichwil SG: Softwareentwicklung und Projektleitung, Individualsoftware und Automatisierung für Schweizer KMU.",
     },
   },
   career: {
@@ -40,7 +40,7 @@ export const PAGE_META = {
     de: {
       title: "Werdegang und Ausbildung",
       description:
-        "Werdegang von Seya Weber: Lehre, Stationen in Betrieb und Softwareentwicklung, Ausbildung und Zertifikate in einer gemeinsamen Zeitleiste.",
+        "Werdegang von Seya Weber: Lehren, Stellen in Betrieb und Softwareentwicklung, Ausbildung und Zertifikate, dargestellt auf einer gemeinsamen Zeitachse.",
     },
   },
   projects: {
@@ -53,7 +53,7 @@ export const PAGE_META = {
     de: {
       title: "Projekte und Fallstudien",
       description:
-        "Ausgewählte Projekte von Weber Development: Webanwendungen, Automatisierung und KI-Integrationen, jeweils mit Problem, Lösung und Ergebnissen.",
+        "Ausgewählte Projekte von Weber Development: Webapplikationen, Automatisierungen und KI-Integrationen, jeweils mit Ausgangslage, Lösung und Ergebnis.",
     },
   },
   services: {
@@ -71,7 +71,7 @@ export const PAGE_META = {
     de: {
       title: "Kontakt",
       description:
-        "Kontaktieren Sie Weber Development für ein Erstgespräch zu Individualsoftware, Automatisierung oder Projektleitung. Sitz in Bichwil SG, tätig in der ganzen Schweiz.",
+        "Kontaktieren Sie Weber Development für ein Erstgespräch zu Individualsoftware, Automatisierung oder Projektleitung. Bichwil SG, tätig in der ganzen Schweiz.",
     },
   },
   imprint: {
@@ -84,7 +84,7 @@ export const PAGE_META = {
     de: {
       title: "Impressum",
       description:
-        "Impressum für sweber.dev und die Subdomains: Weber Development, Seya Weber, Bichwil SG, Schweiz, mit Postadresse und Kontaktangaben.",
+        "Impressum von sweber.dev und seinen Subdomains: Weber Development, Seya Weber, Bichwil SG, Schweiz, mit Postadresse und Kontaktangaben.",
     },
   },
   privacy: {
@@ -97,7 +97,7 @@ export const PAGE_META = {
     de: {
       title: "Datenschutzerklärung",
       description:
-        "Wie Weber Development über sweber.dev übermittelte Personendaten, etwa über das Kontaktformular, bearbeitet und speichert und an wen Sie sich dazu wenden können.",
+        "Wie Weber Development Personendaten bearbeitet und speichert, die über sweber.dev übermittelt werden, etwa per Kontaktformular, und wer dazu Auskunft gibt.",
     },
   },
 } as const

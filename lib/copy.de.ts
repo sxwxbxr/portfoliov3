@@ -31,7 +31,7 @@ export const copyDe: Copy = {
     experience: "Erfahrung",
     career: "Werdegang",
     education: "Ausbildung",
-    skills: "Kompetenzen",
+    skills: "Fähigkeiten",
     blog: "Blog",
     releaseNotes: "Release Notes",
     connect: "Vernetzen",
@@ -49,15 +49,15 @@ export const copyDe: Copy = {
     close: "Schliessen",
     copy: "Kopieren",
     copied: "Kopiert",
-    loading: "Lädt…",
+    loading: "Wird geladen…",
     back: "Zurück",
     current: "Aktuell",
     recommended: "Empfohlen",
     locationFallback: "Bichwil SG, Ostschweiz",
     coreSentence:
-      "Weber Development entwickelt individuelle Software und Automatisierungen für KMU in der Ostschweiz. Dahinter steht Seya Weber, Softwareentwicklung und Projektleitung aus Bichwil SG.",
+      "Weber Development entwickelt Individualsoftware und Automatisierungen für KMU in der Ostschweiz. Dahinter steht Seya Weber, Softwareentwicklung und Projektleitung aus Bichwil SG.",
     coreSentenceShort:
-      "Individuelle Software und Automatisierung für KMU in der Ostschweiz.",
+      "Individualsoftware und Automatisierungen für KMU in der Ostschweiz.",
     dateLocale: "de-CH",
     localTime: (time: string) => `${time} MEZ`,
     footerCtaTitle: "Arbeiten wir zusammen.",
@@ -80,7 +80,7 @@ export const copyDe: Copy = {
         ],
       },
       {
-        category: "Projektmanagement",
+        category: "Projektleitung",
         skills: [
           "Agile / Scrum",
           "Stakeholder-Management",
@@ -96,44 +96,42 @@ export const copyDe: Copy = {
   },
 
   coldStart: {
-    label: "Kalibriere",
+    label: "Kalibrierung",
     ready: "Bereit",
   },
 
   home: {
-    availabilityFallback: "Für Projekte verfügbar",
+    availabilityFallback: "Verfügbar für Projekte",
     heroHeadline: "Weber Development",
-    heroOffer: "Individuelle Software und Automatisierung für KMU in der Ostschweiz.",
+    heroOffer: "Individualsoftware und Automatisierungen für KMU in der Ostschweiz.",
     heroPerson:
       "Dahinter steht Seya Weber, Softwareentwicklung und Projektleitung aus Bichwil SG.",
     introEyebrow: "Kurz gesagt",
     introLead:
-      "Ich übersetze komplexe betriebliche Anforderungen in schlanke, wartbare Software – und weil ich auf beiden Seiten ausgebildet bin, verstehe ich die Anforderung ebenso gut wie das System, das sie erfüllen muss.",
+      "Ich übersetze komplexe betriebliche Anforderungen in schlanke, wartbare Software. Weil ich auf beiden Seiten ausgebildet bin, verstehe ich die Anforderung ebenso gut wie das System, das sie erfüllen muss.",
     introBody:
-      "Mein Weg führte über Elektroplanung, Energieoptimierung, Medizintechnik und SaaS-Entwicklung. Diese Breite ist der Grund, weshalb ich meist die Übersetzungsarbeit zwischen Fachseite und Technik übernehme.",
+      "Mein Weg führte über Elektroplanung, Energieoptimierung, Medizintechnik und SaaS-Entwicklung. Diese Breite ist der Grund, weshalb ich meist die Übersetzung zwischen Fachseite und Technik übernehme.",
     currentRole: (role: string, company: string) => `Aktuell · ${role} bei ${company}`,
     selectedWork: "Ausgewählte Arbeiten",
     selectedWorkEyebrow: "Ausgewählte Arbeiten",
     expertise: "Kompetenzen",
-    expertiseEyebrow: (n: number) => `Kompetenzen · ${n} ${plural(n, "Bereich", "Bereiche")}`,
+    expertiseEyebrow: (n: number) => `Kompetenzen · ${n} ${plural(n,"Bereich","Bereiche")}`,
     experience: "Erfahrung",
-    experienceEyebrow: (n: number, since?: number) =>
-      `Werdegang · ${n} ${plural(n, "Station", "Stationen")}${since ? ` · seit ${since}` : ""}`,
-    fullCareer: "Gesamter Werdegang",
+    experienceEyebrow: (n: number, since?: number) => `Werdegang · ${n} ${plural(n,"Station","Stationen")}${since?` · seit ${since}`:""}`,
+    fullCareer: "Ganzer Werdegang",
     testimonialEyebrow: "Referenz",
     testimonials: "Was Partner sagen",
     readCaseStudy: "Fallstudie lesen",
-    writing: "Texte",
-    metricProjects: "Realisierte Projekte",
+    writing: "Beiträge",
+    metricProjects: "Umgesetzte Projekte",
     metricEmployers: "Arbeitgeber",
-    metricSince: "in der Branche",
+    metricSince: "im Beruf",
     metricSinceValue: (year: number) => `seit ${year}`,
     introHeading: "Einleitung",
-    selectedWorkEyebrowCount: (n: number) =>
-      `Ausgewählte Arbeiten · ${n} ${plural(n, "Projekt", "Projekte")}`,
-    writingEyebrow: (n: number) => `Texte · ${n}`,
-    heroTaglineLead: "Anforderungen rein,",
-    heroTaglineSub: "Software raus",
+    selectedWorkEyebrowCount: (n: number) => `Ausgewählte Arbeiten · ${n} ${plural(n,"Projekt","Projekte")}`,
+    writingEyebrow: (n: number) => `Beiträge · ${n}`,
+    heroTaglineLead: "Aus Anforderungen",
+    heroTaglineSub: "wird Software",
     introLabel: "Kurz gesagt",
     introTitle: "Beide Seiten des Tisches",
     introSub: "die Anforderung und das System",
@@ -145,14 +143,14 @@ export const copyDe: Copy = {
     expertiseSub: "vom Plan bis zum Pull Request",
     careerLabel: "Werdegang",
     careerTitle: "Bisherige Stationen",
-    careerSub: (since?: number) => (since ? `in der Branche seit ${since}` : "und es geht weiter"),
+    careerSub: (since?: number) => since?`im Beruf seit ${since}`:"und es geht weiter",
     referenceLabel: "Referenz",
-    referenceSub: "in ihren eigenen Worten",
-    writingLabel: "Texte",
+    referenceSub: "in eigenen Worten",
+    writingLabel: "Beiträge",
     writingTitle: "Notizen aus der Praxis",
     writingSub: "zu Umsetzung und Engineering",
     ctaEyebrow: "Von der Idee zur Umsetzung",
-    ctaTitle: "Haben Sie ein Projekt im Kopf?",
+    ctaTitle: "Haben Sie ein Projekt vor?",
     ctaButton: "Kontakt aufnehmen",
   },
 
@@ -161,7 +159,7 @@ export const copyDe: Copy = {
   },
 
   projects: {
-    label: (n: number) => (n > 0 ? `${n} ${plural(n, "Projekt", "Projekte")}` : "Arbeiten"),
+    label: (n: number) => n>0?`${n} ${plural(n,"Projekt","Projekte")}`:"Arbeiten",
     title: "Projekte",
     subtitle: "Eine Auswahl aus Gesundheitswesen, Energie, SaaS und Developer Tools.",
     empty: "Noch keine Projekte.",
@@ -180,21 +178,20 @@ export const copyDe: Copy = {
     builtWithSub: "der Stack dahinter",
     nextProject: "Nächstes Projekt",
     allProjects: "Alle Projekte",
-    itemMeta: (index: string, category: string) =>
-      category ? `${index} · ${category}` : index,
+    itemMeta: (index: string, category: string) => category?`${index} · ${category}`:index,
   },
 
   blog: {
-    label: (n: number) => `${n} ${plural(n, "Artikel", "Artikel")}`,
-    title: "Texte",
+    label: (n: number) => `${n} ${plural(n,"Beitrag","Beiträge")}`,
+    title: "Beiträge",
     subtitle:
-      "Notizen zu Softwareentwicklung, Projektumsetzung und digitaler Transformation.",
-    empty: "Noch keine Artikel veröffentlicht.",
+      "Notizen zu Softwareentwicklung, Projektabwicklung und Digitalisierung.",
+    empty: "Noch keine Beiträge veröffentlicht.",
     externalLabel: "Packages",
-    allArticles: "Alle Artikel",
-    previousArticle: "Vorheriger Artikel",
-    nextArticle: "Nächster Artikel",
-    taggedEyebrow: (n: number) => `Verschlagwortet · ${n}`,
+    allArticles: "Alle Beiträge",
+    previousArticle: "Vorheriger Beitrag",
+    nextArticle: "Nächster Beitrag",
+    taggedEyebrow: (n: number) => `Schlagwort · ${n}`,
     writtenBy: "Verfasst von",
   },
 
@@ -202,12 +199,9 @@ export const copyDe: Copy = {
   caseStudies: copy.caseStudies,
 
   experience: {
-    label: (n: number, since?: number) =>
-      n === 0
-        ? "Werdegang"
-        : `${n} ${plural(n, "Station", "Stationen")}${since ? ` · seit ${since}` : ""}`,
+    label: (n: number, since?: number) => n===0?"Werdegang":`${n} ${plural(n,"Station","Stationen")}${since?` · seit ${since}`:""}`,
     title: "Erfahrung",
-    subtitle: "Mein Weg durch Softwareentwicklung, Projektmanagement und Engineering.",
+    subtitle: "Mein Weg durch Softwareentwicklung, Projektleitung und Engineering.",
     empty: "Noch keine Stationen.",
   },
 
@@ -215,104 +209,102 @@ export const copyDe: Copy = {
     label: "Über mich",
     title: "Über mich",
     subtitle:
-      "Weber Development entwickelt individuelle Software und Automatisierungen für KMU in der Ostschweiz. Dahinter steht Seya Weber, Softwareentwicklung und Projektleitung aus Bichwil SG.",
+      "Weber Development entwickelt Individualsoftware und Automatisierungen für KMU in der Ostschweiz. Dahinter steht Seya Weber, Softwareentwicklung und Projektleitung aus Bichwil SG.",
     factLocation: "Standort",
     factExperience: "Erfahrung",
     factFocus: "Schwerpunkt",
     factLanguages: "Sprachen",
     expertise: "Kompetenzen",
-    expertiseSub: "Womit ich arbeite, nach Bereichen gruppiert.",
+    expertiseSub: "Womit ich arbeite, nach Bereich geordnet.",
     educationSub: "Formale Ausbildung und die Stationen auf dem Weg.",
-    expertiseEyebrow: (n: number) => `Kompetenzen · ${n} ${plural(n, "Bereich", "Bereiche")}`,
+    expertiseEyebrow: (n: number) => `Kompetenzen · ${n} ${plural(n,"Bereich","Bereiche")}`,
     skills: "Fähigkeiten",
-    skillsEyebrow: (groups: number, total: number) =>
-      `${groups} ${plural(groups, "Kategorie", "Kategorien")} · ${total} ${plural(total, "Fähigkeit", "Fähigkeiten")}`,
-    skillsEmpty: "Die Fähigkeiten werden im Admin gepflegt und erscheinen hier nach Kategorie.",
+    skillsEyebrow: (groups: number, total: number) => `${groups} ${plural(groups,"Kategorie","Kategorien")} · ${total} ${plural(total,"Fähigkeit","Fähigkeiten")}`,
+    skillsEmpty: "Fähigkeiten werden im Admin gepflegt und erscheinen hier nach Kategorie.",
     career: "Werdegang",
     education: "Ausbildung",
-    educationEyebrow: (n: number) => `Ausbildung · ${n} ${plural(n, "Station", "Stationen")}`,
+    educationEyebrow: (n: number) => `Ausbildung · ${n} ${plural(n,"Station","Stationen")}`,
     ctaTitle: "Möchten Sie zusammenarbeiten?",
-    ctaBody: "Ich bin offen für neue Projekte und Zusammenarbeit.",
+    ctaBody: "Ich bin offen für neue Projekte und Kooperationen.",
     getInTouch: "Kontakt aufnehmen",
-    portraitAlt: "Seya Weber, Projektleiter und Softwareentwickler",
+    portraitAlt: "Seya Weber, Projektleitung und Softwareentwicklung",
     factLocationValue: "Bichwil SG, CH",
     factExperienceValue: "3+ Jahre",
-    factFocusValue: "Automatisierung & PM",
+    factFocusValue: "Automatisierung & Projektleitung",
     factLanguagesValue: "DE, EN, FR",
     bio: [
-      "Ich bin Projektleiter für Software und Digitalisierung bei Telsonic und baue dort massgeschneiderte Automatisierungs-Workflows in geschäftskritischen Systemen. Daneben führe ich Weber Development und schreibe massgeschneiderte Software für verschiedene Unternehmen.",
-      "Mit einem doppelten Hintergrund in Softwareentwicklung und Elektroplanung übersetze ich komplexe betriebliche Anforderungen in klare Spezifikationen, schlanke Prozesse und wartbare Lösungen. Mein Weg führte über Elektroplanung, Energieoptimierung für ein Schweizer Bankenportfolio, Datenmigration im Gesundheitswesen und heute über industrielle Automatisierung und SaaS-Produktentwicklung.",
-      "Ich baue Lösungen, die nicht nur das aktuelle Problem lösen, sondern mit dem Unternehmen mitwachsen. Weil ich sowohl entwickle als auch Projekte leite, kann ich zwischen technischer Umsetzung und betrieblichen Zielen übersetzen.",
+      "Ich leite bei Telsonic Projekte für Software und Digitalisierung und baue dort massgeschneiderte Automatisierungs-Workflows in geschäftskritischen Systemen. Daneben führe ich Weber Development und entwickle Individualsoftware für verschiedene Unternehmen.",
+      "Ausgebildet in Softwareentwicklung und Elektroplanung, übersetze ich komplexe betriebliche Anforderungen in klare Spezifikationen, schlanke Prozesse und wartbare Lösungen. Mein Weg führte über Elektroplanung, Energieoptimierung für das Portfolio einer Schweizer Bank und Datenmigration im Gesundheitswesen bis zur heutigen Arbeit in industrieller Automatisierung und SaaS-Produktentwicklung.",
+      "Ich baue Lösungen, die nicht nur das aktuelle Problem lösen, sondern mit dem Unternehmen mitwachsen. Weil ich sowohl entwickle als auch Projekte leite, übersetze ich zwischen technischer Umsetzung und betrieblichen Zielen.",
     ],
     uncategorised: "Ohne Kategorie",
     skillDetailLoading: "Details werden geladen…",
     skillDetailFallback:
-      "In verschiedenen Projekten eingesetzt – Details finden Sie auf der Projektseite.",
+      "In verschiedenen Projekten eingesetzt. Details finden Sie unter Projekte.",
   },
 
   services: {
     label: "Leistungen",
     title: "Leistungen",
     subtitle:
-      "Komplexe Vorhaben von der Idee bis zur Wirkung – mit der richtigen Mischung aus Strategie und Umsetzung.",
-    packageEyebrow: (n: number) => `Paket ${String(n).padStart(2, "0")}`,
+      "Komplexe Vorhaben von der Idee bis zur Wirkung, mit der richtigen Mischung aus Strategie und Umsetzung.",
+    packageEyebrow: (n: number) => `Leistung ${String(n).padStart(2,"0")}`,
     enquire: "Anfragen",
-    modelsEyebrow: (n: number) =>
-      `Zusammenarbeit · ${n} ${plural(n, "Modell", "Modelle")}`,
-    models: "Zusammenarbeitsmodelle",
-    modelsSub: "Drei Wege, zusammenzuarbeiten.",
+    modelsEyebrow: (n: number) => `Zusammenarbeit · ${n} ${plural(n,"Modell","Modelle")}`,
+    models: "Formen der Zusammenarbeit",
+    modelsSub: "Drei Möglichkeiten, zusammenzuarbeiten.",
     ctaTitle: "Passt eines davon?",
-    ctaBody: "Schildern Sie mir kurz, worum es geht – ich antworte innerhalb von 24 Stunden.",
-    startConversation: "Gespräch beginnen",
+    ctaBody: "Schildern Sie mir kurz, worum es geht. Ich antworte innert 24 Stunden.",
+    startConversation: "Gespräch starten",
     packages: [
       {
         // TODO(Seya): decide whether service names stay English or are translated.
-        title: "Delivery Leadership",
+        title: "Projektleitung",
         description:
-          "Interimistische Projektleitung für Digitalisierungsprogramme, komplexe Migrationen und Automatisierungsvorhaben.",
+          "Projektleitung auf Zeit für Digitalisierungsprogramme, komplexe Migrationen und Automatisierungsvorhaben.",
         outcomes: [
-          "Klarer Umfang, klare Roadmap und abgestimmte Stakeholder",
-          "Risiko- und Abhängigkeitsmanagement über Teams hinweg",
+          "Klarer Umfang, Roadmap und Abstimmung mit allen Beteiligten",
+          "Risiken und Abhängigkeiten über Teams hinweg im Griff",
           "Ein Reporting-Rhythmus, der zur Führungsebene passt",
         ],
       },
       {
-        title: "Solution Acceleration",
+        title: "Umsetzung",
         description:
-          "Praktische Umsetzung: Validierte Konzepte werden zu produktionsreifen Werkzeugen und Workflows.",
+          "Hands-on Umsetzung: Aus validierten Konzepten werden produktionsreife Tools und Workflows.",
         outcomes: [
-          "Schnelle Proofs of Concept und MVP-Entwicklung",
+          "Schnelle Proofs of Concept und MVPs",
           "Dokumentation und Schulung für eine saubere Übergabe",
-          "QA-Unterstützung und Instrumentierung für kontinuierliche Verbesserung",
+          "QA-Unterstützung und Messpunkte für die laufende Verbesserung",
         ],
       },
       {
-        title: "Process & Product Coaching",
+        title: "Prozess- und Produkt-Coaching",
         description:
-          "Unterstützung für Teams, die agile Praktiken einführen, ihre Product Discovery schärfen und ihre Delivery-Rituale verbessern.",
+          "Begleitung für Teams, die agile Methoden einführen, ihre Product Discovery schärfen und ihre Abläufe in der Umsetzung verbessern wollen.",
         outcomes: [
-          "Discovery- und Delivery-Frameworks, die Ihr Team selbst betreiben kann",
-          "Vorlagen, Checklisten und Playbooks für Wiederholbarkeit",
-          "Begleitendes Coaching, damit neue Gewohnheiten bleiben",
+          "Vorgehensmodelle für Discovery und Umsetzung, die Ihr Team selbst betreibt",
+          "Vorlagen, Checklisten und Playbooks, damit es wiederholbar wird",
+          "Coaching im Arbeitsalltag, damit neue Gewohnheiten halten",
         ],
       },
     ],
     engagementModels: [
       {
         title: "Projektbasiert",
-        description: "Fester Umfang mit definierten Meilensteinen und Liefergegenständen.",
+        description: "Fester Umfang mit definierten Meilensteinen und Lieferergebnissen.",
         recommended: false,
       },
       {
         title: "Retainer",
         description:
-          "Laufende Beratung und Umsetzung für Teams, die einen strategischen Partner auf Abruf wünschen.",
+          "Laufende Beratung und Umsetzung für Teams, die eine feste Ansprechperson auf Abruf wünschen.",
         recommended: true,
       },
       {
         title: "Workshops",
         description:
-          "Fokussierte Sessions, um Entscheidungen freizumachen, Discovery zu moderieren oder das interne Team zu befähigen.",
+          "Fokussierte Termine, um Entscheidungen zu klären, Discovery zu moderieren oder das interne Team zu befähigen.",
         recommended: false,
       },
     ],
@@ -322,26 +314,26 @@ export const copyDe: Copy = {
     label: "Kontakt",
     title: "Kontakt aufnehmen",
     subtitle:
-      "Ein Projekt im Kopf oder eine Stelle zu besetzen? Schreiben Sie mir – ich antworte innerhalb von 24 Stunden.",
+      "Ein Projekt vor oder eine Stelle zu besetzen? Schreiben Sie mir, ich antworte innert 24 Stunden.",
     email: "E-Mail",
     phone: "Telefon",
     location: "Standort",
     // TODO(Seya): confirm the service area before launch.
     serviceArea:
-      "Wil, Uzwil, Gossau, St. Gallen und die gesamte Ostschweiz, remote in der ganzen Schweiz.",
+      "Wil, Uzwil, Gossau, St. Gallen und die ganze Ostschweiz, remote in der ganzen Schweiz.",
     responseTime: "Antwortzeit",
-    responseValue: "Innerhalb von 24 Stunden",
+    responseValue: "Innert 24 Stunden",
     form: {
       name: "Name *",
-      namePlaceholder: "Ihr vollständiger Name",
+      namePlaceholder: "Vor- und Nachname",
       email: "E-Mail *",
-      emailPlaceholder: "ihre.mail@example.com",
+      emailPlaceholder: "vorname.name@example.com",
       company: "Firma",
       companyPlaceholder: "Optional",
       projectType: "Projektart *",
-      projectTypePlaceholder: "Projektart auswählen",
+      projectTypePlaceholder: "Projektart wählen",
       budget: "Budgetrahmen",
-      budgetPlaceholder: "Rahmen auswählen",
+      budgetPlaceholder: "Rahmen wählen",
       timeline: "Zeitrahmen",
       timelinePlaceholder: "Bis wann soll es fertig sein?",
       // `value` is the wire format of the contact API: keep identical to English.
@@ -350,44 +342,44 @@ export const copyDe: Copy = {
         { value: "web-development", label: "Webentwicklung" },
         { value: "data-integration", label: "Datenintegration" },
         { value: "consulting", label: "Technische Beratung" },
-        { value: "other", label: "Anderes" },
+        { value: "other", label: "Sonstiges" },
       ],
       budgetOptions: [
         { value: "under-10k", label: "< CHF 10’000" },
         { value: "10k-25k", label: "CHF 10’000 – 25’000" },
         { value: "25k-50k", label: "CHF 25’000 – 50’000" },
         { value: "50k-plus", label: "CHF 50’000+" },
-        { value: "discuss", label: "Besprechen wir" },
+        { value: "discuss", label: "Nach Absprache" },
       ],
       timelineOptions: [
         { value: "asap", label: "So bald wie möglich" },
-        { value: "1-month", label: "Innerhalb eines Monats" },
-        { value: "3-months", label: "Innerhalb von 3 Monaten" },
-        { value: "6-months", label: "Innerhalb von 6 Monaten" },
+        { value: "1-month", label: "Innert eines Monats" },
+        { value: "3-months", label: "Innert 3 Monaten" },
+        { value: "6-months", label: "Innert 6 Monaten" },
         { value: "flexible", label: "Flexibel" },
       ],
       message: "Nachricht *",
       messagePlaceholder:
-        "Erzählen Sie mir von Ihrem Projekt, den Zielen und konkreten Anforderungen…",
+        "Worum geht es? Ausgangslage, Ziele und konkrete Anforderungen, soweit bekannt.",
       submit: "Nachricht senden",
       submitting: "Wird gesendet…",
-      analysisTitle: "KI-Match-Analyse",
+      analysisTitle: "KI-Einschätzung zur Anfrage",
       analysisLoading: "Analyse läuft…",
       messageCount: (n: number, max: number) => `${n}/${max}`,
       privacyLead:
-        "Mit dem Absenden erklären Sie sich einverstanden, dass Ihre Daten zur Beantwortung Ihrer Anfrage verarbeitet werden.",
+        "Mit dem Absenden stimmen Sie zu, dass Ihre Angaben zur Beantwortung Ihrer Anfrage bearbeitet werden.",
       privacyLink: "Datenschutzerklärung",
       privacyTail: "Details in der",
       successTitle: "Nachricht gesendet",
-      successBody: "Danke für Ihre Nachricht. Ich melde mich innerhalb von 24 Stunden bei Ihnen.",
+      successBody: "Danke für Ihre Nachricht. Ich melde mich innert 24 Stunden bei Ihnen.",
       errors: {
-        nameRequired: "Name ist erforderlich",
-        nameShort: "Der Name muss mindestens 2 Zeichen lang sein",
-        emailRequired: "E-Mail ist erforderlich",
+        nameRequired: "Bitte geben Sie Ihren Namen an",
+        nameShort: "Der Name muss mindestens 2 Zeichen haben",
+        emailRequired: "Bitte geben Sie Ihre E-Mail-Adresse an",
         emailInvalid: "Bitte geben Sie eine gültige E-Mail-Adresse ein",
         projectTypeRequired: "Bitte wählen Sie eine Projektart",
-        messageRequired: "Nachricht ist erforderlich",
-        messageShort: "Die Nachricht muss mindestens 10 Zeichen lang sein",
+        messageRequired: "Bitte schreiben Sie eine Nachricht",
+        messageShort: "Die Nachricht muss mindestens 10 Zeichen haben",
         sendFailed: "Die Nachricht konnte nicht gesendet werden.",
         generic: "Etwas ist schiefgelaufen. Schreiben Sie mir direkt an info@sweber.dev.",
       },
@@ -395,61 +387,41 @@ export const copyDe: Copy = {
   },
 
   career: {
-    label: (work: number, education: number) => {
-      const parts: string[] = []
-      if (work > 0) parts.push(`${work} ${plural(work, "Rolle", "Rollen")}`)
-      if (education > 0)
-        parts.push(
-          `${education} ${plural(education, "Qualifikation", "Qualifikationen")}`
-        )
-      return parts.length > 0 ? parts.join(" · ") : "Werdegang"
-    },
+    label: (work: number, education: number) => {const parts=[];if(work>0)parts.push(`${work} ${plural(work,"Stelle","Stellen")}`);if(education>0)parts.push(`${education} ${plural(education,"Abschluss","Abschlüsse")}`);return parts.length>0?parts.join(" · "):"Werdegang"},
     title: "Werdegang",
     subtitle:
-      "Berufstätigkeit und Ausbildung nebeneinander. In beiden Lehren liefen sie gleichzeitig, deshalb gehören sie auf eine Achse und nicht auf zwei Seiten.",
+      "Beruf und Ausbildung nebeneinander. Während beider Lehren liefen sie parallel, deshalb gehören sie auf eine Achse und nicht auf zwei Seiten.",
     timelineEyebrow: (from: number, to: number) => `Zeitstrahl · ${from}–${to}`,
     timelineTitle: "Der ganze Weg",
     timelineSub: "Beruf und Ausbildung auf einer Achse.",
     timelineHint:
-      "Balken überfahren oder fokussieren, um den Eintrag hervorzuheben, und auswählen, um dorthin zu springen.",
-    timelineLabel: (from: number, to: number) =>
-      `Zeitstrahl des Werdegangs von ${from} bis ${to}, in zwei Spuren: Beruf und Ausbildung`,
-    barLabel: (title: string, subtitle: string, period: string) =>
-      subtitle ? `${title} – ${subtitle}, ${period}` : `${title}, ${period}`,
+      "Fahren Sie über einen Balken oder fokussieren Sie ihn, um den Eintrag hervorzuheben. Ein Klick springt dorthin.",
+    timelineLabel: (from: number, to: number) => `Zeitstrahl des Werdegangs von ${from} bis ${to}, in zwei Spuren: Beruf und Ausbildung`,
+    barLabel: (title: string, subtitle: string, period: string) => subtitle?`${title}, ${subtitle}, ${period}`:`${title}, ${period}`,
     laneWork: "Beruf",
     laneEducation: "Ausbildung",
     planned: "Geplant",
-    empty: "Hier ist noch nichts.",
-    emptyTitle: "Der Zeitstrahl des Werdegangs wird noch befüllt.",
+    empty: "Noch nichts vorhanden.",
+    emptyTitle: "Der Zeitstrahl wird noch befüllt.",
     emptyBody:
-      "Rollen und Qualifikationen werden im Admin gepflegt und erscheinen hier auf einer Achse.",
+      "Stellen und Abschlüsse werden im Admin gepflegt und erscheinen hier auf einer Achse.",
   },
 
   education: {
     title: "Ausbildung",
-    subtitle: "Mein akademischer Weg – und die Zertifikate, die den weiteren Weg markieren.",
-    academicBackground: "Akademischer Hintergrund",
+    subtitle: "Mein Ausbildungsweg und die Zertifikate, die den weiteren Weg markieren.",
+    academicBackground: "Ausbildungsweg",
     credentials: "Zertifikate & Roadmap",
-    credentialsSub: "Was erledigt ist, was läuft und was als Nächstes kommt.",
-    empty: "Hier ist noch nichts.",
-    label: (stations: number, certificates: number) => {
-      const parts: string[] = []
-      if (stations > 0)
-        parts.push(`${stations} ${plural(stations, "Station", "Stationen")}`)
-      if (certificates > 0)
-        parts.push(
-          `${certificates} ${plural(certificates, "Zertifikat", "Zertifikate")}`
-        )
-      return parts.length > 0 ? parts.join(" · ") : "Ausbildung"
-    },
-    academicEyebrow: (n: number) =>
-      `Ausbildung · ${n} ${plural(n, "Station", "Stationen")}`,
+    credentialsSub: "Was abgeschlossen ist, was läuft und was als Nächstes kommt.",
+    empty: "Noch nichts vorhanden.",
+    label: (stations: number, certificates: number) => {const parts=[];if(stations>0)parts.push(`${stations} ${plural(stations,"Station","Stationen")}`);if(certificates>0)parts.push(`${certificates} ${plural(certificates,"Zertifikat","Zertifikate")}`);return parts.length>0?parts.join(" · "):"Ausbildung"},
+    academicEyebrow: (n: number) => `Ausbildung · ${n} ${plural(n,"Station","Stationen")}`,
     credentialsEyebrow: (n: number) => `Zertifikate · ${n}`,
-    emptyTitle: "Das Regal ist noch leer – vorerst.",
+    emptyTitle: "Noch ist das Regal leer.",
     emptyBody:
-      "Die nächste Runde von Zertifizierungen rund um KI, Sicherheit und Cloud ist in Planung. Sobald die erste läuft, erscheint sie hier mit Fortschritt und Roadmap.",
+      "Die nächste Runde Zertifizierungen rund um KI, Security und Cloud ist in Planung. Sobald die erste läuft, erscheint sie hier mit Fortschritt und Roadmap.",
     statusCompleted: "Abgeschlossen",
-    statusInProgress: "In Arbeit",
+    statusInProgress: "Laufend",
     statusPlanned: "Geplant",
     lifetime: "Unbefristet",
     certWindow: "Zeitfenster",
@@ -457,25 +429,20 @@ export const copyDe: Copy = {
     certCost: "Kosten",
     certDifficulty: "Schwierigkeit",
     certDifficultyAria: (n: number) => `${n} von 5`,
-    certWhy: "Warum es wichtig ist",
-    certViewCredential: "Nachweis ansehen",
+    certWhy: "Warum es zählt",
+    certViewCredential: "Zertifikat ansehen",
     certIssued: (month: string) => `Ausgestellt ${month}`,
-    certWindowValue: (start: string, end: string) =>
-      end ? `${start} – ${end}` : start,
-    certMeta: (provider: string, category: string) =>
-      [provider, category].filter(Boolean).join(" · "),
+    certWindowValue: (start: string, end: string) => end?`${start} – ${end}`:start,
+    certMeta: (provider: string, category: string) => [provider,category].filter(Boolean).join(" · "),
     roadmapEyebrow: "Roadmap",
-    roadmapTitle: "Was als Nächstes ansteht.",
-    roadmapHeading: (n: number) =>
-      `${n} ${plural(n, "Zertifikat", "Zertifikate")} geplant`,
-    roadmapAxis: "Zeitstrahl",
+    roadmapTitle: "Was als Nächstes dran ist.",
+    roadmapHeading: (n: number) => `${n} ${plural(n,"Zertifikat","Zertifikate")} geplant`,
+    roadmapAxis: "Zeitachse",
     roadmapToday: "Heute",
     roadmapMonthIndex: (n: number) => `M${n}`,
-    roadmapBar: (months: number, label: string) =>
-      `${months} ${plural(months, "Mt.", "Mt.")} · ${label}`,
+    roadmapBar: (months: number, label: string) => `${months} ${plural(months,"Mt.","Mt.")} · ${label}`,
     roadmapRange: (start: string, end: string) => `${start} – ${end}`,
-    roadmapRowMeta: (status: string, start: string, end: string) =>
-      `${status}${start ? ` · ${start}` : ""}${end ? ` – ${end}` : ""}`,
+    roadmapRowMeta: (status: string, start: string, end: string) => `${status}${start?` · ${start}`:""}${end?` – ${end}`:""}`,
   },
 
   // English-only routes (/packages, blog and release notes of the packages): reused as is.
@@ -484,8 +451,8 @@ export const copyDe: Copy = {
 
   notFound: {
     title: "Seite nicht gefunden",
-    body: "Diese Seite existiert nicht oder wurde verschoben.",
-    home: "Zurück zur Startseite",
+    body: "Diese Seite gibt es nicht oder sie ist umgezogen.",
+    home: "Zur Startseite",
     code: "404",
   },
 
@@ -502,33 +469,33 @@ export const copyDe: Copy = {
   privacy: {
     label: "Datenschutz",
     title: "Datenschutz",
-    subtitle: "Wie über diese Website übermittelte Daten verarbeitet werden.",
+    subtitle: "So werden Daten bearbeitet, die Sie über diese Website senden.",
   },
 
   // English-only route (pitch generator): reused as is.
   pitch: copy.pitch,
 
   chat: {
-    open: "Chat öffnen – fragen Sie mich alles",
+    open: "Chat öffnen und Fragen stellen",
     dialogLabel: "Chat mit Seyas KI-Assistent",
     title: "Seyas KI-Assistent",
-    subtitle: "Antwortet in der Regel sofort",
+    subtitle: "Antwortet meist sofort",
     close: "Chat schliessen",
     greeting:
-      "Hallo! Ich bin Seyas KI-Assistent. Fragen Sie mich alles zu seiner Arbeit, seinen Projekten oder seiner Verfügbarkeit.",
-    error: "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+      "Hallo, ich bin Seyas KI-Assistent. Fragen Sie mich zu Arbeit, Projekten oder Verfügbarkeit.",
+    error: "Etwas ist schiefgelaufen. Bitte versuchen Sie es noch einmal.",
     inputLabel: "Nachricht",
-    inputPlaceholder: "Nachricht schreiben…",
+    inputPlaceholder: "Ihre Nachricht",
     send: "Nachricht senden",
     typing: "Assistent schreibt",
   },
 
   deepDive: {
-    toggle: "Technischer Deep Dive",
+    toggle: "Technische Vertiefung",
     generated: "KI-generierte Analyse",
     loading: "Analyse wird geladen…",
     error: "Die Details konnten nicht geladen werden.",
-    retry: "Erneut versuchen",
+    retry: "Noch einmal versuchen",
   },
 
   // English-only routes (admin login): reused as is.
