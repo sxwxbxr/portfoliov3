@@ -25,6 +25,8 @@ export const inverseDemoCopy = {
     sub: "Use the footer.",
     lede: "Muster Outdoor is a made-up shop that also sells a gear subscription. Its footer has the two links the law asks for. Follow one, fill in the form, confirm on the second step, and watch what your server and the customer's inbox get.",
     language: "Language",
+    jurisdiction: "Country",
+    directiveOnly: "Based on the EU directive only; the national act was not read.",
     backToShop: "Back to the shop",
     inbox: "Customer's inbox",
     inboxEmpty: "The acknowledgement e-mail appears here after you confirm.",

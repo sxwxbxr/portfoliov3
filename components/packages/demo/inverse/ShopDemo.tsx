@@ -3,8 +3,11 @@
 import {
   contractEndDate,
   type DeclarationRecord,
+  getJurisdiction,
   type HandlerResult,
   handleDeclaration,
+  type JurisdictionId,
+  jurisdictionIds,
   type Locale,
   type Receipt,
   toIsoDate,
@@ -89,6 +92,8 @@ type View = "shop" | "withdrawal" | "cancellation"
 export function ShopDemo() {
   const langId = useId()
   const [locale, setLocale] = useState<Locale>("de")
+  const [jurisdiction, setJurisdiction] = useState<JurisdictionId>("de")
+  const jurisdictionLabelId = useId()
   const [view, setView] = useState<View>("shop")
   const [run, setRun] = useState(0)
   const [receipt, setReceipt] = useState<Receipt | null>(null)
@@ -98,6 +103,7 @@ export function ShopDemo() {
   const submit = (body: Record<string, unknown>): Promise<HandlerResult> =>
     handleDeclaration(body, {
       company: COMPANY,
+      jurisdiction,
       timeZone: "Europe/Berlin",
       onDeclaration: (r) => setRecord(r),
       sendReceipt: (r) => setReceipt(r),
@@ -145,10 +151,36 @@ export function ShopDemo() {
             ))}
           </select>
         </div>
+        <div className="flex flex-col gap-2">
+          <label htmlFor={jurisdictionLabelId} className="annotate">
+            {t.jurisdiction}
+          </label>
+          <select
+            id={jurisdictionLabelId}
+            value={jurisdiction}
+            onChange={(e) => {
+              const next = e.target.value as JurisdictionId
+              setJurisdiction(next)
+              setLocale(getJurisdiction(next).defaultLocale)
+            }}
+            className="well h-11 px-3 text-sm text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
+          >
+            {jurisdictionIds.map((id) => (
+              <option key={id} value={id}>
+                {getJurisdiction(id).country}
+              </option>
+            ))}
+          </select>
+        </div>
         <button type="button" onClick={reset} className={small}>
           {t.reset}
         </button>
       </div>
+
+      <p className="well px-4 py-3 text-sm text-fg-muted">
+        {getJurisdiction(jurisdiction).verification === "directive" ? `${t.directiveOnly} ` : null}
+        {getJurisdiction(jurisdiction).note}
+      </p>
 
       <div className="grid min-w-0 gap-10 lg:grid-cols-[minmax(0,6fr)_minmax(0,5fr)]">
         <div className="inv-shop" lang={locale}>
