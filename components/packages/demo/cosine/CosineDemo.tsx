@@ -11,7 +11,7 @@ import { pkgPath } from "@/lib/packages/urls"
  */
 
 const t = cosineDemoCopy
-const LIB_URL = "/demos/cosine/cosine-1.0.0.js"
+const LIB_URL = "/demos/cosine/cosine-2.0.0.js"
 const INDEX_URL = "/demos/cosine/cosine-index.json"
 const TRANSFORMERS_URL = "https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.3.0"
 
@@ -33,6 +33,7 @@ type Lib = {
   VectorStore: { fromVectors(v: Float32Array[]): unknown }
   transformersEmbedder(o: object): { model: string; embed(t: string[], k: string): Promise<Float32Array[]> }
   passageText(c: Chunk): string
+  parseManifest(stored: unknown): Manifest
   highlightParts(s: string, h: Array<[number, number]>): Array<{ text: string; match: boolean }>
   defineCosineSearch(): void
 }
@@ -94,10 +95,12 @@ export function CosineDemo() {
     let alive = true
     Promise.all([
       import(/* webpackIgnore: true */ LIB_URL) as Promise<Lib>,
-      fetch(INDEX_URL).then((r) => (r.ok ? (r.json() as Promise<Manifest>) : Promise.reject(new Error(String(r.status))))),
+      fetch(INDEX_URL).then((r) => (r.ok ? (r.json() as Promise<unknown>) : Promise.reject(new Error(String(r.status))))),
     ])
-      .then(([l, m]) => {
+      .then(([l, stored]) => {
         if (!alive) return
+        // Index format 2 stores sections as compact arrays; parseManifest expands them.
+        const m = l.parseManifest(stored)
         // Links work on the packages host and on previews under /packages.
         const fixed = { ...m, chunks: m.chunks.map((c) => ({ ...c, url: pkgPath(c.url) })) }
         l.defineCosineSearch()
