@@ -13,6 +13,15 @@ import { localizeProject } from "@/lib/i18n-data"
 import { JsonLd } from "@/components/JsonLd"
 import { breadcrumbList, creativeWork } from "@/lib/structured-data"
 
+/**
+ * Labels of the fact block. Local rather than in copy.ts: five short words,
+ * and copy.de.ts is edited elsewhere.
+ */
+const FACT_LABELS = {
+  en: { client: "Client / context", period: "Period", stack: "Stack", result: "Result" },
+  de: { client: "Auftraggeber / Kontext", period: "Zeitraum", stack: "Stack", result: "Ergebnis" },
+} as const
+
 export async function ProjectDetailView({ slug, locale = "en" }: { slug: string; locale?: Locale }) {
   const copy = getCopy(locale)
   const [rawProject, study, rawProjects] = await Promise.all([
@@ -53,6 +62,15 @@ export async function ProjectDetailView({ slug, locale = "en" }: { slug: string;
     currentIndex >= 0 ? allProjects[(currentIndex + 1) % allProjects.length] : null
 
   const tags = project.tags as string[]
+  // Role is left out: projects have no role field. There is also no last-updated
+  // date, because the projects table stores none.
+  const factLabels = FACT_LABELS[locale]
+  const facts = [
+    { label: factLabels.client, value: client },
+    { label: factLabels.period, value: duration },
+    { label: factLabels.stack, value: tags.join(", ") },
+    { label: factLabels.result, value: results[0] ?? "" },
+  ].filter((fact) => fact.value.trim() !== "")
   const technologies = (study?.technologies as string[] | undefined) ?? []
 
   return (
@@ -176,6 +194,23 @@ export async function ProjectDetailView({ slug, locale = "en" }: { slug: string;
             />
           )}
         </section>
+
+        {/* ─── Facts: the same data as the chips above, stated as plain text. ─── */}
+        {facts.length > 0 && (
+          <section className="sheet">
+            <dl className="cast flex flex-col gap-3 p-6">
+              {facts.map((fact) => (
+                <div
+                  key={fact.label}
+                  className="flex flex-col gap-1 md:flex-row md:items-baseline md:justify-between md:gap-6"
+                >
+                  <dt className="annotate shrink-0">{fact.label}</dt>
+                  <dd className="text-sm md:text-right">{fact.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        )}
 
         {/* ─── Case-study blocks ─── */}
         {hasCaseStudyContent && (
