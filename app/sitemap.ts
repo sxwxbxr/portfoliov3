@@ -1,120 +1,46 @@
 import type { MetadataRoute } from "next"
-import {
-  getProjects,
-  getBlogPosts,
-  getCaseStudies,
-  getSiteSettings,
-} from "@/lib/data"
+import { getProjects, getBlogPosts, getCaseStudies } from "@/lib/data"
 import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
+import { SITE_URL } from "@/lib/seo"
 
 export const revalidate = 3600
 
+/**
+ * Only indexable portfolio routes. changeFrequency and priority are left out
+ * on purpose (Google ignores them), and lastModified is set only where a real
+ * date exists: a `new Date()` on every build would tell crawlers everything
+ * changed every hour. /packages and /physio have their own sitemaps.
+ */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://sweber.dev"
-
-  const [projects, blogPosts, caseStudies, settings] = await Promise.all([
+  const [projects, blogPosts, caseStudies] = await Promise.all([
     getProjects(),
     BLOG_ENABLED ? getBlogPosts() : Promise.resolve([]),
     CASE_STUDIES_ENABLED ? getCaseStudies() : Promise.resolve([]),
-    getSiteSettings(),
   ])
 
-  const staticPages: MetadataRoute.Sitemap = [
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/about`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/career`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/projects`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    ...(BLOG_ENABLED
-      ? [
-          {
-            url: `${baseUrl}/blog`,
-            lastModified: new Date(),
-            changeFrequency: "weekly" as const,
-            priority: 0.9,
-          },
-        ]
-      : []),
-    ...(CASE_STUDIES_ENABLED
-      ? [
-          {
-            url: `${baseUrl}/case-studies`,
-            lastModified: new Date(),
-            changeFrequency: "monthly" as const,
-            priority: 0.8,
-          },
-        ]
-      : []),
-    {
-      url: `${baseUrl}/services`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    // /skills was folded into /about#skills. A 301 in next.config.mjs keeps
-    // any indexed URL working; it must not stay listed here as a canonical.
-      // /education merged into /career together with /experience; a 308 in
-      // next.config.mjs keeps indexed URLs working, so neither may stay here
-      // as a canonical.
-    {
-      url: `${baseUrl}/contact`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/privacy`,
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/imprint`,
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.2,
-    },
+  const staticPaths = [
+    "",
+    "/about",
+    "/career",
+    "/projects",
+    ...(BLOG_ENABLED ? ["/blog"] : []),
+    ...(CASE_STUDIES_ENABLED ? ["/case-studies"] : []),
+    "/services",
+    "/contact",
+    "/privacy",
+    "/imprint",
+    // /skills was folded into /about#skills and /education into /career; 3xx
+    // redirects in next.config.mjs keep indexed URLs working, so they must not
+    // be listed here as canonicals.
   ]
 
-  const projectPages: MetadataRoute.Sitemap = projects.map((project) => ({
-    url: `${baseUrl}/projects/${project.slug}`,
-    lastModified: new Date(),
-    changeFrequency: "yearly",
-    priority: 0.7,
-  }))
-
-  const blogPages: MetadataRoute.Sitemap = blogPosts.map((post) => ({
-    url: `${baseUrl}/blog/${post.slug}`,
-    lastModified: new Date(post.publishedAt),
-    changeFrequency: "yearly",
-    priority: 0.7,
-  }))
-
-  const caseStudyPages: MetadataRoute.Sitemap = caseStudies.map((cs) => ({
-    url: `${baseUrl}/case-studies/${cs.slug}`,
-    lastModified: new Date(),
-    changeFrequency: "yearly",
-    priority: 0.7,
-  }))
-
-  return [...staticPages, ...projectPages, ...blogPages, ...caseStudyPages]
+  return [
+    ...staticPaths.map((path) => ({ url: `${SITE_URL}${path}` })),
+    ...projects.map((project) => ({ url: `${SITE_URL}/projects/${project.slug}` })),
+    ...blogPosts.map((post) => ({
+      url: `${SITE_URL}/blog/${post.slug}`,
+      lastModified: new Date(post.publishedAt),
+    })),
+    ...caseStudies.map((cs) => ({ url: `${SITE_URL}/case-studies/${cs.slug}` })),
+  ]
 }
