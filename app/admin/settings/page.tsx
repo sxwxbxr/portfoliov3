@@ -196,6 +196,9 @@ export default function SettingsPage() {
             {form.heroMetrics.length === 0 && (
               <p className="text-xs text-muted-foreground">
                 No metrics yet. Add 1-3 to populate the introduction box.
+                Each label must be understandable to a stranger without context
+                (say what is counted, e.g. "Software projects delivered", not
+                "Properties managed").
               </p>
             )}
             {form.heroMetrics.map((metric, i) => (
@@ -252,7 +255,7 @@ export default function SettingsPage() {
             name="contactLocation"
             value={form.contactLocation}
             onChange={(e) => update("contactLocation", e.target.value)}
-            placeholder="St. Gallen, Switzerland"
+            placeholder="Bichwil SG, Ostschweiz"
           />
         </section>
 

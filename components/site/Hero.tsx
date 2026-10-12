@@ -45,15 +45,14 @@ export default function Hero({ settings, metrics, years, skills }: HeroProps) {
         )}
 
         <div className="flex flex-col gap-1">
-          <h1 className="display">Seya Weber</h1>
-          <p className="display text-fg-muted">
-            {settings.currentRole || copy.home.roleFallback}
-          </p>
+          <h1 className="display">
+            {copy.home.heroHeadline}
+            <span className="sr-only">: </span>
+            <span className="display block text-fg-muted">{copy.home.heroOffer}</span>
+          </h1>
         </div>
 
-        <p className="measure lede">
-          {copy.home.locationLead(settings.contactLocation || copy.common.locationFallback)}
-        </p>
+        <p className="measure lede">{copy.home.heroPerson}</p>
 
         <div className="flex flex-wrap gap-3">
           <Link
@@ -80,6 +79,9 @@ export default function Hero({ settings, metrics, years, skills }: HeroProps) {
         <Ruler labels={skills} labelSide="top" interval={2000} />
       </motion.div>
 
+      {/* TODO(Seya): tiles render settings.heroMetrics (DB). Labels that need
+          context, e.g. "Properties managed 150+", should be reworded in /admin/settings
+          so a stranger understands them (what, for whom, over what period). */}
       {metrics.length > 0 && (
         <motion.div className="sheet mt-20 md:mt-28" {...rise(0.3)}>
           <dl className="grid grid-cols-1 divide-y divide-edge-soft border-y border-edge-soft sm:grid-cols-3 sm:divide-x sm:divide-y-0">

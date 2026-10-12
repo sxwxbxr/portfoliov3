@@ -142,20 +142,13 @@ export default function HeroStage({ settings, metrics }: HeroStageProps) {
             className="font-display font-bold leading-[0.94] tracking-tight text-balance"
             style={{ fontSize: "clamp(3rem, 7.5vw, 6.5rem)" }}
           >
-            Seya Weber
+            {copy.home.heroHeadline}
           </h1>
 
-          <p className="text-xl text-fg md:text-2xl">
-            {settings.currentRole || copy.home.roleFallback}
-            {settings.currentEmployer && (
-              <span className="text-fg-muted"> · {settings.currentEmployer}</span>
-            )}
-          </p>
+          <p className="text-xl text-fg md:text-2xl">{copy.home.heroOffer}</p>
 
           <p className="measure text-base leading-relaxed text-fg-muted">
-            {copy.home.locationLead(
-              settings.contactLocation || copy.common.locationFallback
-            )}
+            {copy.home.heroPerson}
           </p>
         </motion.div>
 

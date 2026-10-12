@@ -65,6 +65,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
             <Link href="/" className="text-lg tracking-tight">
               {copy.nav.brand}
             </Link>
+            <p className="measure text-sm text-fg-muted">{copy.common.coreSentenceShort}</p>
             <a href={`mailto:${email}`} className={linkCls}>
               {email}
             </a>
