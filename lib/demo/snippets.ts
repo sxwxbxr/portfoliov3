@@ -100,3 +100,17 @@ npx surjection-report --results a11y.json --brand brand.json \\
   --checklist checklist.json --history-dir .surjection-history \\
   --locale de --out bericht.pdf   # or bericht.docx for Word
 npx surjection-report --results a11y.json --locale de --out massnahmen.csv`
+
+export const SURJECTION_COVERAGE_COMMAND = `npx surjection coverage --out coverage.md
+# 55 success criteria at level A and AA: 11 mostly automatic, 16 partly automatic, 28 manual only.`
+
+export const SURJECTION_CONFORMANCE_COMMANDS = `npx surjection-report --results a11y.json --brand brand.json \\
+  --checklist checklist.json --type conformance --out konformitaet.pdf
+npx surjection-report --results a11y.json --brand brand.json \\
+  --checklist checklist.json --type acr --product "Webshop" --out acr.docx
+
+# After a fix: check only what was affected, then update results and checklist
+npx surjection-history retest --config surjection.config.json --results a11y.json --out retest.config.json
+npx surjection check --config retest.config.json --out-json retest.json
+npx surjection-history merge --base a11y.json --update retest.json --out a11y.json
+npx surjection-checklist retest --checklist checklist.json --results a11y.json`

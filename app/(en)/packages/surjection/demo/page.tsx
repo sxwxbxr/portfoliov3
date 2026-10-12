@@ -9,7 +9,7 @@ import { CookieTableTabs } from "@/components/packages/demo/CookieTableTabs"
 import { LiveCheck } from "@/components/packages/demo/surjection/LiveCheck"
 import { OutputFrame } from "@/components/packages/demo/surjection/OutputFrame"
 import { getSurjectionDemo } from "@/lib/demo/surjection-server"
-import { SURJECTION_BADGE_COMMAND, SURJECTION_MONITOR_COMMAND, SURJECTION_CHECK_COMMAND, SURJECTION_PRO_COMMANDS } from "@/lib/demo/snippets"
+import { SURJECTION_BADGE_COMMAND, SURJECTION_CONFORMANCE_COMMANDS, SURJECTION_COVERAGE_COMMAND, SURJECTION_MONITOR_COMMAND, SURJECTION_CHECK_COMMAND, SURJECTION_PRO_COMMANDS } from "@/lib/demo/snippets"
 import { pkgPath, pkgUrl } from "@/lib/packages/urls"
 import { copy } from "@/lib/copy"
 
@@ -100,6 +100,13 @@ export default function SurjectionDemoPage() {
         </div>
       </Block>
 
+      <Block id="coverage" label={t.coverage.label} title={t.coverage.title} sub={t.coverage.sub} lede={<p>{t.coverage.lede}</p>}>
+        <div className="flex flex-col gap-6">
+          <CodeBlock code={SURJECTION_COVERAGE_COMMAND} label="Coverage" />
+          {demo.coverage ? <CodeBlock code={demo.coverage} label="coverage.md" /> : <Missing />}
+        </div>
+      </Block>
+
       <Block
         id="statement"
         label={t.statement.label}
@@ -153,6 +160,41 @@ export default function SurjectionDemoPage() {
             </a>
           </div>
           <CodeBlock code={SURJECTION_PRO_COMMANDS} label="Pro commands" />
+        </div>
+      </Block>
+
+      <Block id="conformance" label={t.conformance.label} title={t.conformance.title} sub={t.conformance.sub} lede={<p>{t.conformance.lede}</p>}>
+        <div className="flex flex-col gap-6">
+          {demo.conformance && demo.acr ? (
+            <CookieTableTabs
+              label={t.conformance.tabsLabel}
+              tabs={[
+                {
+                  id: "wcag-em",
+                  label: t.conformance.tabReport,
+                  content: <OutputFrame html={demo.conformance} title={t.conformance.frameTitle(t.conformance.tabReport)} height={760} />,
+                },
+                {
+                  id: "acr",
+                  label: "ACR",
+                  content: <OutputFrame html={demo.acr} title={t.conformance.frameTitle("ACR")} height={760} />,
+                },
+              ]}
+            />
+          ) : (
+            <Missing />
+          )}
+          <div className="flex flex-wrap items-start gap-6">
+            <a href="/demos/surjection/surjection-conformance-example.pdf" download className={btn}>
+              <Download className="mr-1 h-3.5 w-3.5" aria-hidden="true" />
+              {t.conformance.pdf}
+            </a>
+            <a href="/demos/surjection/surjection-acr-example.docx" download className={btn}>
+              <Download className="mr-1 h-3.5 w-3.5" aria-hidden="true" />
+              {t.conformance.docx}
+            </a>
+          </div>
+          <CodeBlock code={SURJECTION_CONFORMANCE_COMMANDS} label="Pro commands" />
         </div>
       </Block>
 

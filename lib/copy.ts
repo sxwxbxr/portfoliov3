@@ -1033,8 +1033,10 @@ export const copy = {
       jump: "On this page",
       jumpLinks: [
         { href: "#check", label: "Check" },
+        { href: "#coverage", label: "Coverage" },
         { href: "#statement", label: "Statement" },
         { href: "#report", label: "Report" },
+        { href: "#conformance", label: "Conformance" },
         { href: "#history", label: "History" },
         { href: "#checklist", label: "Checklist" },
       ],
@@ -1077,6 +1079,25 @@ export const copy = {
         sub: "Five languages.",
         lede: "The statement generator is part of the free package. This one is in Swiss German, with the status and the known issue taken from the Pro checklist below.",
         fileLabel: "erklaerung.md",
+      },
+
+      coverage: {
+        label: "Coverage",
+        title: "Coverage (free)",
+        sub: "What a test run can and cannot tell you.",
+        lede: "surjection coverage lists the 55 WCAG 2.2 success criteria at level A and AA and says for each how much of it automated rules can decide. The list is derived from the installed axe-core version and Surjection's own checks. Use it to plan the manual testing, not to read a passing run as proof of conformance.",
+      },
+
+      conformance: {
+        label: "Conformance",
+        title: "Conformance report and ACR (Pro)",
+        sub: "From the checklist to a document.",
+        lede: "Since Pro 2.0 surjection-report turns the decided checklist and the results into a WCAG-EM style conformance report, with the outcome per success criterion, and into an Accessibility Conformance Report with the usual conformance levels. The example is made up, for the Bäckerei Muster site: one criterion fails, thirteen do not apply. Neither document promises legal conformity, and the ACR is not an official VPAT.",
+        tabsLabel: "Document",
+        tabReport: "Conformance report",
+        frameTitle: (name: string) => `Example: ${name}`,
+        pdf: "Download the conformance report (PDF, English)",
+        docx: "Download the ACR (DOCX, English)",
       },
 
       report: {
