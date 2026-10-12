@@ -20,6 +20,7 @@
   "npm": [
     "@sweberdev/lagrangian",
     "@sweberdev/lagrangian-react",
+    "@sweberdev/lagrangian-vue",
     "@sweberdev/lagrangian-svelte"
   ],
   "code": {
@@ -47,11 +48,12 @@
       "Snap points the throw lands on exactly, by adjusting the glide instead of jumping",
       "scroller(): a scroll area with inertia, rubber-banding, snap points, wheel and keyboard on the same values as your own animations",
       "A 2D world: gravity, air drag, collisions between circles, rotating boxes and convex polygons with restitution, Coulomb friction and rolling",
+      "Reproducible runs: fixed steps, seed and world.random(), advance(), snapshot() and restore(), and a hash to compare two runs, the same at 60 and 144 Hz",
       "Springs between bodies, hinges, rods and motors for pendulums, chains and wheels, a pointer joint to grab and throw, every body sleeps on its own when it rests",
       "Sensors that report bodies entering and leaving a zone, for drop targets and triggers",
       "rk4() and system() for your own equations of motion",
       "Reduced motion respected: automatic motion jumps to where it would rest",
-      "React hooks: useSpringProps, useSpring, useDraggable, useWorld, useBody, plus an adapter for Svelte (Vue follows)",
+      "React hooks: useSpringProps, useSpring, useDraggable, useWorld, useBody, plus adapters for Vue and Svelte",
       "About 12 kB min+gzip for everything and tree-shakeable down to 2 kB, checked in CI"
     ],
     "pro": [
@@ -63,7 +65,9 @@
       "Jelly: squash and stretch from the real velocity, area-preserving, wobbles back when it stops or hits something",
       "Ropes, chains and garlands with Verlet integration: grab them, swing them, hang elements from them",
       "Impact sounds synthesized with Web Audio for a World: loudness from speed, pitch from size, five materials",
-      "React hooks for every piece, tested with React 18 and 19 and Strict Mode",
+      "Stack navigation: pages slide over each other, swipe back from the left edge, shared elements fly between pages, focus and screen reader handling",
+      "A referee for gestures: a carousel in a drawer, a sheet around a carousel and the swipe back decide who gets the finger, and a part at its limit hands the swipe outwards",
+      "React hooks for every piece, tested with React 18 and 19 and Strict Mode, plus Vue composables and Svelte actions",
       "Pull to refresh: resistance, threshold, held while loading, springs back with its momentum",
       "Carousel: a throw carries as far as its speed says, rubber-banded ends, arrow keys and ARIA roles",
       "Side drawer from the left or right: draggable, the throw decides, focus goes in and back out",
@@ -151,6 +155,16 @@
       "pro": true
     },
     {
+      "feature": "Stack navigation with swipe back and shared elements",
+      "free": false,
+      "pro": true
+    },
+    {
+      "feature": "Gesture referee for nested drawers, sheets and carousels",
+      "free": false,
+      "pro": true
+    },
+    {
       "feature": "Board (grid and kanban) and zoom",
       "free": false,
       "pro": true
@@ -187,11 +201,19 @@
     "packages": [
       {
         "name": "@weber-development/lagrangian-pro",
-        "description": "Bottom sheet, drawer, dialog, carousel, pull to refresh, toasts, tab indicator, page effects, board, zoom, swipe stack, sortable lists, layout transitions, jelly, ropes and impact sounds, framework-free."
+        "description": "Bottom sheet, drawer, dialog, carousel, stack navigation, pull to refresh, toasts, tab indicator, page effects, board, zoom, swipe stack, sortable lists, layout transitions, jelly, ropes and impact sounds, framework-free."
       },
       {
         "name": "@weber-development/lagrangian-pro-react",
         "description": "React hooks for every piece, for React 18 and 19."
+      },
+      {
+        "name": "@weber-development/lagrangian-pro-vue",
+        "description": "Vue 3 composables for every piece."
+      },
+      {
+        "name": "@weber-development/lagrangian-pro-svelte",
+        "description": "Svelte actions for every piece, for Svelte 3, 4 and 5."
       }
     ],
     "demoUrl": "/lagrangian/demo#pro",
