@@ -12,6 +12,7 @@ import {
   decodeLicense,
   definePlans,
   generateKeyPair,
+  type Algorithm,
   type KeyPair,
   type LicensePayload,
   type LicenseStatus,
@@ -119,9 +120,11 @@ function Field({ label, children, id }: { label: string; children: ReactNode; id
 
 /** Changes the signed content without re-signing, like someone editing the license by hand. */
 function tamper(license: string): string {
-  const [prefix, body, signature] = license.split(".")
+  const parts = license.split(".")
+  const signature = parts[parts.length - 1]
+  const prefix = parts.slice(0, parts.length - 2).join(".")
   const payload = decodeLicense(license)
-  if (!prefix || !body || !signature || !payload) return license
+  if (!prefix || !signature || parts.length < 3 || !payload) return license
   const json = JSON.stringify({ ...payload, plan: "team" })
   const bytes = new TextEncoder().encode(json)
   let binary = ""
@@ -408,6 +411,7 @@ function ActivationSimulator({ keys }: { keys: KeyPair }) {
 export function LicenseLab() {
   const [supported, setSupported] = useState<boolean | null>(null)
   const [keys, setKeys] = useState<KeyPair | null>(null)
+  const [alg, setAlg] = useState<Algorithm>("EdDSA")
   const [plan, setPlan] = useState("pro")
   const [email, setEmail] = useState("kunde@example.ch")
   const [beta, setBeta] = useState(false)
@@ -444,12 +448,20 @@ export function LicenseLab() {
 
   const newKeys = useCallback(async () => {
     try {
-      setKeys(await generateKeyPair())
+      setKeys(await generateKeyPair({ alg }))
       setSupported(true)
     } catch {
-      setSupported(false)
+      // Ed25519 or ECDSA P-256 is missing in this browser: fall back to the other algorithm.
+      try {
+        const other: Algorithm = alg === "EdDSA" ? "ES256" : "EdDSA"
+        setKeys(await generateKeyPair({ alg: other }))
+        setAlg(other)
+        setSupported(true)
+      } catch {
+        setSupported(false)
+      }
     }
-  }, [])
+  }, [alg])
 
   useEffect(() => {
     void newKeys()
@@ -567,9 +579,18 @@ export function LicenseLab() {
         sub={t.keys.sub}
         lede={<p>{t.keys.lede}</p>}
         aside={
-          <button type="button" onClick={() => void newKeys()} className={btn + " self-start"}>
-            {t.keys.regenerate}
-          </button>
+          <div className="flex flex-col gap-3 self-start">
+            <label className="flex items-center gap-2 text-sm text-fg-muted">
+              {t.keys.algorithm}
+              <select value={alg} onChange={(e) => setAlg(e.target.value as Algorithm)} className={field}>
+                <option value="EdDSA">Ed25519 (EdDSA)</option>
+                <option value="ES256">ECDSA P-256 (ES256)</option>
+              </select>
+            </label>
+            <button type="button" onClick={() => void newKeys()} className={btn + " self-start"}>
+              {t.keys.regenerate}
+            </button>
+          </div>
         }
       >
         <div className="grid gap-6 lg:grid-cols-2">
@@ -577,7 +598,7 @@ export function LicenseLab() {
           <CodeBlock title={t.keys.privateKey} code={keys ? `${keys.privateKey.slice(0, 18)}…` : "…"} />
         </div>
         <div className="mt-6">
-          <CodeBlock title={t.keys.cli} code="npx integral keygen" />
+          <CodeBlock title={t.keys.cli} code={alg === "ES256" ? "npx integral keygen --alg es256" : "npx integral keygen"} />
         </div>
       </Block>
 

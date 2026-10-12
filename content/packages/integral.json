@@ -3,7 +3,7 @@
   "name": "Integral",
   "tagline": "Licenses, plans and feature entitlements for developers who sell software. Signed offline license keys, Polar.sh license keys and React feature gates, without a licensing SaaS.",
   "seoTitle": "Integral – software licensing, license keys and entitlements for Polar.sh, Node and React",
-  "description": "Integral is a library for developers who sell software: desktop apps, self-hosted tools, CLIs or paid libraries. Licenses are signed with Ed25519 on your side and verified offline in your app with the public key, so nobody can forge or change one, and no licensing server has to be reachable at runtime. Declare plans with features and limits once, then ask `has(\"export\")` or `check(\"projects\", used)` anywhere.\n\nPolar.sh is built in: validate, activate and deactivate Polar license keys through Polar's public API, with a cache and grace period so customers are not locked out offline. Licenses can end updates instead of usage, so versions released before the end keep working after a cancellation. Zero dependencies, runs in Node, browsers and edge runtimes, MIT-licensed. Integral Pro adds a license server that turns Polar orders and subscriptions into signed licenses automatically, and a React activation view.",
+  "description": "Integral is a library for developers who sell software: desktop apps, self-hosted tools, CLIs or paid libraries. Licenses are signed with Ed25519 or ECDSA P-256 on your side and verified offline in your app with the public key, so nobody can forge or change one, and no licensing server has to be reachable at runtime. Declare plans with features and limits once, then ask `has(\"export\")` or `check(\"projects\", used)` anywhere.\n\nPolar.sh is built in: validate, activate and deactivate Polar license keys through Polar's public API, with a cache and grace period so customers are not locked out offline. Licenses can end updates instead of usage, so versions released before the end keep working after a cancellation. Zero dependencies, runs in Node, browsers and edge runtimes, MIT-licensed. Integral Pro adds a license server that turns Polar orders and subscriptions (and, in beta, Stripe, Paddle and Lemon Squeezy) into signed licenses automatically, signing with keys in a KMS or HSM, and a React activation view.",
   "status": "stable",
   "tags": [
     "Licensing",
@@ -11,6 +11,7 @@
     "Entitlements",
     "Polar.sh",
     "Ed25519",
+    "ECDSA",
     "React",
     "Node.js"
   ],
@@ -38,7 +39,7 @@
   },
   "features": {
     "free": [
-      "Signed offline license keys (Ed25519): no server needed to check them, impossible to forge without your private key",
+      "Signed offline license keys (Ed25519 or ECDSA P-256): no server needed to check them, impossible to forge without your private key",
       "Plans with features and limits, inheritance and per-customer extras signed into the license",
       "Polar.sh license keys: validate, activate and deactivate without an access token in your app",
       "Offline grace: cached checks keep paying customers working when the network is down",
@@ -47,9 +48,11 @@
       "Device binding: lock a license to one machine with an anonymous machineId()",
       "Trial licenses and licenseStatus(): days left, expiring soon, update period ended",
       "Device activation: bindLicense() signs a copy bound to one device, also offline with an activation request file",
+      "License format int2 with algorithm and key id in the header; int1 licenses stay readable, npx integral migrate converts them",
+      "Signer interface: sign with a key that lives in a KMS or HSM instead of a key string",
       "CLI to create keys and issue, verify, inspect and revoke licenses",
       "React bindings: <Feature>, <Limit>, useFeature and an async license check hook",
-      "Zero dependencies, runs in Node 20+, browsers, Bun, Deno and edge runtimes"
+      "Zero dependencies, runs in Node 22+, browsers, Bun, Deno and edge runtimes"
     ],
     "pro": [
       "License server that turns Polar orders and subscriptions into signed licenses: issue, renew, end, revoke",
@@ -70,7 +73,11 @@
       "Import from Keygen, Cryptlex or a spreadsheet: CSV rows become Integral licenses with mapped plans and a dry run",
       "Usage billing: counted usage is forwarded to Polar Meters as events",
       "Trial licenses: one free trial per email address, started from your app and ending by itself",
-      "Offline activation page and guided activation view for computers without internet"
+      "Offline activation page and guided activation view for computers without internet",
+      "Keys in a KMS or HSM: HashiCorp Vault transit signer and a wrapper for AWS KMS, Google Cloud KMS and Azure Key Vault (cloud recipes beta, not verified with real accounts)",
+      "Stripe, Paddle and Lemon Squeezy next to Polar: signed webhooks become licenses, renewals, cancellations and refunds (beta, not verified with real accounts)",
+      "Customer device management: a device list view where customers free a place themselves",
+      "Floating seats keep working for a configurable time when the license server cannot be reached"
     ]
   },
   "comparison": [
@@ -97,6 +104,10 @@
     { "feature": "Usage billing through Polar Meters", "free": false, "pro": true },
     { "feature": "Trial licenses started from your app", "free": false, "pro": true },
     { "feature": "Offline activation page and guided view", "free": false, "pro": true },
+    { "feature": "Ed25519 or ECDSA P-256 signatures, int2 license format", "free": true, "pro": true },
+    { "feature": "Signing with keys in a KMS or HSM", "free": "Signer interface", "pro": true },
+    { "feature": "Stripe, Paddle and Lemon Squeezy as payment sources (beta)", "free": false, "pro": true },
+    { "feature": "Customer device list and offline tolerance for floating seats", "free": false, "pro": true },
     { "feature": "Licence", "free": "MIT", "pro": "Per person" },
     { "feature": "Support", "free": "GitHub issues", "pro": "Agency and Lifetime" }
   ],
@@ -178,6 +189,10 @@
     {
       "q": "Can someone crack it?",
       "a": "Anyone who can change your application can remove a license check, with any licensing tool. What they cannot do is create or change a license without your private key. Integral makes honest use easy and dishonest use deliberate."
+    },
+    {
+      "q": "Which signature algorithms and key stores does Integral support?",
+      "a": "Ed25519 and ECDSA P-256. P-256 is what AWS KMS, Google Cloud KMS, Azure Key Vault and HashiCorp Vault sign with, so Integral Pro 2.0 can issue licenses without the private key ever being in your server. The Vault adapter is tested against a mocked API; the cloud KMS recipes and the Stripe, Paddle and Lemon Squeezy sources are beta and not yet verified with real accounts."
     },
     {
       "q": "Do I need Polar?",

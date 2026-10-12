@@ -7,10 +7,10 @@ export const integralDemo = {
   title: "Integral",
   titleSub: "Live demo.",
   intro:
-    "Integral signs licenses with Ed25519 and checks them offline in your app. This page runs the same code as the npm package: it creates a key pair, issues licenses, verifies them and applies your plans.",
+    "Integral signs licenses with Ed25519 or ECDSA P-256 and checks them offline in your app. This page runs the same code as the npm package: it creates a key pair, issues licenses, verifies them and applies your plans.",
   isolation: "Everything runs in this page. Keys and licenses never leave your browser.",
   unsupported:
-    "Your browser does not support Ed25519 in the Web Crypto API yet. Use a current version of Chrome, Edge, Firefox or Safari.",
+    "Your browser supports neither Ed25519 nor ECDSA P-256 in the Web Crypto API. Use a current version of Chrome, Edge, Firefox or Safari.",
   overview: "Integral overview",
   docs: "Read the docs",
   keys: {
@@ -21,6 +21,7 @@ export const integralDemo = {
       "In a real project the private key stays on your server or in CI secrets. The public key ships with your app: it cannot create licenses, so it does not need to be secret.",
     publicKey: "Public key (ships with the app)",
     privateKey: "Private key (stays on the server)",
+    algorithm: "Algorithm",
     regenerate: "New key pair",
     cli: "Same with the CLI",
   },
