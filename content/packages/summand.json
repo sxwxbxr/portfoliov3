@@ -49,6 +49,8 @@
       "Messages in English or German for every rule, from code (lang: \"de\") or the CLI (--lang de)",
       "Pure TypeScript with its own XPath 2.0 and Schematron engine: Node, browsers, workers and edge runtimes, no Java",
       "Rule set versions at hand: ruleSetInfo() and `summand rules` list what is bundled, `summand rules --check` tells you whether CEN or KoSIT published something newer",
+      "Choose rule sets and versions with one option: ruleSets: [\"en16931\", \"xrechnung@2.5.0\"]",
+      "validateMany for folders and batches with a worker pool; a real gain on large invoices, not on many small ones",
       "Fast on big invoices: 1,000 lines in about half a second, 5,000 lines in a few seconds",
       "summand CLI: validate, extract the XML from a PDF, check a Leitweg-ID, list and check rule sets"
     ],
@@ -62,6 +64,8 @@
       "Fetch invoices straight from a mailbox over IMAP or Microsoft 365 and drop the XML and PDF attachments into the inbox folder",
       "Write a real A4 PDF of every invoice, PDF/A-3b with the original XML attached, so XRechnung and ZUGFeRD CII invoices stay valid ZUGFeRD files",
       "Write e-invoices from a typed invoice object: XRechnung and EN 16931 as UBL or CII, always checked with Summand, with exact VAT and total calculation and ZUGFeRD PDFs",
+      "Write all ZUGFeRD / Factur-X profiles (MINIMUM to EXTENDED), credit notes, partial and final invoices and Skonto, with a clear statement of what the validator could check",
+      "Approval workflow and a tamper-evident archive for received invoices (beta; not reviewed by a tax advisor)",
       "Check incoming invoices against purchase orders and goods receipts: quantities, prices, VAT and totals within tolerances you set, partial invoices tracked, every difference with a stable code in German or English"
     ]
   },
