@@ -84,6 +84,9 @@ export const vectorDemoCopy = {
     enable: "Enable again",
     test: "Send test event",
     send: "Send event",
+    ordered: (key: string) =>
+      `Deliver in order (orderingKey: "${key}"). While an earlier message of this key still waits for a retry at an endpoint, later ones wait behind it, so the receiver sees them in the order you sent them. Try it with the failing CRM endpoint.`,
+    orderingKey: (key: string) => `· ordered by ${key}`,
     eventType: "Event type",
     clock: "Clock",
     elapsed: (s: string) => `${s} since the start of the demo`,
@@ -137,7 +140,7 @@ export const vectorDemoCopy = {
     label: "Pro",
     title: "The portal, the catalog and the night shift",
     sub: "Vector Pro.",
-    lede: "The free package sends, retries and logs. Vector Pro adds the parts you would otherwise build next: an embeddable portal where your customers manage their own endpoints, a typed event catalog that validates payloads and generates docs, and operations tooling for alerts, recovery after outages, metrics and retention. The snippets show how it plugs in.",
+    lede: "The free package sends, retries and logs. Vector Pro adds the parts you would otherwise build next: an embeddable portal where your customers manage their own endpoints, a typed event catalog that validates payloads and generates docs, and operations tooling for alerts, recovery after outages, metrics, SLO alert rules and retention. Since 2.0 your customers can also replay a time range from the portal, and inbound sources cover Slack and Twilio. The snippets show how it plugs in.",
     portal: "Customer portal: one route handler, scoped to the tenant",
     portalUi: "And the React components on your settings page",
     portalNote:
