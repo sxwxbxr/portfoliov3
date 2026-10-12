@@ -2,7 +2,7 @@ const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
 
 export function utf8(value: string): Uint8Array {
-  return textEncoder.encode(value);
+  return textEncoder.encode(value) as Uint8Array;
 }
 
 export function fromUtf8(bytes: Uint8Array): string {
