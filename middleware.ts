@@ -31,6 +31,7 @@ const PORTFOLIO_SEGMENTS = new Set([
   "career",
   "case-studies",
   "contact",
+  "de",
   "design",
   "education",
   "experience",

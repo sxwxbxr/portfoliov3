@@ -1,6 +1,6 @@
 import { SkillPopover } from "@/components/skill-explorer/SkillPopover"
 import { AI_FEATURES_ENABLED } from "@/lib/features"
-import { copy } from "@/lib/copy"
+import { getCopy, type Locale } from "@/lib/i18n"
 
 export interface SkillRow {
   category: string
@@ -10,11 +10,11 @@ export interface SkillRow {
   sortOrder: number
 }
 
-export function groupByCategory(skills: SkillRow[]) {
+export function groupByCategory(skills: SkillRow[], uncategorised: string) {
   const order: string[] = []
   const groups = new Map<string, SkillRow[]>()
   for (const skill of skills) {
-    const key = skill.category || copy.about.uncategorised
+    const key = skill.category || uncategorised
     if (!groups.has(key)) {
       groups.set(key, [])
       order.push(key)
@@ -33,8 +33,8 @@ export function groupByCategory(skills: SkillRow[]) {
  * reader it is the clearest junior signal on a portfolio. The level stays a
  * plain word.
  */
-export function SkillGroups({ skills }: { skills: SkillRow[] }) {
-  const groups = groupByCategory(skills)
+export function SkillGroups({ skills, locale = "en" }: { skills: SkillRow[]; locale?: Locale }) {
+  const groups = groupByCategory(skills, getCopy(locale).about.uncategorised)
   if (groups.length === 0) return null
 
   return (

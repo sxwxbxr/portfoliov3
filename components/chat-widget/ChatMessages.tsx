@@ -3,11 +3,9 @@
 import { useEffect, useRef } from "react"
 import { Markdown } from "@/components/ai/Markdown"
 import { cn } from "@/lib/utils"
-import { copy } from "@/lib/copy"
+import { useCopy } from "@/components/LocaleProvider"
 
 export type Message = { role: "user" | "assistant"; content: string }
-
-export const GREETING = copy.chat.greeting
 
 interface ChatMessagesProps {
   messages: Message[]
@@ -16,6 +14,7 @@ interface ChatMessagesProps {
 }
 
 function TypingDots() {
+  const copy = useCopy()
   return (
     <span className="flex items-center gap-1 py-1" aria-label={copy.chat.typing}>
       {[0, 1, 2].map((i) => (
@@ -53,6 +52,7 @@ function Bubble({
 }
 
 export function ChatMessages({ messages, streaming, error }: ChatMessagesProps) {
+  const copy = useCopy()
   const bottomRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -61,7 +61,7 @@ export function ChatMessages({ messages, streaming, error }: ChatMessagesProps) 
 
   return (
     <div className="flex flex-1 flex-col gap-3 overflow-y-auto p-4" data-lenis-prevent>
-      <Bubble role="assistant">{GREETING}</Bubble>
+      <Bubble role="assistant">{copy.chat.greeting}</Bubble>
 
       {messages.map((message, i) => {
         const isStreamingPlaceholder =

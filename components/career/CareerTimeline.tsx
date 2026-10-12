@@ -3,7 +3,7 @@
 import { useRef } from "react"
 import { motion, useInView, useReducedMotion } from "framer-motion"
 import type { CareerEntry, CareerTimeline as Timeline } from "@/lib/career"
-import { copy } from "@/lib/copy"
+import { useCopy } from "@/components/LocaleProvider"
 
 const EASE = [0.23, 1, 0.32, 1] as const
 
@@ -13,11 +13,6 @@ interface Props {
   onActivate: (id: string | null) => void
   onSelect: (id: string) => void
 }
-
-const LANES: { key: "work" | "education"; label: string }[] = [
-  { key: "work", label: copy.career.laneWork },
-  { key: "education", label: copy.career.laneEducation },
-]
 
 /**
  * Two-lane career chart.
@@ -37,6 +32,11 @@ const LANES: { key: "work" | "education"; label: string }[] = [
  * it — which is also what keeps it usable without a pointer.
  */
 export function CareerTimeline({ timeline, activeId, onActivate, onSelect }: Props) {
+  const copy = useCopy()
+  const LANES: { key: "work" | "education"; label: string }[] = [
+    { key: "work", label: copy.career.laneWork },
+    { key: "education", label: copy.career.laneEducation },
+  ]
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: "-64px" })
   const reduce = useReducedMotion()
@@ -146,6 +146,7 @@ function Bar({
   onActivate: (id: string | null) => void
   onSelect: (id: string) => void
 }) {
+  const copy = useCopy()
   const left = `${(entry.from * 100).toFixed(3)}%`
   const width = `${((entry.to - entry.from) * 100).toFixed(3)}%`
 

@@ -11,7 +11,8 @@ import { ProjectListItem } from "./ProjectListItem"
 import { EmptyState } from "./EmptyState"
 import type { SiteSettings } from "@/lib/data"
 import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
-import { copy } from "@/lib/copy"
+import { useCopy, useLocale } from "@/components/LocaleProvider"
+import { localizePath } from "@/lib/i18n"
 
 // ── Types ────────────────────────────────────────────
 interface Project {
@@ -80,8 +81,6 @@ interface HomeContentProps {
   settings: SiteSettings
 }
 
-const expertise = copy.common.expertiseAreas
-
 // ── Motion ────────────────────────────────────────────
 const EASE = [0.23, 1, 0.32, 1] as const
 
@@ -127,6 +126,9 @@ export default function HomeContent({
   caseStudies,
   settings,
 }: HomeContentProps) {
+  const copy = useCopy()
+  const locale = useLocale()
+  const expertise = copy.common.expertiseAreas
   const selectedProjects = projects.slice(0, 6)
 
   const featuredPosts = blogPosts.filter((p) => p.featured)
@@ -229,7 +231,7 @@ export default function HomeContent({
           title={copy.home.workTitle}
           sub={copy.home.workSub}
           aside={
-            <Link href="/projects" className={pillLink}>
+            <Link href={localizePath("/projects", locale)} className={pillLink}>
               {copy.projects.allProjects}
               <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
             </Link>
@@ -285,7 +287,7 @@ export default function HomeContent({
             title={copy.home.careerTitle}
             sub={copy.home.careerSub(firstYear)}
             aside={
-              <Link href="/career" className={pillLink}>
+              <Link href={localizePath("/career", locale)} className={pillLink}>
                 {copy.home.fullCareer}
                 <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
               </Link>
@@ -388,7 +390,7 @@ export default function HomeContent({
             <p className="annotate">{copy.home.ctaEyebrow}</p>
             <h2 className="display">{copy.home.ctaTitle}</h2>
             <Link
-              href="/contact"
+              href={localizePath("/contact", locale)}
               className="control control-primary inline-flex items-center gap-1 py-2.5 pr-4 pl-5 text-sm"
             >
               {copy.home.ctaButton}

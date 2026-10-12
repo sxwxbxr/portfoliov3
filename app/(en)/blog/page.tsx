@@ -1,0 +1,82 @@
+import Link from "next/link"
+import { notFound } from "next/navigation"
+import { ChevronRight } from "lucide-react"
+import PageLayout, { Section } from "@/components/PageLayout"
+import { EmptyState } from "@/components/EmptyState"
+import { getBlogPosts } from "@/lib/data"
+import { getExternalArticles } from "@/lib/blog"
+import { pkgUrl } from "@/lib/packages/urls"
+import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
+import { copy } from "@/lib/copy"
+
+export const revalidate = 86400
+
+export default async function Blog() {
+  if (!BLOG_ENABLED) notFound()
+  // Marco's posts live on the package site; they link there, so no page exists twice.
+  const [own, external] = await Promise.all([getBlogPosts(), getExternalArticles().catch(() => [])])
+  const blogPosts = [
+    ...own.map((p) => ({ slug: p.slug, title: p.title, publishedAt: p.publishedAt, meta: p.readTime, href: `/blog/${p.slug}` })),
+    ...external.map((p) => ({
+      slug: p.slug,
+      title: p.title,
+      publishedAt: p.publishedAt,
+      meta: copy.blog.externalLabel,
+      href: pkgUrl(`/blog/${p.slug}`),
+    })),
+  ].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
+
+  return (
+    <PageLayout
+      label={copy.blog.label(blogPosts.length)}
+      title={copy.blog.title}
+      subtitle={copy.blog.subtitle}
+    >
+      <section className="sheet flex flex-col gap-10 pb-24 md:pb-32">
+        {blogPosts.length > 0 ? (
+          // A sequence, so: hairline-separated rows.
+          <ol className="border-t border-edge-soft">
+            {blogPosts.map((post, i) => (
+              <li key={post.slug} className="border-b border-edge-soft">
+                <Section delay={i * 0.04}>
+                  <Link
+                    href={post.href}
+                    className="group flex flex-col gap-2 py-5 md:flex-row md:items-baseline md:gap-6"
+                  >
+                    <span className="annotate shrink-0" aria-hidden="true">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <h2 className="text-lg tracking-tight text-fg-muted transition-colors duration-150 group-hover:text-fg md:flex-1">
+                      {post.title}
+                    </h2>
+                    <span className="annotate">
+                      {new Date(post.publishedAt).toLocaleDateString(
+                        copy.common.dateLocale,
+                        { month: "short", year: "numeric" }
+                      )}
+                    </span>
+                    <span className="annotate md:w-20 md:text-right">
+                      {post.meta}
+                    </span>
+                  </Link>
+                </Section>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <EmptyState>{copy.blog.empty}</EmptyState>
+        )}
+
+        {CASE_STUDIES_ENABLED && (
+          <Link
+            href="/case-studies"
+            className="control inline-flex items-center gap-1.5 self-start py-2.5 pr-4 pl-5 text-sm"
+          >
+            {copy.projects.viewCaseStudies}
+            <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
+          </Link>
+        )}
+      </section>
+    </PageLayout>
+  )
+}

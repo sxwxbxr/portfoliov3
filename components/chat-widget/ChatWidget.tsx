@@ -6,11 +6,12 @@ import { X } from "lucide-react"
 import { ChatBubble } from "./ChatBubble"
 import { ChatInput } from "./ChatInput"
 import { ChatMessages, type Message } from "./ChatMessages"
-import { copy } from "@/lib/copy"
+import { useCopy } from "@/components/LocaleProvider"
 
 const EASE = [0.16, 1, 0.3, 1] as const
 
 export function ChatWidget() {
+  const copy = useCopy()
   const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState<Message[]>([])
   const [streaming, setStreaming] = useState(false)

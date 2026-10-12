@@ -1,7 +1,7 @@
 "use client"
 
 import { Markdown } from "@/components/ai/Markdown"
-import { copy } from "@/lib/copy"
+import { useCopy } from "@/components/LocaleProvider"
 
 interface DeepDiveContentProps {
   content: string
@@ -16,6 +16,7 @@ export function DeepDiveContent({
   error,
   onRetry,
 }: DeepDiveContentProps) {
+  const copy = useCopy()
   // Error with nothing streamed yet — offer a retry.
   if (error && !content) {
     return (

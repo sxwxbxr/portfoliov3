@@ -4,7 +4,8 @@ import Link from "next/link"
 import { ChevronRight } from "lucide-react"
 import { motion, useReducedMotion } from "framer-motion"
 import type { SiteSettings } from "@/lib/data"
-import { copy } from "@/lib/copy"
+import { useCopy, useLocale } from "@/components/LocaleProvider"
+import { localizePath } from "@/lib/i18n"
 import { Ruler } from "./Ruler"
 
 const EASE = [0.23, 1, 0.32, 1] as const
@@ -24,6 +25,8 @@ interface HeroProps {
  * strips are decoration and carry nothing the copy does not also say.
  */
 export default function Hero({ settings, metrics, years, skills }: HeroProps) {
+  const copy = useCopy()
+  const locale = useLocale()
   const reduce = useReducedMotion()
   const rise = (delay: number) => ({
     initial: reduce ? false : { opacity: 0, y: 8 },
@@ -56,13 +59,13 @@ export default function Hero({ settings, metrics, years, skills }: HeroProps) {
 
         <div className="flex flex-wrap gap-3">
           <Link
-            href="/contact"
+            href={localizePath("/contact", locale)}
             className="control control-primary inline-flex items-center gap-1 py-2.5 pr-4 pl-5 text-sm"
           >
             {copy.nav.contact}
             <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
-          <Link href="/projects" className="control inline-flex items-center px-5 py-2.5 text-sm">
+          <Link href={localizePath("/projects", locale)} className="control inline-flex items-center px-5 py-2.5 text-sm">
             {copy.projects.allProjects}
           </Link>
         </div>

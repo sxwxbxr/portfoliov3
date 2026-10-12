@@ -1,12 +1,6 @@
 import type { Certificate } from "./CertificateCard"
 import { formatMonth } from "@/lib/utils"
-import { copy } from "@/lib/copy"
-
-const STATUS_LABEL: Record<string, string> = {
-  completed: copy.education.statusCompleted,
-  "in-progress": copy.education.statusInProgress,
-  planned: copy.education.statusPlanned,
-}
+import { getCopy, type Locale } from "@/lib/i18n"
 
 function parseMonth(value: string): number | null {
   if (!value) return null
@@ -25,7 +19,7 @@ interface RoadmapEntry {
   endLabel: string
 }
 
-function buildRoadmap(certs: Certificate[]) {
+function buildRoadmap(certs: Certificate[], locale: Locale) {
   const entries: { cert: Certificate; startIdx: number; endIdx: number }[] = []
   let min = Number.POSITIVE_INFINITY
   let max = Number.NEGATIVE_INFINITY
@@ -61,8 +55,8 @@ function buildRoadmap(certs: Certificate[]) {
       cert: e.cert,
       startOffset: e.startIdx - min,
       span: e.endIdx - e.startIdx + 1,
-      startLabel: formatMonth(e.cert.plannedStart),
-      endLabel: e.cert.plannedEnd ? formatMonth(e.cert.plannedEnd) : "",
+      startLabel: formatMonth(e.cert.plannedStart, locale),
+      endLabel: e.cert.plannedEnd ? formatMonth(e.cert.plannedEnd, locale) : "",
     }))
 
   return { entries: built, months }
@@ -107,10 +101,18 @@ function currentMonthKey() {
  */
 export default function CertificatesRoadmap({
   certs,
+  locale = "en",
 }: {
   certs: Certificate[]
+  locale?: Locale
 }) {
-  const { entries, months } = buildRoadmap(certs)
+  const copy = getCopy(locale)
+  const STATUS_LABEL: Record<string, string> = {
+    completed: copy.education.statusCompleted,
+    "in-progress": copy.education.statusInProgress,
+    planned: copy.education.statusPlanned,
+  }
+  const { entries, months } = buildRoadmap(certs, locale)
   if (entries.length === 0) return null
 
   const totalMonths = months.length
@@ -129,8 +131,8 @@ export default function CertificatesRoadmap({
         </h3>
         <p className="annotate">
           {copy.education.roadmapRange(
-            formatMonth(months[0]),
-            formatMonth(months[months.length - 1])
+            formatMonth(months[0], locale),
+            formatMonth(months[months.length - 1], locale)
           )}
         </p>
       </header>
@@ -174,7 +176,7 @@ export default function CertificatesRoadmap({
                       {copy.education.roadmapMonthIndex(i + 1)}
                     </span>
                     <span className="annotate">
-                      {date.toLocaleString("en-US", { month: "short" })}
+                      {date.toLocaleString(locale === "de" ? "de-CH" : "en-US", { month: "short" })}
                     </span>
                   </div>
                 )

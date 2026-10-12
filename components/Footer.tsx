@@ -3,19 +3,22 @@ import { Github, Linkedin } from "lucide-react"
 import { TimeDisplay } from "./TimeDisplay"
 import type { SiteSettings } from "@/lib/data"
 import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
-import { copy } from "@/lib/copy"
+import { LanguageSwitcher } from "./LanguageSwitcher"
+import type { Copy } from "@/lib/copy"
+import { getCopy, localizePath, type Locale } from "@/lib/i18n"
 import { PACKAGES_ENTRY } from "@/lib/packages/urls"
 import { PHYSIO_ENTRY } from "@/lib/physio/urls"
 
-const footerNav = [
+function buildFooterNav(copy: Copy, locale: Locale) {
+  return [
   {
     heading: copy.nav.work,
     links: [
-      { name: copy.nav.projects, href: "/projects" },
+      { name: copy.nav.projects, href: localizePath("/projects", locale) },
       ...(CASE_STUDIES_ENABLED
         ? [{ name: copy.nav.caseStudies, href: "/case-studies" }]
         : []),
-      { name: copy.nav.services, href: "/services" },
+      { name: copy.nav.services, href: localizePath("/services", locale) },
       { name: copy.nav.packages, href: PACKAGES_ENTRY, sameTab: true },
       // The blog lives on the package site; posts come from Schulz Media and /admin/news.
       { name: copy.nav.blog, href: `${PACKAGES_ENTRY}/blog`, sameTab: true },
@@ -26,15 +29,18 @@ const footerNav = [
   {
     heading: copy.nav.about,
     links: [
-      { name: copy.nav.about, href: "/about" },
-      { name: copy.nav.career, href: "/career" },
-      { name: copy.nav.skills, href: "/about#skills" },
+      { name: copy.nav.about, href: localizePath("/about", locale) },
+      { name: copy.nav.career, href: localizePath("/career", locale) },
+      { name: copy.nav.skills, href: localizePath("/about#skills", locale) },
       ...(BLOG_ENABLED ? [{ name: copy.nav.blog, href: "/blog" }] : []),
     ],
   },
-]
+  ]
+}
 
-export function Footer({ settings }: { settings: SiteSettings }) {
+export function Footer({ settings, locale = "en" }: { settings: SiteSettings; locale?: Locale }) {
+  const copy = getCopy(locale)
+  const footerNav = buildFooterNav(copy, locale)
   const year = new Date().getFullYear()
   const email = settings.contactEmail || "info@sweber.dev"
   const hasSocial = Boolean(settings.githubUrl || settings.linkedinUrl)
@@ -42,15 +48,15 @@ export function Footer({ settings }: { settings: SiteSettings }) {
   const connectGroup = {
     heading: copy.nav.connect,
     links: [
-      { name: copy.nav.contact, href: "/contact", external: false },
+      { name: copy.nav.contact, href: localizePath("/contact", locale), external: false },
       ...(settings.githubUrl
         ? [{ name: copy.nav.github, href: settings.githubUrl, external: true }]
         : []),
       ...(settings.linkedinUrl
         ? [{ name: copy.nav.linkedin, href: settings.linkedinUrl, external: true }]
         : []),
-      { name: copy.nav.privacy, href: "/privacy", external: false },
-      { name: copy.nav.imprint, href: "/imprint", external: false },
+      { name: copy.nav.privacy, href: localizePath("/privacy", locale), external: false },
+      { name: copy.nav.imprint, href: localizePath("/imprint", locale), external: false },
     ],
   }
 
@@ -62,7 +68,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
         <div className="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
           {/* Brand, the address and the social links. */}
           <div className="flex flex-col items-start gap-5">
-            <Link href="/" className="text-lg tracking-tight">
+            <Link href={localizePath("/", locale)} className="text-lg tracking-tight">
               {copy.nav.brand}
             </Link>
             <p className="measure text-sm text-fg-muted">{copy.common.coreSentenceShort}</p>
@@ -145,6 +151,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
             {settings.contactLocation || copy.common.locationFallback}
           </p>
           <div className="flex items-center gap-4">
+            <LanguageSwitcher className="annotate hover:text-fg transition-colors duration-150" />
             <Link
               href="/login"
               className="annotate hover:text-fg transition-colors duration-150"

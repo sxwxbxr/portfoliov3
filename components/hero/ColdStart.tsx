@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import { copy } from "@/lib/copy"
+import { useCopy } from "@/components/LocaleProvider"
 
 interface ColdStartProps {
   /**
@@ -62,6 +62,7 @@ const EXIT_MS = 620
  * It plays once per document load — see `playedThisPageLoad`.
  */
 export default function ColdStart({ heroReady }: ColdStartProps) {
+  const copy = useCopy()
   const rootRef = useRef<HTMLDivElement>(null)
   const fillRef = useRef<HTMLSpanElement>(null)
   const countRef = useRef<HTMLSpanElement>(null)

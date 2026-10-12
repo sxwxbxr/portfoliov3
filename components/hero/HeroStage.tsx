@@ -5,7 +5,7 @@ import dynamic from "next/dynamic"
 import { ArrowDown } from "lucide-react"
 import { motion, useReducedMotion } from "framer-motion"
 import type { SiteSettings } from "@/lib/data"
-import { copy } from "@/lib/copy"
+import { useCopy } from "@/components/LocaleProvider"
 import ColdStart from "./ColdStart"
 
 /**
@@ -40,6 +40,7 @@ const EASE = [0.23, 1, 0.32, 1] as const
  * never arrives the poster is a finished design rather than a placeholder.
  */
 export default function HeroStage({ settings, metrics }: HeroStageProps) {
+  const copy = useCopy()
   const reduce = useReducedMotion()
   const [armed, setArmed] = useState(false)
   const [live, setLive] = useState(false)

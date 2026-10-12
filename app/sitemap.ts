@@ -2,6 +2,8 @@ import type { MetadataRoute } from "next"
 import { getProjects, getBlogPosts, getCaseStudies } from "@/lib/data"
 import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
 import { SITE_URL } from "@/lib/seo"
+import { localizePath } from "@/lib/i18n"
+import { hasGermanProject } from "@/lib/i18n-data"
 
 export const revalidate = 3600
 
@@ -18,13 +20,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     CASE_STUDIES_ENABLED ? getCaseStudies() : Promise.resolve([]),
   ])
 
+  // Both language versions of every page, each entry listing the whole set so
+  // the sitemap and the on-page hreflang agree. Only English paths are listed
+  // here; localizePath derives the German twin.
+  const entry = (enPath: string, withGerman = true): MetadataRoute.Sitemap => {
+    const en = `${SITE_URL}${enPath === "/" ? "" : enPath}`
+    if (!withGerman) return [{ url: en, alternates: { languages: { en, "x-default": en } } }]
+    const deRaw = localizePath(enPath, "de")
+    const de = `${SITE_URL}${deRaw}`
+    const languages = { en, de, "x-default": en }
+    return [
+      { url: en, alternates: { languages } },
+      { url: de, alternates: { languages } },
+    ]
+  }
+
   const staticPaths = [
-    "",
+    "/",
     "/about",
     "/career",
     "/projects",
-    ...(BLOG_ENABLED ? ["/blog"] : []),
-    ...(CASE_STUDIES_ENABLED ? ["/case-studies"] : []),
     "/services",
     "/contact",
     "/privacy",
@@ -35,8 +50,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]
 
   return [
-    ...staticPaths.map((path) => ({ url: `${SITE_URL}${path}` })),
-    ...projects.map((project) => ({ url: `${SITE_URL}/projects/${project.slug}` })),
+    ...staticPaths.flatMap((path) => entry(path)),
+    // A project's German page is indexable only once it has a German
+    // description; until then it is noindex and absent here, and the English
+    // page lists no `de` alternate.
+    ...projects.flatMap((project) =>
+      entry(`/projects/${project.slug}`, hasGermanProject(project))
+    ),
+    // Blog and case studies have no German edition.
+    ...(BLOG_ENABLED ? [{ url: `${SITE_URL}/blog` }] : []),
+    ...(CASE_STUDIES_ENABLED ? [{ url: `${SITE_URL}/case-studies` }] : []),
     ...blogPosts.map((post) => ({
       url: `${SITE_URL}/blog/${post.slug}`,
       lastModified: new Date(post.publishedAt),
