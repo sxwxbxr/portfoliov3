@@ -4,7 +4,7 @@
   "tagline": "Self-hosted webhooks for Node.js and TypeScript: Standard Webhooks signatures, retries, a delivery log and SSRF protection, in your own PostgreSQL, MySQL or SQLite.",
   "seoTitle": "Vector – self-hosted webhooks for Node.js, a Svix alternative with Standard Webhooks signatures",
   "description": "Sooner or later every SaaS product has to send webhooks to its customers. Doing it properly means signing every request, retrying for hours with backoff when a receiver is down, keeping a log your support team can read, refusing URLs that point into your own network and rotating secrets without downtime. Hosted services such as Svix or Hookdeck do this for you, from several hundred dollars a month, and every event and customer URL passes through their infrastructure.\n\nVector is the same building block as a library. It signs with the [Standard Webhooks](https://www.standardwebhooks.com) format that Svix uses, so receivers can verify with any Standard Webhooks or Svix library, retries eight times over about 27 hours, logs every message, delivery and attempt, and keeps all of it in your own PostgreSQL, MySQL or SQLite. It has no dependencies and runs on Node.js, Bun, Deno and in serverless functions.\n\nVector Pro adds an embeddable portal for your customers, a typed event catalog, operations tooling and verified inbound webhooks from Stripe, GitHub and others, messages in the format of Slack, Teams, Discord and Google Chat, and OpenTelemetry output. It is installed from a private GitHub Packages registry, licensed per person, with no licence key and no phone-home.",
-  "status": "beta",
+  "status": "stable",
   "tags": [
     "Webhooks",
     "Standard Webhooks",
@@ -54,14 +54,16 @@
       "transform hook: change the body per endpoint, add headers or skip a delivery, without touching the stored message",
       "Rate limit per endpoint (requests per second, by option, function or endpoint metadata) that delays instead of failing, and egress through a proxy dispatcher for a fixed IP",
       "hold hook: pause deliveries to an endpoint without using up retries, the building block for circuit breakers and maintenance windows",
-      "sendMany for up to 1000 events at once, and receiver dedupers (memory, Postgres, SQLite, MySQL) that skip repeated webhook ids"
+      "sendMany for up to 1000 events at once, and receiver dedupers (memory, Postgres, SQLite, MySQL) that skip repeated webhook ids",
+      "Ordered delivery per key: send with an orderingKey and later messages wait for earlier ones at each endpoint, while other keys keep flowing",
+      "Payload filters per endpoint (eq, in, gte, prefix, contains and more, combined with and, or, not), replay of a time range, prune for old messages and a versioned database schema that upgrades itself"
     ],
     "pro": [
-      "Embeddable customer portal: a tenant-scoped REST handler (adapters for Express, Hono, Fastify and plain Node) and React components for endpoints, secrets, a searchable message log (id, payload text, status, endpoint), retries, test events and an event catalog with examples and schemas; light, dark and shadcn/ui themes",
+      "Embeddable customer portal: a tenant-scoped REST handler (adapters for Express, Hono, Fastify and plain Node) and React components for endpoints, secrets, a searchable message log (id, payload text, status, endpoint), retries, test events and an event catalog with examples and schemas; light, dark and shadcn/ui themes; customers can replay a time range and set payload filters themselves",
       "Typed event catalog with Standard Schema validation, generated Markdown docs, AsyncAPI 3 and TypeScript types, with a CLI",
-      "Operations: alerts to Slack, email or a webhook, a circuit breaker per endpoint, weekly reports per tenant, bulk recovery after outages, health reports, Prometheus metrics and data retention",
-      "Inbound webhooks: verify Stripe, GitHub, GitLab, Shopify, Paddle, Polar, Linear, Sentry, Lemon Squeezy, Svix/Standard Webhooks and HMAC-signed requests, store each event once and forward it to your services with retries and a log",
-      "Chat formats: Slack, Microsoft Teams, Discord and Google Chat messages written from templates per event type, escaped against mentions and cut to each service's limits, plus pick, omit and redact of fields per endpoint",
+      "Operations: alerts to Slack, email or a webhook, a circuit breaker per endpoint, weekly reports per tenant, bulk recovery after outages, health reports, Prometheus metrics and data retention, SLO status with Prometheus alert rules and a Grafana dashboard",
+      "Inbound webhooks: verify Stripe, GitHub, GitLab, Shopify, Paddle, Polar, Linear, Sentry, Lemon Squeezy, Slack, Twilio, Svix/Standard Webhooks and HMAC-signed requests, store each event once and forward it to your services with retries and a log",
+      "Chat formats: Slack, Microsoft Teams, Discord and Google Chat messages written from templates per event type, escaped against mentions and cut to each service's limits, plus pick, omit and redact of fields per endpoint, with a preview to check a template before it goes live",
       "OpenTelemetry: a span and metrics for every delivery attempt for Grafana, Datadog, Honeycomb or any backend, with URL and tenant left out unless you ask"
     ]
   },
@@ -152,6 +154,18 @@
       {
         "name": "@weber-development/vector-ops",
         "description": "Operations tooling: alerts to Slack, email or a webhook, bulk recovery after an outage, a health report, Prometheus metrics and data retention."
+      },
+      {
+        "name": "@weber-development/vector-inbound",
+        "description": "Inbound webhooks: verifies Stripe, GitHub, GitLab, Shopify, Paddle, Polar, Linear, Sentry, Lemon Squeezy, Slack, Twilio, Svix and HMAC-signed requests, stores each event once and forwards it with retries and a log."
+      },
+      {
+        "name": "@weber-development/vector-transform",
+        "description": "Writes messages in the format of Slack, Microsoft Teams, Discord and Google Chat from templates per event type, and picks, omits or redacts fields for other endpoints. Preview a template without sending."
+      },
+      {
+        "name": "@weber-development/vector-otel",
+        "description": "OpenTelemetry output: a span and metrics for every delivery attempt, for Grafana, Datadog, Honeycomb or any backend."
       }
     ],
     "waitlistUrl": "mailto:info@sweber.dev?subject=Vector%20Pro%20waitlist"
@@ -226,7 +240,7 @@
     },
     {
       "q": "What about ordering and duplicates?",
-      "a": "Webhooks are delivered at least once and not in a guaranteed order, with Vector as with any other sender: a retry can arrive after a later event. Every retry of a message carries the same webhook-id, so receivers should store the ids they have processed and skip repeats, and compare timestamps or versions in the payload where order matters. On the sending side, idempotency keys keep a message from being created twice."
+      "a": "Webhooks are delivered at least once, so a retry can arrive twice and, by default, after a later event. Every retry of a message carries the same webhook-id, so receivers should store the ids they have processed and skip repeats. Where order matters, send related events with the same orderingKey (Vector 2.0): for each endpoint and key, the next message is delivered only after the earlier ones succeeded, failed for good or were cancelled. A message that keeps failing therefore delays later messages of the same key, but not other keys. Idempotency keys keep a message from being created twice on the sending side."
     },
     {
       "q": "Which databases are supported?",

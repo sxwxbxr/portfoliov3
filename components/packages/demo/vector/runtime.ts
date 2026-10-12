@@ -9,7 +9,7 @@ import { useEffect, useState } from "react"
  * the verifier, the memory store and the SSRF guard all run in the browser.
  */
 
-export const VECTOR_URL = "/demos/vector/vector-0.1.0.min.js"
+export const VECTOR_URL = "/demos/vector/vector-2.0.0.min.js"
 
 export type DeliveryStatus = "pending" | "succeeded" | "failed" | "cancelled"
 
@@ -38,6 +38,7 @@ export interface Message {
   tenant: string | null
   eventType: string
   payload: unknown
+  orderingKey?: string | null
   createdAt: Date
 }
 
@@ -95,7 +96,7 @@ export interface VectorInstance {
     get(id: string): Promise<Endpoint | undefined>
     update(id: string, input: { enabled?: boolean }): Promise<Endpoint | undefined>
   }
-  send(input: { tenant?: string; eventType: string; payload: unknown; idempotencyKey?: string }): Promise<{
+  send(input: { tenant?: string; eventType: string; payload: unknown; idempotencyKey?: string; orderingKey?: string }): Promise<{
     message: Message
     deliveries: Delivery[]
     duplicate: boolean

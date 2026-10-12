@@ -20,6 +20,7 @@ const t = vectorDemoCopy.delivery
 const RETRY_SCHEDULE = [10, 30, 60, 120]
 const MAX_ATTEMPTS = RETRY_SCHEDULE.length + 1
 const TENANT = "acme"
+const ORDERING_KEY = "customer_88"
 
 const BEHAVIOURS = ["healthy", "failing", "limited", "slow", "gone"] as const
 type Behaviour = (typeof BEHAVIOURS)[number]
@@ -132,7 +133,9 @@ export function DeliveryDemo() {
   const [lastRequest, setLastRequest] = useState<ReceivedRequest | null>(null)
   const [eventType, setEventType] = useState(EVENTS[0]!.type)
   const [generation, setGeneration] = useState(0)
+  const [ordered, setOrdered] = useState(false)
   const eventId = useId()
+  const orderedId = useId()
 
   const refresh = useCallback(async () => {
     const sim = simRef.current
@@ -221,7 +224,12 @@ export function DeliveryDemo() {
   const send = () =>
     run(async (sim) => {
       const event = EVENTS.find((e) => e.type === eventType) ?? EVENTS[0]!
-      const { message } = await sim.vector.send({ tenant: TENANT, eventType: event.type, payload: event.payload })
+      const { message } = await sim.vector.send({
+        tenant: TENANT,
+        eventType: event.type,
+        payload: event.payload,
+        ...(ordered ? { orderingKey: ORDERING_KEY } : {}),
+      })
       sim.messageIds.push(message.id)
     })
   const advance = (seconds: number) =>
@@ -288,6 +296,16 @@ export function DeliveryDemo() {
               {t.send}
             </button>
           </div>
+          <label htmlFor={orderedId} className="flex items-start gap-2 text-sm text-fg-muted">
+            <input
+              id={orderedId}
+              type="checkbox"
+              className="mt-1"
+              checked={ordered}
+              onChange={(e) => setOrdered(e.target.checked)}
+            />
+            <span>{t.ordered(ORDERING_KEY)}</span>
+          </label>
         </div>
         <div className="flex flex-col gap-3">
           <p className="annotate">
@@ -336,6 +354,12 @@ export function DeliveryDemo() {
                   <p className="text-sm text-fg">
                     <code className="font-mono">{message.eventType}</code>{" "}
                     <span className="annotate break-all">{message.id}</span>
+                    {message.orderingKey && (
+                      <>
+                        {" "}
+                        <span className="annotate">{t.orderingKey(message.orderingKey)}</span>
+                      </>
+                    )}
                   </p>
                   <button
                     type="button"
