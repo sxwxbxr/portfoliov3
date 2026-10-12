@@ -48,6 +48,8 @@ export async function POST(request: Request) {
       endDate,
       period,
       description: body.description ?? "",
+      titleDe: body.titleDe ?? "",
+      descriptionDe: body.descriptionDe ?? "",
       sortOrder: body.sortOrder ?? 0,
     })
     .returning()

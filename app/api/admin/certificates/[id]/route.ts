@@ -68,6 +68,10 @@ export async function PUT(
       skills: body.skills,
       whyPoints: body.whyPoints,
       accentColor: body.accentColor,
+      fullTitleDe: body.fullTitleDe ?? "",
+      categoryDe: body.categoryDe ?? "",
+      descriptionDe: body.descriptionDe ?? "",
+      whyPointsDe: body.whyPointsDe ?? [],
       sortOrder: body.sortOrder,
     })
     .where(eq(certificates.id, parseInt(id)))

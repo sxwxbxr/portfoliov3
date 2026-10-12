@@ -61,6 +61,8 @@ export async function PUT(
       endDate,
       period,
       description: body.description ?? "",
+      titleDe: body.titleDe ?? "",
+      descriptionDe: body.descriptionDe ?? "",
       sortOrder: body.sortOrder ?? 0,
     })
     .where(eq(educationEntries.id, parseInt(id)))

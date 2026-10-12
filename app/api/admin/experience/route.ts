@@ -53,6 +53,9 @@ export async function POST(request: Request) {
       current,
       description: body.description ?? "",
       responsibilities: body.responsibilities ?? [],
+      roleDe: body.roleDe ?? "",
+      descriptionDe: body.descriptionDe ?? "",
+      responsibilitiesDe: body.responsibilitiesDe ?? [],
       sortOrder: body.sortOrder ?? 0,
     })
     .returning()

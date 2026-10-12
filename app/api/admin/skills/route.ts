@@ -40,6 +40,10 @@ export async function POST(request: Request) {
       name: body.name,
       detail: body.detail ?? "",
       level: body.level ?? "",
+      categoryDe: body.categoryDe ?? "",
+      nameDe: body.nameDe ?? "",
+      detailDe: body.detailDe ?? "",
+      levelDe: body.levelDe ?? "",
       sortOrder: body.sortOrder ?? 0,
     })
     .returning()

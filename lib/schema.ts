@@ -13,6 +13,10 @@ export const projects = pgTable("projects", {
   title: text("title").notNull(),
   shortDescription: text("short_description").notNull(),
   description: text("description").notNull(),
+  // German edition (/de). Empty string falls back to the English value.
+  titleDe: text("title_de").notNull().default(""),
+  shortDescriptionDe: text("short_description_de").notNull().default(""),
+  descriptionDe: text("description_de").notNull().default(""),
   image: text("image").notNull().default(""),
   tags: json("tags").$type<string[]>().notNull().default([]),
   slug: text("slug").notNull().unique(),
@@ -27,6 +31,11 @@ export const projects = pgTable("projects", {
   challenge: text("challenge").notNull().default(""),
   solution: text("solution").notNull().default(""),
   results: json("results").$type<string[]>().notNull().default([]),
+  clientDe: text("client_de").notNull().default(""),
+  durationDe: text("duration_de").notNull().default(""),
+  challengeDe: text("challenge_de").notNull().default(""),
+  solutionDe: text("solution_de").notNull().default(""),
+  resultsDe: json("results_de").$type<string[]>().notNull().default([]),
 })
 
 export const experienceEntries = pgTable("experience", {
@@ -41,6 +50,9 @@ export const experienceEntries = pgTable("experience", {
   current: boolean("current").notNull().default(false),
   description: text("description").notNull().default(""),
   responsibilities: json("responsibilities").$type<string[]>().notNull().default([]),
+  roleDe: text("role_de").notNull().default(""),
+  descriptionDe: text("description_de").notNull().default(""),
+  responsibilitiesDe: json("responsibilities_de").$type<string[]>().notNull().default([]),
   sortOrder: integer("sort_order").notNull().default(0),
 })
 
@@ -67,6 +79,8 @@ export const educationEntries = pgTable("education_entries", {
   endDate: text("end_date").notNull().default(""),
   period: text("period").notNull().default(""),
   description: text("description").notNull().default(""),
+  titleDe: text("title_de").notNull().default(""),
+  descriptionDe: text("description_de").notNull().default(""),
   sortOrder: integer("sort_order").notNull().default(0),
 })
 
@@ -90,6 +104,10 @@ export const certificates = pgTable("certificates", {
   skills: json("skills").$type<string[]>().notNull().default([]),
   whyPoints: json("why_points").$type<string[]>().notNull().default([]),
   accentColor: text("accent_color").notNull().default(""),
+  fullTitleDe: text("full_title_de").notNull().default(""),
+  categoryDe: text("category_de").notNull().default(""),
+  descriptionDe: text("description_de").notNull().default(""),
+  whyPointsDe: json("why_points_de").$type<string[]>().notNull().default([]),
   sortOrder: integer("sort_order").notNull().default(0),
 })
 
@@ -117,6 +135,10 @@ export const skills = pgTable("skills", {
   name: text("name").notNull(),
   detail: text("detail").notNull().default(""),
   level: text("level").notNull().default(""),
+  categoryDe: text("category_de").notNull().default(""),
+  nameDe: text("name_de").notNull().default(""),
+  detailDe: text("detail_de").notNull().default(""),
+  levelDe: text("level_de").notNull().default(""),
   sortOrder: integer("sort_order").notNull().default(0),
 })
 
@@ -151,6 +173,13 @@ export const siteSettings = pgTable("site_settings", {
   knowsAbout: json("knows_about").$type<string[]>().notNull().default([]),
   // Privacy / legal copy (Markdown). Rendered on /privacy.
   privacyContent: text("privacy_content").notNull().default(""),
+  // German edition (/de). Empty falls back to the English value.
+  heroAvailabilityLabelDe: text("hero_availability_label_de").notNull().default(""),
+  heroMetricsDe: json("hero_metrics_de").$type<HeroMetric[]>().notNull().default([]),
+  contactLocationDe: text("contact_location_de").notNull().default(""),
+  currentRoleDe: text("current_role_de").notNull().default(""),
+  knowsAboutDe: json("knows_about_de").$type<string[]>().notNull().default([]),
+  privacyContentDe: text("privacy_content_de").notNull().default(""),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 })
 

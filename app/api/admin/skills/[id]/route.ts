@@ -50,6 +50,10 @@ export async function PUT(
       name: body.name,
       detail: body.detail ?? "",
       level: body.level ?? "",
+      categoryDe: body.categoryDe ?? "",
+      nameDe: body.nameDe ?? "",
+      detailDe: body.detailDe ?? "",
+      levelDe: body.levelDe ?? "",
       sortOrder: body.sortOrder ?? 0,
     })
     .where(eq(skills.id, parseInt(id)))
