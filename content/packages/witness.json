@@ -62,6 +62,22 @@
       "C2PA signing with your own certificate: sign generated PNG, JPEG, WebP, WAV and MP4/MOV/M4A files with Content Credentials, as API and CLI"
     ]
   },
+  "highlights": {
+    "free": [
+      "Chatbot notice, AI label and player for the EU AI Act Art. 50",
+      "Marks images, audio and video with IPTC metadata",
+      "Reads C2PA Content Credentials",
+      "Invisible text watermark and Vercel AI SDK middleware",
+      "React components, schema.org markup and a CLI"
+    ],
+    "pro": [
+      "Notice wording in all 24 official EU languages",
+      "CI scanner that fails the build when AI content has no label",
+      "Monitoring with baseline, pull request comment and alarm",
+      "AI register and evidence bundle for auditors",
+      "C2PA signing with your own certificate"
+    ]
+  },
   "comparison": [
     {
       "feature": "Chatbot notice and AI labels (web components and React)",

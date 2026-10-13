@@ -73,6 +73,22 @@
       "Check incoming invoices against purchase orders and goods receipts: quantities, prices, VAT and totals within tolerances you set, partial invoices tracked, every difference with a stable code in German or English"
     ]
   },
+  "highlights": {
+    "free": [
+      "Validates XRechnung, ZUGFeRD, Factur-X and Peppol BIS with the official rule sets",
+      "Passes all 1'142 CEN rule tests and the KoSIT test suite",
+      "Every finding with rule ID, XPath and line number",
+      "English and German messages, Leitweg-ID check",
+      "Pure TypeScript for Node, browsers and workers, plus a CLI"
+    ],
+    "pro": [
+      "Reads any invoice into one typed object and shows it as readable HTML",
+      "Batch and inbox-folder validation with reports",
+      "Export to DATEV, Lexoffice and sevDesk",
+      "Writes XRechnung and ZUGFeRD invoices as PDF/A-3",
+      "Validation service as a Docker image with a REST API"
+    ]
+  },
   "comparison": [
     {
       "feature": "EN 16931 and XRechnung validation, UBL and CII",

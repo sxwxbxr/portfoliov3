@@ -84,6 +84,22 @@
       "Reduced motion respected everywhere"
     ]
   },
+  "highlights": {
+    "free": [
+      "Springs solved in closed form, exact at any frame rate",
+      "Interruptible animation that keeps its velocity",
+      "Dragging and scrolling with inertia, rubber-banding and snap points",
+      "2D physics world with joints and sensors",
+      "React hooks; about 12 kB in total"
+    ],
+    "pro": [
+      "Bottom sheet, side drawer, modal, toast and popover",
+      "Swipe stack, carousel, pull to refresh and stack navigation",
+      "Sortable lists and boards with keyboard support",
+      "Jelly, ropes and impact sounds",
+      "Ready-made recipes and a spring editor"
+    ]
+  },
   "faq": [
     {
       "q": "How is this different from Sigmoid?",

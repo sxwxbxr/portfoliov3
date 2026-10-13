@@ -63,6 +63,15 @@
       "A stable API: semantic versioning, a deprecation policy and tests that pin every export"
     ]
   },
+  "highlights": {
+    "free": [
+      "Scroll animation on native CSS view and scroll timelines",
+      "Reveal, parallax, scrub and scroll stories",
+      "Zero-JavaScript mode with data attributes",
+      "Springs and curves for Motion, GSAP and Tailwind",
+      "React, Vue and Svelte bindings; about 5 kB"
+    ]
+  },
   "faq": [
     {
       "q": "Why not just use Motion or GSAP?",

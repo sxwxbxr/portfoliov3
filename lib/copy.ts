@@ -666,6 +666,8 @@ export const copy = {
     freeHeading: "Free, MIT",
     proHeading: "Pro",
     comparisonHeading: "Free and Pro",
+    everythingInFree: "Everything in Free",
+    allFeatures: "All features in detail",
     comparisonFeature: "Feature",
     comparisonFree: "Free",
     comparisonPro: "Pro",

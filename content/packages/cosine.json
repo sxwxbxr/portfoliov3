@@ -81,6 +81,22 @@
       "Models per page language: one index per language, English pages with the 23 MB model and other languages with the multilingual one, so visitors download only the model of the language they read (cosine-i18n)"
     ]
   },
+  "highlights": {
+    "free": [
+      "Semantic search that runs entirely in the browser, no server or API key",
+      "Hybrid ranking: keywords with typo tolerance plus embeddings",
+      "Index builder and CLI for Markdown, MDX and built HTML",
+      "Web component and React hooks in 4 languages",
+      "Scoped search, facets, synonyms and boosting"
+    ],
+    "pro": [
+      "Plugins for Vite, Next.js, Docusaurus, VitePress and Astro",
+      "Search insights without tracking: queries without results and trends",
+      "Gap suggestions, weekly report and golden-query tests",
+      "Short answers quoted from your docs",
+      "Algolia migration and one index per language"
+    ]
+  },
   "comparison": [
     {
       "feature": "Index builder, CLI and hybrid search",

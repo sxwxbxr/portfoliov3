@@ -94,6 +94,17 @@ export const packageSchema = z.object({
     free: z.array(z.string()).min(1),
     pro: z.array(z.string()).optional(),
   }),
+  /**
+   * The short Free-vs-Pro comparison shown on the page: at most 5 points per
+   * column. Pro implicitly starts with "Everything in Free". The long lists
+   * in `features` and `comparison` stay in a collapsed "all features" section.
+   */
+  highlights: z
+    .object({
+      free: z.array(z.string()).min(1).max(5),
+      pro: z.array(z.string()).max(5).default([]),
+    })
+    .optional(),
   /** Free-vs-Pro table rows. `true`/`false` render as check/dash, strings as text. */
   comparison: z
     .array(

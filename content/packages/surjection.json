@@ -65,6 +65,22 @@
       "Guided manual checklist for the criteria automated tests cannot cover, in German, Swiss German, English, French and Italian, with evidence (links, screenshots) and reviewer for every criterion"
     ]
   },
+  "highlights": {
+    "free": [
+      "axe-core checks for Playwright and Vitest, mapped to WCAG 2.2 and EN 301 549",
+      "CLI for whole sites, baseline for existing sites, SARIF and JUnit",
+      "Layout, keyboard, login, state and flow checks",
+      "Markdown reports for pull requests",
+      "Accessibility statement generator in 5 languages"
+    ],
+    "pro": [
+      "Client reports in your branding as HTML, PDF and Word",
+      "WCAG-EM conformance report and accessibility conformance report",
+      "Fix list as CSV for Excel",
+      "History across all client projects with regression monitoring",
+      "Guided manual checklist for what automation cannot test"
+    ]
+  },
   "comparison": [
     {
       "feature": "Playwright helper, Vitest matcher and CLI",

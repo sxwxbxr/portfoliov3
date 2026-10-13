@@ -62,6 +62,15 @@
       "CLI and a zero-dependency library that runs in Node.js and the browser"
     ]
   },
+  "highlights": {
+    "free": [
+      "A full shadcn/ui theme from one brand colour",
+      "Eleven steps per colour with guaranteed contrast, light and dark",
+      "Colour vision check and chart colours that stay apart",
+      "Export as Tailwind v4, Tailwind v3 or CSS variables",
+      "Contrast checks and a GitHub Action for CI"
+    ]
+  },
   "faq": [
     {
       "q": "Does Gradient keep my exact brand color?",

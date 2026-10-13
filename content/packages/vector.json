@@ -69,6 +69,22 @@
       "Regions and tenant limits (new in 2.1): send a customer's webhooks through a proxy with a fixed IP so they can allow-list it, and cap requests per second, requests in flight and requests per day for each tenant or endpoint so one busy tenant cannot use up your workers"
     ]
   },
+  "highlights": {
+    "free": [
+      "Signed webhooks following Standard Webhooks, with verify() for receivers",
+      "Per-tenant endpoints, retries with backoff and a delivery log",
+      "SSRF protection and secret rotation",
+      "Postgres, MySQL and in-memory stores; works on Node, Bun, Deno and edge",
+      "Transform, rate limit, ordering and payload filters"
+    ],
+    "pro": [
+      "Embeddable customer portal",
+      "Typed event catalog with generated docs",
+      "Alerts and circuit breaker, OpenTelemetry",
+      "Inbound webhooks from Stripe, GitHub, Shopify and more",
+      "Standalone server for PHP, Python and Go, with regions and limits"
+    ]
+  },
   "comparison": [
     {
       "feature": "Signing, verification, retries and delivery log",
