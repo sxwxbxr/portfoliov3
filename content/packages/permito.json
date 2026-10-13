@@ -65,7 +65,9 @@
       "Seals for the consent log: a keyed hash chain over the entries of a period, linked from period to period, so later changes, removals and additions are detectable; seals hold only entry IDs and hashes",
       "Catalog texts and cookie table headings in German, English, French, Italian and Spanish, and a freshness check for CI that lists catalog entries older than a limit",
       "WordPress plugin generator: one JSON file becomes a plugin that loads the banner, blocks scripts that other plugins enqueue by handle (also WooCommerce) and adds shortcodes for the settings link and the cookie table",
-      "Receiver for the Permito 2.0 consent webhook: writes each change to the consent log, passes withdrawals on to connected systems with retries, and keeps proof of which system confirmed what (since 2.0)"
+      "Receiver for the Permito 2.0 consent webhook: writes each change to the consent log, passes withdrawals on to connected systems with retries, and keeps proof of which system confirmed what (since 2.0)",
+      "Consent Mode check (beta): reads the consent state of Google tag requests while the page loads without interaction and reports tags that run granted or without a state, plus `permito gtm-template` for an importable Tag Manager container with the default consent state (beta) (since 2.1)",
+      "Alerts for new observations: the weekly monitor can post to a Slack or Teams webhook and names which observations are new per site, those active before consent first (since 2.1)"
     ]
   },
   "comparison": [
@@ -198,7 +200,7 @@
       },
       {
         "name": "@weber-development/permito-scanner",
-        "description": "Lists the cookies, storage and requests a site sets before consent."
+        "description": "Lists the cookies, storage and requests a site sets before consent, checks the Consent Mode of Google tags and monitors many sites with alerts."
       },
       {
         "name": "@weber-development/permito-themes",
