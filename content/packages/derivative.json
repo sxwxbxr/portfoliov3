@@ -50,9 +50,9 @@
       "Bindings for React (<WhatsNew>, useChangelog, an unstyled <ChangelogList>) and Vue 3 (<WhatsNew>, useChangelog); Svelte, Astro and plain HTML use the element directly"
     ],
     "pro": [
-      "Read statistics without cookies or visitor IDs: opens, reads and link clicks per release, plus a \"Was this helpful?\" vote under each release, with an HTML report, a password-protected dashboard route for your own backend, CSV export and storage in a file, Postgres or SQLite",
+      "Read statistics without cookies or visitor IDs: opens, reads and link clicks per release, plus a \"Was this helpful?\" vote under each release, with an HTML report, a password-protected dashboard route for your own backend, CSV export and storage in a file, Postgres or SQLite; emoji reactions and comments under each release, stored in your own database, plain text and approved by you before they show",
       "Audience segments and languages: entries only for certain plans or roles, scheduled releases, feature-flag audiences (Unleash, LaunchDarkly), translations written into the feed with DeepL, an OpenAI-compatible model or Anthropic, and a cache so only changed texts cost anything",
-      "Release notes with approval: drafts as JSON files in your repository (draft, review, approved, publish date), a CI check, and optional AI-written first drafts with your own key that always need a person's approval",
+      "Release notes with approval: drafts as JSON files in your repository (draft, review, approved, publish date), a CI check, and optional AI-written first drafts with your own key that always need a person's approval; import from Linear, Jira and Notion as drafts, with all pages read and retries on rate limits (beta)",
       "Announcements: a subscriber list with double opt-in and e-mail digests sent through Resend, Postmark, Amazon SES or any SMTP server (one-click unsubscribe, consent evidence), plus posts to Slack, Teams, Discord, Mattermost, Google Chat, Mastodon, Bluesky and LinkedIn"
     ]
   },
@@ -68,12 +68,12 @@
       "pro": true
     },
     {
-      "feature": "Read statistics, helpful votes, dashboard route, report and CSV export",
+      "feature": "Read statistics, helpful votes, emoji reactions and moderated comments, dashboard route, report and CSV export",
       "free": false,
       "pro": true
     },
     {
-      "feature": "Audience segments, feature-flag audiences, scheduled releases, translated feeds, drafts with approval, AI-written drafts",
+      "feature": "Audience segments, feature-flag audiences, scheduled releases, translated feeds, drafts with approval, AI-written drafts, tracker import (Linear, Jira, Notion; beta)",
       "free": false,
       "pro": true
     },
@@ -99,11 +99,11 @@
     "packages": [
       {
         "name": "@weber-development/derivative-insights",
-        "description": "Counts opens, reads and link clicks per release on your own endpoint, adds a helpful / not helpful vote under each release, without cookies or visitor IDs, and renders a report or serves a dashboard route."
+        "description": "Counts opens, reads and link clicks per release on your own endpoint, adds a helpful / not helpful vote under each release, without cookies or visitor IDs, and renders a report or serves a dashboard route. Readers can also react with an emoji and leave comments on a release, which you moderate."
       },
       {
         "name": "@weber-development/derivative-segments",
-        "description": "Shows entries only to the plans or roles they are meant for, publishes releases on a schedule, translates the feed into more languages (inside the feed or one file per language) with DeepL, an OpenAI-compatible model or Anthropic, and manages drafts with an approval step, including AI-written first drafts. Entries can follow your Unleash or LaunchDarkly feature flags."
+        "description": "Shows entries only to the plans or roles they are meant for, publishes releases on a schedule, translates the feed into more languages (inside the feed or one file per language) with DeepL, an OpenAI-compatible model or Anthropic, and manages drafts with an approval step, including AI-written first drafts. Entries can follow your Unleash or LaunchDarkly feature flags Imports releases from Linear, Jira and Notion as drafts (beta)."
       },
       {
         "name": "@weber-development/derivative-announce",
@@ -191,6 +191,10 @@
     {
       "q": "I use Derivative 1.x. What changes with 2.0?",
       "a": "The feed format grows to version 2 and the widget's announce attribute becomes highlight; version 1 feeds are still read, and the CLI can write the old format with --feed-format 1. Node 22 is required. The migration guide in the documentation lists every change. Version 1.x keeps getting fixes for 12 months."
+    },
+    {
+      "q": "Do readers need an account to comment?",
+      "a": "No. With Derivative Pro, readers can react with an emoji and leave a comment without an account. Comments are plain text, stored in your own database, held back until you approve them and never sent to us. You are responsible for them as personal data, so mention them in your privacy notice."
     }
   ],
   "publishedAt": "2026-10-05"
