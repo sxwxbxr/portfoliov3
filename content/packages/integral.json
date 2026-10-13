@@ -81,6 +81,22 @@
       "Floating seats keep working for a configurable time when the license server cannot be reached"
     ]
   },
+  "highlights": {
+    "free": [
+      "Signed offline licence keys, no server needed to check them",
+      "Plans with features and limits, trials and update periods",
+      "Polar licence keys, revocation lists and device binding",
+      "CLI to issue, verify and revoke licences",
+      "React bindings; zero dependencies"
+    ],
+    "pro": [
+      "Licence server that turns orders and subscriptions into signed licences",
+      "Stripe, Paddle and Lemon Squeezy next to Polar",
+      "Device activations, floating seats and usage metering",
+      "Customer portal and admin view with audit trail",
+      "Keys in a KMS or HSM, key rotation and signed webhooks"
+    ]
+  },
   "comparison": [
     { "feature": "Sign and verify licenses offline", "free": true, "pro": true },
     { "feature": "Plans, features and limits", "free": true, "pro": true },

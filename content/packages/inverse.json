@@ -58,6 +58,21 @@
       "Branded receipts, a team notification with the refund or end date, a weekly digest of refunds and contract ends that are due, one reminder per case before a deadline, and transports for Resend, Postmark, SendGrid, Brevo, Mailgun and SMTP"
     ]
   },
+  "highlights": {
+    "free": [
+      "Withdrawal and cancellation buttons with the statutory wording",
+      "Two-step forms with a receipt e-mail and a server-side record",
+      "Works as React components or one script tag for WordPress and Shopify",
+      "Deadline calculation and a page check for CI",
+      "9 languages and legal areas for DE, AT and CH"
+    ],
+    "pro": [
+      "Tamper-evident evidence ledger with an evidence sheet per declaration",
+      "Site-wide audit with a report for clients",
+      "Branded receipts and team notification",
+      "Inbox that watches new declarations"
+    ]
+  },
   "comparison": [
     {
       "feature": "Buttons, two-step forms and receipt e-mail",

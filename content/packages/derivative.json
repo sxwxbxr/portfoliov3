@@ -56,6 +56,21 @@
       "Announcements: a subscriber list with double opt-in and e-mail digests sent through Resend, Postmark, Amazon SES or any SMTP server (one-click unsubscribe, consent evidence), plus posts to Slack, Teams, Discord, Mattermost, Google Chat, Mastodon, Bluesky and LinkedIn"
     ]
   },
+  "highlights": {
+    "free": [
+      "Reads Changesets, Keep a Changelog and conventional commits",
+      "Writes changelog.json, Atom and JSON Feed",
+      "What's-new widget with unread badge and release highlights",
+      "React and Vue bindings, 4 languages, accessible",
+      "Frozen API with a written stability promise"
+    ],
+    "pro": [
+      "Read statistics without cookies or visitor IDs",
+      "Audience segments and languages per entry",
+      "Release notes with approval and import from Linear, Jira and Notion",
+      "Announcements with double opt-in e-mail digests"
+    ]
+  },
   "comparison": [
     {
       "feature": "Changelog parsers (incl. GitHub and GitLab Releases), CLI, Atom and JSON Feed",

@@ -121,6 +121,12 @@ export default async function PackagePage({ params }: Props) {
   const showPosts = posts.length > 0
   const showArticles = !showPosts && pkg.articles.length > 0
   const s = copy.packages.sections
+  const highlights = pkg.highlights
+  const proItems = highlights
+    ? highlights.pro.length > 0
+      ? [copy.packages.everythingInFree, ...highlights.pro]
+      : []
+    : (pkg.features.pro ?? [])
   const btn = "control inline-flex items-center gap-1 py-2.5 pr-4 pl-5 text-sm"
   const chev = <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
 
@@ -227,18 +233,77 @@ export default async function PackagePage({ params }: Props) {
         <div className="grid gap-3 md:grid-cols-2">
           <div className="cast flex flex-col gap-5 p-6 md:p-7">
             <h3 className="text-lg tracking-tight">{copy.packages.freeHeading}</h3>
-            <FeatureList items={pkg.features.free} />
+            <FeatureList items={highlights?.free ?? pkg.features.free} />
           </div>
-          {pkg.features.pro && pkg.features.pro.length > 0 && (
+          {proItems.length > 0 && (
             <div className="cast flex flex-col gap-5 p-6 md:p-7">
               <h3 className="text-lg tracking-tight">{copy.packages.proHeading}</h3>
-              <FeatureList items={pkg.features.pro} />
+              <FeatureList items={proItems} />
             </div>
           )}
         </div>
+        {highlights && (
+          <details className="group mt-8 border-t border-edge-soft pt-6">
+            <summary className="annotate flex cursor-pointer list-none items-center gap-2 text-fg [&::-webkit-details-marker]:hidden">
+              <ChevronRight
+                className="h-3.5 w-3.5 transition-transform duration-150 group-open:rotate-90"
+                aria-hidden="true"
+              />
+              {copy.packages.allFeatures}
+            </summary>
+            <div className="mt-8 flex flex-col gap-10">
+              <div className="grid gap-3 md:grid-cols-2">
+                <div className="cast flex flex-col gap-5 p-6 md:p-7">
+                  <h3 className="text-lg tracking-tight">{copy.packages.freeHeading}</h3>
+                  <FeatureList items={pkg.features.free} />
+                </div>
+                {pkg.features.pro && pkg.features.pro.length > 0 && (
+                  <div className="cast flex flex-col gap-5 p-6 md:p-7">
+                    <h3 className="text-lg tracking-tight">{copy.packages.proHeading}</h3>
+                    <FeatureList items={pkg.features.pro} />
+                  </div>
+                )}
+              </div>
+              {pkg.comparison && pkg.comparison.length > 0 && (
+                <div className="cast relative overflow-x-auto p-2">
+                    <table className="w-full min-w-[480px] border-collapse text-left text-sm">
+                      <thead>
+                        <tr className="annotate">
+                          <th scope="col" className="px-4 py-3 font-normal">
+                            {copy.packages.comparisonFeature}
+                          </th>
+                          <th scope="col" className="px-4 py-3 text-center font-normal">
+                            {copy.packages.comparisonFree}
+                          </th>
+                          <th scope="col" className="px-4 py-3 text-center font-normal">
+                            {copy.packages.comparisonPro}
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {pkg.comparison.map((row) => (
+                          <tr key={row.feature} className="border-t border-edge-soft">
+                            <th scope="row" className="px-4 py-3 font-normal text-fg">
+                              {row.feature}
+                            </th>
+                            <td className="px-4 py-3 text-center">
+                              <Cell value={row.free} />
+                            </td>
+                            <td className="px-4 py-3 text-center">
+                              <Cell value={row.pro} />
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+              )}
+            </div>
+          </details>
+        )}
       </Block>
 
-      {pkg.comparison && pkg.comparison.length > 0 && (
+      {!highlights && pkg.comparison && pkg.comparison.length > 0 && (
         <Block label={s.comparison.label} title={s.comparison.title} sub={s.comparison.sub}>
           <div className="cast relative overflow-x-auto p-2">
             <table className="w-full min-w-[480px] border-collapse text-left text-sm">

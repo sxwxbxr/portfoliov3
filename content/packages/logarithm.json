@@ -64,6 +64,22 @@
       "A ready-to-run admin server (Docker image or Node.js): search and export for your customers' admins, one tenant per sign-in, event ingest over HTTP and the alerts above (beta: Postgres/MySQL through the server and e-mail delivery are not tested against live services)"
     ]
   },
+  "highlights": {
+    "free": [
+      "Audit events in one call, with field-level diff and redaction of secrets",
+      "Stores for Postgres, MySQL and SQLite, multi-tenant by default",
+      "React activity view and object history",
+      "Filters, paging and a Fetch API handler",
+      "CloudEvents and OpenTelemetry mappings"
+    ],
+    "pro": [
+      "Tamper evidence with a hash chain and signed checkpoints",
+      "Retention per customer with archive to S3 or R2",
+      "Export for your customers and signed evidence pack",
+      "Forwarding to Splunk, Datadog and Elasticsearch, alerts and anomaly detection",
+      "SOC 2 and ISO 27001 evidence and an admin server"
+    ]
+  },
   "comparison": [
     {
       "feature": "Events, diffs and redaction",

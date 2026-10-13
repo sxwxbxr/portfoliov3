@@ -70,6 +70,22 @@
       "Alerts for new observations: the weekly monitor can post to a Slack or Teams webhook and names which observations are new per site, those active before consent first (since 2.1)"
     ]
   },
+  "highlights": {
+    "free": [
+      "Opt-in banner where \"Reject all\" is as prominent as \"Accept all\"",
+      "No tracking and no network calls: consent lives in your own cookie",
+      "Gates for scripts, iframes and components, safe for Next.js",
+      "Google Consent Mode v2, Global Privacy Control and 9 languages",
+      "Drop-in script tag, Vue and Svelte bindings, WCAG 2.2 AA checked"
+    ],
+    "pro": [
+      "Service catalog with 71 sourced providers and a generated cookie table",
+      "Scanner and GTM container check that find what loads before consent",
+      "Self-hosted consent log with evidence export and audit report",
+      "Monitoring of many client sites with weekly alerts",
+      "Theme templates and a WordPress plugin generator"
+    ]
+  },
   "comparison": [
     {
       "feature": "Cookie banner and preference center",
