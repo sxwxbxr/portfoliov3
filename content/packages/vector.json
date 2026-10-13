@@ -64,7 +64,9 @@
       "Operations: alerts to Slack, email or a webhook, a circuit breaker per endpoint, weekly reports per tenant, bulk recovery after outages, health reports, Prometheus metrics and data retention, SLO status with Prometheus alert rules and a Grafana dashboard",
       "Inbound webhooks: verify Stripe, GitHub, GitLab, Shopify, Paddle, Polar, Linear, Sentry, Lemon Squeezy, Slack, Twilio, Svix/Standard Webhooks and HMAC-signed requests, store each event once and forward it to your services with retries and a log",
       "Chat formats: Slack, Microsoft Teams, Discord and Google Chat messages written from templates per event type, escaped against mentions and cut to each service's limits, plus pick, omit and redact of fields per endpoint, with a preview to check a template before it goes live",
-      "OpenTelemetry: a span and metrics for every delivery attempt for Grafana, Datadog, Honeycomb or any backend, with URL and tenant left out unless you ask"
+      "OpenTelemetry: a span and metrics for every delivery attempt for Grafana, Datadog, Honeycomb or any backend, with URL and tenant left out unless you ask",
+      "Standalone server (new in 2.1): run Vector as its own service for PHP, Python, Go or any other stack. A REST API to send events and manage endpoints, a built-in worker, an admin page to search messages and retry failures, short-lived portal tokens so your customers can use the portal, Prometheus metrics, and PostgreSQL, MySQL or SQLite. Available as an npm package and a Docker image",
+      "Regions and tenant limits (new in 2.1): send a customer's webhooks through a proxy with a fixed IP so they can allow-list it, and cap requests per second, requests in flight and requests per day for each tenant or endpoint so one busy tenant cannot use up your workers"
     ]
   },
   "comparison": [
@@ -95,6 +97,16 @@
     },
     {
       "feature": "Alerts, circuit breaker, weekly tenant reports, bulk recovery, metrics and retention",
+      "free": false,
+      "pro": true
+    },
+    {
+      "feature": "Standalone server for non-Node apps: REST API, admin page, Docker",
+      "free": false,
+      "pro": true
+    },
+    {
+      "feature": "Regions (egress route) and limits per tenant and endpoint",
       "free": false,
       "pro": true
     },
@@ -153,7 +165,11 @@
       },
       {
         "name": "@weber-development/vector-ops",
-        "description": "Operations tooling: alerts to Slack, email or a webhook, bulk recovery after an outage, a health report, Prometheus metrics and data retention."
+        "description": "Operations tooling: alerts to Slack, email or a webhook, bulk recovery after an outage, a health report, Prometheus metrics and data retention. Regions with a fixed egress IP and limits per tenant and per endpoint."
+      },
+      {
+        "name": "@weber-development/vector-server",
+        "description": "Vector as a standalone service for applications in any language: a REST API, a built-in worker, an admin page, short-lived portal tokens for your customers, Prometheus metrics, regions with their own egress route and limits per tenant. Runs as a Node process or a Docker image on PostgreSQL, MySQL or SQLite."
       },
       {
         "name": "@weber-development/vector-inbound",
@@ -253,6 +269,10 @@
     {
       "q": "Can I send webhooks from a fixed IP address?",
       "a": "Yes. Run an egress proxy with a static IP and pass an undici dispatcher such as ProxyAgent to Vector's dispatcher option; on Node.js 24 and later NODE_USE_ENV_PROXY=1 with HTTPS_PROXY works without code. Vector still checks the host name against private networks before each request."
+    },
+    {
+      "q": "Can I use Vector if my application is not written in Node.js?",
+      "a": "Yes, with Vector Pro 2.1. The standalone server runs Vector as its own service. Your PHP, Python, Go or Ruby application sends events to its REST API with a plain HTTP request, and the server signs, delivers and retries them from your own PostgreSQL, MySQL or SQLite database. It includes an admin page and metrics, and comes as an npm package and a Docker image. The free library stays the better fit when your application is already Node.js."
     }
   ],
   "publishedAt": "2026-10-05"
