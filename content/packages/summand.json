@@ -66,6 +66,10 @@
       "Write e-invoices from a typed invoice object: XRechnung and EN 16931 as UBL or CII, always checked with Summand, with exact VAT and total calculation and ZUGFeRD PDFs",
       "Write all ZUGFeRD / Factur-X profiles (MINIMUM to EXTENDED), credit notes, partial and final invoices and Skonto, with a clear statement of what the validator could check",
       "Approval workflow and a tamper-evident archive for received invoices (beta; not reviewed by a tax advisor)",
+      "Validation service as a Docker image with a REST API (validate, batch, rule sets, health, OpenAPI, optional API key), so PHP, Java, .NET and Python stacks can use the validator",
+      "Webhooks (signed, with retries) and mail notifications for approvals and deadlines (beta, tested against local test servers)",
+      "Send e-invoices by SMTP after they were validated (beta, tested against a local test server; no Peppol)",
+      "Evidence bundle from the archive: original, validation result, workflow events and a manifest with SHA-256 that a third party can verify (beta; not reviewed by a tax advisor)",
       "Check incoming invoices against purchase orders and goods receipts: quantities, prices, VAT and totals within tolerances you set, partial invoices tracked, every difference with a stable code in German or English"
     ]
   },
