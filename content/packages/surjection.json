@@ -102,6 +102,11 @@
       "pro": true
     },
     {
+      "feature": "Pull request comment with new issues and scheduled monitoring with Slack or mail alerts (beta)",
+      "free": false,
+      "pro": true
+    },
+    {
       "feature": "Manual WCAG 2.2 checklist with browser editor",
       "free": false,
       "pro": true
@@ -127,7 +132,7 @@
       },
       {
         "name": "@weber-development/surjection-history",
-        "description": "Records every run per project and renders a dashboard with status, change and trend, plus an SVG status badge per project and a regression check for scheduled monitoring. Re-tests only the pages with findings."
+        "description": "Records every run per project and renders a dashboard with status, change and trend, plus an SVG status badge per project and a regression check. New in 2.1 (beta): a sticky pull request comment with only the new issues, and a daily monitoring workflow that notifies by Slack webhook or mail when results get worse. Re-tests only the pages with findings."
       },
       {
         "name": "@weber-development/surjection-checklist",
