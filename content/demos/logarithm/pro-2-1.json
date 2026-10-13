@@ -1,0 +1,37 @@
+{
+  "label": "Pro 2.1.0",
+  "title": "Run it as a service",
+  "sub": "Logarithm Pro.",
+  "lede": "Pro 2.1.0 adds a ready-to-run admin server, so your customers' admins get the audit log without you building a view. It also brings new alert rules and e-mail alerts.",
+  "items": [
+    {
+      "title": "Admin server in one container",
+      "text": "Search, filter, export and view the audit log of a tenant in a ready-made admin view. Runs on Postgres, MySQL/MariaDB or SQLite and is configured with environment variables only.",
+      "beta": true,
+      "codeTitle": "Docker",
+      "code": "docker run -p 3000:3000 \\\n  -e LOGARITHM_DATABASE_URL=postgres://user:pass@db:5432/app \\\n  -e LOGARITHM_ADMIN_TOKENS=\"acme=<long random token>,globex=<another one>\" \\\n  -e LOGARITHM_INGEST_KEY=<long random key> \\\n  -e LOGARITHM_SLACK_WEBHOOK=https://hooks.slack.com/services/... \\\n  ghcr.io/weber-development/logarithm-server:latest"
+    },
+    {
+      "title": "Write events from any language",
+      "text": "Apps in PHP, Python, Java or .NET send events over HTTP. The ingest key decides the tenant, and you can send up to 100 events per request.",
+      "codeTitle": "POST /v1/events",
+      "code": "curl -X POST https://audit.example.com/v1/events \\\n  -H \"authorization: Bearer $LOGARITHM_INGEST_KEY\" -H \"content-type: application/json\" \\\n  -d '{\"action\":\"project.updated\",\"actor\":{\"id\":\"u_1\",\"name\":\"Anna Muster\"},\n       \"targets\":[{\"type\":\"project\",\"id\":\"p_1\"}],\"before\":{\"name\":\"A\"},\"after\":{\"name\":\"B\"}}'"
+    },
+    {
+      "title": "Sign in with token, JWT or your proxy",
+      "text": "Admins sign in with a tenant token, an HS256 JWT or the user header of your reverse proxy. Each login sees only its own tenant.",
+      "beta": true,
+      "codeTitle": "Environment",
+      "code": "# token (default)\nLOGARITHM_AUTH=token\nLOGARITHM_ADMIN_TOKENS=\"acme=<token>,globex=<token>\"\n\n# HS256 JWT\nLOGARITHM_AUTH=jwt\nLOGARITHM_JWT_SECRET=<32+ characters>\n\n# trusted proxy header\nLOGARITHM_AUTH=proxy\nLOGARITHM_PROXY_SECRET=<shared secret>"
+    },
+    {
+      "title": "More alert rules, and e-mail",
+      "text": "The server checks for unusual activity itself, with no cron job. New rules catch mass changes, permission changes outside working hours and permission changes from a new IP. Alerts go to Slack, Teams, a signed webhook or e-mail.",
+      "beta": true,
+      "codeTitle": "Environment",
+      "code": "LOGARITHM_ALERT_RULES=extended\nLOGARITHM_ALERT_INTERVAL_MINUTES=5\nLOGARITHM_RESEND_API_KEY=<key>\nLOGARITHM_ALERT_EMAIL_FROM=audit@example.com\nLOGARITHM_ALERT_EMAIL_TO=security@example.com"
+    }
+  ],
+  "note": "The demo cannot run the server for you. It needs your own database and a container host.",
+  "docsPath": "/logarithm/docs"
+}

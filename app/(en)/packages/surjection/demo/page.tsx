@@ -3,6 +3,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft, ChevronRight, Download } from "lucide-react"
 import PageLayout from "@/components/PageLayout"
+import { ProNewSection } from "@/components/packages/demo/ProNewSection"
 import { Block } from "@/components/site/Block"
 import { CodeBlock } from "@/components/packages/demo/CodeBlock"
 import { CookieTableTabs } from "@/components/packages/demo/CookieTableTabs"
@@ -258,6 +259,8 @@ export default function SurjectionDemoPage() {
           <Missing />
         )}
       </Block>
+
+      <ProNewSection slug="surjection" />
 
       <Block
         label={t.closing.label}

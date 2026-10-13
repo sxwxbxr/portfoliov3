@@ -1,0 +1,41 @@
+{
+  "label": "Pro 2.1.0",
+  "title": "Run it as a service",
+  "sub": "Vector Pro.",
+  "lede": "Pro 2.1.0 adds a standalone server, so apps in PHP, Python, Go or any other language can send webhooks through Vector over HTTP. It also adds outgoing regions with fixed IPs and delivery limits per tenant.",
+  "items": [
+    {
+      "title": "Standalone server in Docker",
+      "text": "Run Vector as its own process with a REST API, a built-in delivery worker and an admin page. Your database holds everything, no Redis needed.",
+      "codeTitle": "Start the container",
+      "code": "docker run -d -p 3000:3000 \\\n  -e VECTOR_API_KEY=\"$(openssl rand -hex 24)\" \\\n  -e DATABASE_URL=\"postgres://user:password@db:5432/vector\" \\\n  ghcr.io/weber-development/vector-server:latest"
+    },
+    {
+      "title": "Send events from any language",
+      "text": "Create an endpoint and post a message with plain HTTP. The receiver gets a signed Standard Webhooks request with retries.",
+      "codeTitle": "Create an endpoint and send an event",
+      "code": "curl -X POST http://localhost:3000/v1/endpoints \\\n  -H \"authorization: Bearer $VECTOR_API_KEY\" -H \"content-type: application/json\" \\\n  -d '{\"url\":\"https://customer.example.com/hooks\",\"tenant\":\"acme\",\"eventTypes\":[\"invoice.*\"]}'\n\ncurl -X POST http://localhost:3000/v1/messages \\\n  -H \"authorization: Bearer $VECTOR_API_KEY\" -H \"content-type: application/json\" \\\n  -d '{\"eventType\":\"invoice.paid\",\"tenant\":\"acme\",\"payload\":{\"id\":\"inv_1\",\"amount\":1200},\"idempotencyKey\":\"inv_1\"}'"
+    },
+    {
+      "title": "Regions with a fixed outgoing IP",
+      "text": "Send an endpoint's requests through a proxy with a fixed IP, so customers who allow-list your address get the region that matches. A region is an outgoing route, your data stays in one database.",
+      "beta": true,
+      "codeTitle": "Server configuration",
+      "code": "VECTOR_REGIONS='{\"eu\":{\"proxy\":\"http://proxy-eu.internal:3128\",\"description\":\"Frankfurt\"},\"us\":{\"proxy\":\"http://proxy-us.internal:3128\"}}'\nVECTOR_DEFAULT_REGION=eu\nVECTOR_TENANT_REGIONS='{\"globex\":\"us\"}'"
+    },
+    {
+      "title": "Limits per tenant and endpoint",
+      "text": "Stop one busy tenant from using all of a worker's capacity. Deliveries over the limit wait and are not counted as failed attempts.",
+      "codeTitle": "Server configuration",
+      "code": "VECTOR_LIMITS='{\"default\":{\"perSecond\":20,\"maxConcurrent\":10},\"tenants\":{\"acme\":{\"perSecond\":100,\"perDay\":500000}}}'"
+    },
+    {
+      "title": "Use the same controls in your own Node app",
+      "text": "Already embedding Vector? createDeliveryControls gives you regions and limits as options for createVector, without the server.",
+      "codeTitle": "vector-ops",
+      "code": "import { ProxyAgent, fetch as undiciFetch } from \"undici\";\nimport { createDeliveryControls } from \"@weber-development/vector-ops\";\n\nconst dispatcher = new ProxyAgent(\"http://proxy-eu.internal:3128\");\nconst controls = createDeliveryControls({\n  fetch: undiciFetch as typeof fetch,\n  regions: { eu: { dispatcher } },\n  defaultRegion: \"eu\",\n  limits: { default: { perSecond: 20, maxConcurrent: 10 } },\n});\n\nconst vector = createVector({ store, ...controls.options });"
+    }
+  ],
+  "note": "The demo cannot show this: the server needs your own host, database and proxies. Limit counters live in the memory of each process.",
+  "docsPath": "/vector/docs"
+}

@@ -1,0 +1,36 @@
+{
+  "label": "Pro 2.1.0",
+  "title": "Import releases, hear from readers",
+  "sub": "Derivative Pro.",
+  "lede": "Pro 2.1.0 pulls release notes from Linear, Jira and Notion into your approval workflow, and lets readers react and comment under each release. Both run on your own backend and database.",
+  "items": [
+    {
+      "title": "Import from Linear, Jira and Notion",
+      "text": "Read cycles, versions and pages from the tracker your team already uses. Every release arrives as a draft with a link per entry, never straight in the feed.",
+      "beta": true,
+      "codeTitle": "Terminal",
+      "code": "export LINEAR_API_KEY=...   # never committed\nnpx derivative-segments import --source linear --team ENG --since 2026-01-01\nnpx derivative-segments import --source jira --url https://acme.atlassian.net --project WEB\nnpx derivative-segments import --source notion --database <id> --props published=Live"
+    },
+    {
+      "title": "Safe to run again",
+      "text": "Imports read all pages and retry on rate limits and server errors. A draft already in review or approved is never overwritten, and labels map to entry types.",
+      "beta": true,
+      "codeTitle": "Terminal",
+      "code": "npx derivative-segments import --source jira --url https://acme.atlassian.net --project WEB --map bug=fix,story=feature"
+    },
+    {
+      "title": "Reactions and comments per release",
+      "text": "Add a comment handler to your backend and one line to the page. Readers open the section under a release, and nothing loads before that.",
+      "codeTitle": "app/api/comments/route.ts",
+      "code": "import { createCommentsHandler, sqlCommentStore } from \"@weber-development/derivative-insights\";\n\nconst store = sqlCommentStore(query, { dialect: \"postgres\" }); // call store.setup() once\nconst handler = createCommentsHandler({ store, allow: yourRateLimiter });\nexport const GET = handler;\nexport const POST = handler;\n\n// in the browser\nimport { addComments } from \"@weber-development/derivative-insights\";\naddComments(document, { endpoint: \"/api/comments\" });"
+    },
+    {
+      "title": "Moderation you control",
+      "text": "Comments are plain text and held back until you approve them. A protected handler lists, approves, rejects or deletes them.",
+      "codeTitle": "Moderation handler",
+      "code": "import { createModerationHandler, bearerAuth } from \"@weber-development/derivative-insights\";\n\nconst moderate = createModerationHandler({ store, authorize: bearerAuth(token) });\n// GET ?status=pending lists\n// POST {id, action: \"approve\" | \"reject\" | \"delete\"} decides"
+    }
+  ],
+  "note": "The demo cannot show these: the import needs your own tracker account (it is Beta, tested against mock servers only) and comments need your own backend and database.",
+  "docsPath": "/derivative/docs"
+}

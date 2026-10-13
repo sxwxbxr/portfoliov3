@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowLeft, ChevronRight } from "lucide-react"
 import PageLayout from "@/components/PageLayout"
+import { ProNewSection } from "@/components/packages/demo/ProNewSection"
 import { Block } from "@/components/site/Block"
 import { CatalogChangesSection } from "@/components/packages/demo/CatalogChangesSection"
 import { CoreDemo } from "@/components/packages/demo/CoreDemo"
@@ -157,6 +158,8 @@ export default function PermitoDemoPage() {
       <Block id="log" label={t.log.label} title={t.log.title} sub={t.log.sub} lede={<p>{t.log.lede}</p>}>
         <ConsentLogSection />
       </Block>
+
+      <ProNewSection slug="permito" />
 
       <Block
         label={t.closing.label}

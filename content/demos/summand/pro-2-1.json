@@ -1,0 +1,43 @@
+{
+  "label": "Pro 2.1.0",
+  "title": "Run it as a service",
+  "sub": "Summand Pro.",
+  "lede": "Pro 2.1.0 adds an HTTP validation service for stacks that are not Node.js, and sending, notifying and evidence export for the inbox. The inbox additions are beta.",
+  "items": [
+    {
+      "title": "Validation service for any stack",
+      "text": "A Docker image that validates XRechnung, ZUGFeRD and Factur-X over HTTP. PHP, Python, Java, C# or a shell script only need an HTTP client, and no invoice is stored.",
+      "codeTitle": "Start it and validate",
+      "code": "docker run --rm -p 8080:8080 ghcr.io/weber-development/summand-server:2\n\ncurl -s --data-binary @invoice.xml -H 'Content-Type: application/xml' \\\n  'http://localhost:8080/v1/validate?lang=en' | jq '{valid, errors: [.errors[] | {id, severity, message}]}'"
+    },
+    {
+      "title": "Embed the service in your own server",
+      "text": "Use the same service from Node.js with an optional API key and a body size limit, or mount its handler in your own node:http server.",
+      "codeTitle": "createServer",
+      "code": "import { createServer } from \"@weber-development/summand-server\";\n\nconst app = createServer({ apiKey: process.env.SUMMAND_API_KEY, maxBodyBytes: 10 * 1024 * 1024 });\nconst { url } = await app.listen(8080, \"0.0.0.0\");\nprocess.on(\"SIGTERM\", () => void app.close());"
+    },
+    {
+      "title": "Send invoices by e-mail",
+      "text": "Validates the e-invoice first, then mails the XML or ZUGFeRD PDF to the buyer over SMTP. An invoice that fails the check is not sent unless you force it.",
+      "beta": true,
+      "codeTitle": "summand-inbox send",
+      "code": "summand-inbox send invoice-4711.xml \\\n  --to buyer@customer.example \\\n  --from invoices@seller.example \\\n  --smtp-url smtp://smtp.seller.example:587 \\\n  --smtp-user-env SUMMAND_SMTP_USER \\\n  --smtp-password-env SUMMAND_SMTP_PASSWORD"
+    },
+    {
+      "title": "Signed webhooks and deadline mails",
+      "text": "Tell your ERP or your team when an invoice is approved, rejected or overdue. Webhooks are signed with HMAC-SHA-256 and retried, and secrets stay in environment variables.",
+      "beta": true,
+      "codeTitle": "notify.json",
+      "code": "{\n  \"version\": 1,\n  \"events\": [\"approved\", \"rejected\", \"deadline-overdue\"],\n  \"webhooks\": [\n    {\n      \"name\": \"erp\",\n      \"url\": \"https://erp.example.com/hooks/summand\",\n      \"secretEnv\": \"SUMMAND_WEBHOOK_SECRET\",\n      \"retries\": 3\n    }\n  ]\n}"
+    },
+    {
+      "title": "Evidence bundle from the archive",
+      "text": "Exports a ZIP with the original invoice, its validation result, workflow events and a SHA-256 manifest. The recipient can check it with a command or a standalone script.",
+      "beta": true,
+      "codeTitle": "Export and verify",
+      "code": "summand-inbox archive export 3fa9c1d20b77a1e4 --out evidence-4711.zip\n\nsummand-inbox archive verify-bundle evidence-4711.zip \\\n  --manifest-sha256 <the value you were sent> \\\n  --anchor <the chain head you were sent>"
+    }
+  ],
+  "note": "The demo cannot show these: the service needs your own Docker host, and mail and webhooks need your own servers. The inbox additions are only tested against local test servers, not real mail or webhook services. The archive is not reviewed for tax purposes.",
+  "docsPath": "/summand/docs"
+}

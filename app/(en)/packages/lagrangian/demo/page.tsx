@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowLeft, ChevronRight } from "lucide-react"
 import PageLayout from "@/components/PageLayout"
+import { ProNewSection } from "@/components/packages/demo/ProNewSection"
 import { Block } from "@/components/site/Block"
 import { CodeBlock } from "@/components/packages/demo/CodeBlock"
 import { DoublePendulum } from "@/components/packages/demo/lagrangian/DoublePendulum"
@@ -245,6 +246,8 @@ export default function LagrangianDemoPage() {
           </div>
         </div>
       </Block>
+
+      <ProNewSection slug="lagrangian" />
 
       <Block
         label={t.closing.label}

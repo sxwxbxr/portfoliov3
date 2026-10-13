@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowLeft, ChevronRight } from "lucide-react"
 import PageLayout from "@/components/PageLayout"
+import { ProNewSection } from "@/components/packages/demo/ProNewSection"
 import { Block } from "@/components/site/Block"
 import { CodeBlock } from "@/components/packages/demo/CodeBlock"
 import { AppPreview } from "@/components/packages/demo/derivative/AppPreview"
@@ -108,6 +109,8 @@ export default function DerivativeDemoPage() {
       >
         <Playground />
       </Block>
+
+      <ProNewSection slug="derivative" />
 
       <Block label={t.closing.label} title={t.closing.title} sub={t.closing.sub} lede={<p>{t.closing.lede}</p>}>
         <div className="flex flex-wrap gap-3">

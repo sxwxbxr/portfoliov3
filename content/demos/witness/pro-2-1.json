@@ -1,0 +1,34 @@
+{
+  "label": "Pro 2.1.0",
+  "title": "Watch your site and hand proof to an auditor",
+  "sub": "Witness Pro.",
+  "lede": "Pro 2.1.0 turns the one-off scan into ongoing monitoring: only new findings fail a run, and a webhook tells your team. It also adds an evidence bundle that you can give to an auditor or a client.",
+  "items": [
+    {
+      "title": "Only new findings fail the build",
+      "text": "Save the findings you already know as a baseline. From then on a scan only fails when something new appears, so old findings no longer block every deploy.",
+      "codeTitle": "Terminal",
+      "code": "# once: save today's findings as the baseline\nnpx witness-scan dist --write-baseline witness-baseline.json\n\n# every build: only findings not in the baseline fail the run\nnpx witness-scan dist --baseline witness-baseline.json"
+    },
+    {
+      "title": "A comparison for every pull request",
+      "text": "Write a Markdown comparison with the baseline (new, fixed, unchanged) and post it as the pull request comment.",
+      "codeTitle": "Terminal",
+      "code": "npx witness-scan dist \\\n  --baseline witness-baseline.json \\\n  --comment witness-comment.md"
+    },
+    {
+      "title": "An alert when something new appears",
+      "text": "Send a message to Slack, Mattermost, Discord or any JSON endpoint when a scan finds something new. Only https URLs are accepted.",
+      "codeTitle": "Terminal",
+      "code": "export WITNESS_WEBHOOK_URL=\"https://hooks.example.com/...\"\nnpx witness-scan dist \\\n  --baseline witness-baseline.json \\\n  --label \"example.com\""
+    },
+    {
+      "title": "An evidence bundle with a hash manifest",
+      "text": "Collect the register, client report, public AI page, scan, change log and legal status in one folder with SHA-256 hashes. Verify later that nothing has changed. The bundle is not signed.",
+      "codeTitle": "Terminal",
+      "code": "npx witness-report evidence --out evidence/\nnpx witness-report evidence --verify evidence/"
+    }
+  ],
+  "note": "The demo runs in your browser and cannot run the CLI. Scanning, alerts and the evidence bundle need your own build output, CI or server.",
+  "docsPath": "/witness/docs"
+}

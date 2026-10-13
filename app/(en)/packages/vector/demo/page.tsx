@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowLeft, ChevronRight } from "lucide-react"
 import PageLayout from "@/components/PageLayout"
+import { ProNewSection } from "@/components/packages/demo/ProNewSection"
 import { Block } from "@/components/site/Block"
 import { CodeBlock } from "@/components/packages/demo/CodeBlock"
 import { DeliveryDemo } from "@/components/packages/demo/vector/DeliveryDemo"
@@ -114,6 +115,8 @@ export default function VectorDemoPage() {
           </div>
         </div>
       </Block>
+
+      <ProNewSection slug="vector" />
 
       <Block
         label={t.closing.label}

@@ -1,0 +1,38 @@
+{
+ "label": "Pro 2.1.0",
+ "title": "Run it in your pipeline",
+ "sub": "Surjection Pro.",
+ "lede": "Pro 2.1.0 turns the history from a tool you run by hand into something that runs by itself. New issues show up on the pull request, and a daily check tells you when a client site got worse.",
+ "items": [
+  {
+   "title": "One comment per pull request",
+   "text": "Compares the production results with the preview results and posts what is new on the pull request. The comment is updated on every push, so there is no spam, and the job can fail from a chosen severity.",
+   "beta": true,
+   "codeTitle": "Compare base and head",
+   "code": "npx surjection-history pr-comment --base base.json --head head.json --fail-on serious"
+  },
+  {
+   "title": "Ready-made workflows",
+   "text": "init-ci writes the GitHub Actions workflow files for you, so you do not build the pipeline yourself. It never overwrites files that already exist.",
+   "beta": true,
+   "codeTitle": "Generate the workflows",
+   "code": "npx surjection-history init-ci --pull-request --monitor"
+  },
+  {
+   "title": "Scheduled monitoring",
+   "text": "The monitoring workflow runs daily and keeps the history in its own branch called surjection-history, so it survives between runs. It fails the job when results got worse.",
+   "beta": true,
+   "codeTitle": "What the workflow runs",
+   "code": "surjection check --out-json a11y.json\nsurjection-history record --results a11y.json --dir .history\nsurjection-history regressions --dir .history --fail-on serious --out-md monitoring.md"
+  },
+  {
+   "title": "Alerts only when it got worse",
+   "text": "Send a message to Slack, Teams or Discord, or an email, but only when results reach your chosen severity. Nothing is sent when nothing got worse.",
+   "beta": true,
+   "codeTitle": "Notify by webhook",
+   "code": "npx surjection-history regressions --fail-on serious --webhook https://hooks.example/..."
+  }
+ ],
+ "note": "The demo cannot show these. They run in your own GitHub repository and need your own production and preview URLs. Both are beta and not yet verified on a real repository.",
+ "docsPath": "/surjection/docs"
+}

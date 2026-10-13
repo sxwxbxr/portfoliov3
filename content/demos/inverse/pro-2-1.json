@@ -1,0 +1,38 @@
+{
+  "label": "Pro 2.1.0",
+  "title": "A web inbox and a watchdog",
+  "sub": "Inverse Pro.",
+  "lede": "Pro 2.1.0 adds a web inbox for withdrawal and cancellation cases and continuous monitoring of your sites. Both are in beta.",
+  "items": [
+    {
+      "title": "Web inbox for your cases",
+      "text": "Lists withdrawals and cancellations with status and refund day, marks overdue ones, changes the status in the ledger chain and sends a reply from a German or English template.",
+      "beta": true,
+      "codeTitle": "Start the inbox",
+      "code": "export INVERSE_INBOX_PASSWORD=\"at-least-12-characters\"\nnpx inverse-ledger inbox ./data/inverse.db --company \"Acme GmbH\""
+    },
+    {
+      "title": "Inbox inside your own server",
+      "text": "Use the same inbox from code. Replies go out through any transport of inverse-mail, and inboxHandler lets you mount it in your own server.",
+      "beta": true,
+      "codeTitle": "createInbox and serveInbox",
+      "code": "import { createInbox, serveInbox } from \"@weber-development/inverse-ledger/node\";\n\nconst inbox = createInbox({ ledger, transport, company });\nserveInbox({ inbox, user, password });"
+    },
+    {
+      "title": "Watch your sites for regressions",
+      "text": "Each run checks your sites and reports only changes: a button that vanished, a site that stays broken, a site that is back. Alerts go to a webhook.",
+      "beta": true,
+      "codeTitle": "Scheduled watch run",
+      "code": "npx inverse-audit watch --sites sites.txt --state state.json --webhook <url>"
+    },
+    {
+      "title": "Generate the GitHub Actions workflow",
+      "text": "Prints a workflow that runs the watch on a schedule and fails the run on an alert, so GitHub notifies you by mail.",
+      "beta": true,
+      "codeTitle": "Print the workflow",
+      "code": "npx inverse-audit init-action https://shop.example.com --webhook"
+    }
+  ],
+  "note": "The demo cannot show these: the inbox needs your own ledger and server (HTTPS in front of it), and the watch needs your own sites and a scheduler. Mail delivery through real providers and the generated workflow on a real GitHub runner are not yet tested against live systems.",
+  "docsPath": "/inverse/docs"
+}

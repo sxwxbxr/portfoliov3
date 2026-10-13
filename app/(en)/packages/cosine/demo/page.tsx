@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowLeft, ChevronRight } from "lucide-react"
 import PageLayout from "@/components/PageLayout"
+import { ProNewSection } from "@/components/packages/demo/ProNewSection"
 import { Block } from "@/components/site/Block"
 import { CodeBlock } from "@/components/packages/demo/CodeBlock"
 import { CosineDemo } from "@/components/packages/demo/cosine/CosineDemo"
@@ -91,6 +92,8 @@ export default function CosineDemoPage() {
           <CodeBlock code={t.insights.command} label="Pro command" />
         </div>
       </Block>
+
+      <ProNewSection slug="cosine" />
 
       <Block
         label={t.closing.label}
