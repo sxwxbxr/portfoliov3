@@ -1,0 +1,46 @@
+{
+ "label": "Free 2.0",
+ "title": "Release communication, not just a changelog",
+ "sub": "Derivative, free.",
+ "lede": "Derivative 2.0 turns the MIT widget from a list of changes into a way to talk to your readers: a richer feed, a modal and banner for the releases that matter, audiences, translations and hints in your product.",
+ "items": [
+  {
+   "title": "Feed format 2 with media, links and importance",
+   "text": "Mark a release as major and give it a title, a summary, an image and a call to action. The build writes it into changelog.json, the Atom feed and the HTML page.",
+   "codeTitle": "derivative.config.json, then npx derivative build",
+   "code": "{\n  \"highlights\": {\n    \"2.4.0\": {\n      \"title\": \"Dark mode is here\",\n      \"summary\": \"Switch it on under **Settings → Appearance**.\",\n      \"importance\": \"major\",\n      \"media\": [{ \"type\": \"image\", \"url\": \"/changelog/dark-mode.png\", \"alt\": \"The dashboard in dark mode\" }],\n      \"links\": [{ \"label\": \"Read the guide\", \"url\": \"https://acme.ch/docs/dark-mode\" }]\n    }\n  }\n}",
+   "outputTitle": "public/changelog.json (real output, trimmed)",
+   "output": "{\n  \"version\": 2,\n  \"releases\": [\n    {\n      \"id\": \"2.4.0\",\n      \"entries\": [ ... 3 entries ... ],\n      \"version\": \"2.4.0\",\n      \"title\": \"Dark mode is here\",\n      \"summary\": \"Switch it on under **Settings → Appearance**.\",\n      \"importance\": \"major\",\n      \"media\": [\n        { \"type\": \"image\", \"url\": \"/changelog/dark-mode.png\", \"alt\": \"The dashboard in dark mode\" }\n      ],\n      \"links\": [\n        { \"label\": \"Read the guide\", \"url\": \"https://acme.ch/docs/dark-mode\" }\n      ]\n    },\n    ...\n  ]\n}"
+  },
+  {
+   "title": "Highlight as toast, banner or modal",
+   "text": "One attribute announces the newest unread release with a title, once per reader. Major releases win over newer minor ones, and the modal shows the image and links. This replaces announce from 1.x.",
+   "codeTitle": "Widget markup",
+   "code": "<derivative-widget src=\"/changelog.json\" highlight=\"modal\"></derivative-widget>\n<script type=\"module\">\n  import \"@sweberdev/derivative/widget\";\n</script>"
+  },
+  {
+   "title": "Audiences, translations and hints",
+   "text": "Show entries only to the readers they matter to, serve titles and entry texts in the reader's language, and let the widget mark the page element an entry is about with data-derivative-hint. Set audience=\"pro\" and hints on the widget.",
+   "codeTitle": "Node script using parseFeed and localizeRelease",
+   "code": "import { parseFeed, localizeRelease } from \"@sweberdev/derivative\";\n\nconst feed = parseFeed({\n  version: 2,\n  releases: [{\n    id: \"2.4.0\", version: \"2.4.0\", title: \"Dark mode is here\",\n    translations: {\n      de: { title: \"Dunkelmodus ist da\", entries: { \"ACME-12\": \"Dunkelmodus für das Dashboard\" } }\n    },\n    entries: [\n      { id: \"ACME-12\", type: \"feature\", text: \"Dark mode for the dashboard\", target: \"#theme-switch\" },\n      { type: \"fix\", text: \"Rounding of Swiss francs\", audience: [\"pro\"] }\n    ]\n  }]\n});\n\nconst de = localizeRelease(feed.releases[0], \"de\");\nconsole.log(de.title, de.entries.map((e) => e.text));",
+   "outputTitle": "Output (real)",
+   "output": "{\n  \"title\": \"Dunkelmodus ist da\",\n  \"entries\": [\n    \"Dunkelmodus für das Dashboard\",\n    \"Rounding of Swiss francs\"\n  ]\n}\n(the entry without a translation falls back to the original text)"
+  },
+  {
+   "title": "Old widgets keep working",
+   "text": "Format 2 is a superset of format 1, and 1.x feeds are still read. If pages with an old widget cache your feed, keep writing the old format for a while.",
+   "codeTitle": "Write a format 1 feed",
+   "code": "npx derivative build --feed-format 1",
+   "outputTitle": "public/changelog.json (real output, trimmed)",
+   "output": "derivative: 2 releases, 4 entries\n  wrote public/changelog-v1.json\n\n{\n  \"version\": 1,\n  \"releases\": [\n    {\n      \"id\": \"2.4.0\",\n      \"entries\": [ ... 3 entries ... ],\n      \"version\": \"2.4.0\",\n      \"title\": \"Dark mode is here\",\n      \"summary\": \"Switch it on under **Settings → Appearance**.\",\n      \"image\": \"/changelog/dark-mode.png\"\n    },\n    ...\n  ]\n}"
+  },
+  {
+   "title": "Linear, Jira and Notion as sources (beta)",
+   "text": "Read what shipped straight from a tracker, read-only, with an API token that you keep in the environment. The readers are tested against fixtures of the documented API responses, not against live accounts yet.",
+   "codeTitle": "derivative.config.json for Linear",
+   "code": "{ \"source\": \"linear\", \"linear\": { \"team\": \"ENG\" } }"
+  }
+ ],
+ "note": "Upgrading from 1.x? Rename announce to highlight and use Node.js 22 or newer. The migration guide lists every change.",
+ "docsPath": "/derivative/docs"
+}

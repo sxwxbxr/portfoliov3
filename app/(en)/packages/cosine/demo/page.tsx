@@ -93,6 +93,7 @@ export default function CosineDemoPage() {
         </div>
       </Block>
 
+      <ProNewSection slug="cosine" file="free-2-0" />
       <ProNewSection slug="cosine" />
 
       <Block

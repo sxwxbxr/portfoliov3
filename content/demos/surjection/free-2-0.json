@@ -1,0 +1,50 @@
+{
+  "label": "Free 2.0",
+  "title": "What 2.0 adds for everyone",
+  "sub": "Surjection, free.",
+  "lede": "Surjection 2.0 can check whole journeys, show honestly what automatic tests cover, give every finding a stable id and test single components. All of it is in the MIT package.",
+  "items": [
+    {
+      "title": "Flows: check every step of a journey",
+      "text": "Describe a checkout or sign-up once and the page is checked after each step. Every check shows up as its own page in the report and the baseline.",
+      "codeTitle": "surjection.config.json (local demo shop)",
+      "code": "{\n  \"baseUrl\": \"http://127.0.0.1:8099\",\n  \"flows\": [\n    {\n      \"name\": \"checkout\",\n      \"url\": \"/\",\n      \"steps\": [\n        {\n          \"check\": \"cart\"\n        },\n        {\n          \"click\": \"#to-address\"\n        },\n        {\n          \"waitFor\": \"#address-form\"\n        },\n        {\n          \"check\": \"address\"\n        }\n      ]\n    }\n  ]\n}",
+      "outputTitle": "npx surjection check --config surjection.config.json",
+      "output": "✗ http://127.0.0.1:8099/ (1 issue)\n✗ http://127.0.0.1:8099/#flow:checkout:cart (1 issue)\n✗ http://127.0.0.1:8099/#flow:checkout:address (3 issues)\n\n5 accessibility issue(s) on 3 page(s)."
+    },
+    {
+      "title": "Coverage: what automatic tests can and cannot decide",
+      "text": "See which of the 55 WCAG 2.2 A and AA criteria are tested automatically, partly, or only by a person, so a green run is not mistaken for conformance.",
+      "codeTitle": "Terminal",
+      "code": "npx surjection coverage",
+      "outputTitle": "Output (first lines and three rows)",
+      "output": "# WCAG 2.2 coverage of Surjection\n\n55 success criteria at level A and AA: 11 mostly automatic, 16 partly automatic, 28 manual only.\nA passing run is no proof of conformance, not even for \"mostly automatic\" criteria.\n\n| Criterion | Level | Name | Coverage | Rules |\n| --- | --- | --- | --- | --- |\n...\n| 1.1.1 | A | Non-text Content | partly automatic | `aria-meter-name`, `aria-progressbar-name`, `image-alt`, `input-image-alt`, `object-alt`, `role-img-alt`, `svg-img-alt` |\n| 1.3.2 | A | Meaningful Sequence | manual only | - |\n| 1.4.3 | AA | Contrast (Minimum) | mostly automatic | `color-contrast` |"
+    },
+    {
+      "title": "Stable ids for every finding",
+      "text": "The results file is now version 2. Each affected element gets an id that stays the same between runs, so you can tell a new problem from a known one.",
+      "codeTitle": "Terminal",
+      "code": "npx surjection check --config surjection.config.json --out-json results.json\n\nnode -e \"const r=require('./results.json');console.log('version',r.version,'tool',r.tool.name+'@'+r.tool.version);for(const p of r.pages)for(const f of p.findings)for(const n of f.nodes)console.log(n.id,f.rule,n.target)\"",
+      "outputTitle": "Version, tool and ids read from results.json (identical in a second run)",
+      "output": "version 2 tool surjection@2.0.0\nf3c3baacfbbb image-alt #hero\n9797a81be492 image-alt #hero\nde0fbf6fa9c8 image-alt #hero\n877d4ef132f5 target-size #to-address\n5cd6660f38ba target-size #email"
+    },
+    {
+      "title": "Convert old files with one command",
+      "text": "Results files and baselines from 1.x are still read, and you can rewrite them as version 2 once.",
+      "codeTitle": "Terminal",
+      "code": "npx surjection convert surjection-baseline.json --out surjection-baseline.json",
+      "outputTitle": "Output (a version 1 baseline with one entry)",
+      "output": "Converted baseline surjection-baseline.json to version 2: surjection-baseline.json\n{\n  \"version\": 2,\n  \"createdAt\": \"2026-09-01T10:00:00.000Z\",\n  \"entries\": [\n    {\n      \"id\": \"f3c3baacfbbb\",\n      \"page\": \"/\",\n      \"rule\": \"image-alt\",\n      \"target\": \"#hero\"\n    }\n  ]\n}"
+    },
+    {
+      "title": "Component checks for Storybook and tests",
+      "text": "Check a single component in a Storybook play function or a Testing Library test, with no Playwright needed. Page-level rules are switched off.",
+      "codeTitle": "Test",
+      "code": "import { expectAccessibleComponent } from \"@sweberdev/surjection/component\";\n\nawait expectAccessibleComponent(container, { name: \"toolbar\" });",
+      "outputTitle": "Failure message (run in jsdom, shortened)",
+      "output": "2 accessibility issue(s) on component:toolbar\n...\n### Issues found\n\n#### Buttons must have discernible text (`button-name`)\n\n- **Critical** · WCAG criteria: 4.1.2 (A)\n- Affected elements (1):\n  - `button`\n- Learn more: https://dequeuniversity.com/rules/axe/4.14/button-name?application=axeAPI\n\n#### Images must have alternative text (`image-alt`)\n\n- **Critical** · WCAG criteria: 1.1.1 (A)\n- Affected elements (1):\n  - `img`\n- Learn more: https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI\n\n---"
+    }
+  ],
+  "note": "Outputs were produced with @sweberdev/surjection 2.0.0 from npm on Node 22.",
+  "docsPath": "/surjection/docs"
+}

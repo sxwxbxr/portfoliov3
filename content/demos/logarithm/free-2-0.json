@@ -1,0 +1,48 @@
+{
+  "label": "Free 2.0",
+  "title": "Outcome, correlation id and standard formats",
+  "sub": "Logarithm, free.",
+  "lede": "Logarithm 2.0 records how every action ended and ties events of one request together, and it maps events to CloudEvents and OpenTelemetry. Large Postgres tables can now be partitioned, all in the MIT package.",
+  "items": [
+    {
+      "title": "Outcome: record what was refused",
+      "text": "Every event now says how the action ended: success, failure or denied. Denied attempts are often the first thing an auditor asks about, and you can filter by result.",
+      "codeTitle": "Record a denied export and filter by outcome",
+      "code": "const log = audit.with({ tenantId: \"acme\", actor: { id: \"u_42\" }, correlationId: \"req-7f3a\" })\nawait log.record({ action: \"project.updated\", targets: [{ type: \"project\", id: \"p1\" }] })\nawait log.record({\n  action: \"export.created\",\n  targets: [{ type: \"project\", id: \"p1\" }],\n  outcome: \"denied\",\n  metadata: { reason: \"missing permission export:create\" },\n})\nconst { events } = await audit.query({ outcome: \"denied\" })\nconst same = await audit.query({ correlationId: \"req-7f3a\" })",
+      "outputTitle": "Real output (SQLite, Node 22)",
+      "output": "1 export.created denied req-7f3a\n[ 'export.created denied', 'project.updated success' ]"
+    },
+    {
+      "title": "Correlation id across a request",
+      "text": "Set one correlationId per request, job or trace and every event of that operation carries it. Query by it to see everything one request did.",
+      "codeTitle": "Same example: both events share req-7f3a",
+      "code": "audit.with({ correlationId })\naudit.query({ correlationId })\n// over HTTP: ?correlation=req-7f3a"
+    },
+    {
+      "title": "CloudEvents 1.0 export",
+      "text": "Turn any event into a CloudEvents envelope for brokers like EventBridge, Event Grid or Knative. The function is pure, so you choose the transport.",
+      "codeTitle": "toCloudEvent",
+      "code": "import { toCloudEvent } from \"@sweberdev/logarithm\"\n\nconst ce = toCloudEvent(events[0], {\n  source: \"https://app.example.ch/audit\",\n  typePrefix: \"ch.example.audit\",\n})",
+      "outputTitle": "Real output (data block trimmed)",
+      "output": "{\n  \"specversion\": \"1.0\",\n  \"id\": \"01M4V0498XFTZZ9DMR9VTW2G7Y\",\n  \"source\": \"https://app.example.ch/audit\",\n  \"type\": \"ch.example.audit.project.updated\",\n  \"time\": \"2026-10-13T16:04:32.668Z\",\n  \"datacontenttype\": \"application/json\",\n  \"data\": { ... },\n  \"subject\": \"project/p1\",\n  \"tenantid\": \"acme\",\n  \"outcome\": \"failure\",\n  \"correlationid\": \"req-7f3a\"\n}"
+    },
+    {
+      "title": "OpenTelemetry logs",
+      "text": "Send events to any OTLP backend such as the OpenTelemetry Collector, Grafana, Datadog or Honeycomb. Severity follows the outcome, and a 32-hex correlation id becomes the trace id.",
+      "codeTitle": "toOtlpLogs",
+      "code": "import { toOtlpLogs } from \"@sweberdev/logarithm\"\n\nconst body = toOtlpLogs(events, { serviceName: \"billing\" })\n// POST body as JSON to http://otel-collector:4318/v1/logs",
+      "outputTitle": "Real output (denied event: severity, body, attributes)",
+      "output": "WARN export.created\nevent.name = export.created\nenduser.id = u_42\nlogarithm.event.id = 01M4V049ATC335RY4NRJ6S12NE\nlogarithm.outcome = denied\nlogarithm.actor.type = user\nlogarithm.correlation_id = req-7f3a"
+    },
+    {
+      "title": "Postgres partitioning",
+      "text": "Very large Postgres audit tables can be partitioned by month or year, so time-range queries stay fast and removing old months is a metadata operation.",
+      "codeTitle": "Create a partitioned table",
+      "code": "import { migratePostgres, ensurePartitions } from \"@sweberdev/logarithm/postgres\"\n\nawait migratePostgres({ client: pool, partitioned: true })\nawait ensurePartitions({ client: pool, from: new Date(), to: \"2027-03-31\" })",
+      "outputTitle": "Real output of postgresSchema({ partitioned: true }), first lines",
+      "output": "CREATE TABLE IF NOT EXISTS \"audit_events\" (\n  id text COLLATE \"C\" NOT NULL,\n  occurred_at timestamptz NOT NULL,\n  tenant_id text,\n  action text NOT NULL,\n  actor_id text NOT NULL,\n  actor jsonb NOT NULL,\n  targets jsonb NOT NULL DEFAULT '[]',\n  changes jsonb NOT NULL DEFAULT '[]',\n  context jsonb NOT NULL DEFAULT '{}',\n  metadata jsonb NOT NULL DEFAULT '{}',\n  outcome text,\n  correlation_id text,\n  search text NOT NULL DEFAULT '',\n  PRIMARY KEY (occurred_at, id)\n) PARTITION BY RANGE (occurred_at);\nCREATE TABLE IF NOT EXISTS \"audit_events_default\" PARTITION OF \"audit_events\" DEFAULT;"
+    }
+  ],
+  "note": "Also new in free 2.0: the React ObjectHistory component (history of one object with a diff per change) and a result filter in AuditLog. Existing tables upgrade in place with migrate*; Node 22 or newer is required.",
+  "docsPath": "/logarithm/docs"
+}

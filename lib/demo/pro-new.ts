@@ -6,7 +6,7 @@ import { cache } from "react"
 
 /**
  * "New in Pro 2.1.0" section of a demo page. The text lives in
- * content/demos/<slug>/pro-2-1.json so every package keeps its own file.
+ * content/demos/<slug>/pro-2-1.json (Pro) and free-2-0.json (free) so every package keeps its own file.
  * Code is copied from the Pro documentation; recorded output only appears
  * when it came from a real run (see `output`).
  */
@@ -33,10 +33,12 @@ export type ProNew = {
   docsPath?: string
 }
 
-export const getProNew = cache((slug: string): ProNew | null => {
+export type ProNewFile = "pro-2-1" | "free-2-0"
+
+export const getProNew = cache((slug: string, file: ProNewFile = "pro-2-1"): ProNew | null => {
   try {
     const raw = fs.readFileSync(
-      path.join(process.cwd(), "content", "demos", slug, "pro-2-1.json"),
+      path.join(process.cwd(), "content", "demos", slug, `${file}.json`),
       "utf8",
     )
     const data = JSON.parse(raw) as ProNew

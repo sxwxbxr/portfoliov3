@@ -247,6 +247,7 @@ export default function LagrangianDemoPage() {
         </div>
       </Block>
 
+      <ProNewSection slug="lagrangian" file="free-2-0" />
       <ProNewSection slug="lagrangian" />
 
       <Block

@@ -93,6 +93,7 @@ export default function LogarithmDemoPage() {
         </div>
       </Block>
 
+      <ProNewSection slug="logarithm" file="free-2-0" />
       <ProNewSection slug="logarithm" />
 
       <Block

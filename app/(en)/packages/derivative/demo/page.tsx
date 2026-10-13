@@ -110,6 +110,7 @@ export default function DerivativeDemoPage() {
         <Playground />
       </Block>
 
+      <ProNewSection slug="derivative" file="free-2-0" />
       <ProNewSection slug="derivative" />
 
       <Block label={t.closing.label} title={t.closing.title} sub={t.closing.sub} lede={<p>{t.closing.lede}</p>}>

@@ -137,6 +137,7 @@ export default function WitnessDemoPage() {
         </div>
       </Block>
 
+      <ProNewSection slug="witness" file="free-2-0" />
       <ProNewSection slug="witness" />
 
       <Block

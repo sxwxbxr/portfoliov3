@@ -1,0 +1,40 @@
+{
+  "label": "Free 2.0",
+  "title": "Purposes, a consent webhook and a safe upgrade",
+  "sub": "Permito, free.",
+  "lede": "Permito 2.0 adds purposes as a first-class idea next to categories, plus a webhook that tells your own backend when someone changes or withdraws consent. Visitors who consented under 1.x are not asked again.",
+  "items": [
+    {
+      "title": "Purposes next to categories",
+      "text": "Split a category into purposes with stable IDs, then check or decline a single purpose without touching the rest of its category.",
+      "codeTitle": "Node script",
+      "code": "import { createConsentManager, createMemoryStorage } from \"@permitojs/core\";\nconst manager = createConsentManager({\n  consentVersion: \"2026-10\",\n  storage: createMemoryStorage(),\n  categories: [{ id: \"necessary\", required: true }, { id: \"marketing\" }],\n  purposes: [\n    { id: \"newsletter\", category: \"marketing\" },\n    { id: \"retargeting\", category: \"marketing\" },\n  ],\n});\nawait manager.ready;\nawait manager.update({ marketing: true });\nconsole.log(\"newsletter:\", manager.hasPurposeConsent(\"newsletter\"));\nconsole.log(\"retargeting:\", manager.hasPurposeConsent(\"retargeting\"));\nawait manager.setPurposeConsent(\"retargeting\", false);\nconsole.log(\"after decline -> retargeting:\", manager.hasPurposeConsent(\"retargeting\"));\nconsole.log(\"purposes:\", JSON.stringify(manager.getSnapshot().purposes));",
+      "outputTitle": "Output",
+      "output": "newsletter: true\nretargeting: true\nafter decline -> retargeting: false\npurposes: {\"newsletter\":true,\"retargeting\":false,\"necessary\":true}"
+    },
+    {
+      "title": "Consent webhook",
+      "text": "connectConsentWebhook posts every change to your own URL, including which purposes were withdrawn. parseConsentWebhookPayload validates it on the server.",
+      "codeTitle": "Node script",
+      "code": "import { createConsentManager, createMemoryStorage, connectConsentWebhook, parseConsentWebhookPayload } from \"@permitojs/core\";\nconst manager = createConsentManager({\n  consentVersion: \"2026-10\",\n  storage: createMemoryStorage(),\n  categories: [{ id: \"necessary\", required: true }, { id: \"marketing\" }],\n  purposes: [{ id: \"newsletter\", category: \"marketing\" }],\n});\nawait manager.ready;\nconst received = [];\nconnectConsentWebhook(manager, {\n  url: \"https://example.com/consent-hook\",\n  subject: \"customer-4711\",\n  fetch: async (url, init) => { received.push(init.body); return new Response(null, { status: 204 }); },\n});\nawait manager.update({ marketing: true });\nawait manager.update({ marketing: false });\nawait new Promise((r) => setTimeout(r, 50));\nconst payload = parseConsentWebhookPayload(received[1]);\nconsole.log(JSON.stringify(payload, null, 2));",
+      "outputTitle": "Payload the receiver gets after a withdrawal (trimmed)",
+      "output": "{\n  \"format\": \"permito.consent/2\",\n  \"id\": \"2026-10:2026-10-13T15:59:29.772Z:consent_updated\",\n  \"event\": \"consent_updated\",\n  ...\n  \"revoked\": {\n    \"purposes\": [\n      \"newsletter\"\n    ],\n    \"categories\": [\n      \"marketing\"\n    ],\n    \"services\": []\n  },\n  \"source\": \"api\",\n  ...\n}"
+    },
+    {
+      "title": "1.x decisions keep working",
+      "text": "A consent stored by Permito 1.x is migrated to the new schema when it loads, so returning visitors are not asked again.",
+      "codeTitle": "Node script",
+      "code": "import { createConsentManager } from \"@permitojs/core\";\nconst stored1x = { schema: 1, version: \"2026-10\", timestamp: \"2026-09-01T10:00:00.000Z\",\n  categories: { necessary: true, statistics: true, marketing: false }, services: {}, source: \"banner\" };\nconst manager = createConsentManager({\n  consentVersion: \"2026-10\",\n  categories: [{ id: \"necessary\", required: true }, { id: \"statistics\" }, { id: \"marketing\" }],\n  initialState: stored1x,\n});\nawait manager.ready;\nconst s = manager.getSnapshot();\nconsole.log(\"needsConsent:\", s.needsConsent);\nconsole.log(\"decision.schema:\", s.decision.schema);\nconsole.log(\"purposes:\", JSON.stringify(s.purposes));",
+      "outputTitle": "Output",
+      "output": "needsConsent: false\ndecision.schema: 2\npurposes: {\"necessary\":true,\"statistics\":true,\"marketing\":false}"
+    },
+    {
+      "title": "Purposes in React",
+      "text": "@permitojs/react exports useHasPurposeConsent to gate UI by purpose.",
+      "codeTitle": "React",
+      "code": "import { useHasPurposeConsent } from \"@permitojs/react\";\n\nconst allowed = useHasPurposeConsent(\"newsletter\");"
+    }
+  ],
+  "note": "Outputs were produced by running these scripts against @permitojs/core 2.0.0 from npm. Node 22 or newer is required.",
+  "docsPath": "/permito/docs"
+}

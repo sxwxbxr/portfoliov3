@@ -1,0 +1,50 @@
+{
+  "label": "Free 2.0",
+  "title": "Ordering, filters and replay",
+  "sub": "Vector, free.",
+  "lede": "Vector 2.0 adds ordered delivery per key, payload filters, replay and pruning to the MIT package, plus a versioned database schema. It needs Node.js 22 and a one-time store.migrate().",
+  "items": [
+    {
+      "title": "Ordered delivery per key",
+      "text": "Give related messages the same orderingKey and each endpoint receives them in send order, one after the other. Other keys are not held back.",
+      "codeTitle": "Send with an ordering key",
+      "code": "await vector.send({ eventType: \"order.created\", payload, orderingKey: order.id });\nawait vector.send({ eventType: \"order.paid\", payload, orderingKey: order.id });",
+      "outputTitle": "Received order (real run, fake receiver, three events, one key)",
+      "output": "ordered: order.created -> order.paid -> order.shipped"
+    },
+    {
+      "title": "Payload filters on endpoints",
+      "text": "An endpoint can limit itself to messages whose payload matches a condition, on top of its event types. Customers only get the events they care about.",
+      "codeTitle": "Create an endpoint with a filter",
+      "code": "await vector.endpoints.create({\n  url: \"https://example.com/webhooks\",\n  tenant: \"acme\",\n  eventTypes: [\"invoice.*\"],\n  filter: {\n    and: [\n      { path: \"amount\", op: \"gte\", value: 1000 },\n      { path: \"customer.country\", op: \"in\", value: [\"CH\", \"DE\"] },\n    ],\n  },\n});",
+      "outputTitle": "Four invoices sent, two delivered (real run, fake receiver)",
+      "output": "filter: 4 sent, delivered:\n  invoice.paid {\"amount\":1200,\"customer\":{\"country\":\"CH\"}}\n  invoice.paid {\"amount\":2500,\"customer\":{\"country\":\"DE\"}}"
+    },
+    {
+      "title": "Replay a time range",
+      "text": "After an outage or for a new endpoint, send stored messages of a time range again, oldest first, as new deliveries. It respects event types and filters.",
+      "codeTitle": "Replay history",
+      "code": "const { messages, deliveries, truncated } = await vector.replay({\n  tenant: \"acme\",\n  from: new Date(\"2026-10-01T00:00:00Z\"),\n  endpointId: endpoint.id, // optional\n  eventTypes: [\"invoice.*\"], // optional, exact types\n  limit: 1000, // default 1000, at most 10000\n});",
+      "outputTitle": "Replay of the last hour (real run; deliveries shown as a count)",
+      "output": "replay: { messages: 3, deliveries: 3, truncated: false }\nreplayed in order: order.created -> order.paid -> order.shipped"
+    },
+    {
+      "title": "Prune old messages",
+      "text": "Delete old messages with their deliveries and attempts in batches, on every store. Messages with a pending delivery are kept. Call it from a nightly job.",
+      "codeTitle": "Nightly cleanup",
+      "code": "await vector.prune({ olderThan: new Date(Date.now() - 30 * 24 * 3600 * 1000) });",
+      "outputTitle": "Result (real run, olderThan set in the future to delete all three test messages)",
+      "output": "prune: 3"
+    },
+    {
+      "title": "Versioned database schema",
+      "text": "Upgrading from 1.x is one call. migrate() adds what is missing and schemaVersion() tells you where the database stands.",
+      "codeTitle": "Migrate and check the version",
+      "code": "const store = createSqliteStore({ database: new DatabaseSync(\"webhooks.db\") });\nawait store.migrate();\nawait store.schemaVersion(); // 2",
+      "outputTitle": "Fresh in-memory SQLite database (real run)",
+      "output": "before migrate: 0\nafter migrate: 2 SCHEMA_VERSION = 2"
+    }
+  ],
+  "note": "Outputs come from a real run of @sweberdev/vector 2.0.0 with a fake receiver in memory. Not verified: ordered delivery on MySQL. Test receiver and Drizzle export are planned for 2.1.",
+  "docsPath": "/vector/docs"
+}

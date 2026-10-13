@@ -1,0 +1,50 @@
+{
+  "label": "Free 2.0",
+  "title": "A physics world that repeats exactly",
+  "sub": "Lagrangian, free.",
+  "lede": "Lagrangian 2.0 makes the world deterministic: the same bodies, inputs and seed give the same numbers at any frame rate and on any machine. It also adds snapshots, a state hash and the Vue adapter on npm, all MIT.",
+  "items": [
+    {
+      "title": "Seeded, repeatable runs",
+      "text": "Give the world a seed and use world.random() instead of Math.random(). Two runs with the same seed end in the same state, so tests and replays are reliable.",
+      "codeTitle": "Run it twice with the same seed",
+      "code": "const run = (seed) => {\n  const world = new World({ seed, bounds });\n  for (let i = 0; i < 5; i++)\n    world.add({ x: 100 + world.random() * 400, y: 40, radius: 20 });\n  world.advance(4); // simulate 4 seconds now\n  return world.hash();\n};\nconsole.log(\"run 1:\", run(7));\nconsole.log(\"run 2:\", run(7));\nconsole.log(\"seed 8:\", run(8));",
+      "outputTitle": "Real output (Node 22, @sweberdev/lagrangian 2.0.0)",
+      "output": "run 1: af530c07\nrun 2: af530c07\nseed 8: f254a889"
+    },
+    {
+      "title": "Same result at every frame rate",
+      "text": "The world always simulates in fixed steps, and sleeping and sensors are decided in every step. A 30 Hz, 60 Hz or 144 Hz display no longer changes the outcome.",
+      "codeTitle": "Advance the same world in frames of different length",
+      "code": "for (const hz of [30, 60, 144]) {\n  const world = makeWorld(); // seed 7, five circles\n  for (let i = 0; i < hz * 4; i++) world.advance(1 / hz);\n  console.log(hz + \" Hz frames, 4 s:\", world.hash(), \"time\", world.time);\n}",
+      "outputTitle": "Real output",
+      "output": "30 Hz frames, 4 s: af530c07 time 4\n60 Hz frames, 4 s: af530c07 time 4\n144 Hz frames, 4 s: af530c07 time 4"
+    },
+    {
+      "title": "Snapshot, restore and replay",
+      "text": "world.snapshot() returns plain JSON for bodies, clock and random generator. Restore it later and the run continues exactly as before, handy for undo, saved scenes and regression tests.",
+      "codeTitle": "Save at 2 s, run on, rewind, run again",
+      "code": "world.advance(2);\nconst saved = world.snapshot(); // plain JSON, safe to store\nworld.advance(3);\nconst after = world.hash();\n\nworld.restore(saved);\nconsole.log(\"time after restore:\", world.time);\nworld.advance(3);\nconsole.log(\"replayed hash matches:\", world.hash() === after);",
+      "outputTitle": "Real output",
+      "output": "time after restore: 2\nreplayed hash matches: true"
+    },
+    {
+      "title": "Keep the 1.x timing while you update",
+      "text": "Fixed steps change when a body falls asleep or a sensor fires by a frame or two in some scenes. legacyStepping restores the 1.x behaviour as a bridge. It is removed in 2.1.",
+      "codeTitle": "Opt back into 1.x timing",
+      "code": "const world = new World({ bounds, legacyStepping: true });",
+      "outputTitle": "Same scene with legacyStepping: true (hash differs from the 2.0 run above)",
+      "output": "legacyStepping: true: 11de78f4"
+    },
+    {
+      "title": "Vue adapter is on npm",
+      "text": "@sweberdev/lagrangian-vue, the composables for springs, dragging, scrolling and the world in Vue 3, is now published at 2.0.0 next to the core, React and Svelte packages.",
+      "codeTitle": "Install",
+      "code": "pnpm add @sweberdev/lagrangian @sweberdev/lagrangian-vue",
+      "outputTitle": "npm view @sweberdev/lagrangian-vue name version license",
+      "output": "name = '@sweberdev/lagrangian-vue'\nversion = '2.0.0'\nlicense = 'MIT'"
+    }
+  ],
+  "note": "Node 22 or newer is needed to build. world.step(dt) now also settles and senses, so a hand-stepped world matches a running one.",
+  "docsPath": "/lagrangian/docs"
+}

@@ -116,6 +116,7 @@ export default function VectorDemoPage() {
         </div>
       </Block>
 
+      <ProNewSection slug="vector" file="free-2-0" />
       <ProNewSection slug="vector" />
 
       <Block

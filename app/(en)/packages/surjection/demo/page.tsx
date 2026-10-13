@@ -260,6 +260,7 @@ export default function SurjectionDemoPage() {
         )}
       </Block>
 
+      <ProNewSection slug="surjection" file="free-2-0" />
       <ProNewSection slug="surjection" />
 
       <Block
