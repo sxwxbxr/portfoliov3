@@ -79,6 +79,8 @@
       "Zoom and pan for images and maps: pinch, wheel, double tap and drag with inertia and rubber-banding",
       "Popover anchored to its trigger: springs out of the facing side, flips when there is no room, follows scrolling, Escape and outside click",
       "Sortable lists scroll the page or their parent while you hold an item near the edge",
+      "Ready-made recipes: a form in a bottom sheet that guards unsaved changes and the keyboard, a photo gallery that opens from its thumbnail, swipeable list rows with actions",
+      "Spring editor (beta): sliders, curve, preview and copy-ready code for tuning a spring by eye",
       "Reduced motion respected everywhere"
     ]
   },
@@ -201,7 +203,7 @@
     "packages": [
       {
         "name": "@weber-development/lagrangian-pro",
-        "description": "Bottom sheet, drawer, dialog, carousel, stack navigation, pull to refresh, toasts, tab indicator, page effects, board, zoom, swipe stack, sortable lists, layout transitions, jelly, ropes and impact sounds, framework-free."
+        "description": "Bottom sheet, drawer, dialog, carousel, stack navigation, pull to refresh, toasts, tab indicator, page effects, board, zoom, swipe stack, sortable lists, layout transitions, jelly, ropes and impact sounds, ready-made recipes and a spring editor, framework-free."
       },
       {
         "name": "@weber-development/lagrangian-pro-react",
