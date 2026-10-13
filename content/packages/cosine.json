@@ -74,7 +74,11 @@
       "Insights dashboard: one HTML file with overview, gaps with fixes, weekly trends, top content and CSV downloads",
       "Golden-query quality tests: cosine-quality check fails CI when a query that used to find the right page stops doing so, and reports what moved",
       "Synonym pull requests: cosine-insights synonyms turns queries without results into a reviewable list of synonym suggestions, ready for a weekly Action to open as a PR",
-      "Answers in several languages: stemmers for English, German, French, Italian, Spanish, Dutch and Portuguese, so the quoted sentence matches inflected words"
+      "Answers in several languages: stemmers for English, German, French, Italian, Spanish, Dutch and Portuguese, so the quoted sentence matches inflected words",
+      "Docusaurus plugin and search bar theme: the index per locale with embedding cache and shards, and a search field that replaces the built-in one",
+      "VitePress: one config wrapper and a theme that puts the search field in the nav bar, with VitePress locales mapped to languages",
+      "Astro and Starlight: an integration and a Starlight plugin that replaces the built-in search",
+      "Models per page language: one index per language, English pages with the 23 MB model and other languages with the multilingual one, so visitors download only the model of the language they read (cosine-i18n)"
     ]
   },
   "comparison": [
@@ -134,6 +138,22 @@
       {
         "name": "@weber-development/cosine-quality",
         "description": "Golden-query tests for CI: fails when a search regression moves the right page down."
+      },
+      {
+        "name": "@weber-development/cosine-docusaurus",
+        "description": "Docusaurus plugin and search bar theme, index per locale."
+      },
+      {
+        "name": "@weber-development/cosine-vitepress",
+        "description": "VitePress config wrapper and theme with the search field in the nav bar."
+      },
+      {
+        "name": "@weber-development/cosine-astro",
+        "description": "Astro integration and Starlight plugin that replaces the built-in search."
+      },
+      {
+        "name": "@weber-development/cosine-i18n",
+        "description": "One index per page language, each with its own model, picked by the page language in the browser."
       }
     ],
     "demoUrl": "/cosine/demo",
@@ -222,6 +242,12 @@
   ],
   "publishedAt": "2026-10-05",
   "releases": [
+    {
+      "version": "2.1.0",
+      "date": "2026-10-13",
+      "title": "Cosine Pro 2.1: Docusaurus, VitePress and Astro plugins, models per language",
+      "url": "https://packages.sweber.dev/blog/cosine-2-1-0-released"
+    },
     {
       "version": "2.0.0",
       "date": "2026-10-12",
