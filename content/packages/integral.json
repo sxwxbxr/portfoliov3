@@ -75,7 +75,8 @@
       "Trial licenses: one free trial per email address, started from your app and ending by itself",
       "Offline activation page and guided activation view for computers without internet",
       "Keys in a KMS or HSM: HashiCorp Vault transit signer and a wrapper for AWS KMS, Google Cloud KMS and Azure Key Vault (cloud recipes beta, not verified with real accounts)",
-      "Stripe, Paddle and Lemon Squeezy next to Polar: signed webhooks become licenses, renewals, cancellations and refunds (beta, not verified with real accounts)",
+      "Stripe, Paddle and Lemon Squeezy next to Polar: signed webhooks become licenses, renewals, cancellations and refunds, including Stripe charge refunds and Paddle refund adjustments (beta, not verified with real accounts)",
+      "Customer portal: a CustomerPortal view with plan, status, update period, usage per period, seats in use and devices, backed by a server overview route",
       "Customer device management: a device list view where customers free a place themselves",
       "Floating seats keep working for a configurable time when the license server cannot be reached"
     ]
@@ -107,6 +108,7 @@
     { "feature": "Ed25519 or ECDSA P-256 signatures, int2 license format", "free": true, "pro": true },
     { "feature": "Signing with keys in a KMS or HSM", "free": "Signer interface", "pro": true },
     { "feature": "Stripe, Paddle and Lemon Squeezy as payment sources (beta)", "free": false, "pro": true },
+    { "feature": "Customer portal with plan, usage and seats", "free": false, "pro": true },
     { "feature": "Customer device list and offline tolerance for floating seats", "free": false, "pro": true },
     { "feature": "Licence", "free": "MIT", "pro": "Per person" },
     { "feature": "Support", "free": "GitHub issues", "pro": "Agency and Lifetime" }
