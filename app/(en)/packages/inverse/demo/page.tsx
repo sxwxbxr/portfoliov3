@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowLeft, ChevronRight } from "lucide-react"
 import PageLayout from "@/components/PageLayout"
+import { ProNewSection } from "@/components/packages/demo/ProNewSection"
 import { Block } from "@/components/site/Block"
 import { CheckPlayground } from "@/components/packages/demo/inverse/CheckPlayground"
 import { DeadlineCalc } from "@/components/packages/demo/inverse/DeadlineCalc"
@@ -88,6 +89,8 @@ export default function InverseDemoPage() {
       >
         <DeadlineCalc />
       </Block>
+
+      <ProNewSection slug="inverse" />
 
       <Block label={t.closing.label} title={t.closing.title} sub={t.closing.sub} lede={<p>{t.closing.lede}</p>}>
         <div className="flex flex-wrap gap-3">

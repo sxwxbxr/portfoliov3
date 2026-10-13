@@ -1,0 +1,41 @@
+{
+  "label": "Pro 2.1.0",
+  "title": "Ready-made recipes",
+  "sub": "Lagrangian Pro.",
+  "lede": "Pro 2.1.0 adds finished building blocks for the screens you build again and again: forms in a sheet, photo galleries and swipeable list rows. It also adds a spring editor to tune a spring by eye.",
+  "items": [
+    {
+      "title": "Form in a bottom sheet",
+      "text": "formSheet wraps a form in a sheet that handles focus, the Tab trap, the on-screen keyboard, submit and error state, and a guard against losing unsaved changes.",
+      "codeTitle": "Import",
+      "code": "import { formSheet } from \"@weber-development/lagrangian-pro\";\n\n// React\nimport { useFormSheet } from \"@weber-development/lagrangian-pro-react\";\n// returns [ref, formSheet]"
+    },
+    {
+      "title": "Photo gallery that opens from its thumbnail",
+      "text": "lightbox turns a grid of thumbnails into a viewer. The picture grows out of its thumbnail, you swipe between pictures and drag down to close, and the keyboard and focus behave as in a dialog.",
+      "codeTitle": "Import",
+      "code": "import { lightbox } from \"@weber-development/lagrangian-pro\";\n\n// React: viewer and backdrop are refs\nimport { useLightbox } from \"@weber-development/lagrangian-pro-react\";\n// returns [ref, lightbox]"
+    },
+    {
+      "title": "List rows with swipe actions",
+      "text": "swipeRows slides a row aside to show actions like delete or archive. A vertical drag still scrolls the page, and the actions work with the keyboard: Alt+ArrowLeft opens a row, Escape or Alt+ArrowRight closes it.",
+      "codeTitle": "Import",
+      "code": "import { swipeRows } from \"@weber-development/lagrangian-pro\";\n\n// React\nimport { useSwipeRows } from \"@weber-development/lagrangian-pro-react\";\n// returns [ref, swipeRows]"
+    },
+    {
+      "title": "Spring editor",
+      "text": "springEditor gives you sliders, a curve, a preview ball and copy-ready code to tune a spring. springCurve samples a spring. The editor is in beta: its markup and class names may still change.",
+      "beta": true,
+      "codeTitle": "Import",
+      "code": "import { springEditor, springCurve } from \"@weber-development/lagrangian-pro\";\n\n// React\nimport { useSpringEditor } from \"@weber-development/lagrangian-pro-react\";\n// returns [ref, editor]"
+    },
+    {
+      "title": "Adapters for Vue and Svelte",
+      "text": "The new recipes come with composables for Vue and actions for Svelte, next to the React hooks. All Pro packages share one version number.",
+      "codeTitle": "Vue and Svelte",
+      "code": "// Vue 3\nuseFormSheet(el, options)\nuseLightbox(grid, () => ({ viewer: viewerEl.value }))\nuseSwipeRows(el, options)\nuseSpringEditor(el, options)\n\n// Svelte\nformSheetAction, gallery, swipeRows, springLab\n// e.g. use:gallery, use:springLab"
+    }
+  ],
+  "note": "Pro code is not shipped in a browser demo. The recipes are tested in jsdom and Chromium, not yet on a real mobile keyboard or in Safari and Firefox.",
+  "docsPath": "/lagrangian/docs"
+}

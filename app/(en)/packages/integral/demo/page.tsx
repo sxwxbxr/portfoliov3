@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowLeft, ChevronRight } from "lucide-react"
 import PageLayout from "@/components/PageLayout"
+import { ProNewSection } from "@/components/packages/demo/ProNewSection"
 import { Block } from "@/components/site/Block"
 import { CodeBlock } from "@/components/packages/demo/CodeBlock"
 import { LicenseLab } from "@/components/packages/demo/integral/LicenseLab"
@@ -75,6 +76,7 @@ export default function IntegralDemoPage() {
       >
         <CodeBlock code={VERIFY} label="TypeScript" />
       </Block>
+      <ProNewSection slug="integral" />
     </PageLayout>
   )
 }

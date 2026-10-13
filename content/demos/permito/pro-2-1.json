@@ -1,0 +1,36 @@
+{
+  "label": "Pro 2.1.0",
+  "title": "Know what changed, where your team reads",
+  "sub": "Permito Pro.",
+  "lede": "Pro 2.1.0 adds a Consent Mode check to the scanner, a Tag Manager container for the default consent state, and team alerts that name the new findings from your weekly monitor run.",
+  "items": [
+    {
+      "title": "Alerts in Slack or Teams",
+      "text": "The weekly monitor posts one message per run that names the new findings per site, with those active before consent first. It runs in your own GitHub account and sends only site names and finding names to the webhook you set.",
+      "codeTitle": "Repository secret",
+      "code": "PERMITO_ALERT_WEBHOOK = <incoming webhook URL of Slack or Teams>\n\n# any URL that accepts a POST with {\"text\": \"...\"} works"
+    },
+    {
+      "title": "Consent Mode check",
+      "text": "The scanner reads the consent state (gcs, gcd) that Google tags send before any interaction. Tags that run granted or without a consent state show up as findings of the type consentMode.",
+      "beta": true,
+      "codeTitle": "Scan a page",
+      "code": "npx permito scan https://example.ch --config ./consent.config.ts"
+    },
+    {
+      "title": "Tag Manager container",
+      "text": "One command writes an importable Tag Manager container that sets the default consent state on Consent Initialization, before every other tag.",
+      "beta": true,
+      "codeTitle": "Export the container",
+      "code": "npx permito gtm-template --out permito-consent-mode.json\n\n# optional: --wait-for-update <ms> (default 500)"
+    },
+    {
+      "title": "Finding keys in the report",
+      "text": "summary.json lists findingKeys per site, and the monitor stores them in each issue. That is how it can tell you what is new, not just that something changed.",
+      "codeTitle": "Monitor run",
+      "code": "npx permito scan --sites permito.sites.json --report-dir permito-reports"
+    }
+  ],
+  "note": "The demo cannot show the alerts or the monitor: they run in your own GitHub account with your webhook. The Consent Mode check and the Tag Manager container are beta; the container has not yet been imported into a real Tag Manager account.",
+  "docsPath": "/permito/docs"
+}

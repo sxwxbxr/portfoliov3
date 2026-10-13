@@ -1,0 +1,29 @@
+{
+  "label": "Pro 2.1.0",
+  "title": "Let customers see their own license",
+  "sub": "Integral Pro.",
+  "lede": "Pro 2.1.0 adds a customer overview, so buyers of your app can see plan, usage, seats and devices without a support ticket. Stripe and Paddle purchases now also handle refunds and cancellations.",
+  "items": [
+    {
+      "title": "Customer overview from the server",
+      "text": "One call returns plan, status, dates, features, limits, usage per period, seats in use and devices for a license key. The same data is served on POST /overview, and expired licenses are included so customers can see they need to renew.",
+      "codeTitle": "server.overview()",
+      "code": "const result = await server.overview(licenseKey, { periods: 2 });\n\nif (result.ok) {\n  console.log(result.license.plan, result.license.status);\n  console.log(result.seatsInUse.active);\n  console.log(result.usage[0].metrics);\n}"
+    },
+    {
+      "title": "Ready-made customer portal",
+      "text": "Drop the React component into your account page. It shows the overview and includes the device list, so customers can manage their devices themselves.",
+      "codeTitle": "React",
+      "code": "import { CustomerPortal } from \"@weber-development/integral-portal\";\n\n<CustomerPortal endpoint=\"/api/integral\" periods={3} />"
+    },
+    {
+      "title": "Stripe and Paddle refunds and cancellations",
+      "text": "Next to Polar, you can take payments through Stripe or Paddle. A Stripe refund (charge.refunded) or an approved Paddle refund now revokes the license, and a Stripe subscription with cancel_at is treated as cancelled at the period end.",
+      "beta": true,
+      "codeTitle": "Payment sources",
+      "code": "const handler = createLicenseHandler(server, {\n  basePath: \"/api/integral\",\n  sources: [\n    stripeSource({ secret: process.env.STRIPE_WEBHOOK_SECRET!, apiKey: process.env.STRIPE_API_KEY }),\n    paddleSource({ secret: process.env.PADDLE_WEBHOOK_SECRET!, apiKey: process.env.PADDLE_API_KEY }),\n  ],\n});\n// webhooks: POST /api/integral/webhook/stripe and /webhook/paddle"
+    }
+  ],
+  "note": "The demo cannot show Stripe or Paddle: they need your own accounts and webhooks, and they are tested with documented payloads, not yet with real accounts.",
+  "docsPath": "/integral/docs"
+}

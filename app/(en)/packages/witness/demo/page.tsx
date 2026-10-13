@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowLeft, ChevronRight } from "lucide-react"
 import PageLayout from "@/components/PageLayout"
+import { ProNewSection } from "@/components/packages/demo/ProNewSection"
 import { Block } from "@/components/site/Block"
 import { CodeBlock } from "@/components/packages/demo/CodeBlock"
 import { OutputFrame } from "@/components/packages/demo/surjection/OutputFrame"
@@ -135,6 +136,8 @@ export default function WitnessDemoPage() {
           </Link>
         </div>
       </Block>
+
+      <ProNewSection slug="witness" />
 
       <Block
         label={t.closing.label}
