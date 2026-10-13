@@ -116,5 +116,22 @@
     "tsx": "^4.21.0",
     "tw-animate-css": "1.3.3",
     "typescript": "^5.0.2"
-  }
+  },
+  "description": "*Automatically synced with your [v0.app](https://v0.app) deployments*",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sxwxbxr/portfoliov3.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sxwxbxr/portfoliov3/issues"
+  },
+  "homepage": "https://github.com/sxwxbxr/portfoliov3#readme"
 }

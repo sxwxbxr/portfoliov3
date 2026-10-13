@@ -1,0 +1,42 @@
+{
+  "label": "Free 2.0",
+  "title": "Pick rule set versions and validate whole folders",
+  "sub": "Summand, free.",
+  "lede": "Summand 2.0 builds on the 1.1 line: one ruleSets option decides which official rules run and in which version, and validateMany checks whole folders of invoices in parallel. The 2.0 release itself makes result messages a stable contract and requires Node.js 22.",
+  "items": [
+    {
+      "title": "One option for rule sets and versions",
+      "text": "ruleSets replaces the old xrechnung switch. You choose EN 16931 and XRechnung, and can pin the older XRechnung 2.5.0 to reproduce a verdict that was given under it. The result lists the versions that really ran.",
+      "codeTitle": "Node.js",
+      "code": "import { validateInvoice } from \"@sweberdev/summand\";\nconst result = validateInvoice(xml, { ruleSets: [\"en16931\", \"xrechnung@2.5.0\"] });\n// CLI: summand validate --rule-sets en16931,xrechnung@2.5.0 invoice.xml",
+      "outputTitle": "Output for a UBL invoice whose amount due was changed to 1.00 (valid, ran, then each error)",
+      "output": "valid: false\nran: en16931-ubl@1.3.16, xrechnung-ubl@2.5.0\nBR-CO-16 error en16931-ubl"
+    },
+    {
+      "title": "See exactly which rules are bundled",
+      "text": "summand rules lists every bundled rule set with version, rule count, licence and source, and shows which version is the default. Your stored verdicts can name the rules that produced them.",
+      "codeTitle": "Terminal",
+      "code": "npx @sweberdev/summand rules",
+      "outputTitle": "Output",
+      "output": "Rule set       Version  Rules  Licence     Publisher                                      Source                                                  Used\nen16931-ubl    1.3.16   979    EUPL-1.2    CEN/TC 434 (ConnectingEurope)                  https://github.com/ConnectingEurope/eInvoicing-EN16931  default\nen16931-cii    1.3.16   806    EUPL-1.2    CEN/TC 434 (ConnectingEurope)                  https://github.com/ConnectingEurope/eInvoicing-EN16931  default\nxrechnung-ubl  v2.6.0   56     Apache-2.0  Koordinierungsstelle für IT-Standards (KoSIT)  https://github.com/itplr-kosit/xrechnung-schematron     default\nxrechnung-cii  v2.6.0   52     Apache-2.0  Koordinierungsstelle für IT-Standards (KoSIT)  https://github.com/itplr-kosit/xrechnung-schematron     default\nxrechnung-ubl  v2.5.0   55     Apache-2.0  Koordinierungsstelle für IT-Standards (KoSIT)  https://github.com/itplr-kosit/xrechnung-schematron     on request (@2.5.0)\nxrechnung-cii  v2.5.0   49     Apache-2.0  Koordinierungsstelle für IT-Standards (KoSIT)  https://github.com/itplr-kosit/xrechnung-schematron     on request (@2.5.0)"
+    },
+    {
+      "title": "Validate folders with a worker pool",
+      "text": "validateMany spreads files over worker threads and returns results in input order. A file that cannot be read becomes a SUM-BATCH error entry, never a crash, so an unreadable file never looks like a valid one.",
+      "codeTitle": "Node.js (batch.mjs)",
+      "code": "import { validateMany } from \"@sweberdev/summand/batch\";\n\nfor await (const { index, name, result, error } of validateMany(files, { lang: \"de\" })) {\n  if (error) console.log(index, name, error.code);\n  else console.log(index, name, result.valid ? \"valid\" : `${result.errors.length} error(s)`);\n}",
+      "outputTitle": "Output for four invoices and one missing file",
+      "output": "0 inv/rechnung-1.xml valid\n1 inv/rechnung-2.xml valid\n2 inv/rechnung-3.xml valid\n3 inv/falsch.xml 1 error(s)\n4 inv/fehlt.xml SUM-BATCH"
+    },
+    {
+      "title": "Stable rule codes in every message",
+      "text": "Every error, warning and info carries a stable id, a severity and the rule set it came from, in English or German. 2.0 documents these fields as the contract, so you can build filters and reports on them.",
+      "codeTitle": "Terminal",
+      "code": "npx @sweberdev/summand validate --lang de invoice.xml",
+      "outputTitle": "Output for the same changed invoice",
+      "output": "UNGÜLTIG falsch.xml  XRechnung 3.0  1 Fehler, 0 Warnung(en)\n  Fehler  BR-CO-16 (Zeile 88): Fälliger Zahlungsbetrag (BT-115) = Gesamtbetrag der Rechnung mit Umsatzsteuer (BT-112) - Gezahlter Betrag (BT-113) + Rundungsbetrag (BT-114)."
+    }
+  ],
+  "note": "Upgrading from 1.x: replace the xrechnung option with ruleSets, and use Node.js 22 or newer. Peppol rules and the Factur-X EXTENDED Schematron are not bundled.",
+  "docsPath": "/summand/docs"
+}

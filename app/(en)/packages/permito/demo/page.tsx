@@ -159,6 +159,7 @@ export default function PermitoDemoPage() {
         <ConsentLogSection />
       </Block>
 
+      <ProNewSection slug="permito" file="free-2-0" />
       <ProNewSection slug="permito" />
 
       <Block

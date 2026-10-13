@@ -1,0 +1,42 @@
+{
+  "label": "Free 2.0",
+  "title": "One handler, eight legal areas",
+  "sub": "Inverse, free.",
+  "lede": "Inverse 2.0 knows the legal area of every declaration. Germany, Austria, Switzerland, France, Italy, Spain, the Netherlands and Poland are built in, and each record shows which state of the rules it followed.",
+  "items": [
+    {
+      "title": "Pick the legal area per shop or per request",
+      "text": "Set a default jurisdiction and allow a list of others, so a shop that sells in several countries gets the right language and the right legal status on every record.",
+      "codeTitle": "Handler options",
+      "code": "import { createInverseHandler } from \"@sweberdev/inverse\";\n\nexport const POST = createInverseHandler({\n  company: { name: \"Acme SA\" },\n  jurisdiction: \"de\",\n  jurisdictions: [\"at\", \"fr\"], // areas a request may pick\n  onDeclaration,\n  sendReceipt,\n});\n\n// request body: { kind: \"withdrawal\", jurisdiction: \"fr\", data: { ... } }",
+      "outputTitle": "Real run: a request for fr is accepted, one for pl (not allowed) falls back to de",
+      "output": "200 true\n200 true\n{ jurisdiction: 'fr', locale: 'fr', legalCheckedOn: '2026-10-12' }\n{ jurisdiction: 'de', locale: 'de', legalCheckedOn: '2026-10-12' }"
+    },
+    {
+      "title": "See how well each country is covered",
+      "text": "The CLI prints the legal status of one area, its sources and what changed. France, Italy, Spain, the Netherlands and Poland say plainly that they rest on the directive only.",
+      "codeTitle": "Terminal",
+      "code": "npx inverse legal --jurisdiction fr",
+      "outputTitle": "Output (trimmed)",
+      "output": "France (fr): directive only, national act not read\nThe French implementing act was not read. Check the Code de la consommation on legifrance.gouv.fr.\n\nLegal status checked on 2026-10-12\n\nSources:\n  - Directive (EU) 2023/2673, Article 11a Consumer Rights Directive (withdrawal function)\n  - National implementing act not read\n\nChanges:\n  2026-10-12  2.0.0  Legal status is kept per legal area (`legalRevisions`, `getLegalRevision`). France, Italy, Spain, the Netherlands and Poland added on the basis of the directive only. No change in requirements.\n  ..."
+    },
+    {
+      "title": "Let CI notice a legal change",
+      "text": "With --since the command exits 1 when the library has a newer legal status than your last review, so a cron or CI job can remind you.",
+      "codeTitle": "Terminal",
+      "code": "npx inverse legal --jurisdiction de --since 2026-10-01   # exit 1 if something is newer",
+      "outputTitle": "Output (trimmed)",
+      "output": "$ npx inverse legal --jurisdiction de --since 2026-10-01\nGermany (de): national provision checked\nBoth duties apply to online contracts with consumers.\n\nChanges since 2026-10-01 (checked 2026-10-12):\n  2026-10-12  2.0.0  Legal status is kept per legal area (`legalRevisions`, `getLegalRevision`). ...\n  ...\nexit code 1\n\n$ npx inverse legal --jurisdiction de --since 2030-01-01\nGermany (de): national provision checked\nBoth duties apply to online contracts with consumers.\n\nNothing new since 2030-01-01.\nexit code 0"
+    },
+    {
+      "title": "Read the legal status from code",
+      "text": "The single legalRevision export became getLegalRevision per area. Use the checked date in your own compliance docs or to fail a build.",
+      "codeTitle": "Node",
+      "code": "import { getLegalRevision } from \"@sweberdev/inverse\";\n\ngetLegalRevision(\"fr\").checkedOn;",
+      "outputTitle": "Output",
+      "output": "2026-10-12"
+    }
+  ],
+  "note": "France, Italy, Spain, the Netherlands and Poland follow Article 11a of the directive only; the national laws were not read and the texts are not reviewed by a lawyer or native speaker. 2.0 also needs Node 22.",
+  "docsPath": "/inverse/docs"
+}

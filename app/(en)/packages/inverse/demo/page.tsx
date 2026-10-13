@@ -90,6 +90,7 @@ export default function InverseDemoPage() {
         <DeadlineCalc />
       </Block>
 
+      <ProNewSection slug="inverse" file="free-2-0" />
       <ProNewSection slug="inverse" />
 
       <Block label={t.closing.label} title={t.closing.title} sub={t.closing.sub} lede={<p>{t.closing.lede}</p>}>

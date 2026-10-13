@@ -126,6 +126,7 @@ export default function SummandDemoPage() {
         </div>
       </Block>
 
+      <ProNewSection slug="summand" file="free-2-0" />
       <ProNewSection slug="summand" />
 
       <Block

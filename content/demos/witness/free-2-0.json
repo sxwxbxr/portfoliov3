@@ -1,0 +1,42 @@
+{
+  "label": "Free 2.0",
+  "title": "Marking layers and Content Credentials",
+  "sub": "Witness, free.",
+  "lede": "Witness 2.0 records and checks the marking layers the final Code of Practice asks for, and shows Content Credentials in the browser. Everything is MIT and a drop-in for 1.x markings, with Node 22 as the new minimum.",
+  "items": [
+    {
+      "title": "Record which layers mark your content",
+      "text": "Markings now carry a schema version and a list of layers (visible, metadata, watermark, credentials), so you can document which techniques you apply. Old markings stay readable.",
+      "codeTitle": "createMarking with layers",
+      "code": "import { createMarking, markingAttributes } from \"@sweberdev/witness\";\n\nconst marking = createMarking({\n  generator: \"image-model\",\n  layers: [\"visible\", \"metadata\", \"watermark\"],\n});\nmarkingAttributes(marking);",
+      "outputTitle": "Real output (@sweberdev/witness 2.0.0)",
+      "output": "{\n  'data-ai-generated': 'true',\n  'data-ai-schema': '2',\n  'data-ai-kind': 'generated',\n  'data-ai-source-type': 'http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia',\n  'data-ai-created': '2026-10-13T16:00:17.383Z',\n  'data-ai-generator': 'image-model',\n  'data-ai-layers': 'visible metadata watermark'\n}"
+    },
+    {
+      "title": "Check against the two-layer expectation",
+      "text": "assessLayers tells you whether audio, image and video content reaches the two machine-readable techniques the Code of Practice asks for, and what is missing. inspectLayers reads the layers straight from a file.",
+      "codeTitle": "assessLayers and inspectLayers",
+      "code": "import { assessLayers, inspectLayers } from \"@sweberdev/witness\";\n\nassessLayers(\"image\", [\"visible\", \"metadata\"]);\ninspectLayers(bytes); // bytes of a PNG marked with markFile / witness mark",
+      "outputTitle": "Real output",
+      "output": "{\n  required: 2,\n  present: [ 'metadata' ],\n  satisfied: false,\n  missing: [ 'watermark', 'credentials' ],\n  notes: []\n}\n{\n  contentType: 'image',\n  layers: [ 'metadata' ],\n  watermarkChecked: false\n}"
+    },
+    {
+      "title": "Gate your build with witness layers",
+      "text": "The CLI lists the layers of each file and, with --require, exits 1 when a file has fewer machine-readable layers than the Code asks for. Use --assume for a watermark your provider applies and Witness cannot see.",
+      "codeTitle": "Terminal",
+      "code": "npx witness layers ./out/*.png --require\nnpx witness layers ./out/*.png --assume watermark --require",
+      "outputTitle": "Real output (first run exits 1, second exits 0)",
+      "output": "out/plain.png: image, layers metadata, 1 of 2 machine-readable, missing e.g. watermark or credentials\nout/plain.png: image, layers metadata + watermark, 2 of 2 machine-readable"
+    },
+    {
+      "title": "Show Content Credentials in the browser",
+      "text": "The new <witness-credentials> element reads the C2PA manifest of an image, audio or video file client-side and shows who made it and whether it declares AI. It reads the manifest but does not verify the signature, and says so.",
+      "codeTitle": "HTML (element) and readC2pa (same reader, in Node)",
+      "code": "<script type=\"module\">\n  import \"@sweberdev/witness/elements\";\n</script>\n\n<witness-credentials src=\"/media/picture.jpg\"></witness-credentials>\n\n// Node, same reader:\nreadC2pa(bytes);",
+      "outputTitle": "Real readC2pa output on the package's test fixture (trimmed)",
+      "output": "{\n  aiGenerated: true,\n  sourceType: 'trainedAlgorithmicMedia',\n  generator: 'Image Model X 3',\n  verified: false,\n  claimGenerator: 'Witness test generator 1.0',\n  actions: [ 'c2pa.created' ]\n}"
+    }
+  ],
+  "note": "Outputs were produced by running @sweberdev/witness 2.0.0 from npm. The credentials example uses a test fixture, and the output was reduced to selected fields.",
+  "docsPath": "/witness/docs"
+}

@@ -1,0 +1,38 @@
+{
+ "label": "Free 2.0",
+ "title": "Bigger sites, more languages, fewer files to worry about",
+ "sub": "Cosine, free.",
+ "lede": "Cosine 2.0 makes the MIT package ready for very large docs: a smaller index format, shards, and 4-bit vectors. It also finds words in Chinese, Japanese and Thai, and ships integrations for Astro (Starlight), Docusaurus and VitePress.",
+ "items": [
+  {
+   "title": "Shards for large sites",
+   "text": "Split the index into several files that the browser loads in parallel. Results rank exactly like one file, and unchanged shards keep their name so your CDN can cache them.",
+   "codeTitle": "Build with shards",
+   "code": "cosine build docs --out public/cosine --lexical-only --shard-size 10",
+   "outputTitle": "Real output (13 pages, lexical build) and the manifest that lists the shards",
+   "output": "Indexed 13 pages as 25 chunks in 0.0 s (lexical only)\n  public/cosine/cosine-index.json\n  public/cosine/cosine-shard-0.json\n  public/cosine/cosine-shard-1.json\n  public/cosine/cosine-shard-2.json\n\n{\"version\":2,\"model\":null,\"dimensions\":0,\"createdAt\":\"...\",\"vectors\":null,\"shards\":[{\"file\":\"cosine-shard-0.json\",\"chunks\":10},{\"file\":\"cosine-shard-1.json\",\"chunks\":10},{\"file\":\"cosine-shard-2.json\",\"chunks\":5}]}"
+  },
+  {
+   "title": "Search in Chinese, Japanese and Thai",
+   "text": "Cosine 2 splits scripts without spaces into words with Intl.Segmenter, so a search for a short word finds longer phrases and highlights it.",
+   "codeTitle": "Search the shard index",
+   "code": "cosine search public/cosine 東京 --mode lexical --limit 1",
+   "outputTitle": "Real output",
+   "output": "1. Tokyo  (lexical)\n   /tokyo\n   東京 東京タワーは東京の有名な観光地です。"
+  },
+  {
+   "title": "4-bit vectors",
+   "text": "Store each vector value in 4 bits. The vector file is half the size, at a small cost in ranking quality.",
+   "codeTitle": "Build with smaller vectors",
+   "code": "cosine build docs --shard-size 2000 --vector-bits 4"
+  },
+  {
+   "title": "Docusaurus, Astro and VitePress integrations",
+   "text": "Add the plugin and the index is built with your site. The same package exports /astro and /vitepress.",
+   "codeTitle": "docusaurus.config.js",
+   "code": "plugins: [[\"@sweberdev/cosine/docusaurus\", { model: \"english\" }]],"
+  }
+ ],
+ "note": "Real output comes from @sweberdev/cosine 2.0.0 from npm, using a keyword-only build. The 4-bit vectors and the integrations are shown from the docs.",
+ "docsPath": "/cosine/docs"
+}

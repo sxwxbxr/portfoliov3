@@ -76,6 +76,7 @@ export default function IntegralDemoPage() {
       >
         <CodeBlock code={VERIFY} label="TypeScript" />
       </Block>
+      <ProNewSection slug="integral" file="free-2-0" />
       <ProNewSection slug="integral" />
     </PageLayout>
   )

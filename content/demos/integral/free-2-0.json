@@ -1,0 +1,42 @@
+{
+  "label": "Free 2.0",
+  "title": "License format int2, P-256 keys and KMS signing",
+  "sub": "Integral, free.",
+  "lede": "Integral 2.0 adds the int2 license format with algorithm choice (Ed25519 or ECDSA P-256) and key ids, signer objects for KMS and HSM keys, and a migrate command for existing licenses. int1 licenses stay readable.",
+  "items": [
+    {
+      "title": "ECDSA P-256 keys and int2 licenses",
+      "text": "Licenses now carry their algorithm in the header, so you can sign with Ed25519 or with ECDSA P-256, the curve KMS and HSM services support. Everything below runs offline.",
+      "codeTitle": "Generate a P-256 key, issue, inspect and verify",
+      "code": "npx integral keygen --alg es256\nnpx integral issue --product my-app --plan pro --feature beta \\\n  --limit projects=100 --email kunde@example.ch --kid kms-2027 \\\n  --updates-until 2027-10-05 > license.txt\nnpx integral inspect \"$(cat license.txt)\"\nnpx integral verify \"$(cat license.txt)\" --public-key \"$INTEGRAL_PUBLIC_KEY\" --product my-app",
+      "outputTitle": "Real output (throwaway key)",
+      "output": "{\n  \"product\": \"my-app\",\n  \"plan\": \"pro\",\n  \"features\": [\n    \"beta\"\n  ],\n  \"limits\": {\n    \"projects\": 100\n  },\n  \"customer\": {\n    \"email\": \"kunde@example.ch\"\n  },\n  \"updatesUntil\": \"2027-10-05T00:00:00.000Z\",\n  \"id\": \"lic_mcEXuvtW0Gcpc7kv\",\n  \"kid\": \"kms-2027\",\n  \"v\": 2,\n  \"iat\": \"2026-10-13T16:02:28.241Z\"\n}\n(signature not checked)\nvalid: my-app / pro (lic_mcEXuvtW0Gcpc7kv)"
+    },
+    {
+      "title": "Convert old licenses with integral migrate",
+      "text": "int1 licenses stay valid in 2.x, and one command re-signs a whole file of them as int2 with the same id, plan and dates, so revocation lists and renewals still match.",
+      "codeTitle": "Migrate a file of int1 licenses",
+      "code": "npx integral migrate --file licenses.txt --private-key-file integral-private.key > migrated.txt\nnpx integral inspect \"$(cat migrated.txt)\"\nnpx integral verify \"$(cat migrated.txt)\" --public-key \"$(cat integral-public.key)\"",
+      "outputTitle": "Real output (licenses.txt held one int1 license, id lic_old1)",
+      "output": "{\n  \"product\": \"my-app\",\n  \"plan\": \"pro\",\n  \"id\": \"lic_old1\",\n  \"iat\": \"2026-10-13T16:02:36.885Z\",\n  \"v\": 2\n}\n(signature not checked)\nvalid: my-app / pro (lic_old1)"
+    },
+    {
+      "title": "Key rotation with a key ring",
+      "text": "Pass several public keys by key id and mix Ed25519 with P-256. Apps keep accepting old licenses while you issue new ones with the new key.",
+      "codeTitle": "Verify against a mixed key ring",
+      "code": "await verifyLicense(license, {\n  publicKey: { \"2026-a\": ed25519Key, \"2027-a\": p256Key },\n});",
+      "outputTitle": "Real output (ES256 license from item 1, ring of one Ed25519 and one P-256 key)",
+      "output": "{\"valid\":true,\"plan\":\"pro\",\"id\":\"lic_mcEXuvtW0Gcpc7kv\"}"
+    },
+    {
+      "title": "Sign with a KMS or HSM through a Signer",
+      "text": "signLicense accepts a signer object instead of a private key string, so the key can stay inside your KMS. ecdsaDerToRaw converts the DER signatures that AWS KMS, Google KMS and similar services return.",
+      "codeTitle": "Signer with a local P-256 key standing in for the KMS",
+      "code": "import { signLicense, verifyLicense, ecdsaDerToRaw } from \"@sweberdev/integral\";\nimport { generateKeyPairSync, sign } from \"node:crypto\";\n\nconst { privateKey } = generateKeyPairSync(\"ec\", { namedCurve: \"P-256\" });\nconst kmsSignSha256 = async (data) => sign(\"sha256\", data, privateKey);\n\nconst signer = {\n  alg: \"ES256\",\n  kid: \"kms-2027\",\n  sign: async (data) => ecdsaDerToRaw(await kmsSignSha256(data)),\n};\nconst license = await signLicense({ product: \"app\", plan: \"pro\" }, signer);\n// then: verifyLicense(license, { publicKey: \"p256.<uncompressed point>\" })",
+      "outputTitle": "Real output (header alg and kid, then verification)",
+      "output": "int2 ES256 kms-2027\nvalid: true"
+    }
+  ],
+  "note": "Outputs were captured from the published @sweberdev/integral 2.0.0 on Node 22 with throwaway keys. Ready-made KMS adapters belong to Integral Pro and are not covered here.",
+  "docsPath": "/integral/docs"
+}
