@@ -59,8 +59,9 @@
       "Retention periods per customer with archiving to S3 or Cloudflare R2 and legal holds, GDPR and Swiss FADP erasure and access requests, each run recorded in the log and reportable as CSV or print page for auditors",
       "Streamed CSV, NDJSON and JSON export for your customers, and a signed evidence pack for auditors with events, integrity report, checkpoints and retention report as one ZIP",
       "Forwarding to signed webhooks, Splunk, Datadog, Elasticsearch, OpenSearch and Loki, with retries and a dead-letter queue",
-      "Alerts to Slack and Teams, and anomaly detection that learns what is normal for each tenant",
-      "SOC 2 and ISO 27001 control evidence from the log, monthly evidence packs per customer, and read-only auditor links that expire and are logged"
+      "Alerts to Slack, Teams, webhook and e-mail, and anomaly detection for mass deletions, mass changes, off-hours permission changes and new IPs, with thresholds that learn what is normal for each tenant",
+      "SOC 2 and ISO 27001 control evidence from the log, monthly evidence packs per customer, and read-only auditor links that expire and are logged",
+      "A ready-to-run admin server (Docker image or Node.js): search and export for your customers' admins, one tenant per sign-in, event ingest over HTTP and the alerts above (beta: Postgres/MySQL through the server and e-mail delivery are not tested against live services)"
     ]
   },
   "comparison": [
@@ -115,6 +116,11 @@
       "pro": true
     },
     {
+      "feature": "Admin server for your customers' admins, anomaly alerts",
+      "free": false,
+      "pro": true
+    },
+    {
       "feature": "Licence",
       "free": "MIT",
       "pro": "Per person"
@@ -139,7 +145,11 @@
       },
       {
         "name": "@weber-development/logarithm-export",
-        "description": "Streamed CSV, NDJSON and JSON downloads, forwarding to Splunk, Datadog and webhooks, SOC 2 / ISO 27001 control evidence, monthly evidence packs and read-only auditor access."
+        "description": "Streamed CSV, NDJSON and JSON downloads, forwarding to Splunk, Datadog and webhooks, Slack, Teams and e-mail alerts with anomaly rules, SOC 2 / ISO 27001 control evidence, monthly evidence packs and read-only auditor access."
+      },
+      {
+        "name": "@weber-development/logarithm-server",
+        "description": "Ready-to-run admin server as a Docker image or with Node.js: search and export for your customers' admins, token, JWT or proxy sign-in per tenant, event ingest over HTTP and anomaly alerts."
       }
     ],
     "demoUrl": "/logarithm/demo",
