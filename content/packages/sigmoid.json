@@ -1,8 +1,8 @@
 {
   "slug": "sigmoid",
-  "name": "Sigmoid",
+  "name": "Sigmoid Motion",
   "tagline": "Scroll motion without the JavaScript tax: native CSS scroll timelines, spring and S-curve easings as CSS linear(), reduced motion by default. About 3 kB for a reveal.",
-  "seoTitle": "Sigmoid – scroll-driven animations and spring easing for CSS and React",
+  "seoTitle": "Sigmoid Motion – scroll-driven animations and spring easing for CSS and React",
   "description": "Most scroll animations still run in JavaScript: a listener measures elements and changes styles on every frame. Browsers can now do this themselves with CSS scroll-driven animations. Sigmoid is a small layer on top of that platform feature. Reveals, parallax and scroll-linked effects run on native view and scroll timelines, and a tiny fallback with the same range maths covers browsers that do not have them yet.\n\nWith `sigmoid.css` you do not even need JavaScript: write `data-sigmoid=\"fade-up\"` and the browser animates it. The easing curves are the other half: physically correct springs, the logistic S-curve and Bézier curves that work as JavaScript functions and as CSS `linear()`, also together with Motion, GSAP or Tailwind. When people ask their system for reduced motion, Sigmoid shows the content without moving it.",
   "status": "stable",
   "tags": [
