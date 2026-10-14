@@ -21,11 +21,11 @@ importers:
         specifier: ^1.0.2
         version: 1.1.0
       '@permitojs/core':
-        specifier: ^0.3.0
-        version: 0.3.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@permitojs/react':
-        specifier: ^0.3.0
-        version: 0.3.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+        specifier: ^2.0.0
+        version: 2.0.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
       '@radix-ui/react-accordion':
         specifier: 1.2.2
         version: 1.2.2(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
@@ -129,14 +129,14 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(next@15.2.6(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(react@19.1.2)
       '@weber-development/permito-catalog':
-        specifier: ^0.4.1
-        version: 0.4.1(@permitojs/core@0.3.0)
+        specifier: ^2.1.0
+        version: 2.1.0(@permitojs/core@2.0.0)
       '@weber-development/permito-cookie-table':
-        specifier: ^0.4.1
-        version: 0.4.1(@permitojs/core@0.3.0)(@permitojs/react@0.3.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(@weber-development/permito-catalog@0.4.1(@permitojs/core@0.3.0))(react@19.1.2)
+        specifier: ^2.1.0
+        version: 2.1.0(@permitojs/core@2.0.0)(@permitojs/react@2.0.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(@weber-development/permito-catalog@2.1.0(@permitojs/core@2.0.0))(react@19.1.2)
       '@weber-development/permito-themes':
-        specifier: ^0.4.1
-        version: 0.4.1(@permitojs/core@0.3.0)(@permitojs/react@0.3.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(react@19.1.2)
+        specifier: ^2.1.0
+        version: 2.1.0(@permitojs/core@2.0.0)(@permitojs/react@2.0.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(react@19.1.2)
       autoprefixer:
         specifier: ^10.4.20
         version: 10.4.20(postcss@8.5.0)
@@ -345,11 +345,11 @@ packages:
 
   '@esbuild-kit/core-utils@3.3.2':
     resolution: {integrity: sha512-sPRAnw9CdSsRmEtnsl2WXWdyquogVpB3yZ3dgwJfe8zrOzTsV7cJvmwrKVa+0ma5BoiGJ+BoqkMvawbayKUsqQ==}
-    deprecated: 'Merged into tsx: https://tsx.is'
+    deprecated: 'Merged into tsx: https://tsx.hirok.io'
 
   '@esbuild-kit/esm-loader@2.6.5':
     resolution: {integrity: sha512-FxEMIkJKnodyA1OaCUoEvbYRkoZlLZ4d/eXFu9Fh8CbBBgP5EmZxrfTRyN0qpXZ4vOvqnE5YdRdcrmUUXuU+dA==}
-    deprecated: 'Merged into tsx: https://tsx.is'
+    deprecated: 'Merged into tsx: https://tsx.hirok.io'
 
   '@esbuild/aix-ppc64@0.25.12':
     resolution: {integrity: sha512-Hhmwd6CInZ3dwpuGTF8fJG6yoWmsToE+vYgD4nytZVxcu1ulHpUQRAB1UJ8+N1Am3Mz4+xOByoQoSZf4D+CpkA==}
@@ -1094,11 +1094,18 @@ packages:
     resolution: {integrity: sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA==}
     engines: {node: '>=12.4.0'}
 
-  '@permitojs/core@0.3.0':
-    resolution: {integrity: sha512-aSIYr2LM9DEYknH6N8HEiWOXwJJkrWUwQUmfBJ5FI++VHYDKA44R9WHiyMC3NbHXwK64YWCKGVICMvN7uFjLMw==}
+  '@permitojs/core@2.0.0':
+    resolution: {integrity: sha512-MOut7mkomPsj7fJ9hweZWKYgH5WOejAPNbhDewfctobwNl6Jf4Q4bFi9x+MuI2g/wzX2ifwnv8WyTPrGbYrdTQ==}
+    engines: {node: '>=22'}
+    peerDependencies:
+      vue: '>=3.3.0'
+    peerDependenciesMeta:
+      vue:
+        optional: true
 
-  '@permitojs/react@0.3.0':
-    resolution: {integrity: sha512-rTHBBS0ARVVKeJsRgqrR1RrqRr4U/zAbuHPkPMbeZngP0fvfnj28kzXPjx4R1v/NVMo0mOeD/wpzzSyRbxV2Yg==}
+  '@permitojs/react@2.0.0':
+    resolution: {integrity: sha512-6UOPj+Us3PXpGC1MVJ4gzx8OCeLhcPZ+j9RPNntpnfRdayycCBI1C/XRUXDRXYiSu66ezLjmDhBx+9Fu4jF2vA==}
+    engines: {node: '>=22'}
     peerDependencies:
       react: '>=18.2.0'
       react-dom: '>=18.2.0'
@@ -2017,11 +2024,13 @@ packages:
 
   '@sweberdev/inverse-react@2.1.0':
     resolution: {integrity: sha512-+8PTlOm9Dslef3jks+2IlJpv87sa2daipIX8FiX5l9pISXhdIR1EndIg+SDzmos+1+eSw9BY28e7QydtR2wqgw==}
+    engines: {node: '>=22'}
     peerDependencies:
       react: '>=18'
 
   '@sweberdev/inverse@2.1.0':
     resolution: {integrity: sha512-r21ZcqgVndyykvZERMk9F/Jrm5R8NH7SBYPt6c6DLCpahPukHBEBpGGazWsbXW+3yymKLvzcg2jxMBKrHNj/UA==}
+    engines: {node: '>=22'}
     hasBin: true
 
   '@sweberdev/lagrangian@2.0.0':
@@ -2258,6 +2267,7 @@ packages:
 
   '@ungap/structured-clone@1.3.0':
     resolution: {integrity: sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==}
+    deprecated: Potential CWE-502 - Update to 1.3.1 or higher
 
   '@unrs/resolver-binding-android-arm-eabi@1.11.1':
     resolution: {integrity: sha512-ppLRUgHVaGRWUx0R0Ut06Mjo9gBaBkg3v/8AxusGLhsIotbBLuRk51rAzqLC8gq6NyyAojEXglNjzf6R948DNw==}
@@ -2429,33 +2439,29 @@ packages:
       vue-router:
         optional: true
 
-  '@weber-development/permito-catalog@0.4.1':
-    resolution: {integrity: sha512-E8y5QatDgdYTR5TG9c9oib4DSVBCDzeMO8dVG/gM2BfdGERFtHvkfnXJSdA6od2e1LRQxsR4QGYe00B1oe+rzQ==, tarball: https://npm.pkg.github.com/download/@weber-development/permito-catalog/0.4.1/697039c0bde3f9e9b79e79603d7bd0ce24f0f6d8}
+  '@weber-development/permito-catalog@2.1.0':
+    resolution: {integrity: sha512-KPnZCJDWBA818QySGzuvvoE8qhP+95o0VDnGRMgdMiVCfQ1OXnbWs6sviBDNLqPSgn+NoJXIE3ZIzBLW4H48DA==, tarball: https://npm.pkg.github.com/download/@weber-development/permito-catalog/2.1.0/317bb1e69ad7c4b71c2d7095b16fe415cb5e6d7a}
+    engines: {node: '>=22'}
     hasBin: true
     peerDependencies:
-      '@permitojs/core': ^0.1.0 || ^0.2.0 || ^0.3.0
+      '@permitojs/core': '>=0.1.0 <3.0.0'
 
-  '@weber-development/permito-cookie-table@0.4.1':
-    resolution: {integrity: sha512-5hs5ftnM456yK+R6W9EfyEvbEMkTXY+FhLn74YG7wa9yBE2tsfrw0BJwK++PhovPu4ibxZ0oLM4ycedclDY3Tg==, tarball: https://npm.pkg.github.com/download/@weber-development/permito-cookie-table/0.4.1/aa16c827c766cb6e323d80ae024c11fb7c6f9f40}
+  '@weber-development/permito-cookie-table@2.1.0':
+    resolution: {integrity: sha512-KKk2flcmJxy0s2luMOB86W8z7VfVUi7W9w/4nZ24t3LuF0NgHZGmO3yeI74JGzmjcpGMjrOr8dvK8hg9A6FiUA==, tarball: https://npm.pkg.github.com/download/@weber-development/permito-cookie-table/2.1.0/91d018215650beb72f32a7f3b63a74f0614d5c75}
+    engines: {node: '>=22'}
     hasBin: true
     peerDependencies:
-      '@permitojs/core': ^0.1.0 || ^0.2.0 || ^0.3.0
-      '@permitojs/react': ^0.1.0 || ^0.2.0 || ^0.3.0
-      '@weber-development/permito-catalog': <1
+      '@permitojs/core': '>=0.1.0 <3.0.0'
+      '@permitojs/react': '>=0.1.0 <3.0.0'
+      '@weber-development/permito-catalog': '>=2.0.0 <3.0.0'
       react: '>=18.2.0'
-    peerDependenciesMeta:
-      '@permitojs/react':
-        optional: true
-      '@weber-development/permito-catalog':
-        optional: true
-      react:
-        optional: true
 
-  '@weber-development/permito-themes@0.4.1':
-    resolution: {integrity: sha512-KDftJJGqCG5P1ecHUZ+UR+NvbIbTXrybfwncxInHgF26i2FEvgwRgSiwWznj52QMbiRKRtW/qgoaRRponHtNJA==, tarball: https://npm.pkg.github.com/download/@weber-development/permito-themes/0.4.1/434b4bf1896a023340cecd5e51f9a09c51bf6aac}
+  '@weber-development/permito-themes@2.1.0':
+    resolution: {integrity: sha512-PBYs9nxcheUrasQQ08DejgGFui8D0yZI5ZtZ2jg8vtiCp1uMAQtEkdfDVida2M87v9jtyo+/ajqSGHHwGw2X0Q==, tarball: https://npm.pkg.github.com/download/@weber-development/permito-themes/2.1.0/2c3605deff91282f2ebeadc22c8a1c0cd224bc77}
+    engines: {node: '>=22'}
     peerDependencies:
-      '@permitojs/core': ^0.1.0 || ^0.2.0 || ^0.3.0
-      '@permitojs/react': ^0.1.0 || ^0.2.0 || ^0.3.0
+      '@permitojs/core': '>=0.1.0 <3.0.0'
+      '@permitojs/react': '>=0.1.0 <3.0.0'
       react: '>=18'
 
   acorn-jsx@5.3.2:
@@ -3075,6 +3081,7 @@ packages:
   eslint@9.33.0:
     resolution: {integrity: sha512-TS9bTNIryDzStCpJN93aC5VRSW3uTx9sClUn4B87pwiCaJh220otoI0X8mJKr+VcPtniMdN8GKjlwgWGUv5ZKA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
     peerDependencies:
       jiti: '*'
@@ -3894,6 +3901,7 @@ packages:
   next@15.2.6:
     resolution: {integrity: sha512-DIKFctUpZoCq5ok2ztVU+PqhWsbiqM9xNP7rHL2cAp29NQcmDp7Y6JnBBhHRbFt4bCsCZigj6uh+/Gwh2158Wg==}
     engines: {node: ^18.18.0 || ^19.8.0 || >= 20.0.0}
+    deprecated: This version has a security vulnerability. Please upgrade to a patched version. See https://nextjs.org/blog/security-update-2025-12-11 for more details.
     hasBin: true
     peerDependencies:
       '@opentelemetry/api': ^1.1.0
@@ -4138,6 +4146,7 @@ packages:
   recharts@2.15.4:
     resolution: {integrity: sha512-UT/q6fwS3c1dHbXv2uFgYJ9BMFHu3fwnd7AYZaEQhXuYQ4hgsxLvsUXzGdKeZrW5xopzDCvuA2N41WJ88I7zIw==}
     engines: {node: '>=14'}
+    deprecated: 1.x and 2.x branches are no longer active. Bump to Recharts v3 to receive latest features and bugfixes. See https://github.com/recharts/recharts/wiki/3.0-migration-guide
     peerDependencies:
       react: ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -4415,6 +4424,7 @@ packages:
   tar@7.4.3:
     resolution: {integrity: sha512-5S7Va8hKfV7W5U6g3aYxXmlPoZVAwUMy9AOKyF2fVuZa2UD3qZjg578OrLRt8PcNN1PleVaL/5/yYATNL0ICUw==}
     engines: {node: '>=18'}
+    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   throttleit@2.1.0:
     resolution: {integrity: sha512-nt6AMGKW1p/70DF/hGBdJB57B8Tspmbp5gfJ8ilhLnt7kkr2ye7hzD6NVG8GGErk2HWF34igrL2CXmNIkzKqKw==}
@@ -5148,13 +5158,15 @@ snapshots:
 
   '@nolyfill/is-core-module@1.0.39': {}
 
-  '@permitojs/core@0.3.0': {}
+  '@permitojs/core@2.0.0': {}
 
-  '@permitojs/react@0.3.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2)':
+  '@permitojs/react@2.0.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2)':
     dependencies:
-      '@permitojs/core': 0.3.0
+      '@permitojs/core': 2.0.0
       react: 19.1.2
       react-dom: 19.1.2(react@19.1.2)
+    transitivePeerDependencies:
+      - vue
 
   '@preact/signals-core@1.12.1': {}
 
@@ -6413,24 +6425,23 @@ snapshots:
       next: 15.2.6(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
       react: 19.1.2
 
-  '@weber-development/permito-catalog@0.4.1(@permitojs/core@0.3.0)':
+  '@weber-development/permito-catalog@2.1.0(@permitojs/core@2.0.0)':
     dependencies:
-      '@permitojs/core': 0.3.0
+      '@permitojs/core': 2.0.0
       jiti: 2.7.0
 
-  '@weber-development/permito-cookie-table@0.4.1(@permitojs/core@0.3.0)(@permitojs/react@0.3.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(@weber-development/permito-catalog@0.4.1(@permitojs/core@0.3.0))(react@19.1.2)':
+  '@weber-development/permito-cookie-table@2.1.0(@permitojs/core@2.0.0)(@permitojs/react@2.0.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(@weber-development/permito-catalog@2.1.0(@permitojs/core@2.0.0))(react@19.1.2)':
     dependencies:
-      '@permitojs/core': 0.3.0
+      '@permitojs/core': 2.0.0
+      '@permitojs/react': 2.0.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      '@weber-development/permito-catalog': 2.1.0(@permitojs/core@2.0.0)
       jiti: 2.7.0
-    optionalDependencies:
-      '@permitojs/react': 0.3.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
-      '@weber-development/permito-catalog': 0.4.1(@permitojs/core@0.3.0)
       react: 19.1.2
 
-  '@weber-development/permito-themes@0.4.1(@permitojs/core@0.3.0)(@permitojs/react@0.3.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(react@19.1.2)':
+  '@weber-development/permito-themes@2.1.0(@permitojs/core@2.0.0)(@permitojs/react@2.0.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(react@19.1.2)':
     dependencies:
-      '@permitojs/core': 0.3.0
-      '@permitojs/react': 0.3.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      '@permitojs/core': 2.0.0
+      '@permitojs/react': 2.0.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
       react: 19.1.2
 
   acorn-jsx@5.3.2(acorn@8.15.0):
@@ -7034,8 +7045,8 @@ snapshots:
       '@typescript-eslint/parser': 8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2)
       eslint: 9.33.0(jiti@2.7.0)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint@9.33.0(jiti@2.7.0)))(eslint@9.33.0(jiti@2.7.0))
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint@9.33.0(jiti@2.7.0)))(eslint@9.33.0(jiti@2.7.0)))(eslint@9.33.0(jiti@2.7.0))
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0)(eslint@9.33.0(jiti@2.7.0))
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint-import-resolver-typescript@3.10.1)(eslint@9.33.0(jiti@2.7.0))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.33.0(jiti@2.7.0))
       eslint-plugin-react: 7.37.5(eslint@9.33.0(jiti@2.7.0))
       eslint-plugin-react-hooks: 5.2.0(eslint@9.33.0(jiti@2.7.0))
@@ -7054,7 +7065,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint@9.33.0(jiti@2.7.0)))(eslint@9.33.0(jiti@2.7.0)):
+  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0)(eslint@9.33.0(jiti@2.7.0)):
     dependencies:
       '@nolyfill/is-core-module': 1.0.39
       debug: 4.4.1
@@ -7065,22 +7076,22 @@ snapshots:
       tinyglobby: 0.2.14
       unrs-resolver: 1.11.1
     optionalDependencies:
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint@9.33.0(jiti@2.7.0)))(eslint@9.33.0(jiti@2.7.0)))(eslint@9.33.0(jiti@2.7.0))
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint-import-resolver-typescript@3.10.1)(eslint@9.33.0(jiti@2.7.0))
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.1(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint@9.33.0(jiti@2.7.0)))(eslint@9.33.0(jiti@2.7.0)))(eslint@9.33.0(jiti@2.7.0)):
+  eslint-module-utils@2.12.1(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.33.0(jiti@2.7.0)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2)
       eslint: 9.33.0(jiti@2.7.0)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint@9.33.0(jiti@2.7.0)))(eslint@9.33.0(jiti@2.7.0))
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0)(eslint@9.33.0(jiti@2.7.0))
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint@9.33.0(jiti@2.7.0)))(eslint@9.33.0(jiti@2.7.0)))(eslint@9.33.0(jiti@2.7.0)):
+  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint-import-resolver-typescript@3.10.1)(eslint@9.33.0(jiti@2.7.0)):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.9
@@ -7091,7 +7102,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.33.0(jiti@2.7.0)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.1(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint@9.33.0(jiti@2.7.0)))(eslint@9.33.0(jiti@2.7.0)))(eslint@9.33.0(jiti@2.7.0))
+      eslint-module-utils: 2.12.1(@typescript-eslint/parser@8.40.0(eslint@9.33.0(jiti@2.7.0))(typescript@5.0.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.33.0(jiti@2.7.0))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
