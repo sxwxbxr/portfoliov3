@@ -117,8 +117,8 @@ importers:
         specifier: ^2.1.0
         version: 2.1.0(react@19.1.2)
       '@sweberdev/lagrangian':
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@vercel/analytics':
         specifier: ^1.5.0
         version: 1.5.0(next@15.2.6(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(react@19.1.2)
@@ -2024,8 +2024,8 @@ packages:
     resolution: {integrity: sha512-r21ZcqgVndyykvZERMk9F/Jrm5R8NH7SBYPt6c6DLCpahPukHBEBpGGazWsbXW+3yymKLvzcg2jxMBKrHNj/UA==}
     hasBin: true
 
-  '@sweberdev/lagrangian@0.1.0':
-    resolution: {integrity: sha512-4MxWQZ9uipJO6bdLbj/8WL7O7wVAfQIkR+p2Kc1msFTamm5ZhcOtSvV1q+uWNOJtkPzmfKArqQmCou0DTyWMhA==}
+  '@sweberdev/lagrangian@2.0.0':
+    resolution: {integrity: sha512-I7EcDqSE7GwAWKr02gHSoPaJHrUPOYo1+oL6MrbQR3qkUGABzIbzfm4yH4a7DgOHhkNyHIVEvHzV6CXNdPstzg==}
 
   '@tailwindcss/node@4.1.9':
     resolution: {integrity: sha512-ZFsgw6lbtcZKYPWvf6zAuCVSuer7UQ2Z5P8BETHcpA4x/3NwOjAIXmRnYfG77F14f9bPeuR4GaNz3ji1JkQMeQ==}
@@ -6074,7 +6074,7 @@ snapshots:
 
   '@sweberdev/inverse@2.1.0': {}
 
-  '@sweberdev/lagrangian@0.1.0': {}
+  '@sweberdev/lagrangian@2.0.0': {}
 
   '@tailwindcss/node@4.1.9':
     dependencies:
