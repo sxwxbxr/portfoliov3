@@ -23,6 +23,7 @@ function buildFooterNav(copy: Copy, locale: Locale) {
       // The blog lives on the package site; posts come from Schulz Media and /admin/news.
       { name: copy.nav.blog, href: `${PACKAGES_ENTRY}/blog`, sameTab: true },
       { name: copy.nav.releaseNotes, href: `${PACKAGES_ENTRY}/releasenotes`, sameTab: true },
+      { name: locale === "de" ? "Suche" : "Search", href: `${PACKAGES_ENTRY}/search`, sameTab: true },
       { name: copy.nav.physio, href: PHYSIO_ENTRY, sameTab: true },
     ],
   },
