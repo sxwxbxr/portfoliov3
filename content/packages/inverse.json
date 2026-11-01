@@ -53,9 +53,11 @@
       "Legal areas: a jurisdiction on every record (Germany, Austria, Switzerland note, France, Italy, Spain, the Netherlands, Poland), legal status per country with inverse legal --since for CI, and a migration guide to 2.0. France, Italy, Spain, the Netherlands and Poland follow the EU directive only; the national acts were not read"
     ],
     "pro": [
-      "Evidence ledger: every declaration and receipt in a SHA-256 hash chain, evidence sheet per declaration, stored as JSON Lines, PostgreSQL or SQLite, erasure and a retention period that keep the chain verifiable, RFC 3161 time stamp anchors, and an evidence dossier for your lawyer, the ledger CLI on SQLite or PostgreSQL, the dossier as PDF, anchors on a schedule, one ledger per client for agencies, the audit report as PDF, and ending a subscription at Stripe or Paddle after a cancellation, case management with status, refund date and history in the chain, the ledger storage format field with a migrate command, and Lemon Squeezy next to Stripe and Paddle, and a web inbox for the cases (beta) with status changes, refund day, overdue marks and German and English reply templates",
-      "Site audit: every page from the sitemap, buttons followed to the form without login, HTML report for clients that prints to PDF, a CSV overview of all sites, many sites in one run, and a comparison with the last run that flags what got worse, and continuous monitoring (beta): a scheduled check with a webhook or failing-workflow alert when a button goes missing, plus a generated GitHub Actions workflow",
-      "Branded receipts, a team notification with the refund or end date, a weekly digest of refunds and contract ends that are due, one reminder per case before a deadline, and transports for Resend, Postmark, SendGrid, Brevo, Mailgun and SMTP"
+      "Evidence ledger: every declaration and receipt in a SHA-256 hash chain, evidence sheet per declaration, stored as JSON Lines, PostgreSQL or SQLite, erasure and a retention period that keep the chain verifiable, RFC 3161 time stamp anchors, and an evidence dossier for your lawyer, the ledger CLI on SQLite or PostgreSQL, the dossier as PDF, anchors on a schedule, one ledger per client for agencies, the audit report as PDF, and ending a subscription at Stripe or Paddle after a cancellation, case management with status, refund date and history in the chain, the ledger storage format field with a migrate command, and Lemon Squeezy next to Stripe and Paddle, and a web inbox for the cases (the API is stable from 3.0) with status changes, refund day, overdue marks and German and English reply templates",
+      "Site audit: every page from the sitemap, buttons followed to the form without login, HTML report for clients that prints to PDF, a CSV overview of all sites, many sites in one run, and a comparison with the last run that flags what got worse, and continuous monitoring (the API is stable from 3.0): a scheduled check with a webhook or failing-workflow alert when a button goes missing, plus a generated GitHub Actions workflow",
+      "Branded receipts, a team notification with the refund or end date, a weekly digest of refunds and contract ends that are due, one reminder per case before a deadline, and transports for Resend, Postmark, SendGrid, Brevo, Mailgun and SMTP",
+      "Server in a Docker image for shops that are not Node.js: POST /v1/declarations with the ledger behind it, receipt mail, the case inbox, reminders before refund and contract-end deadlines, and a page watcher with webhook and mail alerts, all set by environment variables (SQLite in a volume; the case inbox and the watcher are stable from 3.0)",
+      "WooCommerce plugin: an order-bound withdrawal button with a lookup by order number and e-mail address or the link from My Account, an order note, and the declaration sent to your Inverse server (tested with WordPress 7.1 and WooCommerce 11.2; no Shopware or Magento plugin)"
     ]
   },
   "highlights": {
@@ -70,7 +72,8 @@
       "Tamper-evident evidence ledger with an evidence sheet per declaration",
       "Site-wide audit with a report for clients",
       "Branded receipts and team notification",
-      "Inbox that watches new declarations"
+      "Case inbox with deadline reminders",
+      "Server image and WooCommerce plugin for shops that are not Node.js"
     ]
   },
   "comparison": [
@@ -100,6 +103,11 @@
       "pro": true
     },
     {
+      "feature": "Server image and WooCommerce plugin",
+      "free": false,
+      "pro": true
+    },
+    {
       "feature": "Licence",
       "free": "MIT",
       "pro": "Per person"
@@ -125,6 +133,10 @@
       {
         "name": "@weber-development/inverse-mail",
         "description": "Sends receipts in your branding, notifies your team with the next due date, and ships transports for the common mail providers."
+      },
+      {
+        "name": "@weber-development/inverse-server",
+        "description": "Inverse Pro as one Docker image for WooCommerce, Shopware and every other stack: POST /v1/declarations, a hash-chained ledger in SQLite, receipts by SMTP or Resend, Postmark, SendGrid and Brevo, the case inbox, reminders before deadlines and a page watcher with webhook alerts. Ships with a WooCommerce plugin as a ZIP in each release."
       }
     ],
     "waitlistUrl": "mailto:info@sweber.dev?subject=Inverse%20Pro%20waitlist"
@@ -204,6 +216,10 @@
     {
       "q": "Is this legal advice?",
       "a": "No. Inverse implements the published wording and process of § 356a and § 312k BGB and explains its reasoning in the docs. For your specific case, ask a lawyer or your trade association."
+    },
+    {
+      "q": "Does Inverse work with WooCommerce or Shopware?",
+      "a": "For WooCommerce there is a plugin in Inverse Pro 3.0: an order-bound withdrawal button that sends the declaration to the Inverse server, a Docker image you run yourself. For Shopware, Magento and other shops the server takes the declaration over HTTP (POST /v1/declarations), but there is no plugin for them yet and we have not tried them."
     }
   ],
   "publishedAt": "2026-10-05"
