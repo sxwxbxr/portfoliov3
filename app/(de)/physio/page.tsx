@@ -8,7 +8,7 @@ import { siteCopy } from "@/lib/physio/copy/site"
 import { PHYSIO_TOOLS, isNewTool, landingTools } from "@/lib/physio/tools"
 import { physioPath, physioUrl } from "@/lib/physio/urls"
 
-export const revalidate = 60
+export const revalidate = 3600
 
 const c = siteCopy.landing
 

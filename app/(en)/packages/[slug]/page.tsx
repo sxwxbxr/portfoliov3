@@ -20,7 +20,7 @@ import { getPostsForPackage, getReleaseNotesForPackage } from "@/lib/blog"
 import { bundlesWith } from "@/lib/packages/bundles"
 import { copy } from "@/lib/copy"
 
-export const revalidate = 60
+export const revalidate = 3600
 
 export function generateStaticParams() {
   return getPackages().map((p) => ({ slug: p.slug }))

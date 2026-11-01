@@ -11,7 +11,7 @@ import { ShopDemo } from "@/components/packages/demo/inverse/ShopDemo"
 import { inverseDemoCopy } from "@/lib/demo/inverse-copy"
 import { pkgPath, pkgUrl } from "@/lib/packages/urls"
 
-export const revalidate = 60
+export const revalidate = 3600
 
 const t = inverseDemoCopy
 

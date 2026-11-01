@@ -18,7 +18,7 @@ import { getCatalogView } from "@/lib/demo/permito-server"
 import { pkgPath, pkgUrl } from "@/lib/packages/urls"
 import { copy } from "@/lib/copy"
 
-export const revalidate = 60
+export const revalidate = 3600
 
 const t = copy.packages.demo
 

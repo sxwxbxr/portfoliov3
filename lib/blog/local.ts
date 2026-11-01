@@ -29,9 +29,13 @@ const frontmatter = z.object({
   canonicalUrl: z.string().url().optional(),
 })
 
-const readAll = cache((): Post[] => {
-  if (!fs.existsSync(DIR)) return []
-  const today = new Date().toISOString().slice(0, 10)
+// shortcut: parsed once per server instance in production (the files only change with a
+// deploy), so ISR renders and feeds do not re-parse ~190 files each time. Dev re-reads.
+let parsed: Post[] | undefined
+
+function parseAll(): Post[] {
+  if (parsed && process.env.NODE_ENV === "production") return parsed
+  if (!fs.existsSync(DIR)) return (parsed = [])
 
   const posts = fs
     .readdirSync(DIR)
@@ -60,11 +64,15 @@ const readAll = cache((): Post[] => {
       }
       return post
     })
-    // A future date is how a post is scheduled: it ships with the build but
-    // stays invisible until the day (ISR picks it up within the revalidate window).
-    .filter((p) => p.publishedAt <= today)
 
-  return posts.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
+  return (parsed = posts.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt)))
+}
+
+// A future date is how a post is scheduled: it ships with the build but
+// stays invisible until the day (ISR picks it up within the revalidate window).
+const readAll = cache((): Post[] => {
+  const today = new Date().toISOString().slice(0, 10)
+  return parseAll().filter((p) => p.publishedAt <= today)
 })
 
 export function createLocalSource(): BlogSource {

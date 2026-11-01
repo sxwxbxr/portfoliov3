@@ -2,8 +2,10 @@ import { getReleaseNotes } from "@/lib/blog"
 import { renderRss } from "@/lib/blog/rss"
 import { pkgUrl } from "@/lib/packages/urls"
 
-// Rendered per request, like the blog feed: a new release note must appear at once.
-export const dynamic = "force-dynamic"
+// Cached for 5 min instead of rendered per request: every hit re-read all posts (and, for the
+// sitemap, every docs page), which was a main source of Vercel Hobby CPU. A new post therefore
+// shows up here within 5 min; revalidatePath/revalidateTag do not reach route handlers.
+export const revalidate = 300
 
 export async function GET() {
   const posts = await getReleaseNotes()

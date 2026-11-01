@@ -6,10 +6,10 @@ import { getDocsNavFor } from "@/lib/packages/docs"
 import { demoUrlOf } from "@/lib/packages/schema"
 import { pkgUrl } from "@/lib/packages/urls"
 
-// Rendered per request: these list package posts, and a post published in
-// /admin/news or through the ingest API must appear here immediately. A
-// cached route handler did not pick up revalidatePath/revalidateTag.
-export const dynamic = "force-dynamic"
+// Cached for 60 min instead of rendered per request: every hit re-read all posts (and, for the
+// sitemap, every docs page), which was a main source of Vercel Hobby CPU. A new post therefore
+// shows up here within 60 min; revalidatePath/revalidateTag do not reach route handlers.
+export const revalidate = 3600
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await blog.getPosts()

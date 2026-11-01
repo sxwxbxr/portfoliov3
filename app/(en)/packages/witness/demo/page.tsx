@@ -15,7 +15,7 @@ import { getWitnessDemo } from "@/lib/demo/witness-server"
 import { WITNESS_PRO_COMMANDS } from "@/lib/demo/witness-snippets"
 import { pkgPath, pkgUrl } from "@/lib/packages/urls"
 
-export const revalidate = 60
+export const revalidate = 3600
 
 export function generateMetadata(): Metadata {
   const url = pkgUrl("/witness/demo")

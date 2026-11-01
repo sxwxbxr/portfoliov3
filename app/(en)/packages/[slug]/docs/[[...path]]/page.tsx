@@ -18,7 +18,7 @@ import { pkgPath, pkgUrl } from "@/lib/packages/urls"
 import { extractHeadings } from "@/lib/blog"
 import { copy } from "@/lib/copy"
 
-export const revalidate = 3600
+export const revalidate = 21600
 export const dynamicParams = true
 
 const t = copy.packages.docsPage

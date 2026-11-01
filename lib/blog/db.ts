@@ -32,7 +32,8 @@ export const POSTS_TAG = "package-posts"
  * Published posts from package_posts. Without DATABASE_URL (local markup
  * work) there are none. A missing table also yields none, with a warning:
  * the code can ship before `db:push` creates the table, and the package site
- * must not go down for that. Any other database error propagates.
+ * must not go down for that. Any other database error propagates; lib/blog's
+ * `tolerant` wrapper turns it into a fallback to the other sources.
  */
 const queryPublished = async (): Promise<Post[]> => {
   if (!process.env.DATABASE_URL) return []

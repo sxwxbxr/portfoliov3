@@ -9,7 +9,7 @@ import { getBundles } from "@/lib/packages/bundles"
 import { pkgPath, pkgUrl } from "@/lib/packages/urls"
 import { copy } from "@/lib/copy"
 
-export const revalidate = 60
+export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: "Packages",
