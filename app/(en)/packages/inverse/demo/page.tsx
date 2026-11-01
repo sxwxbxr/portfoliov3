@@ -91,6 +91,7 @@ export default function InverseDemoPage() {
       </Block>
 
       <ProNewSection slug="inverse" file="free-2-0" />
+      <ProNewSection slug="inverse" file="pro-3-0" />
       <ProNewSection slug="inverse" />
 
       <Block label={t.closing.label} title={t.closing.title} sub={t.closing.sub} lede={<p>{t.closing.lede}</p>}>
