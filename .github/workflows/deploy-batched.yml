@@ -2,11 +2,13 @@ name: Gebündeltes Deployment
 
 # Vercel baut nicht mehr bei jedem Push (git.deploymentEnabled=false in vercel.json).
 # Stattdessen löst dieser Workflow alle 2 Stunden einen einzigen Production-Deploy aus,
-# aber nur, wenn main seit dem letzten Deploy neue Commits hat.
-# Cron läuft in UTC: 05-21 Uhr UTC = 07-23 Uhr Zürich im Sommer, 06-22 Uhr im Winter.
+# aber nur, wenn main seit dem letzten Deploy Änderungen hat, die die Seite betreffen
+# (nicht nur .github/, docs/ oder Markdown im Hauptordner).
+# Cron läuft in UTC (5, 9, 13, 17, 21 Uhr = 6-7 bis 22-23 Uhr Zürich). Eilige Änderungen:
+# "Run workflow" mit force.
 on:
   schedule:
-    - cron: "0 5-21/2 * * *"
+    - cron: "0 5-21/4 * * *"
   workflow_dispatch:
     inputs:
       force:
@@ -40,12 +42,17 @@ jobs:
           git fetch --tags --force origin
           last=$(git rev-parse -q --verify refs/tags/last-deployed || true)
           echo "sha=$head" >> "$GITHUB_OUTPUT"
-          if [ "$FORCE" = "true" ] || [ "$head" != "$last" ]; then
+          # Ohne Tag (erster Lauf) gilt alles als relevant.
+          relevant=first-run
+          if [ -n "$last" ]; then
+            relevant=$(git diff --name-only "$last" "$head" | grep -vE '^(\.github/|docs/|[^/]+\.md$)' || true)
+          fi
+          if [ "$FORCE" = "true" ] || [ -n "$relevant" ]; then
             echo "deploy=true" >> "$GITHUB_OUTPUT"
             echo "Deploy nötig (letzter: ${last:-keiner}, jetzt: $head)"
           else
             echo "deploy=false" >> "$GITHUB_OUTPUT"
-            echo "Keine neuen Commits seit dem letzten Deploy, übersprungen."
+            echo "Keine seitenrelevanten Änderungen seit dem letzten Deploy, übersprungen."
           fi
 
       - name: Vercel Deploy Hook auslösen
