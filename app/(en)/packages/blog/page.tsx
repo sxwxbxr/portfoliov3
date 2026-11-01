@@ -10,7 +10,7 @@ import { pkgPath, pkgUrl } from "@/lib/packages/urls"
 import { copy } from "@/lib/copy"
 import { PostCard } from "./PostCard"
 
-export const revalidate = 60
+export const revalidate = 3600
 
 const PAGE_SIZE = 10
 /** Release notes have their own page (/releasenotes). */

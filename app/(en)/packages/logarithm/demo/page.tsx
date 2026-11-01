@@ -9,7 +9,7 @@ import { AuditPlayground } from "@/components/packages/demo/logarithm/AuditPlayg
 import { logarithmDemo as t } from "@/lib/demo/logarithm-copy"
 import { pkgPath, pkgUrl } from "@/lib/packages/urls"
 
-export const revalidate = 60
+export const revalidate = 3600
 
 const RECORD = `// app/projects/actions.ts
 await audit.with({ tenantId: org.id, actor: { id: user.id, name: user.name } }).record({

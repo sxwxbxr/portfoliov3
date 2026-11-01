@@ -13,7 +13,7 @@ import { getSummandDemo } from "@/lib/demo/summand-server"
 import { SUMMAND_READ_SNIPPET } from "@/lib/demo/summand-snippets"
 import { pkgPath, pkgUrl } from "@/lib/packages/urls"
 
-export const revalidate = 60
+export const revalidate = 3600
 
 export function generateMetadata(): Metadata {
   const url = pkgUrl("/summand/demo")

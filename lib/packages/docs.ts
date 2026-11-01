@@ -49,7 +49,7 @@ function rawUrl(docs: DocsConfig, file: string) {
 async function fetchText(url: string): Promise<string | null> {
   try {
     const res = await fetch(url, {
-      next: { revalidate: 3600 },
+      next: { revalidate: 21600 },
       signal: AbortSignal.timeout(TIMEOUT_MS),
     })
     return res.ok ? await res.text() : null

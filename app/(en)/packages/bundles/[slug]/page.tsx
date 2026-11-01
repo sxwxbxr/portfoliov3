@@ -13,7 +13,7 @@ import { bundlePackages, getBundle, getBundles, type Bundle } from "@/lib/packag
 import { pkgPath, pkgUrl } from "@/lib/packages/urls"
 import { copy } from "@/lib/copy"
 
-export const revalidate = 60
+export const revalidate = 3600
 
 export function generateStaticParams() {
   return getBundles().map((b) => ({ slug: b.slug }))

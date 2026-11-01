@@ -8,7 +8,7 @@ import { PaletteStudio } from "@/components/packages/demo/gradient/PaletteStudio
 import { gradientDemo as t } from "@/lib/demo/gradient-copy"
 import { pkgPath, pkgUrl } from "@/lib/packages/urls"
 
-export const revalidate = 60
+export const revalidate = 3600
 
 const CLI = `npx @sweberdev/gradient "#e30613" accent=#0a84ff --format tailwind --out app/gradient.css`
 

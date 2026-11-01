@@ -18,7 +18,7 @@ import { sigmoidDemo as t } from "@/lib/demo/sigmoid-copy"
 import { pkgPath, pkgUrl } from "@/lib/packages/urls"
 import "./sigmoid.css"
 
-export const revalidate = 60
+export const revalidate = 3600
 
 export function generateMetadata(): Metadata {
   const url = pkgUrl("/sigmoid/demo")
