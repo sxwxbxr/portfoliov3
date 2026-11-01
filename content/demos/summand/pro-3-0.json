@@ -1,0 +1,34 @@
+{
+  "label": "Pro 3.0.0",
+  "title": "A workbench for received invoices",
+  "sub": "Summand Pro.",
+  "lede": "Pro 3.0.0 adds a browser workbench to the validation service: named users register received invoices, check and approve them with the four-eyes rule, and export them with an evidence bundle. The approval workflow is stable from this version. Nothing from 2.x was removed.",
+  "items": [
+    {
+      "title": "Register, check, approve, export",
+      "text": "The workbench keeps documents and a hash-chained log in a data folder. Reviewers check, approvers approve, admins export, and the person behind each step comes from the sign-in, not from a typed name. Everyone gets only the buttons their role and the four-eyes rule allow.",
+      "codeTitle": "Start it with a users file",
+      "code": "docker run -d -p 8080:8080 -v summand-data:/data \\\n  -v ./users.json:/etc/summand/users.json:ro \\\n  -e SUMMAND_WORKBENCH_DIR=/data \\\n  -e SUMMAND_USERS_FILE=/etc/summand/users.json \\\n  ghcr.io/weber-development/summand-server:3\n\n# users.json\n[\n  { \"name\": \"Anna\",  \"role\": \"reviewer\", \"tokenSha256\": \"<sha-256 of her token>\" },\n  { \"name\": \"Bernd\", \"role\": \"approver\", \"tokenSha256\": \"<sha-256 of his token>\" },\n  { \"name\": \"Chris\", \"role\": \"admin\",    \"tokenSha256\": \"<sha-256 of his token>\" }\n]"
+    },
+    {
+      "title": "The whole path, recorded",
+      "text": "Recorded from a real run of the server with the KoSIT sample invoice, three users and the HTTP API that the page uses. The reviewer cannot approve; the approver can only approve what somebody else checked.",
+      "outputTitle": "Recorded output",
+      "output": "$ curl -s -H \"Authorization: Bearer $ANNA_TOKEN\" -H \"Content-Type: application/xml\" --data-binary @rechnung-4711.xml localhost:8080/v1/documents | jq \".document | {id, state, invoice, receivedBy}\"\n{\n  \"id\": \"8ed131cc276b\",\n  \"state\": \"received\",\n  \"invoice\": {\n    \"status\": \"valid\",\n    \"errors\": 0,\n    \"warnings\": 0,\n    \"number\": \"18383\",\n    \"issueDate\": \"2020-11-27\",\n    \"seller\": \"Mustermann GmbH\",\n    \"sellerVatId\": \"DE 123456789\",\n    \"payableAmount\": \"233.00\",\n    \"currency\": \"EUR\"\n  },\n  \"receivedBy\": \"Anna\"\n}\n\n$ curl -s -X POST -H \"Authorization: Bearer $ANNA_TOKEN\" -d \"{}\" localhost:8080/v1/documents/$ID/approve | jq .error\n{\n  \"code\": \"forbidden\",\n  \"message\": \"The role \\\"reviewer\\\" may not do this (approve).\"\n}\n\n$ curl -s -X POST -H \"Authorization: Bearer $ANNA_TOKEN\" -d \"{}\" localhost:8080/v1/documents/$ID/check | jq \".document | {state, checkedBy}\"\n{\n  \"state\": \"checked\",\n  \"checkedBy\": \"Anna\"\n}\n\n$ curl -s -X POST -H \"Authorization: Bearer $BERND_TOKEN\" -d \"{}\" localhost:8080/v1/documents/$ID/approve | jq \".document | {state, approvedBy}\"\n{\n  \"state\": \"approved\",\n  \"approvedBy\": \"Bernd\"\n}\n\n$ curl -s -X POST -H \"Authorization: Bearer $CHRIS_TOKEN\" -d \"{\\\"reference\\\":\\\"BU-2026-118\\\"}\" localhost:8080/v1/documents/$ID/export | jq \".document | {state, exportedBy}\"\n{\n  \"state\": \"exported\",\n  \"exportedBy\": \"Chris\"\n}\n\n$ curl -s -H \"Authorization: Bearer $CHRIS_TOKEN\" localhost:8080/v1/documents/$ID/evidence -o evidence-4711.zip && unzip -Z1 evidence-4711.zip\nmanifest.json\nREADME.md\nverify.mjs\nindex.jsonl\ndocuments/8ed131cc276bb37d/original.bin\ndocuments/8ed131cc276bb37d/validation.json\ndocuments/8ed131cc276bb37d/events.jsonl\n\n$ curl -s -H \"Authorization: Bearer $CHRIS_TOKEN\" localhost:8080/v1/workflow/verify | jq -c \".events | {ok, records}\"\n{\"ok\":true,\"records\":4}"
+    },
+    {
+      "title": "Evidence bundle on export",
+      "text": "Marking an invoice as exported archives the original with its validation result and the full event history. The ZIP can be checked by a third party with the included script, or with summand-inbox archive verify-bundle. It is unsigned.",
+      "codeTitle": "Verify the log and a bundle",
+      "code": "curl -s -H \"Authorization: Bearer $ADMIN_TOKEN\" localhost:8080/v1/workflow/verify | jq .events\n\nunzip evidence-4711.zip -d evidence && node evidence/verify.mjs evidence"
+    },
+    {
+      "title": "One page, two languages",
+      "text": "The page at /app is plain HTML in German and English with a strict content security policy. We checked it with axe-core in headless Chromium (sign-in, list and detail view, no violations). We did not test with a screen reader.",
+      "codeTitle": "Open it",
+      "code": "http://localhost:8080/app"
+    }
+  ],
+  "note": "The demo cannot show the page itself: it needs your own Docker host and users. Not verified: browsers other than Chromium, a screen reader, load, several server processes on one data folder. The text files inside the evidence bundle are in German. The archive and the evidence bundle are not reviewed by a tax advisor and not a certified GoBD system.",
+  "docsPath": "/summand/docs"
+}

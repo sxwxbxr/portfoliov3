@@ -70,7 +70,8 @@
       "Webhooks (signed, with retries) and mail notifications for approvals and deadlines (beta, tested against local test servers)",
       "Send e-invoices by SMTP after they were validated (beta, tested against a local test server; no Peppol)",
       "Evidence bundle from the archive: original, validation result, workflow events and a manifest with SHA-256 that a third party can verify (beta; not reviewed by a tax advisor)",
-      "Check incoming invoices against purchase orders and goods receipts: quantities, prices, VAT and totals within tolerances you set, partial invoices tracked, every difference with a stable code in German or English"
+      "Check incoming invoices against purchase orders and goods receipts: quantities, prices, VAT and totals within tolerances you set, partial invoices tracked, every difference with a stable code in German or English",
+      "Workbench in the validation service: named users register received invoices in the browser, check and approve them with the four-eyes rule, and export them with an evidence bundle (roles reviewer, approver, admin; German and English; the approval workflow is stable from 3.0)"
     ]
   },
   "highlights": {
@@ -83,10 +84,10 @@
     ],
     "pro": [
       "Reads any invoice into one typed object and shows it as readable HTML",
-      "Batch and inbox-folder validation with reports",
-      "Export to DATEV, Lexoffice and sevDesk",
+      "Batch and inbox-folder validation, export to DATEV, Lexoffice and sevDesk",
       "Writes XRechnung and ZUGFeRD invoices as PDF/A-3",
-      "Validation service as a Docker image with a REST API"
+      "Validation service as a Docker image with a REST API",
+      "Workbench: register, check, approve and archive invoices with named users"
     ]
   },
   "comparison": [
@@ -112,6 +113,11 @@
     },
     {
       "feature": "Batch validation, duplicates, audit log",
+      "free": false,
+      "pro": true
+    },
+    {
+      "feature": "Workbench: four-eyes approval and archive in the browser",
       "free": false,
       "pro": true
     },
@@ -149,6 +155,10 @@
       {
         "name": "@weber-development/summand-match",
         "description": "Checks an invoice against the purchase order it belongs to, and against a goods receipt for a three-way match. Pairs the lines in an explainable way, compares quantity, unit, price, VAT and totals within tolerances you set, tracks what is still open on partial invoices and reports every difference with a stable code, in German or English. Orders load from JSON or CSV."
+      },
+      {
+        "name": "@weber-development/summand-server",
+        "description": "The Summand validator as an HTTP service for PHP, Java, .NET, Python and every other stack: POST /v1/validate, batch, rule sets, health checks and an OpenAPI file, as a Docker image or a Node.js process. Since 3.0 it also runs the workbench: a browser page and API where named users (reviewer, approver, admin) register received invoices, check and approve them with the four-eyes rule, and export them with an evidence bundle. The workbench is off unless you configure it."
       }
     ],
     "waitlistUrl": "mailto:info@sweber.dev?subject=Summand%20Pro%20waitlist"
