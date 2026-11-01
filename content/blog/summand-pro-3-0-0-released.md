@@ -1,7 +1,7 @@
 ---
 title: "Summand Pro 3.0.0 released"
 excerpt: "Summand Pro 3.0 adds a workbench to the validation service: a browser page where named users register received invoices, check and approve them with the four-eyes rule, and export them with an evidence bundle. The approval workflow is now stable. Nothing from 2.x breaks, and we explain why it is still a major version."
-date: 2026-11-07
+date: 2026-11-01
 author: Seya Weber
 type: release
 packages: [summand]
