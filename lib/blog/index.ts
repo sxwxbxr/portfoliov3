@@ -36,12 +36,30 @@ function combine(...sources: BlogSource[]): BlogSource {
 }
 
 /**
+ * Wraps a remote source (database, API) so its failure never takes a page or
+ * the build down: it logs a warning and contributes no posts, and the
+ * Markdown files in content/blog still render. The local source is not
+ * wrapped, because a broken Markdown file is a bug that must fail loudly.
+ */
+function tolerant(name: string, source: BlogSource): BlogSource {
+  const warn = (err: unknown) =>
+    console.warn(`[blog] ${name} source failed, using the remaining sources: ${err instanceof Error ? err.message : err}`)
+  return {
+    getPosts: (query) => source.getPosts(query).catch((err) => (warn(err), [])),
+    getPost: (slug) => source.getPost(slug).catch((err) => (warn(err), null)),
+  }
+}
+
+/**
  * Where posts come from. Pages only ever import `blog` from here.
  *
  * - package_posts in the database: written in /admin/news, or pushed by an
  *   external system through /api/packages/posts.
  * - The Schulz Media content API, when SCHULZ_MEDIA_API_KEY is set.
  * - Markdown in content/blog, for posts that live in the repository.
+ *
+ * The database and the API are optional at runtime: if one fails (Neon quota,
+ * revoked API key), posts from the others and from Markdown are still served.
  *
  * BLOG_SOURCE=local restricts it to Markdown, e.g. for a build without a
  * database or API key.
@@ -50,10 +68,11 @@ function createSource(): BlogSource {
   const kind = process.env.BLOG_SOURCE ?? "all"
   switch (kind) {
     case "all":
+      const schulz = createSchulzMediaSource()
       return combine(
-        ...[createDbSource(), createSchulzMediaSource(), createLocalSource()].filter(
-          (s): s is BlogSource => s !== null
-        )
+        tolerant("database", createDbSource()),
+        ...(schulz ? [tolerant("Schulz Media", schulz)] : []),
+        createLocalSource()
       )
     case "local":
       return createLocalSource()

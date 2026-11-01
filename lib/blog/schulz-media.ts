@@ -117,8 +117,9 @@ function toPost(p: RemotePost): Post {
 
 /**
  * A failed call must not break the build: there it yields no posts. At
- * runtime it throws, so Next keeps serving the last good page instead of
- * caching one without the remote posts.
+ * runtime it throws; lib/blog's `tolerant` wrapper catches that and serves
+ * the other sources, so a revoked key degrades to "no Schulz Media posts"
+ * instead of a 500. The next revalidation retries.
  */
 function onFailure(err: unknown): [] {
   if (process.env.NEXT_PHASE === "phase-production-build") {
