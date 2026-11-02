@@ -7,6 +7,7 @@ import { useIsomorphism } from "./runtime"
 
 const t = copy.anonymize
 const r = copy.restore
+const st = copy.stream
 const btn = "control inline-flex items-center gap-1 py-2.5 pr-4 pl-5 text-sm"
 const area = "well w-full px-3 py-2 font-mono text-sm leading-relaxed text-fg"
 
@@ -15,11 +16,14 @@ export function IsomorphismDemo() {
   const [text, setText] = useState(t.sampleList[0].text)
   const [keep, setKeep] = useState("")
   const [answer, setAnswer] = useState(r.sample)
-  const ids = { text: useId(), keep: useId(), answer: useId() }
+  const [size, setSize] = useState(4)
+  const ids = { text: useId(), keep: useId(), answer: useId(), size: useId() }
 
   const result = useMemo(() => (runtime ? runtime.run(text, keep) : null), [runtime, text, keep])
   // Depends on the mapping from the run above, so it must follow `result`.
   const restored = useMemo(() => (runtime && result ? runtime.restore(answer) : ""), [runtime, result, answer])
+
+  const steps = useMemo(() => (runtime && result ? runtime.stream(answer, size) : []), [runtime, result, answer, size])
 
   return (
     <>
@@ -142,6 +146,43 @@ export function IsomorphismDemo() {
               {runtime ? restored : "…"}
             </pre>
           </div>
+        </div>
+      </Block>
+
+      <Block id="stream" label={st.label} title={st.title} sub={st.sub} lede={<p>{st.lede}</p>}>
+        <div className="flex flex-col gap-4">
+          <label htmlFor={ids.size} className="flex max-w-xs flex-col gap-1.5">
+            <span className="annotate">{st.size}</span>
+            <input
+              id={ids.size}
+              type="number"
+              min={1}
+              max={20}
+              className="well w-full px-3 py-2 font-mono text-sm text-fg"
+              value={size}
+              onChange={(e) => setSize(Math.min(20, Math.max(1, Number(e.target.value) || 1)))}
+            />
+          </label>
+          {steps.length > 0 && (
+            <div className="max-h-96 overflow-auto" tabIndex={0} aria-label={st.output}>
+              <table className="w-full text-left text-sm">
+                <thead>
+                  <tr className="annotate">
+                    <th className="py-1 pr-4 font-normal">{st.piece}</th>
+                    <th className="py-1 font-normal">{st.output}</th>
+                  </tr>
+                </thead>
+                <tbody className="font-mono text-[13px]">
+                  {steps.map(([piece, out], i) => (
+                    <tr key={i} className="border-t border-line">
+                      <td className="whitespace-pre py-1 pr-4">{piece}</td>
+                      <td className="whitespace-pre-wrap py-1">{out === "" ? st.held : out}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       </Block>
     </>

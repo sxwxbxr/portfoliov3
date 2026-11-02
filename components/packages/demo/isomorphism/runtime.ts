@@ -9,7 +9,7 @@ import { useCallback, useState } from "react"
  */
 
 const PYODIDE_BASE = "https://cdn.jsdelivr.net/pyodide/v0.27.2/full/"
-export const WHEEL_URL = "/demos/isomorphism/isomorphism-0.1.0-py3-none-any.whl"
+export const WHEEL_URL = "/demos/isomorphism/isomorphism-0.2.0-py3-none-any.whl"
 
 export interface Finding {
   kind: string
@@ -31,12 +31,14 @@ export interface Runtime {
   version: string
   run(text: string, keep: string): RunResult
   restore(answer: string): string
+  /** The answer in pieces of `size` characters: [piece, restored output of that step]. */
+  stream(answer: string, size: number): Array<[string, string]>
 }
 
 const BRIDGE = `
 import json
 from dataclasses import asdict
-from isomorphism import __version__, anonymize, restore
+from isomorphism import Restorer, __version__, anonymize, restore
 
 _mapping = {}
 
@@ -47,11 +49,17 @@ def run(text, keep):
 
 def back(answer):
     return restore(answer, _mapping)
+
+def stream(answer, size):
+    r = Restorer(_mapping)
+    steps = [[answer[i:i + size], r.feed(answer[i:i + size])] for i in range(0, len(answer), size)]
+    steps.append(["(end)", r.flush()])
+    return json.dumps(steps)
 `
 
 interface PyodideApi {
   runPython(code: string): unknown
-  globals: { get(name: string): (...args: string[]) => string }
+  globals: { get(name: string): (...args: (string | number)[]) => string }
   unpackArchive(buffer: ArrayBuffer, format: string): void
 }
 
@@ -72,10 +80,12 @@ export function useIsomorphism() {
       py.runPython(BRIDGE)
       const run = py.globals.get("run")
       const back = py.globals.get("back")
+      const stream = py.globals.get("stream")
       setRuntime({
         version: py.runPython("__version__") as string,
         run: (text, keep) => JSON.parse(run(text, keep)) as RunResult,
         restore: (answer) => back(answer),
+        stream: (answer, size) => JSON.parse(stream(answer, size)) as Array<[string, string]>,
       })
       setStatus("ready")
     } catch {
