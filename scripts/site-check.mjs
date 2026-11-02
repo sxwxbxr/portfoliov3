@@ -89,6 +89,15 @@ for (const f of readdirSync("content/packages")) {
     if (!v) problems.push(`npm ${n} nicht gefunden (${r.status})`)
   }
 }
+for (const f of readdirSync("content/packages")) {
+  const d = JSON.parse(readFileSync(`content/packages/${f}`, "utf8"))
+  for (const n of d.pypi ?? []) {
+    const r = await get(`https://pypi.org/pypi/${n}/json`, { redirect: "follow" })
+    const v = r.status === 200 ? (await r.json())?.info?.version : null
+    console.log(`pypi ${n}: ${r.status} ${v ?? "-"}`)
+    if (!v) problems.push(`pypi ${n} nicht gefunden (${r.status})`)
+  }
+}
 for (const f of readdirSync("content/bundles")) {
   const d = JSON.parse(readFileSync(`content/bundles/${f}`, "utf8"))
   const links = []

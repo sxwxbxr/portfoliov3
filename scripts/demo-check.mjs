@@ -2,7 +2,7 @@
 import { chromium } from "playwright"
 import { mkdirSync } from "node:fs"
 const ORIGIN = process.argv[2] || "https://packages.sweber.dev"
-const slugs = ["permito", "surjection", "integral", "cosine", "derivative", "gradient", "sigmoid", "logarithm", "inverse", "witness", "summand", "vector", "lagrangian"]
+const slugs = ["permito", "surjection", "integral", "cosine", "derivative", "gradient", "sigmoid", "logarithm", "inverse", "witness", "summand", "vector", "lagrangian", "isomorphism"]
 const pages = ["/inverse", "/bundles/compliance", "/lagrangian", "/permito", "/gradient", ...slugs.map((s) => `/${s}/demo`)]
 mkdirSync("shots", { recursive: true })
 const browser = await chromium.launch()

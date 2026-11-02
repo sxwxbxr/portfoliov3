@@ -1,0 +1,101 @@
+{
+  "slug": "isomorphism",
+  "name": "Isomorphism",
+  "tagline": "Reversible anonymisation of Swiss personal data for Python. AHV numbers, IBANs, UID numbers, phone numbers and emails become placeholders before a model call and come back in the answer.",
+  "seoTitle": "Isomorphism – anonymise Swiss personal data (AHV, IBAN, UID) for LLMs in Python",
+  "description": "Before a text goes to a language model, Isomorphism replaces Swiss personal data with placeholders like [AHV_1] and [IBAN_1]. After the answer comes back, restore() puts the real values in again. The same value always gets the same placeholder, so the model can still follow who is meant.\n\nThe recognisers know the Swiss formats and their check digits: AHV numbers (EAN-13), IBANs of Switzerland and Liechtenstein (mod 97), UID numbers (mod 11), Swiss phone numbers in their usual spellings, and email addresses. Numbers that look right but fail the check are reported as well, with lower confidence, because a typo in a document is still personal data. Every hit comes back with kind, position, confidence and recogniser, never the value, so it fits an audit log.\n\nIt runs fully local: pure Python 3.12 or newer, no dependencies, no network calls, no telemetry. The mapping with the real values is never logged or stored by the package. Names and postal addresses are not recognised in this version and stay in the text; no tool finds all personal data, so treat it as one protective layer. MIT-licensed.",
+  "status": "beta",
+  "tags": [
+    "Python",
+    "Privacy",
+    "Anonymisation",
+    "Switzerland",
+    "AHV",
+    "IBAN",
+    "LLM",
+    "DSG"
+  ],
+  "license": "MIT",
+  "order": 32,
+  "install": "pip install isomorphism",
+  "npm": [],
+  "pypi": [
+    "isomorphism"
+  ],
+  "code": {
+    "title": "anonymize.py",
+    "language": "python",
+    "snippet": "from isomorphism import anonymize, restore\n\ntext = \"AHV 756.1234.5678.97, IBAN CH93 0076 2011 6238 5295 7, Tel. 071 123 45 67\"\nsafe, mapping = anonymize(text, lang=\"de\")\n# 'AHV [AHV_1], IBAN [IBAN_1], Tel. [PHONE_1]'\n\nanswer = call_your_model(safe)   # the model only sees placeholders\nprint(restore(answer, mapping))  # the real values are back\n\nfor f in mapping.findings:       # audit log, without values\n    print(f.kind, f.start, f.end, f.confidence, f.detector, f.checksum_ok)"
+  },
+  "demoUrl": "/isomorphism/demo",
+  "links": {
+    "docs": "https://packages.sweber.dev/isomorphism/docs",
+    "github": "https://github.com/Weber-Development/isomorphism",
+    "pypi": "https://pypi.org/project/isomorphism/",
+    "changelog": "https://github.com/Weber-Development/isomorphism/blob/main/CHANGELOG.md"
+  },
+  "docs": {
+    "repo": "Weber-Development/isomorphism",
+    "path": "docs",
+    "ref": "main"
+  },
+  "features": {
+    "free": [
+      "anonymize() replaces personal data with placeholders such as [AHV_1], [IBAN_1], [UID_1], [PHONE_1] and [EMAIL_1]; restore() puts the real values back",
+      "The same value gets the same placeholder inside one call, so a model can follow who is meant",
+      "AHV numbers: prefix 756 and EAN-13 check digit, dotted, spaced or without separators",
+      "IBANs of Switzerland and Liechtenstein: mod-97 check, with or without spaces, upper or lower case",
+      "UID numbers (CHE): mod-11 check; MWST, TVA, IVA and HR stay in the text",
+      "Swiss phone numbers: +41, 0041, +41 (0)71, 071 123 45 67, 071/123 45 67, (071) … and ten bare digits",
+      "Email addresses",
+      "Numbers with a wrong check digit are still found, with lower confidence (better too many than too few)",
+      "Audit log per hit: kind, position, confidence, recogniser and check result, never the value",
+      "Exceptions with keep=[…]: exact values such as an authority's address stay in the text",
+      "restore() tolerates changes by the model: [ahv_1] and [ AHV_1 ] still match, unknown placeholders stay unchanged",
+      "A placeholder that already stands in your text is never reused",
+      "The mapping hides its values in repr() and str(); the package logs and stores nothing",
+      "Fully local: pure Python 3.12+, no dependencies, no network calls, no telemetry",
+      "Typed (py.typed), tested on Python 3.12 and 3.13 with invented Swiss texts in German, French, Italian and English, hit rate and false alarms per kind in the README"
+    ]
+  },
+  "highlights": {
+    "free": [
+      "AHV, IBAN (CH/LI), UID, phone and email, checked with their check digits",
+      "Reversible: same value, same placeholder, restore() puts the values back",
+      "Audit log per hit without the value: kind, position, confidence, recogniser",
+      "Fully local: no dependencies, no network, no telemetry",
+      "Hit rate and false alarms per kind, measured on invented Swiss texts"
+    ]
+  },
+  "faq": [
+    {
+      "q": "Does it find names and addresses?",
+      "a": "Not in 0.1. Names, postal addresses, company names, dates of birth and account and card numbers are planned for the next version. Until then they stay in the text, so do not rely on 0.1 for those."
+    },
+    {
+      "q": "Does anonymising make my processing compliant with the FADP or GDPR?",
+      "a": "No. Isomorphism is a technical tool, not legal advice. Recognition is pattern based, the surrounding text can still identify a person, and the mapping itself is personal data. You remain responsible for what you send to a model."
+    },
+    {
+      "q": "Where does the mapping with the real values live?",
+      "a": "In the object that anonymize() returns, in your process. The package never logs or stores it, and repr() shows only the number of placeholders. If you keep it longer than one request, that is up to you; dict(mapping) gives a plain dictionary."
+    },
+    {
+      "q": "What happens with a number that has a typo?",
+      "a": "It is reported with lower confidence (for example 0.60 instead of 0.99 for an AHV number) and checksum_ok set to False. It is replaced like any other hit, because a mistyped AHV number is still personal data."
+    },
+    {
+      "q": "Does the model give the placeholders back unchanged?",
+      "a": "Square brackets, capital letters and a number are chosen so models usually return them as they are. restore() also accepts a changed case or spaces inside the brackets, and leaves placeholders that are not in the mapping untouched."
+    },
+    {
+      "q": "Does it send anything over the network?",
+      "a": "No. There are no dependencies and no network code. The live demo runs the same package in your browser through Pyodide; the page downloads the Python runtime once from jsDelivr."
+    },
+    {
+      "q": "Is there a paid version?",
+      "a": "Not at the moment. The core is MIT-licensed and contains everything above."
+    }
+  ],
+  "publishedAt": "2026-11-02"
+}
