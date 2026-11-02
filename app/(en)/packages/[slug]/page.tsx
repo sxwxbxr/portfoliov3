@@ -195,6 +195,12 @@ export default async function PackagePage({ params }: Props) {
                 {chev}
               </TrackedLink>
             )}
+            {pkg.links.pypi && (
+              <TrackedLink href={pkg.links.pypi} className={btn}>
+                {copy.packages.pypi}
+                {chev}
+              </TrackedLink>
+            )}
             {pkg.links.changelog && (
               <TrackedLink href={pkg.links.changelog} className={btn}>
                 {copy.packages.changelog}

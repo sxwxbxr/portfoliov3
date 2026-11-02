@@ -657,6 +657,7 @@ export const copy = {
     },
     github: "GitHub",
     npm: "npm",
+    pypi: "PyPI",
     changelog: "Changelog",
     pricing: "Pricing",
     viewPackage: (name: string) => `View ${name}`,

@@ -60,6 +60,8 @@ export const packageSchema = z.object({
   install: z.string(),
   /** npm package names that belong to the open-source part. */
   npm: z.array(z.string()).default([]),
+  /** PyPI project names, for Python packages. */
+  pypi: z.array(z.string()).default([]),
   code: z
     .object({
       title: z.string().optional(),
@@ -72,6 +74,7 @@ export const packageSchema = z.object({
       docs: url.optional(),
       github: url.optional(),
       npm: url.optional(),
+      pypi: url.optional(),
       changelog: url.optional(),
     })
     .default({}),

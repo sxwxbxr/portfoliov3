@@ -109,6 +109,26 @@ const nextConfig = {
         ],
       },
       {
+        // The Isomorphism demo runs Pyodide (Python for WebAssembly) from jsDelivr, only on this page.
+        source: "/:prefix(packages)?/isomorphism/demo",
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' https://va.vercel-scripts.com https://cdn.jsdelivr.net",
+              "style-src 'self' 'unsafe-inline'",
+              "img-src 'self' data: https:",
+              "connect-src 'self' https://api.github.com https://va.vercel-scripts.com https://vitals.vercel-insights.com https://cdn.jsdelivr.net",
+              "worker-src 'self' blob:",
+              "font-src 'self' https://fonts.gstatic.com",
+              "frame-src https://www.youtube-nocookie.com",
+              "frame-ancestors 'none'",
+            ].join("; "),
+          },
+        ],
+      },
+      {
         // The Suchstring-Generator offers an opt-in hit count: the browser sends the finished
         // search string (never the question) to PubMed's E-utilities. Only these pages may.
         // The prefix covers the physio.* host (rewritten from /tools/...) and /physio/... locally.
