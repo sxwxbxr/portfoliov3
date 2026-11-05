@@ -49,9 +49,9 @@
       "UID numbers (CHE): mod-11 check; MWST, TVA, IVA and HR stay in the text",
       "Swiss phone numbers: +41, 0041, +41 (0)71, 071 123 45 67, 071/123 45 67, (071) … and ten bare digits",
       "Email addresses",
-      "Persons: after a title (Hr., Frau, Dr., M., Mme, signora …), first name plus surname from a list of about 440 common first names, Muster, Anna, the same surname again later and a first name alone",
-      "Companies: the name before AG, GmbH, SA, Sàrl, Sagl, KlG, KG, Ltd, Inc, LLC",
-      "Addresses: street with number and postcode with place in German, French, Italian and English, also with CH- before the postcode",
+      "Persons: after a title or salutation (Hr., Frau, Dr. med., M., Mme, signora, Familie …), first name plus surname from a list of common first names of many origins, after context words such as Mieter, Kontoinhaber or Freundliche Grüsse, Muster, Anna, initials, the same surname again later and a first name alone; also in capitals and in lowercase chats",
+      "Companies: the name before AG, GmbH, SA, Sàrl, Sagl, KlG, KG, Ltd, Inc, LLC, & Cie, also in capitals, plus Verein, Genossenschaft and trades such as Bäckerei or Garage with their name",
+      "Addresses: street with number and postcode with place in German, French, Italian and English (Rue d'Italie, Via dell'Ospedale), also with CH- before the postcode, a canton after the place, a PO box, or on two lines",
       "Dates of birth: only after context words such as geb., Geburtsdatum, né le, nata il, date of birth, so invoice dates stay untouched",
       "Card numbers with Luhn check and accounts: PostFinance numbers with mod-10 check and digits after Konto, compte, conto or account",
       "Authorities such as Steueramt St. Gallen or Handelsregisteramt Zürich are never replaced; keep=[…] takes exact values or patterns for your own exceptions",
@@ -60,7 +60,7 @@
       "restore() tolerates changes by the model: [ahv_1] and [ AHV_1 ] still match, unknown placeholders stay unchanged; a placeholder that already stands in your text is never reused",
       "Optional Presidio backend for names in running text: detectors=[presidio_detector(analyzer)], not a dependency, runs locally",
       "The mapping hides its values in repr() and str(); the package logs and stores nothing; pure Python 3.12+, no dependencies, no network calls, no telemetry",
-      "Typed (py.typed), tested on Python 3.12 and 3.13 with invented Swiss texts in German, French, Italian and English, hit rate and false alarms per kind in the README"
+      "Typed (py.typed), tested on Python 3.12 and 3.13 with invented Swiss texts in German, French, Italian and English; names, companies and addresses are measured on test sets written blind by a reviewer who never saw the recognisers, with the honest result in the README"
     ]
   },
   "highlights": {
@@ -75,7 +75,7 @@
   "faq": [
     {
       "q": "Does it find names and addresses?",
-      "a": "Yes, with limits. Names are found after a title (Hr. Keller), as first name plus surname from a list of about 440 common first names, and again when the surname appears later in the text. Companies are found by legal form, addresses by street words and postcodes. These are heuristics, less certain than the checksum kinds, and they can over-report; check the confidence. For other names in running text you can add Presidio."
+      "a": "Yes, with limits. Since 0.3.0 the README measures it on texts written blind: on the last set every name with a salutation or title, every company with a legal form and every full address was protected, but only about half of the names without a salutation and companies without a legal form, and about two thirds of incomplete or foreign addresses. Names are found after a title (Hr. Keller), as first name plus surname from a list of common first names, after context words, and again when the surname appears later. These are heuristics, less certain than the checksum kinds; check the confidence. For other names in running text you can add Presidio."
     },
     {
       "q": "Does anonymising make my processing compliant with the FADP or GDPR?",
