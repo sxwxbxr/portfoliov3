@@ -20,7 +20,7 @@ const BASE = (process.env.SCHULZ_MEDIA_API_URL || "https://www.schulz-media.ch/a
 const KEY = process.env.SCHULZ_MEDIA_API_KEY
 
 /** Seconds a fetched response is reused. Approval in Schulz Media calls /api/revalidate to skip the wait. */
-const REVALIDATE = 300
+const REVALIDATE = 3600
 
 interface RemotePost {
   id: string

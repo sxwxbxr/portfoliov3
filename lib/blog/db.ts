@@ -57,7 +57,7 @@ const queryPublished = async (): Promise<Post[]> => {
 // Tagged so a write can invalidate every page, feed and sitemap built from
 // these rows at once; revalidatePath alone does not reach route handlers.
 const readPublished = cache(
-  unstable_cache(queryPublished, [POSTS_TAG], { tags: [POSTS_TAG], revalidate: 60 })
+  unstable_cache(queryPublished, [POSTS_TAG], { tags: [POSTS_TAG], revalidate: 3600 })
 )
 
 export function createDbSource(): BlogSource {

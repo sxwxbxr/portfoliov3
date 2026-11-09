@@ -8,7 +8,7 @@ import { InstallCommand } from "@/components/packages/InstallCommand"
 import { sigmoidCurves as t } from "@/lib/demo/sigmoid-copy"
 import { pkgPath, pkgUrl } from "@/lib/packages/urls"
 
-export const revalidate = 3600
+export const revalidate = 86400
 
 export function generateMetadata(): Metadata {
   const url = pkgUrl("/sigmoid/curves")

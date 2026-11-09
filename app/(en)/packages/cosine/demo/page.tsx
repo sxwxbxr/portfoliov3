@@ -11,7 +11,7 @@ import { cosineDemoCopy as t } from "@/lib/demo/cosine-copy"
 import { getCosineDemo } from "@/lib/demo/cosine-server"
 import { pkgPath, pkgUrl } from "@/lib/packages/urls"
 
-export const revalidate = 3600
+export const revalidate = 86400
 
 export function generateMetadata(): Metadata {
   const url = pkgUrl("/cosine/demo")

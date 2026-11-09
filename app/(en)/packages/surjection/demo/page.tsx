@@ -20,7 +20,7 @@ const BADGES = [
   { slug: "velo-huber", project: "Velo Huber", width: 187, alt: "accessibility: no issues found" },
 ]
 
-export const revalidate = 3600
+export const revalidate = 86400
 
 const t = copy.packages.surjectionDemo
 

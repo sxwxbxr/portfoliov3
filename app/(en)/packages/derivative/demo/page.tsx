@@ -12,7 +12,7 @@ import { DERIVATIVE_BUILD_COMMAND, DERIVATIVE_EMBED } from "@/lib/demo/derivativ
 import { pkgPath, pkgUrl } from "@/lib/packages/urls"
 import { derivativeDemoCopy } from "@/lib/demo/derivative-copy"
 
-export const revalidate = 3600
+export const revalidate = 86400
 
 const t = derivativeDemoCopy
 

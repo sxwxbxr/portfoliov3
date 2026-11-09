@@ -45,12 +45,26 @@ const PORTFOLIO_SEGMENTS = new Set([
   "skills",
 ])
 
+/**
+ * Paths only vulnerability scanners ask for (WordPress, PHP, env and git files). Without this,
+ * each one reaches the catch-all route and renders the full not-found page in a function,
+ * which counts against the Fluid CPU quota. The edge answers them with a bare 404.
+ */
+const SCANNER_PATH = /^\/(wp-|xmlrpc|phpmyadmin|cgi-bin|\.env|\.git\b|\.aws|\.ssh)|\.(php\d?|asp|aspx|jsp|cgi)$/i
+
 /** Machine-readable physio routes with a file extension (see PACKAGE_FILES). */
 const PHYSIO_FILES = new Set(["/sitemap.xml"])
 
 export async function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl
   const host = (request.headers.get("host") ?? "").toLowerCase()
+
+  if (SCANNER_PATH.test(pathname)) {
+    return new NextResponse("Not found", {
+      status: 404,
+      headers: { "Cache-Control": "public, s-maxage=86400" },
+    })
+  }
 
   // physio.sweber.dev (and physio.localhost:3000 for local testing). Same
   // scheme as the packages host below; the physio pages use German paths, so

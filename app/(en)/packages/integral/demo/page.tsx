@@ -9,7 +9,7 @@ import { LicenseLab } from "@/components/packages/demo/integral/LicenseLab"
 import { integralDemo as t } from "@/lib/demo/integral-copy"
 import { pkgPath, pkgUrl } from "@/lib/packages/urls"
 
-export const revalidate = 3600
+export const revalidate = 86400
 
 const VERIFY = `import { createEntitlements, verifyLicense } from "@sweberdev/integral"
 

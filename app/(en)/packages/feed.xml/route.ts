@@ -2,10 +2,10 @@ import { renderRss, type FeedItem } from "@/lib/blog/rss"
 import { getPackages } from "@/lib/packages"
 import { pkgUrl } from "@/lib/packages/urls"
 
-// Cached for 5 min instead of rendered per request: every hit re-read all posts (and, for the
+// Cached for 60 min instead of rendered per request: every hit re-read all posts (and, for the
 // sitemap, every docs page), which was a main source of Vercel Hobby CPU. A new post therefore
-// shows up here within 5 min; revalidatePath/revalidateTag do not reach route handlers.
-export const revalidate = 300
+// shows up here within 60 min; revalidatePath/revalidateTag do not reach route handlers.
+export const revalidate = 3600
 
 export async function GET() {
   const items: FeedItem[] = getPackages().flatMap((p) => [

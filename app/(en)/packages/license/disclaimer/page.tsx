@@ -6,7 +6,7 @@ import { ProseMarkdown } from "@/components/ProseMarkdown"
 import { pkgUrl } from "@/lib/packages/urls"
 import { copy } from "@/lib/copy"
 
-export const revalidate = 3600
+export const revalidate = 86400
 
 export const metadata: Metadata = {
   title: "Disclaimer",

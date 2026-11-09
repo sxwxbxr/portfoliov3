@@ -6,10 +6,10 @@ import { getDocsNavFor } from "@/lib/packages/docs"
 import { demoUrlOf } from "@/lib/packages/schema"
 import { pkgUrl } from "@/lib/packages/urls"
 
-// Cached for 60 min instead of rendered per request: every hit re-read all posts (and, for the
+// Cached for 24 h instead of rendered per request: every hit re-read all posts (and, for the
 // sitemap, every docs page), which was a main source of Vercel Hobby CPU. A new post therefore
-// shows up here within 60 min; revalidatePath/revalidateTag do not reach route handlers.
-export const revalidate = 3600
+// shows up here within 24 h; revalidatePath/revalidateTag do not reach route handlers.
+export const revalidate = 86400
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await blog.getPosts()
