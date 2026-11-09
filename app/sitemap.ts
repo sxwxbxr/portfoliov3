@@ -6,7 +6,7 @@ import { localizePath } from "@/lib/i18n"
 import { hasGermanProject } from "@/lib/i18n-data"
 import { SERVICE_KEYS, getService } from "@/lib/services"
 
-export const revalidate = 3600
+export const revalidate = 86400
 
 /**
  * Only indexable portfolio routes. changeFrequency and priority are left out

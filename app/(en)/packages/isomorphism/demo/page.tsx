@@ -8,7 +8,7 @@ import { IsomorphismDemo } from "@/components/packages/demo/isomorphism/Isomorph
 import { ISOMORPHISM_SNIPPET, isomorphismDemo as t } from "@/lib/demo/isomorphism-copy"
 import { pkgPath, pkgUrl } from "@/lib/packages/urls"
 
-export const revalidate = 3600
+export const revalidate = 86400
 
 export function generateMetadata(): Metadata {
   const url = pkgUrl("/isomorphism/demo")

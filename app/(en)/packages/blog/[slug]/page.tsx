@@ -13,7 +13,7 @@ import { pkgPath, pkgUrl, MAIN_ORIGIN } from "@/lib/packages/urls"
 import { copy } from "@/lib/copy"
 import { PostCard, formatDate } from "../PostCard"
 
-export const revalidate = 3600
+export const revalidate = 86400
 
 export async function generateStaticParams() {
   return (await blog.getPosts()).map((p) => ({ slug: p.slug }))

@@ -14,7 +14,7 @@ import { InstallCommand } from "@/components/packages/InstallCommand"
 import { lagrangianDemo as t } from "@/lib/demo/lagrangian-copy"
 import { pkgPath, pkgUrl } from "@/lib/packages/urls"
 
-export const revalidate = 3600
+export const revalidate = 86400
 
 export function generateMetadata(): Metadata {
   const url = pkgUrl("/lagrangian/demo")
