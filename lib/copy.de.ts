@@ -106,6 +106,15 @@ export const copyDe: Copy = {
     heroOffer: "Individualsoftware und Automatisierungen für KMU in der Ostschweiz.",
     heroPerson:
       "Dahinter steht Seya Weber, Softwareentwicklung und Projektleitung aus Bichwil SG.",
+    heroName: "Seya Weber",
+    console: {
+      title: "weber-development · zsh",
+      boot: "npx seya-weber",
+      ready: "bereit",
+      list: "cd projekte && ls",
+      open: (slug: string) => `open ${slug}`,
+      contact: "./kontakt",
+    },
     introEyebrow: "Kurz gesagt",
     introLead:
       "Ich übersetze komplexe betriebliche Anforderungen in schlanke, wartbare Software. Weil ich auf beiden Seiten ausgebildet bin, verstehe ich die Anforderung ebenso gut wie das System, das sie erfüllen muss.",
@@ -130,8 +139,6 @@ export const copyDe: Copy = {
     introHeading: "Einleitung",
     selectedWorkEyebrowCount: (n: number) => `Ausgewählte Arbeiten · ${n} ${plural(n,"Projekt","Projekte")}`,
     writingEyebrow: (n: number) => `Beiträge · ${n}`,
-    heroTaglineLead: "Aus Anforderungen",
-    heroTaglineSub: "wird Software",
     introLabel: "Kurz gesagt",
     introTitle: "Beide Seiten des Tisches",
     introSub: "die Anforderung und das System",

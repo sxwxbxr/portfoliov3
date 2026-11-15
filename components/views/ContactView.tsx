@@ -21,7 +21,7 @@ export async function ContactView({ locale = "en" }: { locale?: Locale }) {
   )
 
   return (
-    <PageLayout
+    <PageLayout site="lk"
       label={copy.contact.label}
       title={copy.contact.title}
       subtitle={copy.contact.subtitle}

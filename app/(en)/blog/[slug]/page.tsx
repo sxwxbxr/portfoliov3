@@ -65,7 +65,7 @@ export default async function BlogPost({ params }: BlogPostPageProps) {
   const tags = post.tags as string[]
 
   return (
-    <div className="min-h-screen bg-ground">
+    <div className="min-h-screen bg-ground" data-site="lk">
       <JsonLd data={blogPostStructuredData} />
       <Navigation />
 

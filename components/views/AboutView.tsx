@@ -34,7 +34,7 @@ export async function AboutView({ locale = "en" }: { locale?: Locale }) {
   // The point is that a CV should be requested, not lying on a public URL.
 
   return (
-    <PageLayout
+    <PageLayout site="lk"
       label={copy.about.label}
       title={copy.about.title}
       subtitle={copy.about.subtitle}

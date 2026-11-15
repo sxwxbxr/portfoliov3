@@ -74,7 +74,7 @@ export async function ProjectDetailView({ slug, locale = "en" }: { slug: string;
   const technologies = (study?.technologies as string[] | undefined) ?? []
 
   return (
-    <div className="min-h-screen bg-ground">
+    <div className="min-h-screen bg-ground" data-site="lk">
       <JsonLd
         data={breadcrumbList(
           [

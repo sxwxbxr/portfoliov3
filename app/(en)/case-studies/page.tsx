@@ -14,7 +14,7 @@ export default async function CaseStudies() {
   const caseStudies = await getCaseStudies()
 
   return (
-    <PageLayout
+    <PageLayout site="lk"
       label={copy.caseStudies.label(caseStudies.length)}
       title={copy.caseStudies.title}
       subtitle={copy.caseStudies.subtitle}

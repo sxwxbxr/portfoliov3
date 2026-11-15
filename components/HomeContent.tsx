@@ -5,7 +5,7 @@ import { useRef } from "react"
 import { ArrowUpRight, ChevronRight } from "lucide-react"
 import { motion, useInView, useReducedMotion, type Variants } from "framer-motion"
 import Navigation from "./Navigation"
-import Hero from "./site/Hero"
+import LightConsole from "./hero/LightConsole"
 import { Block } from "./site/Block"
 import { ProjectListItem } from "./ProjectListItem"
 import { EmptyState } from "./EmptyState"
@@ -199,23 +199,49 @@ export default function HomeContent({
 
   const current = experience.find((e) => e.current)
 
-  const thisYear = new Date().getFullYear()
-  const startYear = firstYear && firstYear < thisYear ? firstYear : thisYear - 8
-  const years = Array.from({ length: thisYear - startYear + 1 }, (_, i) => String(startYear + i))
-  // A few from each area, so the strip reads as a range rather than one list.
-  const skills = expertise
-    .flatMap((area) => (area.skills as readonly string[]).filter((s) => s.length <= 12).slice(0, 3))
-    .slice(0, 12)
-
   const pillLink = "control inline-flex items-center gap-1 self-start py-2 pr-3 pl-4 text-sm"
 
   return (
-    <div className="min-h-screen bg-ground">
-      <Navigation />
+    <div className="min-h-screen bg-ground" data-site="lk">
+      <Navigation overlay />
 
-      <Hero settings={settings} metrics={heroMetrics} years={years} skills={skills} />
+      <LightConsole
+        projects={selectedProjects}
+        services={services.services.map((service) => ({
+          key: service.key,
+          label: service.linkLabel,
+          href: servicePath(service.key, locale),
+        }))}
+        status={
+          settings.heroAvailable
+            ? settings.heroAvailabilityLabel || copy.home.availabilityFallback
+            : undefined
+        }
+      />
 
-      <div className="mt-24 md:mt-32">
+      {/* What the hero shows in pictures, said once in a sentence, with the
+          figures from site_settings. */}
+      <section className="sheet flex flex-col gap-10 py-20 md:py-28">
+        <p className="headline max-w-[32ch]">
+          {copy.home.heroOffer}
+          <span className="headline-sub">{copy.home.heroPerson}</span>
+        </p>
+        {/* TODO(Seya): tiles render settings.heroMetrics (DB). Labels that need
+            context, e.g. "Properties managed 150+", should be reworded in /admin/settings
+            so a stranger understands them (what, for whom, over what period). */}
+        {heroMetrics.length > 0 && (
+          <dl className="grid grid-cols-1 divide-y divide-edge-soft border-y border-edge-soft sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+            {heroMetrics.map((metric) => (
+              <div key={metric.label} className="flex flex-col gap-1 py-6 sm:px-6 sm:first:pl-0">
+                <dt className="annotate order-2">{metric.label}</dt>
+                <dd className="order-1 text-3xl tracking-tight tabular">{metric.value}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
+      </section>
+
+      <div>
         {/* ─── Services: what is offered, to whom, where. The hero carries the
             first two sentences of the opening paragraph, so this adds the rest. ─── */}
         <Block

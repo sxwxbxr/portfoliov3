@@ -27,7 +27,7 @@ export default async function Blog() {
   ].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
 
   return (
-    <PageLayout
+    <PageLayout site="lk"
       label={copy.blog.label(blogPosts.length)}
       title={copy.blog.title}
       subtitle={copy.blog.subtitle}

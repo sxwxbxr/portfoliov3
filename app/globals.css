@@ -467,3 +467,57 @@
 body:has([data-site="physio"]) .portfolio-chrome {
   display: none;
 }
+
+/* ══════════════════════════════════════════════════════════════════════
+   LICHTKONSOLE — the portfolio's own look: a blue-black room, pale blue
+   type, Syne for display lines and amber as the one warm signal.
+
+   Scoped to `data-site="lk"` rather than set on :root, because the package
+   shop, physio and /admin share this stylesheet and keep the LINE values
+   above. The root layout's footer and scroll bar sit outside the page tree,
+   so they follow whenever a light-console page is mounted.
+
+   Contrast on --plate: fg 16.6, fg-muted 9.9, fg-subtle 8.7, edge 5.1
+   (all :1).
+   ══════════════════════════════════════════════════════════════════════ */
+[data-site="lk"],
+body:has([data-site="lk"]) .portfolio-chrome {
+  --ground:      #040714;
+  --plate:       #0a1130;
+  --plate-hi:    #101a45;
+  --well:        #070c24;
+
+  --fg:          #eef3ff;
+  --fg-muted:    #a9bdf0;
+  --fg-subtle:   #9db1e6;
+
+  --edge:        #6f84c4;
+  --edge-soft:   #172250;
+  --edge-mid:    #2a3a78;
+
+  --signal-fg:   #040714;
+  --amber:       #ffb000;
+
+  color: var(--fg);
+}
+
+body:has([data-site="lk"]) {
+  background: #040714;
+}
+
+[data-site="lk"] :is(.headline, .display, .block-label),
+body:has([data-site="lk"]) .portfolio-chrome :is(.headline, .display) {
+  font-family: var(--font-syne), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+[data-site="lk"] .headline-sub { font-weight: 500; }
+
+@media (prefers-contrast: more) {
+  [data-site="lk"],
+  body:has([data-site="lk"]) .portfolio-chrome {
+    --edge-soft: var(--edge);
+    --edge-mid: var(--edge);
+    --fg-muted: #c9d6fb;
+  }
+}

@@ -13,7 +13,7 @@ export function ImprintView({ locale = "en" }: { locale?: Locale }) {
     "utf8"
   )
   return (
-    <PageLayout
+    <PageLayout site="lk"
       label={copy.packages.imprintLabel}
       title={copy.packages.imprintTitle}
       subtitle={copy.packages.imprintSubtitle}

@@ -15,7 +15,11 @@ import { useOnPackagesHost } from "@/lib/packages/useOnPackagesHost"
 /** Height of the announcement strip plus the nav row, for page offsets. */
 export const NAV_OFFSET = "pt-36"
 
-export default function Navigation() {
+/**
+ * `overlay` leaves the bar clear while the page is at the top, for a hero
+ * that runs underneath it.
+ */
+export default function Navigation({ overlay = false }: { overlay?: boolean } = {}) {
   const copy = useCopy()
   const locale = useLocale()
   /** Browse destinations, all visible. */
@@ -81,7 +85,7 @@ export default function Navigation() {
           "fixed inset-x-0 top-0 z-50",
           "transition-[transform,background-color] duration-200 ease-out",
           visible ? "translate-y-0" : "-translate-y-full",
-          seated ? "bg-ground/85 backdrop-blur-md" : "bg-ground",
+          seated ? "bg-ground/85 backdrop-blur-md" : overlay ? "bg-transparent" : "bg-ground",
         ].join(" ")}
       >
         {/* On packages.* the strip would point at the page you are on. */}

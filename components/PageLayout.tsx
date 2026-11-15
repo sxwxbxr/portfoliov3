@@ -10,6 +10,9 @@ interface PageLayoutProps {
   title?: string
   subtitle?: string
   label?: string
+  /** "lk" puts the page in the portfolio's light-console colours (see
+   *  globals.css). Package pages leave it out and keep the neutral look. */
+  site?: "lk"
 }
 
 /**
@@ -57,11 +60,12 @@ export default function PageLayout({
   title,
   subtitle,
   label,
+  site,
 }: PageLayoutProps) {
   const reduce = useReducedMotion()
 
   return (
-    <div className="min-h-screen bg-ground">
+    <div className="min-h-screen bg-ground" data-site={site}>
       <Navigation />
 
       <div className="pt-36">
