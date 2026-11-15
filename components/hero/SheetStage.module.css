@@ -124,31 +124,10 @@
 .lockup {
   display: flex;
   flex-direction: column;
-  gap: clamp(0.5rem, 1.2vw, 1rem);
   margin-top: auto;
   padding-bottom: clamp(0.75rem, 2.5svh, 1.75rem);
   transform-origin: 0 100%;
   will-change: transform;
-}
-
-.company {
-  margin: 0;
-  font-size: clamp(0.75rem, 1.15vw, 1rem);
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.name {
-  margin: 0;
-  font-family: var(--font-syne), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  /* Syne at 800 runs about 1.25em a capital; --chars is the longest word.
-     The height cap keeps two lines on a short laptop screen. */
-  font-size: min(calc(73vw / var(--chars, 5)), 23svh);
-  font-weight: 800;
-  line-height: 0.84;
-  letter-spacing: -0.035em;
-  text-transform: uppercase;
 }
 
 /* ── Sheets ───────────────────────────────────────────────────────── */
@@ -392,8 +371,8 @@
   .counter {
     font-size: min(11.5vw, 15svh);
   }
-  .name {
-    font-size: min(calc(73vw / var(--chars, 5)), 21svh);
+  .lockup {
+    --slab-cap: 21svh;
   }
 }
 @media (max-height: 480px) {

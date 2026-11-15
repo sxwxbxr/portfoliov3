@@ -1,0 +1,155 @@
+/* The footer: the page ends on the night scene the home page opens with.
+   It sets its own colours, because it sits outside every page's theme
+   scope and is shared by the portfolio and the package site. */
+
+.finale {
+  --ground: #070304;
+  --plate: #1c0607;
+  --plate-hi: #2b0608;
+  --fg: #f4f4f1;
+  --fg-muted: #e3d5d2;
+  --fg-subtle: #d6c3bf;
+  --edge: #8a5a56;
+  --edge-mid: #8a5a56;
+  --edge-soft: rgb(244 244 241 / 0.16);
+  --signal: #f4f4f1;
+  --signal-fg: #070304;
+  --radius-ctl: 0rem;
+
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  margin-top: 6rem;
+  background: var(--ground);
+  color: var(--fg);
+  color-scheme: dark;
+}
+/* Where the page above already ends in the night, the two join. */
+:global(body:has([data-ends-dark])) .finale {
+  margin-top: 0;
+}
+
+.scene {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+.scene canvas {
+  width: 100%;
+  height: 100%;
+}
+/* The links sit on the sky; a wash keeps the smoke under them quiet. */
+.finale::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(#070304 0%, rgb(7 3 4 / 0.82) 38%, rgb(7 3 4 / 0) 78%);
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(3rem, 7vw, 6rem);
+  padding-top: clamp(4rem, 9vw, 8rem);
+}
+
+/* The invitation, in the size the stage counts its projects in. */
+.ask {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(1rem, 2vw, 1.75rem);
+}
+.askLabel {
+  margin: 0;
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.askLabel::before {
+  content: "/ ";
+  color: #e8463a;
+}
+.askTitle {
+  margin: 0;
+  max-width: 14ch;
+  font-size: clamp(2.75rem, 10.5vw, 10rem);
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+}
+.askLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 2.5rem;
+  font-size: clamp(1.25rem, 2.6vw, 2.25rem);
+  letter-spacing: -0.02em;
+}
+.askLinks a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  text-decoration: underline;
+  text-decoration-thickness: 0.06em;
+  text-underline-offset: 0.18em;
+}
+.askLinks a:hover {
+  text-decoration-thickness: 0.12em;
+}
+/* The package site is for looking at packages: no invitation there. */
+:global(body:not(:has([data-site="portfolio"]))) .ask {
+  display: none;
+}
+
+.slab {
+  padding-bottom: clamp(0.75rem, 2vw, 1.75rem);
+  rotate: -2deg;
+  transform-origin: 0 100%;
+}
+
+/* Clear of the chat button, which sits in the bottom right corner. */
+@media (max-width: 640px) {
+  .slab {
+    padding-bottom: 5.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .slab {
+      animation: rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 100%;
+    }
+    .askTitle {
+      animation: slide linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 45%;
+    }
+  }
+}
+@keyframes rise {
+  from {
+    translate: 0 55%;
+    rotate: -9deg;
+  }
+  to {
+    translate: 0 0;
+    rotate: -2deg;
+  }
+}
+@keyframes slide {
+  from {
+    translate: -12vw 0;
+  }
+  to {
+    translate: 0 0;
+  }
+}
+
+@media (forced-colors: active) {
+  .scene {
+    display: none;
+  }
+}

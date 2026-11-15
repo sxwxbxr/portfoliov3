@@ -3,21 +3,21 @@
 import Image from "next/image"
 import Link from "next/link"
 import type React from "react"
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import {
   motion,
   transform,
   useMotionValueEvent,
   useScroll,
-  useSpring,
   useTransform,
-  useVelocity,
   type MotionValue,
 } from "framer-motion"
 import { ArrowRight } from "lucide-react"
 import { useCopy, useLocale } from "@/components/LocaleProvider"
 import { localizePath } from "@/lib/i18n"
 import InkScene from "./InkScene"
+import { useScrollSpeed, useStill } from "./motion"
+import { NameSlab } from "./NameSlab"
 import { sheetPose } from "./sheetPose"
 import s from "./SheetStage.module.css"
 
@@ -80,16 +80,7 @@ function useTrack<T extends number | string>(source: MotionValue<number>, input:
 export default function SheetStage({ projects, services, location, status }: SheetStageProps) {
   const copy = useCopy()
   const locale = useLocale()
-  // Read after mount, so the server markup and the first client render agree.
-  // Until then the stylesheet's own reduced-motion rules hold the stage still.
-  const [still, setStill] = useState(false)
-  useEffect(() => {
-    const query = window.matchMedia("(prefers-reduced-motion: reduce)")
-    const sync = () => setStill(query.matches)
-    sync()
-    query.addEventListener("change", sync)
-    return () => query.removeEventListener("change", sync)
-  }, [])
+  const still = useStill()
   const ref = useRef<HTMLElement>(null)
   const { scrollYProgress: p } = useScroll({
     target: ref,
@@ -116,8 +107,7 @@ export default function SheetStage({ projects, services, location, status }: She
   // How fast the page is moving, eased so it swells and settles instead of
   // jumping. The scene streaks with it and everything on the stage leans
   // into the direction of travel.
-  const { scrollY } = useScroll()
-  const speed = useSpring(useVelocity(scrollY), { stiffness: 120, damping: 26, mass: 0.6 })
+  const speed = useScrollSpeed()
   const lean = useTransform(speed, (v) => Math.max(-2.4, Math.min(2.4, v / 700)))
   const nameLean = useTransform(speed, (v) => Math.max(-10, Math.min(10, v / -160)))
 
@@ -137,9 +127,6 @@ export default function SheetStage({ projects, services, location, status }: She
   const landed = still ? 0 : landedNow
   /** The opening screen is mostly off the stage: its links leave the tab order. */
   const away = !still && awayNow
-
-  // The longest word sets the size, so a longer name still fits the width.
-  const longest = Math.max(...copy.home.heroName.split(/\s+/).map((word) => word.length))
 
   return (
     <section
@@ -183,13 +170,9 @@ export default function SheetStage({ projects, services, location, status }: She
           </div>
 
           <motion.div className={s.lockup} style={still ? undefined : { rotate: nameTilt, skewX: nameLean }}>
-            {copy.home.heroHeadline !== copy.home.heroName && (
-              <p className={s.company}>{copy.home.heroHeadline}</p>
-            )}
-            <h1 className={s.name} style={{ "--chars": longest } as React.CSSProperties}>
-              {copy.home.heroName}
+            <NameSlab as="h1" name={copy.home.heroName} company={copy.home.heroHeadline}>
               <span className="sr-only">: {copy.home.heroOffer}</span>
-            </h1>
+            </NameSlab>
           </motion.div>
         </motion.div>
 

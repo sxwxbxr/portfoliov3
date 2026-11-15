@@ -122,6 +122,9 @@ const item: Variants = {
   visible: { opacity: 1, x: 0, transition: { duration: 0.32, ease: EASE } },
 }
 
+/** How many projects the home page shows. */
+const HOME_PROJECTS = 2
+
 // ── Component ────────────────────────────────────────
 export default function HomeContent({
   projects,
@@ -136,7 +139,9 @@ export default function HomeContent({
   const homeCopy = locale === "de" ? homeDe : homeEn
   const services = servicesOverview(locale)
   const serviceLabels = servicesLabels(locale)
-  const selectedProjects = projects.slice(0, 6)
+  // The home page shows the first two projects by sort order (Seya,
+  // 2026-11-15: the rest make room for new ones). /projects lists them all.
+  const selectedProjects = projects.slice(0, HOME_PROJECTS)
 
   const featuredPosts = blogPosts.filter((p) => p.featured)
   const sortedByDate = [...blogPosts].sort(
@@ -237,7 +242,7 @@ export default function HomeContent({
         </p>
         {selectedProjects.length > 0 && (
           <p>
-            {[...selectedProjects, ...selectedProjects].map((project, i) => (
+            {[...selectedProjects, ...selectedProjects, ...selectedProjects].map((project, i) => (
               <span key={i}>{project.title}</span>
             ))}
           </p>
@@ -479,20 +484,7 @@ export default function HomeContent({
           </Block>
         )}
 
-        {/* ─── Closing call to action ─── */}
-        <section className="section-block">
-          <div className="sheet flex flex-col items-center gap-8 py-8 text-center md:py-12">
-            <p className="annotate">{copy.home.ctaEyebrow}</p>
-            <h2 className="display">{copy.home.ctaTitle}</h2>
-            <Link
-              href={localizePath("/contact", locale)}
-              className="control control-primary inline-flex items-center gap-1 py-2.5 pr-4 pl-5 text-sm"
-            >
-              {copy.home.ctaButton}
-              <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
-            </Link>
-          </div>
-        </section>
+        {/* The closing call to action is the footer's opening line. */}
       </div>
     </div>
   )

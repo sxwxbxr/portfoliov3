@@ -33,23 +33,23 @@ function seeded(seed: number) {
 }
 
 interface Puff {
-  /** Centre, x in stage widths and y in stage heights. */
+  /** Centre, x in frame widths and y in scene heights. */
   x: number
   y: number
-  /** Radius in stage heights. */
+  /** Radius in scene heights. */
   r: number
   phase: number
 }
 
 interface Bank {
   puffs: Puff[]
-  /** Top of the solid mass under the puffs, in stage heights. */
+  /** Top of the solid mass under the puffs, in scene heights. */
   floor: number
   rim: string
   fill: string
-  /** Sideways drift in stage widths per second. */
+  /** Sideways drift in frame widths per second. */
   drift: number
-  /** How far the bank rises over the whole journey, in stage heights. */
+  /** How far the bank rises over the whole journey, in scene heights. */
   lift: number
 }
 
@@ -76,6 +76,15 @@ function bank(
         phase: rand() * Math.PI * 2,
       })
     }
+  }
+  // A row along the floor, so the solid mass below never shows a straight edge.
+  for (let x = -0.3; x < 1.3; x += size * 0.3) {
+    puffs.push({
+      x: x + (rand() - 0.5) * size * 0.1,
+      y: floor + size * 0.04,
+      r: size * (0.26 + rand() * 0.1),
+      phase: rand() * Math.PI * 2,
+    })
   }
   // Tall puffs first, so the lower ones overlap them.
   puffs.sort((a, b) => a.y - b.y)
@@ -135,11 +144,16 @@ function paint(
   ctx.fillStyle = INK
   ctx.fillRect(0, 0, w, h)
 
+  // The scene is composed for a frame about as tall as a window. In a
+  // much taller one (a footer on a phone) it keeps that size and stands on
+  // the bottom edge, under open sky.
+  const u = Math.min(h, w * 2.2)
+  const top = h - u
+
   // The disc: low at rest, rising and growing along the journey.
-  const unit = Math.min(w, h)
   const discX = w * 0.7
-  const discY = h * (0.47 - progress * 0.2)
-  const discR = unit * (0.25 + progress * 0.12)
+  const discY = top + u * (0.47 - progress * 0.2)
+  const discR = Math.min(w, u) * (0.25 + progress * 0.12)
 
   const glow = ctx.createRadialGradient(discX, discY, discR * 0.6, discX, discY, discR * 3.4)
   glow.addColorStop(0, "rgba(120, 12, 18, 0.55)")
@@ -176,11 +190,11 @@ function paint(
   // side that faces it. Drawn back to front, so the lumps overlap like
   // smoke in a drawn film.
   for (const b of BANKS) {
-    const rise = progress * b.lift * h
+    const rise = progress * b.lift * u
     for (const puff of b.puffs) {
       const x = wrap(puff.x + time * b.drift, -0.3, 1.3) * w
-      const y = puff.y * h - rise
-      const r = puff.r * h * (1 + 0.06 * Math.sin(time * 0.5 + puff.phase))
+      const y = top + puff.y * u - rise
+      const r = puff.r * u * (1 + 0.06 * Math.sin(time * 0.5 + puff.phase))
       const dx = x - discX
       const dy = y - discY
       const far = Math.hypot(dx, dy) || 1
@@ -194,7 +208,7 @@ function paint(
       ctx.fill()
     }
     ctx.fillStyle = b.fill
-    ctx.fillRect(0, b.floor * h - rise, w, h)
+    ctx.fillRect(0, top + b.floor * u - rise, w, h)
   }
 
   // Sparks: small diamonds that rise and, while the page moves, stretch
