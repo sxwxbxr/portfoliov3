@@ -149,15 +149,7 @@ export const copy = {
     /** The name set in light on the home page. One string, so it can become
      *  "Weber Development" the day the company starts. */
     heroName: "Seya Weber",
-    /** The terminal in the home hero. Commands are decoration. */
-    console: {
-      title: "weber-development · zsh",
-      boot: "npx seya-weber",
-      ready: "ready",
-      list: "cd projects && ls",
-      open: (slug: string) => `open ${slug}`,
-      contact: "./contact",
-    },
+    viewProject: "View project",
     introEyebrow: "In short",
     introLead:
       "I turn complex operational requirements into lean, maintainable software — and because I trained on both sides, I understand the requirement as well as the system that has to satisfy it.",

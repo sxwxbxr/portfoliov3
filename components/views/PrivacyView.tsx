@@ -29,7 +29,7 @@ export async function PrivacyView({ locale = "en" }: { locale?: Locale }) {
     )
 
   return (
-    <PageLayout site="lk"
+    <PageLayout site="portfolio"
       label={copy.privacy.label}
       title={copy.privacy.title}
       subtitle={copy.privacy.subtitle}

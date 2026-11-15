@@ -107,14 +107,7 @@ export const copyDe: Copy = {
     heroPerson:
       "Dahinter steht Seya Weber, Softwareentwicklung und Projektleitung aus Bichwil SG.",
     heroName: "Seya Weber",
-    console: {
-      title: "weber-development · zsh",
-      boot: "npx seya-weber",
-      ready: "bereit",
-      list: "cd projekte && ls",
-      open: (slug: string) => `open ${slug}`,
-      contact: "./kontakt",
-    },
+    viewProject: "Projekt ansehen",
     introEyebrow: "Kurz gesagt",
     introLead:
       "Ich übersetze komplexe betriebliche Anforderungen in schlanke, wartbare Software. Weil ich auf beiden Seiten ausgebildet bin, verstehe ich die Anforderung ebenso gut wie das System, das sie erfüllen muss.",

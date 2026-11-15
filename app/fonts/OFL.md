@@ -9,7 +9,7 @@ comment above the `localFont` calls in `app/layout.tsx` for why.
 | `Inter-Variable-latin.woff2` | Inter | 100–900 | https://fonts.google.com/specimen/Inter |
 | `SpaceGrotesk-Variable-latin.woff2` | Space Grotesk | 300–700 | https://fonts.google.com/specimen/Space+Grotesk |
 | `JetBrainsMono-Variable-latin.woff2` | JetBrains Mono | 100–800 | https://fonts.google.com/specimen/JetBrains+Mono |
-| `Syne-Variable-latin.woff2` | Syne (display face of the portfolio's light-console theme, `[data-site="lk"]`) | 400–800 | https://fonts.google.com/specimen/Syne |
+| `Syne-Variable-latin.woff2` | Syne (display face of the portfolio's light-console theme, `[data-site="portfolio"]`) | 400–800 | https://fonts.google.com/specimen/Syne |
 | `SourceSerif4-Variable-latin.woff2` | Source Serif 4 (headings on physio.sweber.dev, loaded in `app/physio/layout.tsx`) | 500–700 | https://fonts.google.com/specimen/Source+Serif+4 |
 
 ## Licence

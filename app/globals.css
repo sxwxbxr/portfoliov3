@@ -63,8 +63,18 @@
   /* ── Legacy names still read by older components ──────────────── */
   --cast-hi:     transparent;
   --cast-lo:     transparent;
+}
 
-  /* ── shadcn/ui aliases. Keeps components/ui and /admin working. ─ */
+/* ── shadcn/ui aliases. Keeps components/ui and /admin working. ─────────
+   A custom property that refers to another is resolved where it is
+   declared. Declared on :root alone, these would keep the LINE values
+   inside a scope that re-themes the tokens below, so the portfolio
+   scope is listed here as well. */
+:root,
+.dark,
+[data-site="portfolio"],
+[data-site="portfolio"] [data-field="signal"],
+body:has([data-site="portfolio"]) .portfolio-chrome {
   --background: var(--ground);
   --foreground: var(--fg);
   --card: var(--plate);
@@ -473,55 +483,110 @@ body:has([data-site="physio"]) .portfolio-chrome {
 }
 
 /* ══════════════════════════════════════════════════════════════════════
-   LICHTKONSOLE — the portfolio's own look: a blue-black room, pale blue
-   type, Syne for display lines and amber as the one warm signal.
+   BLATT — the portfolio's own look: paper, black type set very large, one
+   flat signal blue, and cards that lie on the page like sheets on a desk.
 
-   Scoped to `data-site="lk"` rather than set on :root, because the package
+   Scoped to `data-site="portfolio"` rather than set on :root, because the package
    shop, physio and /admin share this stylesheet and keep the LINE values
    above. The root layout's footer and scroll bar sit outside the page tree,
-   so they follow whenever a light-console page is mounted.
+   so they follow whenever such a page is mounted.
 
-   Contrast on --plate: fg 16.6, fg-muted 9.9, fg-subtle 8.7, edge 5.1
+   Contrast on --plate (the darkest paper): fg 15.6, fg-muted 7.4,
+   fg-subtle 5.2, edge 4.0, signal 5.4. Paper on the signal field: 6.2
    (all :1).
    ══════════════════════════════════════════════════════════════════════ */
-[data-site="lk"],
-body:has([data-site="lk"]) .portfolio-chrome {
-  --ground:      #040714;
-  --plate:       #0a1130;
-  --plate-hi:    #101a45;
-  --well:        #070c24;
+[data-site="portfolio"],
+body:has([data-site="portfolio"]) .portfolio-chrome {
+  color-scheme: light;
 
-  --fg:          #eef3ff;
-  --fg-muted:    #a9bdf0;
-  --fg-subtle:   #9db1e6;
+  --ground:      #f4f4f1;
+  --plate:       #e4e5e9;   /* a sheet                                    */
+  --plate-hi:    #d8d9df;
+  --well:        #ecedf0;
 
-  --edge:        #6f84c4;
-  --edge-soft:   #172250;
-  --edge-mid:    #2a3a78;
+  --fg:          #0b0b0c;
+  --fg-muted:    #45474f;
+  --fg-subtle:   #5a5d66;
 
-  --signal-fg:   #040714;
+  --edge:        #6b6e78;
+  --edge-soft:   #cfd0d6;
+  --edge-mid:    #b0b2bb;
+
+  --signal:      #2238ff;
+  --signal-bright: #2238ff;
+  --signal-fg:   #f4f4f1;
   --amber:       #ffb000;
+
+  --radius:      0rem;
+  --radius-ctl:  0rem;
 
   color: var(--fg);
 }
 
-body:has([data-site="lk"]) {
-  background: #040714;
+body:has([data-site="portfolio"]) {
+  background: #f4f4f1;
 }
 
-[data-site="lk"] :is(.headline, .display, .block-label),
-body:has([data-site="lk"]) .portfolio-chrome :is(.headline, .display) {
-  font-family: var(--font-syne), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  font-weight: 600;
-  letter-spacing: -0.015em;
+/* On the signal field (the home stage and the navigation above it) the
+   roles swap: paper becomes the ink. */
+[data-site="portfolio"] [data-field="signal"] {
+  --fg:          #f4f4f1;
+  --fg-muted:    #dfe3ff;
+  --fg-subtle:   #d3d8ff;
+  --plate:       #1a2de0;
+  --plate-hi:    #1626c9;
+  --edge-mid:    #8b98ff;
+  --signal:      #f4f4f1;
+  --signal-fg:   #2238ff;
+  color: var(--fg);
 }
-[data-site="lk"] .headline-sub { font-weight: 500; }
+
+[data-site="portfolio"] .control-primary:hover { background: #1626c9; border-color: #1626c9; }
+[data-site="portfolio"] .control-primary:active { background: #101ea6; }
+[data-site="portfolio"] [data-field="signal"] .control-primary:hover { background: #dfe3ff; border-color: #dfe3ff; }
+
+/* ── Type. Headings are the pictures: very large, tight, weight 500. ─── */
+[data-site="portfolio"] :is(.headline, .display) {
+  font-weight: 500;
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+}
+[data-site="portfolio"] .headline { font-size: clamp(2.5rem, 7.5vw, 7rem); }
+[data-site="portfolio"] .display  { font-size: clamp(2.75rem, 8vw, 7.5rem); }
+[data-site="portfolio"] .headline-sub {
+  margin-top: 0.75rem;
+  font-size: clamp(1.25rem, 2.4vw, 2.125rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+/* The section label sits above its heading as a slash line. */
+[data-site="portfolio"] .block-head { grid-template-columns: 1fr; gap: 1rem; }
+[data-site="portfolio"] .block-label {
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+[data-site="portfolio"] .block-label::before { content: "/ "; color: var(--signal); }
+
+/* ── Sheets. Cards in a grid lie slightly askew and straighten when
+      picked up. ───────────────────────────────────────────────────── */
+[data-site="portfolio"] .card-link {
+  transition:
+    background-color var(--dur-hover) var(--ease-out),
+    rotate var(--dur-panel) var(--ease-out);
+}
+[data-site="portfolio"] .card-link:nth-child(3n + 1) { rotate: -0.7deg; }
+[data-site="portfolio"] .card-link:nth-child(3n + 2) { rotate: 0.5deg; }
+[data-site="portfolio"] .card-link:nth-child(3n)     { rotate: -0.3deg; }
+[data-site="portfolio"] .card-link:is(:hover, :focus-visible, :focus-within) { rotate: 0deg; }
 
 @media (prefers-contrast: more) {
-  [data-site="lk"],
-  body:has([data-site="lk"]) .portfolio-chrome {
+  [data-site="portfolio"],
+  body:has([data-site="portfolio"]) .portfolio-chrome {
     --edge-soft: var(--edge);
     --edge-mid: var(--edge);
-    --fg-muted: #c9d6fb;
+    --fg-muted: #2a2c33;
   }
 }

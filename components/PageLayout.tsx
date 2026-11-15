@@ -10,9 +10,9 @@ interface PageLayoutProps {
   title?: string
   subtitle?: string
   label?: string
-  /** "lk" puts the page in the portfolio's light-console colours (see
+  /** "portfolio" puts the page in the portfolio's own colours and type (see
    *  globals.css). Package pages leave it out and keep the neutral look. */
-  site?: "lk"
+  site?: "portfolio"
 }
 
 /**

@@ -5,7 +5,7 @@ import { useRef } from "react"
 import { ArrowUpRight, ChevronRight } from "lucide-react"
 import { motion, useInView, useReducedMotion, type Variants } from "framer-motion"
 import Navigation from "./Navigation"
-import LightConsole from "./hero/LightConsole"
+import SheetStage from "./hero/SheetStage"
 import { Block } from "./site/Block"
 import { ProjectListItem } from "./ProjectListItem"
 import { EmptyState } from "./EmptyState"
@@ -199,30 +199,38 @@ export default function HomeContent({
 
   const current = experience.find((e) => e.current)
 
+  // The bar sits on the hero's signal field for as long as the hero is
+  // under it, and takes the paper look once the page below has arrived.
+  const heroRef = useRef<HTMLDivElement>(null)
+  const overHero = useInView(heroRef, { margin: "0px 0px -90% 0px", initial: true })
+
   const pillLink = "control inline-flex items-center gap-1 self-start py-2 pr-3 pl-4 text-sm"
 
   return (
-    <div className="min-h-screen bg-ground" data-site="lk">
-      <Navigation overlay />
+    <div className="min-h-screen bg-ground" data-site="portfolio">
+      <Navigation overlay={overHero} />
 
-      <LightConsole
-        projects={selectedProjects}
-        services={services.services.map((service) => ({
-          key: service.key,
-          label: service.linkLabel,
-          href: servicePath(service.key, locale),
-        }))}
-        status={
-          settings.heroAvailable
-            ? settings.heroAvailabilityLabel || copy.home.availabilityFallback
-            : undefined
-        }
-      />
+      <div ref={heroRef}>
+        <SheetStage
+          projects={selectedProjects}
+          services={services.services.map((service) => ({
+            key: service.key,
+            label: service.linkLabel,
+            href: servicePath(service.key, locale),
+          }))}
+          location={settings.contactLocation || copy.common.locationFallback}
+          status={
+            settings.heroAvailable
+              ? settings.heroAvailabilityLabel || copy.home.availabilityFallback
+              : undefined
+          }
+        />
+      </div>
 
       {/* What the hero shows in pictures, said once in a sentence, with the
           figures from site_settings. */}
       <section className="sheet flex flex-col gap-10 py-20 md:py-28">
-        <p className="headline max-w-[32ch]">
+        <p className="max-w-[24ch] text-[clamp(1.75rem,3.6vw,3.25rem)] leading-[1.05] font-medium tracking-[-0.03em]">
           {copy.home.heroOffer}
           <span className="headline-sub">{copy.home.heroPerson}</span>
         </p>

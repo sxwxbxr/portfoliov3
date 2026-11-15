@@ -39,7 +39,7 @@ export default async function CaseStudy({ params }: CaseStudyPageProps) {
   const technologies = study.technologies as string[]
 
   return (
-    <div className="min-h-screen bg-ground" data-site="lk">
+    <div className="min-h-screen bg-ground" data-site="portfolio">
       <Navigation />
 
       <div className="flex flex-col gap-14 pt-32 md:gap-20">

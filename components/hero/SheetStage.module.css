@@ -1,0 +1,452 @@
+/* The home hero. See SheetStage.tsx for what happens when. */
+
+.journey {
+  --paper: #f4f4f1;
+  --sheet: #e4e5e9;
+  --ink: #0b0b0c;
+  --blue: #2238ff;
+  position: relative;
+  background: var(--blue);
+}
+
+.stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 6.75rem var(--gutter) 0;
+  background: var(--blue);
+  color: var(--paper);
+  isolation: isolate;
+}
+
+/* The opening screen: count, services and the name, moved as one piece. */
+.intro {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  will-change: transform;
+}
+
+/* Reduced motion: one screen, not pinned, no sheets in the air. */
+.journey[data-still] {
+  height: auto !important;
+}
+.journey[data-still] .stage {
+  position: relative;
+}
+.journey[data-still] :is(.sheets, .hint) {
+  display: none;
+}
+
+/* ── Artwork in the field ─────────────────────────────────────────── */
+.reel {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.55;
+  mix-blend-mode: soft-light;
+}
+.reel img {
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.2);
+  opacity: 0;
+  animation: reel3 21s linear infinite;
+}
+.reel[data-count="2"] img {
+  animation-name: reel2;
+  animation-duration: 14s;
+}
+.reel[data-count="1"] img {
+  animation: none;
+  opacity: 1;
+}
+@keyframes reel3 {
+  0% { opacity: 0; transform: scale(1.02); }
+  4% { opacity: 1; }
+  33% { opacity: 1; }
+  38% { opacity: 0; transform: scale(1.1); }
+  100% { opacity: 0; }
+}
+@keyframes reel2 {
+  0% { opacity: 0; transform: scale(1.02); }
+  6% { opacity: 1; }
+  50% { opacity: 1; }
+  57% { opacity: 0; transform: scale(1.1); }
+  100% { opacity: 0; }
+}
+
+/* ── Counter ──────────────────────────────────────────────────────── */
+.counter {
+  margin: 0 0 0 -0.04em;
+  font-size: min(11.5vw, 21svh);
+  font-weight: 500;
+  line-height: 0.86;
+  letter-spacing: -0.055em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ── Services and status ──────────────────────────────────────────── */
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  margin-top: clamp(1rem, 3.5svh, 2.75rem);
+  max-width: 62rem;
+}
+
+.services {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.5em;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: clamp(1.125rem, 2.3vw, 2.125rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+.services li::before {
+  content: "/ ";
+  opacity: 0.6;
+}
+.services a {
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 0.16em;
+  text-decoration-thickness: 0.06em;
+  transition: text-decoration-color 160ms;
+}
+.services a:is(:hover, :focus-visible) {
+  text-decoration-color: currentColor;
+}
+
+.status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 2rem;
+  margin: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.status span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.status i {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: #ffb000;
+}
+
+/* ── Name ─────────────────────────────────────────────────────────── */
+.lockup {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.5rem, 1.2vw, 1rem);
+  margin-top: auto;
+  padding-bottom: clamp(0.75rem, 2.5svh, 1.75rem);
+  transform-origin: 0 100%;
+  will-change: transform;
+}
+
+.company {
+  margin: 0;
+  font-size: clamp(0.75rem, 1.15vw, 1rem);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.name {
+  margin: 0;
+  font-family: var(--font-syne), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  /* Syne at 800 runs about 1.25em a capital; --chars is the longest word.
+     The height cap keeps two lines on a short laptop screen. */
+  font-size: min(calc(73vw / var(--chars, 5)), 23svh);
+  font-weight: 800;
+  line-height: 0.84;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+}
+
+/* ── Sheets ───────────────────────────────────────────────────────── */
+.sheets {
+  position: absolute;
+  inset: 7rem 0 2.25rem;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.sheet {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  width: min(94vw, 66rem);
+  height: min(100%, 46rem);
+  padding: clamp(0.75rem, 1.5vw, 1.5rem);
+  border: 1px solid rgb(11 11 12 / 0.12);
+  background: var(--sheet);
+  color: var(--ink);
+  pointer-events: auto;
+  will-change: transform;
+}
+/* Neighbouring sheets differ a shade, so the stack reads as a stack. */
+.sheet:nth-child(even) {
+  background: var(--paper);
+}
+.sheet[data-dark] {
+  justify-content: space-between;
+  padding: clamp(1.25rem, 3vw, 3rem);
+  border-color: transparent;
+  background: var(--ink);
+  color: var(--paper);
+}
+.sheet[data-buried] {
+  visibility: hidden;
+}
+
+.sheetHead {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: end;
+  gap: clamp(0.75rem, 2vw, 2rem);
+  padding-bottom: clamp(0.625rem, 1.2vw, 1rem);
+}
+.sheetNo {
+  font-size: clamp(2.5rem, 6.5vw, 6rem);
+  font-weight: 500;
+  line-height: 0.8;
+  letter-spacing: -0.055em;
+  font-variant-numeric: tabular-nums;
+  color: var(--blue);
+}
+.sheetNo small {
+  margin-left: 0.15em;
+  font-size: 0.28em;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+.sheetTitle {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  font-size: clamp(1.5rem, 3.6vw, 3.375rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  /* Room for descenders inside the clamp. */
+  padding-bottom: 0.08em;
+}
+.sheetLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  font-size: clamp(0.9375rem, 1.4vw, 1.375rem);
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+.sheetLink:hover {
+  color: var(--blue);
+}
+
+/* Layout guides, the way a design file marks its frames. */
+.frame {
+  position: relative;
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  padding: 1.375rem clamp(0.5rem, 1vw, 0.875rem) clamp(0.5rem, 1vw, 0.875rem);
+  border: 1px dashed rgb(11 11 12 / 0.5);
+}
+.frame > span {
+  position: absolute;
+  top: 0.3125rem;
+  left: 0.5rem;
+  font-size: 0.625rem;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.frame > span + span {
+  left: auto;
+  right: 0.5rem;
+}
+
+.shot {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  background: var(--blue);
+}
+.shot img {
+  object-fit: cover;
+  object-position: top left;
+}
+.shot > span {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-syne), ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(5rem, 22vw, 16rem);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--paper);
+}
+
+.sheetText {
+  display: flex;
+  gap: 1.25rem;
+  margin: clamp(0.625rem, 1.2vw, 1rem) 0 0;
+  font-size: clamp(0.8125rem, 1.1vw, 1rem);
+  line-height: 1.4;
+  color: #45474f;
+}
+.sheetText span {
+  flex: none;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.sheetText span::before {
+  content: "/ ";
+  color: var(--blue);
+}
+
+/* ── Contact sheet ────────────────────────────────────────────────── */
+.askLabel {
+  margin: 0;
+  font-size: 0.8125rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.askLabel::before {
+  content: "/ ";
+  color: #8b98ff;
+}
+.ask {
+  margin: 0;
+  max-width: 12ch;
+  font-size: min(clamp(2.75rem, 9.5vw, 9rem), 19svh);
+  font-weight: 500;
+  line-height: 0.92;
+  letter-spacing: -0.05em;
+  text-wrap: balance;
+}
+.askLink {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 0.35em;
+  font-size: clamp(1.25rem, 2.6vw, 2.5rem);
+  letter-spacing: -0.03em;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 0.05em;
+}
+.askLink:is(:hover, :focus-visible) {
+  color: #8b98ff;
+}
+
+/* ── Scroll hint ──────────────────────────────────────────────────── */
+.hint {
+  position: absolute;
+  right: var(--gutter);
+  top: 7rem;
+  margin: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.hint::after {
+  content: " ↓";
+}
+
+@media (max-width: 640px) {
+  .counter {
+    font-size: min(17vw, 16svh);
+    white-space: normal;
+  }
+  .counter span {
+    display: block;
+  }
+  .hint {
+    display: none;
+  }
+  /* Clear of the chat button, which sits in the bottom right corner. */
+  .lockup {
+    padding-bottom: 5.25rem;
+  }
+  .sheetHead {
+    grid-template-columns: auto 1fr;
+  }
+  .sheetTitle {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+  .sheetLink {
+    justify-self: end;
+    align-self: start;
+  }
+  .sheetText {
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+}
+
+/* Short windows: the count gives way so the name keeps its room. */
+@media (max-height: 700px) {
+  .counter {
+    font-size: min(11.5vw, 15svh);
+  }
+  .name {
+    font-size: min(calc(73vw / var(--chars, 5)), 21svh);
+  }
+}
+@media (max-height: 480px) {
+  .counter {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .journey {
+    height: auto !important;
+  }
+  .stage {
+    position: relative;
+  }
+  .sheets,
+  .hint {
+    display: none;
+  }
+  .reel img {
+    animation: none;
+  }
+  .reel img:first-child {
+    opacity: 1;
+  }
+}
+
+@media (forced-colors: active) {
+  .reel {
+    display: none;
+  }
+}
