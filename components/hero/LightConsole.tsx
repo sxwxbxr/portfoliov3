@@ -136,9 +136,13 @@ export default function LightConsole({ projects, services, status }: LightConsol
   const activeAt = (v: number) => (n ? Math.min(n - 1, Math.max(0, Math.floor((v - listEnd) / f))) : 0)
   const [step, setStep] = useState(0)
   const [active, setActive] = useState(0)
+  // While the projects pass, the terminal is faded out below the stage. Its
+  // links must not take focus there, so it is inert for that stretch.
+  const [away, setAway] = useState(false)
   useMotionValueEvent(p, "change", (v) => {
     setStep(stepAt(v))
     setActive(activeAt(v))
+    setAway(n > 0 && v > listEnd + 0.25 * f && v < contactStart)
   })
 
   // The longest word sets the size, so a longer name still fits the width.
@@ -245,6 +249,7 @@ export default function LightConsole({ projects, services, status }: LightConsol
           <motion.div
             className={s.terminal}
             style={still ? undefined : { y: termY, opacity: termOpacity }}
+            inert={!still && away}
           >
             {titleBar}
             <div className={s.termBody}>
