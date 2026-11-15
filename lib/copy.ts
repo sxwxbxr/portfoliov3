@@ -628,6 +628,8 @@ export const copy = {
       filterTag: "Tag",
       filterStatus: "Status",
       filterLicense: "License",
+      allTags: (n: number) => `All ${n} tags`,
+      fewerTags: "Fewer tags",
       all: "All",
       results: (n: number, total: number) =>
         n === total

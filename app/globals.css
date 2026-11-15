@@ -264,6 +264,10 @@
     }
   }
   .control-primary:active { background: #cccccc; }
+  /* A pressed toggle that is also primary stays light. Without this the
+     pressed rule above wins on specificity and leaves dark text on a dark
+     pill (the active package filter was unreadable). */
+  .control-primary[aria-pressed="true"] { background: var(--signal); }
 
   /* A control without a fill or outline: nav items, "Sign in"-style. */
   .control-ghost {
