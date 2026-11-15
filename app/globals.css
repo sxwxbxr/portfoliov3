@@ -484,7 +484,7 @@ body:has([data-site="physio"]) .portfolio-chrome {
 
 /* ══════════════════════════════════════════════════════════════════════
    BLATT — the portfolio's own look: paper, black type set very large, one
-   flat signal blue, and cards that lie on the page like sheets on a desk.
+   flat signal red, and cards that lie on the page like sheets on a desk.
 
    Scoped to `data-site="portfolio"` rather than set on :root, because the package
    shop, physio and /admin share this stylesheet and keep the LINE values
@@ -492,8 +492,8 @@ body:has([data-site="physio"]) .portfolio-chrome {
    so they follow whenever such a page is mounted.
 
    Contrast on --plate (the darkest paper): fg 15.6, fg-muted 7.4,
-   fg-subtle 5.2, edge 4.0, signal 5.4. Paper on the signal field: 6.2
-   (all :1).
+   fg-subtle 5.2, edge 4.0, signal 4.6. Paper on the night field of the
+   home stage: 18.4, and 8.5 on the brightest smoke (all :1).
    ══════════════════════════════════════════════════════════════════════ */
 [data-site="portfolio"],
 body:has([data-site="portfolio"]) .portfolio-chrome {
@@ -512,8 +512,8 @@ body:has([data-site="portfolio"]) .portfolio-chrome {
   --edge-soft:   #cfd0d6;
   --edge-mid:    #b0b2bb;
 
-  --signal:      #2238ff;
-  --signal-bright: #2238ff;
+  --signal:      #c81e17;
+  --signal-bright: #c81e17;
   --signal-fg:   #f4f4f1;
   --amber:       #ffb000;
 
@@ -527,23 +527,23 @@ body:has([data-site="portfolio"]) {
   background: #f4f4f1;
 }
 
-/* On the signal field (the home stage and the navigation above it) the
+/* On the night field (the home stage and the navigation above it) the
    roles swap: paper becomes the ink. */
 [data-site="portfolio"] [data-field="signal"] {
   --fg:          #f4f4f1;
-  --fg-muted:    #dfe3ff;
-  --fg-subtle:   #d3d8ff;
-  --plate:       #1a2de0;
-  --plate-hi:    #1626c9;
-  --edge-mid:    #8b98ff;
+  --fg-muted:    #e3d5d2;
+  --fg-subtle:   #d6c3bf;
+  --plate:       #1c0607;
+  --plate-hi:    #2b0608;
+  --edge-mid:    #8a5a56;
   --signal:      #f4f4f1;
-  --signal-fg:   #2238ff;
+  --signal-fg:   #070304;
   color: var(--fg);
 }
 
-[data-site="portfolio"] .control-primary:hover { background: #1626c9; border-color: #1626c9; }
-[data-site="portfolio"] .control-primary:active { background: #101ea6; }
-[data-site="portfolio"] [data-field="signal"] .control-primary:hover { background: #dfe3ff; border-color: #dfe3ff; }
+[data-site="portfolio"] .control-primary:hover { background: #a91812; border-color: #a91812; }
+[data-site="portfolio"] .control-primary:active { background: #8c130e; }
+[data-site="portfolio"] [data-field="signal"] .control-primary:hover { background: #e3d5d2; border-color: #e3d5d2; }
 
 /* ── Type. Headings are the pictures: very large, tight, weight 500. ─── */
 [data-site="portfolio"] :is(.headline, .display) {
@@ -577,10 +577,115 @@ body:has([data-site="portfolio"]) {
     background-color var(--dur-hover) var(--ease-out),
     rotate var(--dur-panel) var(--ease-out);
 }
-[data-site="portfolio"] .card-link:nth-child(3n + 1) { rotate: -0.7deg; }
-[data-site="portfolio"] .card-link:nth-child(3n + 2) { rotate: 0.5deg; }
-[data-site="portfolio"] .card-link:nth-child(3n)     { rotate: -0.3deg; }
-[data-site="portfolio"] .card-link:is(:hover, :focus-visible, :focus-within) { rotate: 0deg; }
+[data-site="portfolio"] .card-link { rotate: var(--tilt, 0deg); }
+[data-site="portfolio"] .card-link:nth-child(3n + 1) { --tilt: -0.7deg; }
+[data-site="portfolio"] .card-link:nth-child(3n + 2) { --tilt: 0.5deg; }
+[data-site="portfolio"] .card-link:nth-child(3n)     { --tilt: -0.3deg; }
+[data-site="portfolio"] .card-link:is(:hover, :focus-visible, :focus-within) { --tilt: 0deg; }
+
+/* ── The band: two rows of very large type under the home stage that run
+      against each other as the page scrolls. Decoration; the same words
+      are links and headings elsewhere on the page. ──────────────────── */
+[data-site="portfolio"] .band {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1em;
+  overflow: clip;
+  padding-block: clamp(2rem, 5vw, 4.5rem);
+  border-bottom: 1px solid var(--edge-soft);
+  font-size: clamp(3rem, 10.5vw, 10rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  white-space: nowrap;
+}
+[data-site="portfolio"] .band > * {
+  display: flex;
+  gap: 0.35em;
+  width: max-content;
+}
+[data-site="portfolio"] .band > * > * + *::before {
+  content: "/";
+  margin-right: 0.35em;
+  color: var(--signal);
+}
+[data-site="portfolio"] .band > :nth-child(2) {
+  align-self: flex-end;
+  /* Outlined. The stroke is painted under a paper fill, which hides the
+     overlapping contours inside the letters of a variable font. */
+  color: var(--ground);
+  -webkit-text-stroke: 3px var(--fg);
+  paint-order: stroke fill;
+}
+
+/* ── Motion while scrolling. Where the browser can tie an animation to an
+      element's way through the window, nothing on the page stands still:
+      headings slide in from one side and leave to the other, their second
+      line runs against them, rows and cards turn into place, the band
+      runs. Elsewhere, and under reduced motion, everything simply stands.
+      Only `translate`, `rotate` and `scale` move, so layout never does. ─ */
+[data-site="portfolio"] { overflow-x: clip; }
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    [data-site="portfolio"] :is(.headline, .display) {
+      animation: pf-pass linear both;
+      animation-timeline: view();
+    }
+    [data-site="portfolio"] .headline-sub {
+      animation: pf-counter linear both;
+      animation-timeline: view();
+    }
+    /* Rows and cards only on the way in, so hover and focus stay theirs. */
+    [data-site="portfolio"] :is(.card-link, .def-grid) {
+      animation: pf-land linear backwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 95%;
+    }
+    [data-site="portfolio"] .card-link:nth-child(3n + 2) { animation-range: entry 15% entry 110%; }
+    [data-site="portfolio"] .card-link:nth-child(3n)     { animation-range: entry 30% entry 125%; }
+    [data-site="portfolio"] .def-grid { --turn: 0deg; --rise: 0rem; --slide: 5rem; }
+
+    [data-site="portfolio"] .band > * {
+      animation: pf-run linear both;
+      animation-timeline: view();
+    }
+    [data-site="portfolio"] .band > :nth-child(2) { animation-name: pf-run-back; }
+  }
+}
+
+@keyframes pf-pass {
+  0%   { translate: -11vw 0; }
+  36%  { translate: 0 0; }
+  78%  { translate: 0 0; }
+  100% { translate: 7vw 0; }
+}
+@keyframes pf-counter {
+  0%   { translate: 16vw 0; }
+  40%  { translate: 0 0; }
+  78%  { translate: 0 0; }
+  100% { translate: -9vw 0; }
+}
+@keyframes pf-land {
+  from {
+    translate: var(--slide, 0rem) var(--rise, 7rem);
+    rotate: var(--turn, calc(var(--tilt, 0.5deg) * 12));
+    scale: 0.94;
+  }
+  to {
+    translate: 0 0;
+    rotate: var(--tilt, 0deg);
+    scale: 1;
+  }
+}
+@keyframes pf-run {
+  from { translate: 4vw 0; }
+  to   { translate: -38% 0; }
+}
+@keyframes pf-run-back {
+  from { translate: 38% 0; }
+  to   { translate: -4vw 0; }
+}
 
 @media (prefers-contrast: more) {
   [data-site="portfolio"],

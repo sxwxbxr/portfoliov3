@@ -9,12 +9,16 @@ import {
   transform,
   useMotionValueEvent,
   useScroll,
+  useSpring,
   useTransform,
+  useVelocity,
   type MotionValue,
 } from "framer-motion"
 import { ArrowRight } from "lucide-react"
 import { useCopy, useLocale } from "@/components/LocaleProvider"
 import { localizePath } from "@/lib/i18n"
+import InkScene from "./InkScene"
+import { sheetPose } from "./sheetPose"
 import s from "./SheetStage.module.css"
 
 export interface StageProject {
@@ -44,9 +48,6 @@ const INTRO = 1
 const SHEET = 1
 const CONTACT = 1.2
 
-/** How each sheet comes to rest, in degrees. Repeats after six. */
-const TILT = [-2.4, 1.7, -1.1, 2.3, -1.8, 1.2]
-
 const two = (n: number) => String(n).padStart(2, "0")
 
 /**
@@ -62,14 +63,15 @@ function useTrack<T extends number | string>(source: MotionValue<number>, input:
 }
 
 /**
- * The home hero: a pinned stage on a flat signal field that scroll moves
- * through.
+ * The home hero: a pinned stage in front of a drawn night scene (see
+ * InkScene) that scroll moves through.
  *
  * At rest the name lies across the bottom as one slab of type, with the
- * project count and the services above it and project artwork tinted into
- * the field. Scrolling pushes that screen off the top, then drops one sheet
- * per project onto the stack, each a little askew like paper thrown on a
- * desk. The last sheet is the contact.
+ * project count and the services above it. Scrolling pushes that screen off
+ * the top, then throws one sheet per project onto a stack, each a little
+ * askew. The sheets never lie still: while the page scrolls they drift and
+ * fan out, lean with the scroll speed, and their pictures slide in their
+ * frames. The last sheet is the contact.
  *
  * Everything that moves is decoration over real content: the services are
  * links at rest, the projects exist again as the grid below the hero, and
@@ -111,6 +113,14 @@ export default function SheetStage({ projects, services, location, status }: She
   const nameTilt = useTrack<number>(p, [0, introEnd], [-2, -7])
   const hintOpacity = useTrack<number>(p, [0, introEnd * 0.15], [1, 0])
 
+  // How fast the page is moving, eased so it swells and settles instead of
+  // jumping. The scene streaks with it and everything on the stage leans
+  // into the direction of travel.
+  const { scrollY } = useScroll()
+  const speed = useSpring(useVelocity(scrollY), { stiffness: 120, damping: 26, mass: 0.6 })
+  const lean = useTransform(speed, (v) => Math.max(-2.4, Math.min(2.4, v / 700)))
+  const nameLean = useTransform(speed, (v) => Math.max(-10, Math.min(10, v / -160)))
+
   // How many sheets lie on the stack, the contact sheet included. A count
   // rather than a motion value, so React renders once per sheet.
   const landedAt = (v: number) => {
@@ -130,7 +140,6 @@ export default function SheetStage({ projects, services, location, status }: She
 
   // The longest word sets the size, so a longer name still fits the width.
   const longest = Math.max(...copy.home.heroName.split(/\s+/).map((word) => word.length))
-  const reel = projects.flatMap((project) => (project.imageSrc ? [project.imageSrc] : [])).slice(0, 3)
 
   return (
     <section
@@ -145,20 +154,7 @@ export default function SheetStage({ projects, services, location, status }: She
       </noscript>
       {/* Remounted when the preference flips, so no half-played value sticks. */}
       <div className={s.stage} key={still ? "still" : "moving"} data-field="signal">
-        {/* Project artwork, printed into the field in one colour. */}
-        <div className={s.reel} data-count={reel.length} aria-hidden="true">
-          {reel.map((src, i) => (
-            <Image
-              key={src}
-              src={src}
-              alt=""
-              fill
-              sizes="100vw"
-              priority={i === 0}
-              style={{ animationDelay: `${i * 7}s` }}
-            />
-          ))}
-        </div>
+        <InkScene className={s.scene} progress={p} velocity={speed} still={still} />
 
         <motion.div className={s.intro} style={still ? undefined : { y: introY }} inert={away}>
           {n > 0 && (
@@ -186,7 +182,7 @@ export default function SheetStage({ projects, services, location, status }: She
             </p>
           </div>
 
-          <motion.div className={s.lockup} style={still ? undefined : { rotate: nameTilt }}>
+          <motion.div className={s.lockup} style={still ? undefined : { rotate: nameTilt, skewX: nameLean }}>
             {copy.home.heroHeadline !== copy.home.heroName && (
               <p className={s.company}>{copy.home.heroHeadline}</p>
             )}
@@ -206,8 +202,10 @@ export default function SheetStage({ projects, services, location, status }: She
               progress={p}
               from={startAt(i)}
               to={landAt(i)}
-              // Three sheets down nothing shows any more.
-              buried={landed - i > 3}
+              length={f}
+              lean={lean}
+              // The stack fans out, so a sheet shows for a while yet.
+              buried={landed - i > 4}
             >
               <div className={s.sheetHead}>
                 <span className={s.sheetNo}>
@@ -249,7 +247,16 @@ export default function SheetStage({ projects, services, location, status }: She
 
         {/* The last sheet is real content: the way to get in touch. */}
         <div className={s.sheets}>
-          <Sheet index={n} progress={p} from={startAt(n)} to={landAt(n)} dark inert={landed <= n}>
+          <Sheet
+            index={n}
+            progress={p}
+            from={startAt(n)}
+            to={landAt(n)}
+            length={f}
+            lean={lean}
+            dark
+            inert={landed <= n}
+          >
             <p className={s.askLabel}>{copy.nav.contact}</p>
             <p className={s.ask}>{copy.home.ctaTitle}</p>
             <Link href={localizePath("/contact", locale)} className={s.askLink}>
@@ -269,13 +276,15 @@ export default function SheetStage({ projects, services, location, status }: She
 
 /**
  * One sheet of paper: comes up from below the stage, turning as it travels,
- * and stays where it lands.
+ * and keeps drifting for as long as the page scrolls. See sheetPose.
  */
 function Sheet({
   index,
   progress,
   from,
   to,
+  length,
+  lean,
   dark = false,
   buried = false,
   inert = false,
@@ -285,6 +294,10 @@ function Sheet({
   progress: MotionValue<number>
   from: number
   to: number
+  /** Progress one sheet takes. */
+  length: number
+  /** Skew from the scroll speed, in degrees. */
+  lean: MotionValue<number>
   /** The contact sheet is ink instead of paper. */
   dark?: boolean
   /** Far enough down the stack to skip painting. */
@@ -292,10 +305,15 @@ function Sheet({
   inert?: boolean
   children: React.ReactNode
 }) {
-  const rest = TILT[index % TILT.length]
-  // Most of the way quickly, the last stretch slowly: it settles.
-  const y = useTrack(progress, [from, from + (to - from) * 0.55, to], ["115svh", "14svh", "0svh"])
-  const rotate = useTrack<number>(progress, [from, to], [rest + (rest < 0 ? -9 : 9), rest])
+  const pose = (v: number) => sheetPose(v, index, from, to, length)
+  const y = useTransform(progress, (v) => `${pose(v).y}svh`)
+  const rotate = useTransform(progress, (v) => pose(v).rotate)
+  const scale = useTransform(progress, (v) => pose(v).scale)
+  // The picture slides inside its frame as the sheet travels.
+  const shift = useTransform(progress, (v) => {
+    const { y: offset, age } = pose(v)
+    return `${(offset / 115) * 9 - age * 2.5}%`
+  })
 
   return (
     <motion.div
@@ -303,7 +321,7 @@ function Sheet({
       data-dark={dark || undefined}
       data-buried={buried || undefined}
       inert={inert}
-      style={{ y, rotate }}
+      style={{ y, rotate, scale, skewY: lean, "--shift": shift } as React.ComponentProps<typeof motion.div>["style"]}
     >
       {children}
     </motion.div>

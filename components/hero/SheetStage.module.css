@@ -4,9 +4,10 @@
   --paper: #f4f4f1;
   --sheet: #e4e5e9;
   --ink: #0b0b0c;
-  --blue: #2238ff;
+  --red: #c81e17;
+  --night: #070304;
   position: relative;
-  background: var(--blue);
+  background: var(--night);
 }
 
 .stage {
@@ -17,7 +18,7 @@
   display: flex;
   flex-direction: column;
   padding: 6.75rem var(--gutter) 0;
-  background: var(--blue);
+  background: var(--night);
   color: var(--paper);
   isolation: isolate;
 }
@@ -42,41 +43,13 @@
   display: none;
 }
 
-/* ── Artwork in the field ─────────────────────────────────────────── */
-.reel {
+/* ── The drawn scene behind everything ────────────────────────────── */
+.scene {
   position: absolute;
   inset: 0;
   z-index: -1;
-  opacity: 0.55;
-  mix-blend-mode: soft-light;
-}
-.reel img {
-  object-fit: cover;
-  filter: grayscale(1) contrast(1.2);
-  opacity: 0;
-  animation: reel3 21s linear infinite;
-}
-.reel[data-count="2"] img {
-  animation-name: reel2;
-  animation-duration: 14s;
-}
-.reel[data-count="1"] img {
-  animation: none;
-  opacity: 1;
-}
-@keyframes reel3 {
-  0% { opacity: 0; transform: scale(1.02); }
-  4% { opacity: 1; }
-  33% { opacity: 1; }
-  38% { opacity: 0; transform: scale(1.1); }
-  100% { opacity: 0; }
-}
-@keyframes reel2 {
-  0% { opacity: 0; transform: scale(1.02); }
-  6% { opacity: 1; }
-  50% { opacity: 1; }
-  57% { opacity: 0; transform: scale(1.1); }
-  100% { opacity: 0; }
+  width: 100%;
+  height: 100%;
 }
 
 /* ── Counter ──────────────────────────────────────────────────────── */
@@ -228,7 +201,7 @@
   line-height: 0.8;
   letter-spacing: -0.055em;
   font-variant-numeric: tabular-nums;
-  color: var(--blue);
+  color: var(--red);
 }
 .sheetNo small {
   margin-left: 0.15em;
@@ -261,7 +234,7 @@
   text-decoration-thickness: 1px;
 }
 .sheetLink:hover {
-  color: var(--blue);
+  color: var(--red);
 }
 
 /* Layout guides, the way a design file marks its frames. */
@@ -291,11 +264,14 @@
   position: relative;
   flex: 1;
   overflow: hidden;
-  background: var(--blue);
+  background: var(--red);
 }
 .shot img {
   object-fit: cover;
   object-position: top left;
+  /* Larger than its frame, so it can slide inside it as the sheet travels. */
+  scale: 1.12;
+  translate: 0 var(--shift, 0%);
 }
 .shot > span {
   position: absolute;
@@ -327,7 +303,7 @@
 }
 .sheetText span::before {
   content: "/ ";
-  color: var(--blue);
+  color: var(--red);
 }
 
 /* ── Contact sheet ────────────────────────────────────────────────── */
@@ -437,16 +413,10 @@
   .hint {
     display: none;
   }
-  .reel img {
-    animation: none;
-  }
-  .reel img:first-child {
-    opacity: 1;
-  }
 }
 
 @media (forced-colors: active) {
-  .reel {
+  .scene {
     display: none;
   }
 }

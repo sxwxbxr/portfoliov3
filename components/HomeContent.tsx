@@ -227,6 +227,23 @@ export default function HomeContent({
         />
       </div>
 
+      {/* Runs sideways with the scroll. The words are the services and the
+          projects, both of which are real links further down. */}
+      <div className="band" aria-hidden="true">
+        <p>
+          {[...services.services, ...services.services].map((service, i) => (
+            <span key={i}>{service.linkLabel}</span>
+          ))}
+        </p>
+        {selectedProjects.length > 0 && (
+          <p>
+            {[...selectedProjects, ...selectedProjects].map((project, i) => (
+              <span key={i}>{project.title}</span>
+            ))}
+          </p>
+        )}
+      </div>
+
       {/* What the hero shows in pictures, said once in a sentence, with the
           figures from site_settings. */}
       <section className="sheet flex flex-col gap-10 py-20 md:py-28">
