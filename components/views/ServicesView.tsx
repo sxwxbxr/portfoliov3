@@ -50,7 +50,7 @@ export function ServicesView({ locale = "en" }: { locale?: Locale }) {
   const page = servicesOverview(locale)
   const labels = servicesLabels(locale)
   return (
-    <PageLayout site="portfolio" label={copy.services.label} title={page.h1}>
+    <PageLayout site="portfolio" ownAsk label={copy.services.label} title={page.h1}>
       <JsonLd
         data={breadcrumbList(
           [{ name: labels.overviewCrumb, path: localizePath("/services", locale) }],

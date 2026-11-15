@@ -122,8 +122,18 @@ const item: Variants = {
   visible: { opacity: 1, x: 0, transition: { duration: 0.32, ease: EASE } },
 }
 
-/** How many projects the home page shows. */
-const HOME_PROJECTS = 2
+/**
+ * The projects the home page shows, by slug, in their sort order (Seya,
+ * 2026-11-15). BlogPilot and Project Gotthard appear as soon as they are
+ * entered in /admin under one of these slugs. /projects lists them all.
+ */
+const HOME_PROJECTS = [
+  "flowlychat",
+  "home-network-observability-dashboard",
+  "blogpilot",
+  "project-gotthard",
+  "gotthard",
+]
 
 // ── Component ────────────────────────────────────────
 export default function HomeContent({
@@ -139,9 +149,10 @@ export default function HomeContent({
   const homeCopy = locale === "de" ? homeDe : homeEn
   const services = servicesOverview(locale)
   const serviceLabels = servicesLabels(locale)
-  // The home page shows the first two projects by sort order (Seya,
-  // 2026-11-15: the rest make room for new ones). /projects lists them all.
-  const selectedProjects = projects.slice(0, HOME_PROJECTS)
+  // Should none of the slugs exist (a renamed entry), the stage still has
+  // its first two sheets.
+  const chosen = projects.filter((p) => HOME_PROJECTS.includes(p.slug))
+  const selectedProjects = chosen.length > 0 ? chosen : projects.slice(0, 2)
 
   const featuredPosts = blogPosts.filter((p) => p.featured)
   const sortedByDate = [...blogPosts].sort(

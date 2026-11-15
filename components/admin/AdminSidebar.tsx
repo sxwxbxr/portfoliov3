@@ -77,8 +77,8 @@ export default function AdminSidebar() {
   const pathname = usePathname()
 
   return (
-    <aside className="w-56 shrink-0">
-      <nav className="glass rounded-xl p-3 space-y-1 sticky top-24">
+    <aside className="shrink-0 md:w-56">
+      <nav className="glass rounded-xl p-3 flex gap-1 overflow-x-auto md:block md:space-y-1 md:sticky md:top-24">
         {navItems.map((item) => {
           const isActive =
             item.href === "/admin"
@@ -89,7 +89,7 @@ export default function AdminSidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+              className={`flex shrink-0 items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                 isActive
                   ? "bg-primary text-primary-foreground"
                   : "text-muted-foreground hover:text-foreground hover:bg-accent"
@@ -101,7 +101,7 @@ export default function AdminSidebar() {
               }
             >
               {icons[item.icon]}
-              <span className="flex-1 truncate">{item.label}</span>
+              <span className="flex-1 whitespace-nowrap md:truncate">{item.label}</span>
               {item.disabled && (
                 <span className="text-[10px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded bg-muted/60 text-muted-foreground border border-border">
                   Off

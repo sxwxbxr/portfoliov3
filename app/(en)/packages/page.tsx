@@ -42,8 +42,8 @@ export default function PackagesOverview() {
   }))
 
   return (
-    <PageLayout>
-      <header className="sheet pt-10 pb-16 md:pt-16 md:pb-24">
+    <PageLayout
+      opening={
         <div className="flex flex-col items-start gap-6">
           <h1 className="display text-balance">
             Packages
@@ -55,7 +55,8 @@ export default function PackagesOverview() {
             <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
           </a>
         </div>
-      </header>
+      }
+    >
 
       <section id="packages" className="sheet pb-24 md:pb-32" style={{ scrollMarginTop: "6rem" }}>
         {/* Every card is in the server HTML (fallback); the browser adds search and filters. */}

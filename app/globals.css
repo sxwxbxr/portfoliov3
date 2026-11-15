@@ -74,7 +74,11 @@
 .dark,
 [data-site="portfolio"],
 [data-site="portfolio"] [data-field="signal"],
-body:has([data-site="portfolio"]) .portfolio-chrome {
+body:has([data-site="portfolio"]) .portfolio-chrome,
+[data-site="packages"],
+body:has([data-site="packages"]) .portfolio-chrome,
+[data-site="admin"],
+body:has([data-site="admin"]) .portfolio-chrome {
   --background: var(--ground);
   --foreground: var(--fg);
   --card: var(--plate);
@@ -685,6 +689,167 @@ body:has([data-site="portfolio"]) {
 @keyframes pf-run-back {
   from { translate: 38% 0; }
   to   { translate: -4vw 0; }
+}
+
+/* ── A page's opening: the night scene of the home stage at a smaller
+      size, with the page title set on it. ─────────────────────────────── */
+[data-site] .page-stage {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: min(70svh, 46rem);
+  padding: 10rem 0 clamp(2.5rem, 6vw, 5rem);
+  background: #070304;
+}
+[data-site] .page-stage-scene {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+}
+/* A wash under the type, so the title never sits on bright smoke. */
+[data-site] .page-stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, rgb(7 3 4 / 0.72) 0%, rgb(7 3 4 / 0) 62%);
+}
+[data-site] .page-stage .block-label::before { color: #ff5a47; }
+@media (forced-colors: active) {
+  [data-site] .page-stage-scene { display: none; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   PACKAGES — the same night, kept quiet. The package site is for reading
+   docs and trying demos, so it takes the colours, the square controls and
+   the tight headings of the portfolio. Only its entry page opens on the
+   scene; the rest has no scene and no scroll motion of its own. Its footer
+   is the shared one.
+
+   Contrast on --plate: fg 17.5, fg-muted 7.3, fg-subtle 6.6, edge 3.9,
+   accent 6.3 (all :1).
+   ══════════════════════════════════════════════════════════════════════ */
+[data-site="packages"],
+body:has([data-site="packages"]) .portfolio-chrome,
+[data-site="admin"],
+body:has([data-site="admin"]) .portfolio-chrome {
+  --ground:      #090506;
+  --plate:       #170b0c;
+  --plate-hi:    #211012;
+  --well:        #110809;
+
+  --fg:          #f4f4f1;
+  --fg-muted:    #a89d9b;
+  --fg-subtle:   #a09492;
+
+  --edge:        #806a6c;
+  --edge-soft:   #2a1719;
+  --edge-mid:    #3f2628;
+
+  --signal:      #f4f4f1;
+  --signal-bright: #f4f4f1;
+  --signal-fg:   #090506;
+
+  --radius:      0rem;
+  --radius-ctl:  0rem;
+
+  color: var(--fg);
+}
+body:has(:is([data-site="packages"], [data-site="admin"])) {
+  background: #090506;
+}
+[data-site="packages"] :is(.headline, .display) {
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+[data-site="packages"] .display { font-size: clamp(2.25rem, 5vw, 4.5rem); }
+[data-site="packages"] .display .headline-sub {
+  margin-top: 0.75rem;
+  max-width: 34ch;
+  font-size: clamp(1.25rem, 2.2vw, 2rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+/* Only the entry page opens on the scene, lower than a portfolio page. */
+[data-site="packages"] .page-stage {
+  --fg-muted: #e3d5d2;
+  min-height: min(58svh, 38rem);
+}
+:is([data-site="packages"], [data-site="admin"]) .block-label {
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+:is([data-site="packages"], [data-site="admin"]) .block-label::before { content: "/ "; color: #ff5a47; }
+
+/* ══════════════════════════════════════════════════════════════════════
+   ADMIN — the working rooms (admin, sign-in, 404) in the same quiet night
+   as the package site. The admin pages are built from Tailwind utilities,
+   so the look is set on those here and not in thirty page files.
+   ══════════════════════════════════════════════════════════════════════ */
+[data-site="admin"] :is(.rounded, .rounded-md, .rounded-lg, .rounded-xl, .rounded-full) {
+  border-radius: 0;
+}
+[data-site="admin"] .glass { border: 1px solid var(--edge-soft); }
+[data-site="admin"] .font-display {
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+/* A page's title: large and tight, behind the red slash of the labels. */
+[data-site="admin"] main h2.font-display {
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+[data-site="admin"] main h2.font-display::before { content: "/ "; color: #ff5a47; }
+/* Fields get the stronger edge: 3.9:1 against the ground. */
+[data-site="admin"] main :is(input, textarea, select) { border-color: var(--edge); }
+[data-site="admin"] :is(.headline, .display) {
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+[data-site="admin"] .display { font-size: clamp(2.5rem, 7vw, 6rem); }
+
+/* The scene behind a whole room (sign-in, 404) or at the head of one. */
+.night-scene {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+.night-scene canvas {
+  width: 100%;
+  height: 100%;
+}
+.night-room {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  background: #070304;
+}
+/* A wash under the type, as on a page's opening. */
+.night-room::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, rgb(7 3 4 / 0.72) 0%, rgb(7 3 4 / 0) 62%);
+}
+/* The admin dashboard's greeting, set on the scene. */
+[data-site="admin"] .admin-stage {
+  min-height: 17rem;
+  padding: 2rem;
+  --fg-muted: #e3d5d2;
+}
+[data-site="admin"] .admin-stage h2.font-display::before { content: none; }
+@media (forced-colors: active) {
+  .night-scene { display: none; }
 }
 
 @media (prefers-contrast: more) {

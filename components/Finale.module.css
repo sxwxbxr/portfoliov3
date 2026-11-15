@@ -24,9 +24,14 @@
   color: var(--fg);
   color-scheme: dark;
 }
-/* Where the page above already ends in the night, the two join. */
-:global(body:has([data-ends-dark])) .finale {
+/* Where the page above already ends in the night, the two join. A page
+   that is one scene from top to bottom (sign-in, 404) does not get a
+   second disc under it. */
+:global(body:has(:is([data-ends-dark], .night-room))) .finale {
   margin-top: 0;
+}
+:global(body:has(.night-room)) .scene {
+  display: none;
 }
 
 .scene {
@@ -97,8 +102,10 @@
 .askLinks a:hover {
   text-decoration-thickness: 0.12em;
 }
-/* The package site is for looking at packages: no invitation there. */
-:global(body:not(:has([data-site="portfolio"]))) .ask {
+/* The package site is for looking at packages: no invitation there. Nor
+   on a page that ends on an invitation of its own, or is the contact page. */
+:global(body:not(:has([data-site="portfolio"]))) .ask,
+:global(body:has([data-own-ask])) .ask {
   display: none;
 }
 
