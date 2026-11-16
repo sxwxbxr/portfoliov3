@@ -1,0 +1,21 @@
+/* The name as one slab of type, with the company line above it. */
+
+.company {
+  margin: 0 0 clamp(0.5rem, 1.2vw, 1rem);
+  font-size: clamp(0.75rem, 1.15vw, 1rem);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.name {
+  margin: 0;
+  font-family: var(--font-syne), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  /* Syne at 800 runs about 1.25em a capital; --chars is the longest word.
+     --slab-cap keeps two lines on a short screen where the parent sets it. */
+  font-size: min(calc(73vw / var(--chars, 5)), var(--slab-cap, 23svh));
+  font-weight: 800;
+  line-height: 0.84;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+}

@@ -1,15 +1,17 @@
 import Link from "next/link"
 import { ChevronRight } from "lucide-react"
 import Navigation from "@/components/Navigation"
+import { FinaleScene } from "@/components/hero/FinaleScene"
 import { getCopy, localizePath, type Locale } from "@/lib/i18n"
 
 export function NotFoundView({ locale = "en" }: { locale?: Locale }) {
   const copy = getCopy(locale)
   return (
-    <div className="min-h-screen bg-ground">
-      <Navigation />
+    <div className="night-room min-h-screen" data-site="admin">
+      <FinaleScene className="night-scene" />
+      <Navigation overlay />
 
-      <div className="sheet pt-32 pb-24">
+      <div className="sheet pt-40 pb-24">
         <div className="flex max-w-2xl flex-col items-start gap-6">
           <span className="tab annotate">{copy.notFound.code}</span>
 

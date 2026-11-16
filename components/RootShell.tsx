@@ -13,7 +13,7 @@ import { AI_FEATURES_ENABLED } from "@/lib/features"
 import { getSiteSettings } from "@/lib/data"
 import { localizeSettings } from "@/lib/i18n-data"
 import { getCopy, type Locale } from "@/lib/i18n"
-import { inter, jetbrainsMono } from "@/lib/fonts"
+import { inter, jetbrainsMono, syne } from "@/lib/fonts"
 import { siteGraph } from "@/lib/structured-data"
 
 /** BCP 47 tag for <html lang>. German is the Swiss variety. */
@@ -36,7 +36,7 @@ export async function RootShell({
   const structuredData = siteGraph(settings, locale)
 
   return (
-    <html lang={HTML_LANG[locale]} className={`${inter.variable} ${jetbrainsMono.variable} dark antialiased`} suppressHydrationWarning>
+    <html lang={HTML_LANG[locale]} className={`${inter.variable} ${jetbrainsMono.variable} ${syne.variable} dark antialiased`} suppressHydrationWarning>
       <head>
         <JsonLd data={structuredData} />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />

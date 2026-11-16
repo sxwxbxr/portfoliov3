@@ -20,7 +20,7 @@ export async function ProjectsView({ locale = "en" }: { locale?: Locale }) {
   }))
 
   return (
-    <PageLayout
+    <PageLayout site="portfolio"
       label={copy.projects.label(projects.length)}
       title={copy.projects.title}
       subtitle={copy.projects.subtitle}

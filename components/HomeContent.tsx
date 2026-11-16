@@ -2,18 +2,15 @@
 
 import Link from "next/link"
 import { useRef } from "react"
-import { ArrowUpRight, ChevronRight } from "lucide-react"
-import { motion, useInView, useReducedMotion, type Variants } from "framer-motion"
+import { ArrowRight } from "lucide-react"
+import { useInView } from "framer-motion"
 import Navigation from "./Navigation"
-import Hero from "./site/Hero"
-import { Block } from "./site/Block"
-import { ProjectListItem } from "./ProjectListItem"
-import { EmptyState } from "./EmptyState"
+import JourneyStage, { type JourneyStation } from "./hero/JourneyStage"
+import stage from "./hero/JourneyStage.module.css"
+import type { LandmarkKind } from "./hero/landmarks"
 import type { SiteSettings } from "@/lib/data"
-import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
 import { useCopy, useLocale } from "@/components/LocaleProvider"
 import { localizePath } from "@/lib/i18n"
-import { FaqList } from "./site/FaqList"
 import { home as homeEn } from "@/content/home/en"
 import { home as homeDe } from "@/content/home/de"
 import { servicePath, servicesOverview, servicesLabels } from "@/lib/services"
@@ -85,87 +82,46 @@ interface HomeContentProps {
   settings: SiteSettings
 }
 
-// ── Motion ────────────────────────────────────────────
-const EASE = [0.23, 1, 0.32, 1] as const
+/**
+ * The projects the home page shows, by slug, in their sort order (Seya,
+ * 2026-11-15). BlogPilot and Project Gotthard appear as soon as they are
+ * entered in /admin under one of these slugs. /projects lists them all.
+ */
+const HOME_PROJECTS = [
+  "flowlychat",
+  "home-network-observability-dashboard",
+  "blogpilot",
+  "project-gotthard",
+  "gotthard",
+]
 
-function Stagger({
-  children,
-  className = "",
-}: {
-  children: React.ReactNode
-  className?: string
-}) {
-  const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: "-56px" })
-  const reduce = useReducedMotion()
-
-  return (
-    <motion.div
-      ref={ref}
-      className={className}
-      initial="hidden"
-      animate={inView ? "visible" : "hidden"}
-      variants={{
-        hidden: {},
-        visible: { transition: { staggerChildren: reduce ? 0 : 0.028 } },
-      }}
-    >
-      {children}
-    </motion.div>
-  )
+/** What stands in the landscape for a project. Others take turns. */
+const PROJECT_LANDMARKS: Record<string, LandmarkKind> = {
+  flowlychat: "mast",
+  "home-network-observability-dashboard": "observatory",
+  blogpilot: "airship",
+  "project-gotthard": "mountain",
+  gotthard: "mountain",
 }
-
-// Offset is horizontal. A vertical stagger down a vertical list reads as the
-// whole list sagging.
-const item: Variants = {
-  hidden: { opacity: 0, x: -4 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.32, ease: EASE } },
-}
+const SPARE_LANDMARKS: LandmarkKind[] = ["mast", "observatory", "airship", "mountain"]
 
 // ── Component ────────────────────────────────────────
-export default function HomeContent({
-  projects,
-  experience,
-  blogPosts,
-  caseStudies,
-  settings,
-}: HomeContentProps) {
+/**
+ * The home page is one flight (see JourneyStage): every section it used to
+ * stack under the hero is a station in the landscape now. The blog teaser
+ * and the testimonial are switched off in lib/features.ts and have no
+ * station; they need one if they come back.
+ */
+export default function HomeContent({ projects, experience, settings }: HomeContentProps) {
   const copy = useCopy()
   const locale = useLocale()
-  const expertise = copy.common.expertiseAreas
   const homeCopy = locale === "de" ? homeDe : homeEn
   const services = servicesOverview(locale)
   const serviceLabels = servicesLabels(locale)
-  const selectedProjects = projects.slice(0, 6)
-
-  const featuredPosts = blogPosts.filter((p) => p.featured)
-  const sortedByDate = [...blogPosts].sort(
-    (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-  )
-  const newestDate = sortedByDate[0]
-    ? new Date(sortedByDate[0].publishedAt).getTime()
-    : 0
-  const monthsSinceNewest = newestDate
-    ? (Date.now() - newestDate) / (1000 * 60 * 60 * 24 * 30)
-    : Infinity
-  const blogIsFresh = monthsSinceNewest <= 12
-
-  const latestPosts = !BLOG_ENABLED
-    ? []
-    : featuredPosts.length > 0
-      ? featuredPosts.slice(0, 2)
-      : blogIsFresh
-        ? sortedByDate.slice(0, 2)
-        : []
-
-  const featuredTestimonial = CASE_STUDIES_ENABLED
-    ? (caseStudies.find(
-        (cs) =>
-          cs.testimonialQuote &&
-          cs.testimonialAuthor.trim() &&
-          cs.testimonialCompany.trim()
-      ) ?? null)
-    : null
+  // Should none of the slugs exist (a renamed entry), the flight still has
+  // its first two projects.
+  const chosen = projects.filter((p) => HOME_PROJECTS.includes(p.slug))
+  const selectedProjects = chosen.length > 0 ? chosen : projects.slice(0, 2)
 
   // Derived fallback metrics. Every number traces to a row that exists, so an
   // empty site_settings row cannot produce a claim the content does not back.
@@ -174,9 +130,9 @@ export default function HomeContent({
     .filter((n) => Number.isFinite(n))
     .sort((a, b) => a - b)[0]
 
-  // A derived metric is only shown when it actually counts something. Rendering
-  // "0 Projects delivered" on an unseeded database is worse than rendering
-  // nothing, and the tiles are the first objects a visitor sees.
+  // A derived metric is only shown when it actually counts something.
+  // TODO(Seya): labels that need context, e.g. "Properties managed 150+",
+  // should be reworded in /admin/settings so a stranger understands them.
   const heroMetrics =
     settings.heroMetrics.length > 0
       ? settings.heroMetrics
@@ -198,250 +154,167 @@ export default function HomeContent({
         ]
 
   const current = experience.find((e) => e.current)
+  const arrow = <ArrowRight className="h-[0.9em] w-[0.9em]" aria-hidden="true" />
 
-  const thisYear = new Date().getFullYear()
-  const startYear = firstYear && firstYear < thisYear ? firstYear : thisYear - 8
-  const years = Array.from({ length: thisYear - startYear + 1 }, (_, i) => String(startYear + i))
-  // A few from each area, so the strip reads as a range rather than one list.
-  const skills = expertise
-    .flatMap((area) => (area.skills as readonly string[]).filter((s) => s.length <= 12).slice(0, 3))
-    .slice(0, 12)
-
-  const pillLink = "control inline-flex items-center gap-1 self-start py-2 pr-3 pl-4 text-sm"
-
-  return (
-    <div className="min-h-screen bg-ground">
-      <Navigation />
-
-      <Hero settings={settings} metrics={heroMetrics} years={years} skills={skills} />
-
-      <div className="mt-24 md:mt-32">
-        {/* ─── Services: what is offered, to whom, where. The hero carries the
-            first two sentences of the opening paragraph, so this adds the rest. ─── */}
-        <Block
-          label={copy.nav.services}
-          title={services.servicesHeading}
-          lede={
-            <>
-              <p>{homeCopy.complement}</p>
-              <p>{homeCopy.serviceArea}</p>
-            </>
-          }
-        >
-          <ul className="border-t border-edge-soft">
+  const stations: JourneyStation[] = [
+    {
+      key: "services",
+      kind: "windmill",
+      label: copy.nav.services,
+      title: services.servicesHeading,
+      children: (
+        <>
+          <p>{homeCopy.complement}</p>
+          <ul className={stage.rows}>
             {services.services.map((service) => (
-              <li key={service.key} className="def-grid border-b border-edge-soft py-5">
-                <h3 className="text-lg tracking-tight">
-                  <Link
-                    href={servicePath(service.key, locale)}
-                    className="link-underline hover:text-fg-muted"
-                  >
-                    {service.title}
-                  </Link>
-                </h3>
-                <p className="text-sm leading-relaxed text-fg-muted">{service.text}</p>
+              <li key={service.key}>
+                <strong>
+                  <Link href={servicePath(service.key, locale)}>{service.title}</Link>
+                </strong>
+                <span>{service.text}</span>
               </li>
             ))}
           </ul>
-        </Block>
-
-        {/* ─── Introduction ─── */}
-        <Block
-          label={copy.home.introLabel}
-          title={copy.home.introTitle}
-          sub={copy.home.introSub}
-          lede={
-            <>
-              <p>{copy.home.introLead}</p>
-              <p>{copy.home.introBody}</p>
-              {current && (
-                <p className="annotate">{copy.home.currentRole(current.role, current.company)}</p>
-              )}
-            </>
-          }
-        />
-
-        {/* ─── Selected Work ─── */}
-        <Block
-          label={copy.home.workLabel}
-          title={copy.home.workTitle}
-          sub={copy.home.workSub}
-          aside={
-            <Link href={localizePath("/projects", locale)} className={pillLink}>
-              {copy.projects.allProjects}
-              <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
-            </Link>
-          }
-        >
-          {selectedProjects.length > 0 ? (
-            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-              {selectedProjects.map((project, i) => (
-                <ProjectListItem
-                  key={project.slug}
-                  project={project}
-                  index={i}
-                  imageSrc={project.imageSrc ?? null}
-                  priority={i < 2}
-                />
+          <p>{homeCopy.serviceArea}</p>
+        </>
+      ),
+    },
+    ...selectedProjects.map((project, i) => ({
+      key: project.slug,
+      kind: PROJECT_LANDMARKS[project.slug] ?? SPARE_LANDMARKS[i % SPARE_LANDMARKS.length],
+      label: copy.home.workLabel,
+      title: project.title,
+      children: (
+        <>
+          <p>{project.shortDescription}</p>
+          {project.tags.length > 0 && (
+            <ul className={stage.tags}>
+              {project.tags.slice(0, 4).map((tag) => (
+                <li key={tag}>{tag}</li>
               ))}
-            </div>
-          ) : (
-            <EmptyState>{copy.projects.empty}</EmptyState>
+            </ul>
           )}
-        </Block>
-
-        {/* ─── Expertise ─── */}
-        <Block
-          label={copy.home.expertiseLabel}
-          title={copy.home.expertiseTitle}
-          sub={copy.home.expertiseSub}
-        >
-          <Stagger className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-            {expertise.map((area) => (
-              <motion.div
-                key={area.category}
-                variants={item}
-                className="cast flex flex-col gap-5 p-6 md:p-7"
-              >
-                <h3 className="text-lg tracking-tight">{area.category}</h3>
-                <ul className="flex flex-wrap gap-1.5">
-                  {area.skills.map((skill) => (
-                    <li key={skill} className="tab text-xs text-fg-muted">
-                      {skill}
+          <Link href={localizePath(`/projects/${project.slug}`, locale)} className={stage.go}>
+            {copy.home.viewProject}
+            {arrow}
+          </Link>
+        </>
+      ),
+    })),
+    {
+      key: "about",
+      kind: "tree",
+      label: copy.home.introLabel,
+      title: copy.home.introTitle,
+      children: (
+        <>
+          <p>{copy.home.introLead}</p>
+          <p>{copy.home.introBody}</p>
+          {heroMetrics.length > 0 && (
+            <dl className={stage.figures}>
+              {heroMetrics.map((metric) => (
+                <div key={metric.label}>
+                  <dt>{metric.label}</dt>
+                  <dd>{metric.value}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
+          <ul className={stage.tags}>
+            {copy.common.expertiseAreas.map((area) => (
+              <li key={area.category}>{area.category}</li>
+            ))}
+          </ul>
+          <Link href={localizePath("/about", locale)} className={stage.go}>
+            {copy.nav.about}
+            {arrow}
+          </Link>
+        </>
+      ),
+    },
+    ...(experience.length > 0
+      ? [
+          {
+            key: "career",
+            kind: "pagoda" as const,
+            floors: experience.length,
+            label: copy.home.careerLabel,
+            title: copy.home.careerTitle,
+            children: (
+              <>
+                {current && <p>{copy.home.currentRole(current.role, current.company)}</p>}
+                <ul className={`${stage.rows} ${stage.split}`}>
+                  {experience.map((entry) => (
+                    <li key={entry.company}>
+                      <strong>{entry.company}</strong>
+                      <small>{entry.period}</small>
+                      <span>{entry.role}</span>
                     </li>
                   ))}
                 </ul>
-              </motion.div>
-            ))}
-          </Stagger>
-        </Block>
-
-        {/* ─── Experience ─── */}
-        {experience.length > 0 && (
-          <Block
-            label={copy.home.careerLabel}
-            title={copy.home.careerTitle}
-            sub={copy.home.careerSub(firstYear)}
-            aside={
-              <Link href={localizePath("/career", locale)} className={pillLink}>
-                {copy.home.fullCareer}
-                <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
-              </Link>
-            }
-          >
-            <Stagger className="flex flex-col border-t border-edge-soft">
-              {experience.map((entry) => (
-                <motion.div
-                  key={entry.company}
-                  variants={item}
-                  className="grid gap-1 border-b border-edge-soft py-5 md:grid-cols-[1fr_1fr_auto] md:items-baseline md:gap-6"
-                >
-                  <span className="flex items-center gap-2.5">
-                    {entry.current && (
-                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-signal" aria-hidden="true" />
-                    )}
-                    <span>{entry.company}</span>
-                  </span>
-                  <span className="text-sm text-fg-muted">{entry.role}</span>
-                  <span className="annotate md:text-right">{entry.period}</span>
-                </motion.div>
-              ))}
-            </Stagger>
-          </Block>
-        )}
-
-        {/* ─── Testimonial ─── */}
-        {featuredTestimonial && (
-          <Block
-            label={copy.home.referenceLabel}
-            title={copy.home.testimonials}
-            sub={copy.home.referenceSub}
-          >
-            <figure className="cast flex flex-col gap-8 p-8 md:p-12">
-              <blockquote className="text-2xl leading-snug tracking-tight md:text-3xl">
-                &ldquo;{featuredTestimonial.testimonialQuote}&rdquo;
-              </blockquote>
-              <figcaption className="flex flex-wrap items-end justify-between gap-4">
-                <span className="flex flex-col">
-                  <span>{featuredTestimonial.testimonialAuthor}</span>
-                  <span className="text-sm text-fg-muted">
-                    {featuredTestimonial.testimonialCompany}
-                  </span>
-                </span>
-                <Link
-                  href={`/case-studies/${featuredTestimonial.slug}`}
-                  className="link-underline text-sm text-fg-muted hover:text-fg"
-                >
-                  {copy.home.readCaseStudy} &rarr;
+                <Link href={localizePath("/career", locale)} className={stage.go}>
+                  {copy.home.fullCareer}
+                  {arrow}
                 </Link>
-              </figcaption>
-            </figure>
-          </Block>
-        )}
+              </>
+            ),
+          },
+        ]
+      : []),
+    // Only questions with a finished answer. Pricing, prototype time and code
+    // ownership wait for TODO(Seya) in content/home.
+    ...(homeCopy.faq.length > 0
+      ? [
+          {
+            key: "faq",
+            kind: "lanterns" as const,
+            label: "FAQ",
+            title: serviceLabels.faq,
+            children: (
+              <div>
+                {homeCopy.faq.map((entry) => (
+                  <details key={entry.q}>
+                    <summary>{entry.q}</summary>
+                    <p>{entry.a}</p>
+                  </details>
+                ))}
+              </div>
+            ),
+          },
+        ]
+      : []),
+  ]
 
-        {/* ─── Writing ─── */}
-        {latestPosts.length > 0 && (
-          <Block
-            label={copy.home.writingLabel}
-            title={copy.home.writingTitle}
-            sub={copy.home.writingSub}
-            aside={
-              <Link href="/blog" className={pillLink}>
-                {copy.blog.allArticles}
-                <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
-              </Link>
-            }
-          >
-            <Stagger className="flex flex-col border-t border-edge-soft">
-              {latestPosts.map((post) => (
-                <motion.div key={post.slug} variants={item}>
-                  <Link
-                    href={`/blog/${post.slug}`}
-                    className="group flex flex-col gap-1 border-b border-edge-soft py-5 md:flex-row md:items-baseline md:gap-6"
-                  >
-                    <h3 className="text-fg transition-opacity duration-150 group-hover:opacity-70 md:flex-1">
-                      {post.title}
-                    </h3>
-                    <span className="annotate">
-                      {new Date(post.publishedAt).toLocaleDateString(copy.common.dateLocale, {
-                        month: "short",
-                        year: "numeric",
-                      })}{" "}
-                      · {post.readTime}
-                    </span>
-                    <ArrowUpRight
-                      className="hidden h-4 w-4 text-fg-subtle transition-colors group-hover:text-fg md:block"
-                      aria-hidden="true"
-                    />
-                  </Link>
-                </motion.div>
-              ))}
-            </Stagger>
-          </Block>
-        )}
+  // The bar sits on the scene for as long as the stage is under it.
+  const heroRef = useRef<HTMLDivElement>(null)
+  const overHero = useInView(heroRef, { margin: "0px 0px -90% 0px", initial: true })
 
-        {/* ─── FAQ: only questions with a finished answer. Pricing, prototype
-            time and code ownership wait for TODO(Seya) in content/home. ─── */}
-        {homeCopy.faq.length > 0 && (
-          <Block label="FAQ" title={serviceLabels.faq}>
-            <FaqList items={homeCopy.faq} />
-          </Block>
-        )}
+  return (
+    <div className="bg-ground" data-site="portfolio" data-ends-dark="" data-own-ask="">
+      <Navigation overlay={overHero} />
 
-        {/* ─── Closing call to action ─── */}
-        <section className="section-block">
-          <div className="sheet flex flex-col items-center gap-8 py-8 text-center md:py-12">
-            <p className="annotate">{copy.home.ctaEyebrow}</p>
-            <h2 className="display">{copy.home.ctaTitle}</h2>
-            <Link
-              href={localizePath("/contact", locale)}
-              className="control control-primary inline-flex items-center gap-1 py-2.5 pr-4 pl-5 text-sm"
-            >
-              {copy.home.ctaButton}
-              <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
-            </Link>
-          </div>
-        </section>
+      <div ref={heroRef}>
+        <JourneyStage
+          stations={stations}
+          projectCount={selectedProjects.length}
+          services={services.services.map((service) => ({
+            key: service.key,
+            label: service.linkLabel,
+            href: servicePath(service.key, locale),
+          }))}
+          location={settings.contactLocation || copy.common.locationFallback}
+          status={
+            settings.heroAvailable
+              ? settings.heroAvailabilityLabel || copy.home.availabilityFallback
+              : undefined
+          }
+          email={settings.contactEmail || "info@sweber.dev"}
+          legal={[
+            { label: copy.nav.projects, href: localizePath("/projects", locale) },
+            { label: copy.nav.imprint, href: localizePath("/imprint", locale) },
+            { label: copy.nav.privacy, href: localizePath("/privacy", locale) },
+          ]}
+        />
       </div>
     </div>
   )

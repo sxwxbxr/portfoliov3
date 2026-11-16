@@ -63,8 +63,22 @@
   /* ── Legacy names still read by older components ──────────────── */
   --cast-hi:     transparent;
   --cast-lo:     transparent;
+}
 
-  /* ── shadcn/ui aliases. Keeps components/ui and /admin working. ─ */
+/* ── shadcn/ui aliases. Keeps components/ui and /admin working. ─────────
+   A custom property that refers to another is resolved where it is
+   declared. Declared on :root alone, these would keep the LINE values
+   inside a scope that re-themes the tokens below, so the portfolio
+   scope is listed here as well. */
+:root,
+.dark,
+[data-site="portfolio"],
+[data-site="portfolio"] [data-field="signal"],
+body:has([data-site="portfolio"]) .portfolio-chrome,
+[data-site="packages"],
+body:has([data-site="packages"]) .portfolio-chrome,
+[data-site="admin"],
+body:has([data-site="admin"]) .portfolio-chrome {
   --background: var(--ground);
   --foreground: var(--fg);
   --card: var(--plate);
@@ -264,6 +278,10 @@
     }
   }
   .control-primary:active { background: #cccccc; }
+  /* A pressed toggle that is also primary stays light. Without this the
+     pressed rule above wins on specificity and leaves dark text on a dark
+     pill (the active package filter was unreadable). */
+  .control-primary[aria-pressed="true"] { background: var(--signal); }
 
   /* A control without a fill or outline: nav items, "Sign in"-style. */
   .control-ghost {
@@ -466,4 +484,329 @@
    whenever the physio shell is on the page. */
 body:has([data-site="physio"]) .portfolio-chrome {
   display: none;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   BLATT — the portfolio's own look: paper, black type set very large, one
+   flat signal red, and cards that lie on the page like sheets on a desk.
+
+   Scoped to `data-site="portfolio"` rather than set on :root, because the package
+   shop, physio and /admin share this stylesheet and keep the LINE values
+   above. The root layout's footer and scroll bar sit outside the page tree,
+   so they follow whenever such a page is mounted.
+
+   Contrast on --plate (the darkest paper): fg 15.6, fg-muted 7.4,
+   fg-subtle 5.2, edge 4.0, signal 4.6. Paper on the night field of the
+   home stage: 18.4, and 8.5 on the brightest smoke (all :1).
+   ══════════════════════════════════════════════════════════════════════ */
+[data-site="portfolio"],
+body:has([data-site="portfolio"]) .portfolio-chrome {
+  color-scheme: light;
+
+  --ground:      #f4f4f1;
+  --plate:       #e4e5e9;   /* a sheet                                    */
+  --plate-hi:    #d8d9df;
+  --well:        #ecedf0;
+
+  --fg:          #0b0b0c;
+  --fg-muted:    #45474f;
+  --fg-subtle:   #5a5d66;
+
+  --edge:        #6b6e78;
+  --edge-soft:   #cfd0d6;
+  --edge-mid:    #b0b2bb;
+
+  --signal:      #c81e17;
+  --signal-bright: #c81e17;
+  --signal-fg:   #f4f4f1;
+  --amber:       #ffb000;
+
+  --radius:      0rem;
+  --radius-ctl:  0rem;
+
+  color: var(--fg);
+}
+
+body:has([data-site="portfolio"]) {
+  background: #f4f4f1;
+}
+
+/* On the night field (the home stage and the navigation above it) the
+   roles swap: paper becomes the ink. */
+[data-site="portfolio"] [data-field="signal"] {
+  --fg:          #f4f4f1;
+  --fg-muted:    #e3d5d2;
+  --fg-subtle:   #d6c3bf;
+  --plate:       #1c0607;
+  --plate-hi:    #2b0608;
+  --edge-mid:    #8a5a56;
+  --signal:      #f4f4f1;
+  --signal-fg:   #070304;
+  color: var(--fg);
+}
+
+[data-site="portfolio"] .control-primary:hover { background: #a91812; border-color: #a91812; }
+[data-site="portfolio"] .control-primary:active { background: #8c130e; }
+[data-site="portfolio"] [data-field="signal"] .control-primary:hover { background: #e3d5d2; border-color: #e3d5d2; }
+
+/* ── Type. Headings are the pictures: very large, tight, weight 500. ─── */
+[data-site="portfolio"] :is(.headline, .display) {
+  font-weight: 500;
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+}
+[data-site="portfolio"] .headline { font-size: clamp(2.5rem, 7.5vw, 7rem); }
+[data-site="portfolio"] .display  { font-size: clamp(2.75rem, 8vw, 7.5rem); }
+[data-site="portfolio"] .headline-sub {
+  margin-top: 0.75rem;
+  font-size: clamp(1.25rem, 2.4vw, 2.125rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+/* The section label sits above its heading as a slash line. */
+[data-site="portfolio"] .block-head { grid-template-columns: 1fr; gap: 1rem; }
+[data-site="portfolio"] .block-label {
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+[data-site="portfolio"] .block-label::before { content: "/ "; color: var(--signal); }
+
+/* ── Sheets. Cards in a grid lie slightly askew and straighten when
+      picked up. ───────────────────────────────────────────────────── */
+[data-site="portfolio"] .card-link {
+  transition:
+    background-color var(--dur-hover) var(--ease-out),
+    rotate var(--dur-panel) var(--ease-out);
+}
+[data-site="portfolio"] .card-link { rotate: var(--tilt, 0deg); }
+[data-site="portfolio"] .card-link:nth-child(3n + 1) { --tilt: -0.7deg; }
+[data-site="portfolio"] .card-link:nth-child(3n + 2) { --tilt: 0.5deg; }
+[data-site="portfolio"] .card-link:nth-child(3n)     { --tilt: -0.3deg; }
+[data-site="portfolio"] .card-link:is(:hover, :focus-visible, :focus-within) { --tilt: 0deg; }
+
+/* ── Motion while scrolling. Where the browser can tie an animation to an
+      element's way through the window, nothing on the page stands still:
+      headings slide in from one side and leave to the other, their second
+      line runs against them, rows and cards turn into place. Elsewhere, and under reduced motion, everything simply stands.
+      Only `translate`, `rotate` and `scale` move, so layout never does. ─ */
+[data-site="portfolio"] { overflow-x: clip; }
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    [data-site="portfolio"] :is(.headline, .display) {
+      animation: pf-pass linear both;
+      animation-timeline: view();
+    }
+    [data-site="portfolio"] .headline-sub {
+      animation: pf-counter linear both;
+      animation-timeline: view();
+    }
+    /* Rows and cards only on the way in, so hover and focus stay theirs. */
+    [data-site="portfolio"] :is(.card-link, .def-grid) {
+      animation: pf-land linear backwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 95%;
+    }
+    [data-site="portfolio"] .card-link:nth-child(3n + 2) { animation-range: entry 15% entry 110%; }
+    [data-site="portfolio"] .card-link:nth-child(3n)     { animation-range: entry 30% entry 125%; }
+    [data-site="portfolio"] .def-grid { --turn: 0deg; --rise: 0rem; --slide: 5rem; }
+  }
+}
+
+@keyframes pf-pass {
+  0%   { translate: -11vw 0; }
+  36%  { translate: 0 0; }
+  78%  { translate: 0 0; }
+  100% { translate: 7vw 0; }
+}
+@keyframes pf-counter {
+  0%   { translate: 16vw 0; }
+  40%  { translate: 0 0; }
+  78%  { translate: 0 0; }
+  100% { translate: -9vw 0; }
+}
+@keyframes pf-land {
+  from {
+    translate: var(--slide, 0rem) var(--rise, 7rem);
+    rotate: var(--turn, calc(var(--tilt, 0.5deg) * 12));
+    scale: 0.94;
+  }
+  to {
+    translate: 0 0;
+    rotate: var(--tilt, 0deg);
+    scale: 1;
+  }
+}
+
+/* ── A page's opening: the night scene of the home stage at a smaller
+      size, with the page title set on it. ─────────────────────────────── */
+[data-site] .page-stage {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: min(70svh, 46rem);
+  padding: 10rem 0 clamp(2.5rem, 6vw, 5rem);
+  background: #070304;
+}
+[data-site] .page-stage-scene {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+}
+/* A wash under the type, so the title never sits on bright smoke. */
+[data-site] .page-stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, rgb(7 3 4 / 0.72) 0%, rgb(7 3 4 / 0) 62%);
+}
+[data-site] .page-stage .block-label::before { color: #ff5a47; }
+@media (forced-colors: active) {
+  [data-site] .page-stage-scene { display: none; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   PACKAGES — the same night, kept quiet. The package site is for reading
+   docs and trying demos, so it takes the colours, the square controls and
+   the tight headings of the portfolio. Only its entry page opens on the
+   scene; the rest has no scene and no scroll motion of its own. Its footer
+   is the shared one.
+
+   Contrast on --plate: fg 17.5, fg-muted 7.3, fg-subtle 6.6, edge 3.9,
+   accent 6.3 (all :1).
+   ══════════════════════════════════════════════════════════════════════ */
+[data-site="packages"],
+body:has([data-site="packages"]) .portfolio-chrome,
+[data-site="admin"],
+body:has([data-site="admin"]) .portfolio-chrome {
+  --ground:      #090506;
+  --plate:       #170b0c;
+  --plate-hi:    #211012;
+  --well:        #110809;
+
+  --fg:          #f4f4f1;
+  --fg-muted:    #a89d9b;
+  --fg-subtle:   #a09492;
+
+  --edge:        #806a6c;
+  --edge-soft:   #2a1719;
+  --edge-mid:    #3f2628;
+
+  --signal:      #f4f4f1;
+  --signal-bright: #f4f4f1;
+  --signal-fg:   #090506;
+
+  --radius:      0rem;
+  --radius-ctl:  0rem;
+
+  color: var(--fg);
+}
+body:has(:is([data-site="packages"], [data-site="admin"])) {
+  background: #090506;
+}
+[data-site="packages"] :is(.headline, .display) {
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+[data-site="packages"] .display { font-size: clamp(2.25rem, 5vw, 4.5rem); }
+[data-site="packages"] .display .headline-sub {
+  margin-top: 0.75rem;
+  max-width: 34ch;
+  font-size: clamp(1.25rem, 2.2vw, 2rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+/* Only the entry page opens on the scene, lower than a portfolio page. */
+[data-site="packages"] .page-stage {
+  --fg-muted: #e3d5d2;
+  min-height: min(58svh, 38rem);
+}
+:is([data-site="packages"], [data-site="admin"]) .block-label {
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+:is([data-site="packages"], [data-site="admin"]) .block-label::before { content: "/ "; color: #ff5a47; }
+
+/* ══════════════════════════════════════════════════════════════════════
+   ADMIN — the working rooms (admin, sign-in, 404) in the same quiet night
+   as the package site. The admin pages are built from Tailwind utilities,
+   so the look is set on those here and not in thirty page files.
+   ══════════════════════════════════════════════════════════════════════ */
+[data-site="admin"] :is(.rounded, .rounded-md, .rounded-lg, .rounded-xl, .rounded-full) {
+  border-radius: 0;
+}
+[data-site="admin"] .glass { border: 1px solid var(--edge-soft); }
+[data-site="admin"] .font-display {
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+/* A page's title: large and tight, behind the red slash of the labels. */
+[data-site="admin"] main h2.font-display {
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+[data-site="admin"] main h2.font-display::before { content: "/ "; color: #ff5a47; }
+/* Fields get the stronger edge: 3.9:1 against the ground. */
+[data-site="admin"] main :is(input, textarea, select) { border-color: var(--edge); }
+[data-site="admin"] :is(.headline, .display) {
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+[data-site="admin"] .display { font-size: clamp(2.5rem, 7vw, 6rem); }
+
+/* The scene behind a whole room (sign-in, 404) or at the head of one. */
+.night-scene {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+.night-scene canvas {
+  width: 100%;
+  height: 100%;
+}
+.night-room {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  background: #070304;
+}
+/* A wash under the type, as on a page's opening. */
+.night-room::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, rgb(7 3 4 / 0.72) 0%, rgb(7 3 4 / 0) 62%);
+}
+/* The admin dashboard's greeting, set on the scene. */
+[data-site="admin"] .admin-stage {
+  min-height: 17rem;
+  padding: 2rem;
+  --fg-muted: #e3d5d2;
+}
+[data-site="admin"] .admin-stage h2.font-display::before { content: none; }
+@media (forced-colors: active) {
+  .night-scene { display: none; }
+}
+
+@media (prefers-contrast: more) {
+  [data-site="portfolio"],
+  body:has([data-site="portfolio"]) .portfolio-chrome {
+    --edge-soft: var(--edge);
+    --edge-mid: var(--edge);
+    --fg-muted: #2a2c33;
+  }
 }

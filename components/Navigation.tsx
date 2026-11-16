@@ -15,7 +15,11 @@ import { useOnPackagesHost } from "@/lib/packages/useOnPackagesHost"
 /** Height of the announcement strip plus the nav row, for page offsets. */
 export const NAV_OFFSET = "pt-36"
 
-export default function Navigation() {
+/**
+ * `overlay` puts the bar on a hero's signal field: paper type, clear at the
+ * top of the page and filled with the field's colour once scrolled.
+ */
+export default function Navigation({ overlay = false }: { overlay?: boolean } = {}) {
   const copy = useCopy()
   const locale = useLocale()
   /** Browse destinations, all visible. */
@@ -81,8 +85,15 @@ export default function Navigation() {
           "fixed inset-x-0 top-0 z-50",
           "transition-[transform,background-color] duration-200 ease-out",
           visible ? "translate-y-0" : "-translate-y-full",
-          seated ? "bg-ground/85 backdrop-blur-md" : "bg-ground",
+          overlay
+            ? seated
+              ? "bg-signal-fg"
+              : "bg-transparent"
+            : seated
+              ? "bg-ground/85 backdrop-blur-md"
+              : "bg-ground",
         ].join(" ")}
+        data-field={overlay ? "signal" : undefined}
       >
         {/* On packages.* the strip would point at the page you are on. */}
         {!onPackagesHost && (

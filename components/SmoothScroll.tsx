@@ -5,6 +5,10 @@ import type { ReactNode } from "react"
 // Lenis smooth scroll styles — imported at module level for Next.js bundling
 import "lenis/dist/lenis.css"
 
+/** The running Lenis, for code that has to move the page itself (the home
+ *  page's loop). Null under reduced motion and before it has loaded. */
+export const smoothScroll: { current: InstanceType<typeof import("lenis").default> | null } = { current: null }
+
 interface SmoothScrollProps {
   children: ReactNode
 }
@@ -37,6 +41,7 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
       })
 
       lenisRef.current = lenis
+      smoothScroll.current = lenis
 
       function raf(time: number) {
         lenis?.raf(time)
@@ -54,6 +59,7 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
       }
       lenis?.destroy()
       lenisRef.current = null
+      smoothScroll.current = null
     }
   }, [])
 

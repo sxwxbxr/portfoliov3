@@ -9,6 +9,7 @@ comment above the `localFont` calls in `app/layout.tsx` for why.
 | `Inter-Variable-latin.woff2` | Inter | 100–900 | https://fonts.google.com/specimen/Inter |
 | `SpaceGrotesk-Variable-latin.woff2` | Space Grotesk | 300–700 | https://fonts.google.com/specimen/Space+Grotesk |
 | `JetBrainsMono-Variable-latin.woff2` | JetBrains Mono | 100–800 | https://fonts.google.com/specimen/JetBrains+Mono |
+| `Syne-Variable-latin.woff2` | Syne (display face of the portfolio's light-console theme, `[data-site="portfolio"]`) | 400–800 | https://fonts.google.com/specimen/Syne |
 | `SourceSerif4-Variable-latin.woff2` | Source Serif 4 (headings on physio.sweber.dev, loaded in `app/physio/layout.tsx`) | 500–700 | https://fonts.google.com/specimen/Source+Serif+4 |
 
 ## Licence
@@ -23,6 +24,8 @@ the fonts are not sold on their own and the licence travels with them.
   <https://github.com/floriankarsten/space-grotesk>
 - JetBrains Mono — Copyright (c) 2020 The JetBrains Mono Project Authors
   <https://github.com/JetBrains/JetBrainsMono>
+- Syne — Copyright 2017 The Syne Project Authors
+  <https://gitlab.com/bonjour-monde/fonderie/syne-typeface>
 - Source Serif 4 — Copyright 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'
   <https://github.com/adobe-fonts/source-serif>
 

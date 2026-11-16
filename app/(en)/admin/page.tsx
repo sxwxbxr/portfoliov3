@@ -6,6 +6,7 @@ import { projects, experienceEntries, blogPosts, caseStudies, certificates, skil
 import { count } from "drizzle-orm"
 import { getSession } from "@/lib/auth"
 import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
+import { FinaleScene } from "@/components/hero/FinaleScene"
 
 export default async function AdminDashboardPage() {
   const session = await getSession()
@@ -75,11 +76,12 @@ export default async function AdminDashboardPage() {
 
   return (
     <div className="space-y-8">
-      <div>
+      <div className="page-stage admin-stage" data-field="signal">
+        <FinaleScene className="night-scene" />
         <h2 className="font-display text-2xl font-semibold tracking-tight">
           Welcome back{session?.email ? `, ${session.email.split("@")[0]}` : ""}
         </h2>
-        <p className="text-sm text-muted-foreground mt-1">
+        <p className="text-sm text-muted-foreground mt-3">
           Manage your portfolio content from here.
         </p>
       </div>

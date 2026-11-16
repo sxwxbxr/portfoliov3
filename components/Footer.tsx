@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Github, Linkedin } from "lucide-react"
+import { ArrowRight, Github, Linkedin } from "lucide-react"
 import { TimeDisplay } from "./TimeDisplay"
 import type { SiteSettings } from "@/lib/data"
 import { BLOG_ENABLED, CASE_STUDIES_ENABLED } from "@/lib/features"
@@ -8,6 +8,9 @@ import type { Copy } from "@/lib/copy"
 import { getCopy, localizePath, type Locale } from "@/lib/i18n"
 import { PACKAGES_ENTRY } from "@/lib/packages/urls"
 import { PHYSIO_ENTRY } from "@/lib/physio/urls"
+import { FinaleScene } from "./hero/FinaleScene"
+import { NameSlab } from "./hero/NameSlab"
+import s from "./Finale.module.css"
 
 function buildFooterNav(copy: Copy, locale: Locale) {
   return [
@@ -64,8 +67,22 @@ export function Footer({ settings, locale = "en" }: { settings: SiteSettings; lo
   const linkCls = "text-sm text-fg-muted hover:text-fg transition-colors duration-150"
 
   return (
-    <footer className="mt-24 md:mt-32 border-t border-edge-soft">
-      <div className="sheet flex flex-col gap-14 py-14">
+    <footer className={s.finale}>
+      <FinaleScene className={s.scene} />
+      <div className={`sheet ${s.inner}`}>
+        {/* The invitation, on portfolio pages only (see the stylesheet). */}
+        <div className={s.ask}>
+          <p className={s.askLabel}>{copy.home.ctaEyebrow}</p>
+          <h2 className={s.askTitle}>{copy.home.ctaTitle}</h2>
+          <p className={s.askLinks}>
+            <Link href={localizePath("/contact", locale)}>
+              {copy.home.ctaButton}
+              <ArrowRight className="h-[0.8em] w-[0.8em]" aria-hidden="true" />
+            </Link>
+            <a href={`mailto:${email}`}>{email}</a>
+          </p>
+        </div>
+
         <div className="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
           {/* Brand, the address and the social links. */}
           <div className="flex flex-col items-start gap-5">
@@ -161,6 +178,12 @@ export function Footer({ settings, locale = "en" }: { settings: SiteSettings; lo
             </Link>
             <TimeDisplay />
           </div>
+        </div>
+
+        {/* The name once more, as at the top of the home page. The brand
+            link above is the real one. */}
+        <div className={s.slab} aria-hidden="true">
+          <NameSlab name={copy.home.heroName} company={copy.home.heroHeadline} />
         </div>
       </div>
     </footer>

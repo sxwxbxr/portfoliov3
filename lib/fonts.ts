@@ -42,3 +42,16 @@ export const jetbrainsMono = localFont({
   preload: false,
   fallback: ["ui-monospace", "monospace"],
 })
+
+/** Display face of the portfolio's light-console theme (the lit name on the
+ *  home page and headings inside `[data-site="portfolio"]`). Not preloaded: packages
+ *  and physio pages share this root layout and never use it. */
+export const syne = localFont({
+  src: "../app/fonts/Syne-Variable-latin.woff2",
+  weight: "400 800",
+  style: "normal",
+  display: "swap",
+  variable: "--font-syne",
+  preload: false,
+  fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
+})

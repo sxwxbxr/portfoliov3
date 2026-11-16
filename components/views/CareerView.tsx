@@ -41,7 +41,7 @@ export async function CareerView({ locale = "en" }: { locale?: Locale }) {
   )
 
   return (
-    <PageLayout
+    <PageLayout site="portfolio"
       label={copy.career.label(work.length, education.length)}
       title={copy.career.title}
       subtitle={copy.career.subtitle}

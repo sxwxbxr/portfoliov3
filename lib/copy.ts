@@ -146,6 +146,10 @@ export const copy = {
     /** Lede under the h1: the person behind the offer. */
     heroPerson:
       "Behind it is Seya Weber, software development and project leadership from Bichwil SG.",
+    /** The name set in light on the home page. One string, so it can become
+     *  "Weber Development" the day the company starts. */
+    heroName: "Seya Weber",
+    viewProject: "View project",
     introEyebrow: "In short",
     introLead:
       "I turn complex operational requirements into lean, maintainable software — and because I trained on both sides, I understand the requirement as well as the system that has to satisfy it.",
@@ -173,9 +177,6 @@ export const copy = {
     selectedWorkEyebrowCount: (n: number) =>
       `Selected work · ${n} ${plural(n, "project", "projects")}`,
     writingEyebrow: (n: number) => `Writing · ${n}`,
-    /** Two-tone lines between the hero rulers. */
-    heroTaglineLead: "Requirements in,",
-    heroTaglineSub: "software out",
     introLabel: "In short",
     introTitle: "Both sides of the table",
     introSub: "the requirement and the system",
@@ -619,6 +620,8 @@ export const copy = {
       filterTag: "Tag",
       filterStatus: "Status",
       filterLicense: "License",
+      allTags: (n: number) => `All ${n} tags`,
+      fewerTags: "Fewer tags",
       all: "All",
       results: (n: number, total: number) =>
         n === total

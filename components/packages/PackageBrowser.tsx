@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
-import { X } from "lucide-react"
+import { ChevronDown, X } from "lucide-react"
 import { Section } from "@/components/PageLayout"
 import { PackageBadges } from "@/components/packages/Badges"
 import { pkgPath } from "@/lib/packages/urls"
@@ -95,41 +95,63 @@ export function PackageGrid({ packages }: { packages: PackageCardData[] }) {
   )
 }
 
-function Chip({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+function Chip({
+  active,
+  onClick,
+  count,
+  children,
+}: {
+  active: boolean
+  onClick: () => void
+  /** How many packages the option matches; shown after the label. */
+  count?: number
+  children: React.ReactNode
+}) {
   return (
     <button
       type="button"
       aria-pressed={active}
       onClick={onClick}
-      className={`${active ? "control control-primary" : "control"} inline-flex items-center px-3 py-1.5 text-xs`}
+      className={`${active ? "control control-primary" : "control"} inline-flex items-center gap-1.5 px-3 py-1.5 text-xs`}
     >
       {children}
+      {count !== undefined && <span className="tabular opacity-60">{count}</span>}
     </button>
   )
 }
 
+/**
+ * One filter as a row: its name in a fixed column on the left, the options
+ * on the right, so the three filters line up under each other.
+ */
 function ChipGroup({
   label,
   value,
   options,
   onChange,
+  children,
 }: {
   label: string
   value: string
-  options: { value: string; label: string }[]
+  options: { value: string; label: string; count?: number }[]
   onChange: (v: string) => void
+  /** Trailing control, e.g. the "all tags" toggle. */
+  children?: React.ReactNode
 }) {
   return (
-    <div role="group" aria-label={label} className="flex flex-wrap items-center gap-2">
-      <span className="annotate mr-1">{label}</span>
-      <Chip active={!value} onClick={() => onChange("")}>
-        {copy.packages.browser.all}
-      </Chip>
-      {options.map((o) => (
-        <Chip key={o.value} active={value === o.value} onClick={() => onChange(o.value)}>
-          {o.label}
+    <div role="group" aria-label={label} className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:gap-4">
+      <span className="annotate shrink-0 sm:w-16">{label}</span>
+      <div className="flex flex-wrap items-center gap-2">
+        <Chip active={!value} onClick={() => onChange("")}>
+          {copy.packages.browser.all}
         </Chip>
-      ))}
+        {options.map((o) => (
+          <Chip key={o.value} active={value === o.value} count={o.count} onClick={() => onChange(o.value)}>
+            {o.label}
+          </Chip>
+        ))}
+        {children}
+      </div>
     </div>
   )
 }
@@ -145,6 +167,7 @@ export function PackageBrowser({ packages }: { packages: PackageCardData[] }) {
   const params = useSearchParams()
   const inputRef = useRef<HTMLInputElement>(null)
 
+  const [allTags, setAllTags] = useState(false)
   const [filters, setFilters] = useState<Filters>(() => ({
     q: params.get("q") ?? "",
     tag: params.get("tag") ?? "",
@@ -184,8 +207,16 @@ export function PackageBrowser({ packages }: { packages: PackageCardData[] }) {
   const tags = useMemo(() => {
     const counts = new Map<string, number>()
     for (const p of packages) for (const t of p.tags) counts.set(t, (counts.get(t) ?? 0) + 1)
-    return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([t]) => t)
+    return [...counts.entries()]
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+      .map(([value, count]) => ({ value, label: value, count }))
   }, [packages])
+
+  // Most tags belong to a single package, where the search field does the
+  // same job. Only the shared ones show up front (plus the selected one, so
+  // an active filter is never hidden); the rest sit behind a toggle.
+  const shared = tags.filter((t) => t.count > 1 || t.value === filters.tag)
+  const shownTags = allTags || shared.length === tags.length ? tags : shared
 
   const statuses = useMemo(() => STATUSES.filter((s) => packages.some((p) => p.status === s)), [packages])
   const licenses = useMemo(() => LICENSES.filter((l) => packages.some((p) => p.license === l)), [packages])
@@ -206,7 +237,7 @@ export function PackageBrowser({ packages }: { packages: PackageCardData[] }) {
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-5">
         <div className="relative w-full sm:max-w-md">
           <label htmlFor="package-search" className="annotate mb-2 block">
             {b.searchLabel}
@@ -238,43 +269,60 @@ export function PackageBrowser({ packages }: { packages: PackageCardData[] }) {
           )}
         </div>
 
-        {tags.length > 0 && (
+        <div className="flex flex-col gap-4 border-y border-edge-soft py-5 sm:gap-3">
           <ChipGroup
-            label={b.filterTag}
-            value={filters.tag}
-            options={tags.map((t) => ({ value: t, label: t }))}
-            onChange={(tag) => update({ tag })}
+            label={b.filterStatus}
+            value={filters.status}
+            options={statuses.map((s) => ({ value: s, label: copy.packages.status[s] }))}
+            onChange={(status) => update({ status })}
           />
-        )}
-        <ChipGroup
-          label={b.filterStatus}
-          value={filters.status}
-          options={statuses.map((s) => ({ value: s, label: copy.packages.status[s] }))}
-          onChange={(status) => update({ status })}
-        />
-        <ChipGroup
-          label={b.filterLicense}
-          value={filters.license}
-          options={licenses.map((l) => ({ value: l, label: copy.packages.license[l] }))}
-          onChange={(license) => update({ license })}
-        />
+          <ChipGroup
+            label={b.filterLicense}
+            value={filters.license}
+            options={licenses.map((l) => ({ value: l, label: copy.packages.license[l] }))}
+            onChange={(license) => update({ license })}
+          />
+          {tags.length > 0 && (
+            <ChipGroup label={b.filterTag} value={filters.tag} options={shownTags} onChange={(tag) => update({ tag })}>
+              {shared.length < tags.length && (
+                <button
+                  type="button"
+                  aria-expanded={allTags}
+                  onClick={() => setAllTags(!allTags)}
+                  className="inline-flex items-center gap-1 px-2 py-1.5 text-xs text-fg-muted underline decoration-edge-mid underline-offset-4 transition-colors duration-150 hover:text-fg"
+                >
+                  {allTags ? b.fewerTags : b.allTags(tags.length)}
+                  <ChevronDown
+                    className={`h-3.5 w-3.5 transition-transform duration-150 ${allTags ? "rotate-180" : ""}`}
+                    aria-hidden="true"
+                  />
+                </button>
+              )}
+            </ChipGroup>
+          )}
+        </div>
 
-        <p className="annotate" aria-live="polite">
-          {b.results(visible.length, packages.length)}
-        </p>
+        <div className="flex min-h-9 flex-wrap items-center justify-between gap-x-6 gap-y-2">
+          <p className="annotate" aria-live="polite">
+            {b.results(visible.length, packages.length)}
+          </p>
+          {active && (
+            <button
+              type="button"
+              className="control inline-flex items-center gap-1.5 py-1.5 pr-3 pl-2.5 text-xs"
+              onClick={() => update(EMPTY)}
+            >
+              <X className="h-3.5 w-3.5" aria-hidden="true" />
+              {b.reset}
+            </button>
+          )}
+        </div>
       </div>
 
       {visible.length > 0 ? (
         <PackageGrid packages={visible} />
       ) : (
-        <div className="flex flex-col items-start gap-4">
-          <p className="text-fg-muted">{b.empty}</p>
-          {active && (
-            <button type="button" className="control px-4 py-2.5 text-sm" onClick={() => update(EMPTY)}>
-              {b.reset}
-            </button>
-          )}
-        </div>
+        <p className="text-fg-muted">{b.empty}</p>
       )}
     </div>
   )

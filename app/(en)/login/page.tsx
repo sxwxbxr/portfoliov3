@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Navigation from "@/components/Navigation"
+import { FinaleScene } from "@/components/hero/FinaleScene"
 import { copy } from "@/lib/copy"
 
 export default function LoginPage() {
@@ -41,8 +42,9 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-ground">
-      <Navigation />
+    <div className="night-room min-h-screen" data-site="admin">
+      <FinaleScene className="night-scene" />
+      <Navigation overlay />
 
       <div className="flex min-h-screen items-center justify-center px-6 pb-16 pt-24">
         <div className="cast flex w-full max-w-[420px] flex-col gap-7 p-7 md:p-8">
