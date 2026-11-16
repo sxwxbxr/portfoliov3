@@ -83,27 +83,19 @@ interface HomeContentProps {
 }
 
 /**
- * The projects the home page shows, by slug, in their sort order (Seya,
- * 2026-11-15). BlogPilot and Project Gotthard appear as soon as they are
- * entered in /admin under one of these slugs. /projects lists them all.
+ * The projects the home page shows, in the order of the flight, and what
+ * stands in the landscape for each (Seya, 2026-11-16). A project is found by
+ * a word in its slug, so it appears as soon as it is entered in /admin,
+ * whatever its exact title. /projects lists them all.
  */
-const HOME_PROJECTS = [
-  "flowlychat",
-  "home-network-observability-dashboard",
-  "blogpilot",
-  "project-gotthard",
-  "gotthard",
+const HOME_PROJECTS: { slug: RegExp; kind: LandmarkKind }[] = [
+  { slug: /flowlychat/, kind: "mast" },
+  { slug: /home-network/, kind: "observatory" },
+  { slug: /questionnaire|fragebogen/, kind: "bridge" },
+  { slug: /migration/, kind: "storehouses" },
+  { slug: /blogpilot/, kind: "airship" },
+  { slug: /gotthard/, kind: "mountain" },
 ]
-
-/** What stands in the landscape for a project. Others take turns. */
-const PROJECT_LANDMARKS: Record<string, LandmarkKind> = {
-  flowlychat: "mast",
-  "home-network-observability-dashboard": "observatory",
-  blogpilot: "airship",
-  "project-gotthard": "mountain",
-  gotthard: "mountain",
-}
-const SPARE_LANDMARKS: LandmarkKind[] = ["mast", "observatory", "airship", "mountain"]
 
 // ── Component ────────────────────────────────────────
 /**
@@ -120,8 +112,14 @@ export default function HomeContent({ projects, experience, settings }: HomeCont
   const serviceLabels = servicesLabels(locale)
   // Should none of the slugs exist (a renamed entry), the flight still has
   // its first two projects.
-  const chosen = projects.filter((p) => HOME_PROJECTS.includes(p.slug))
-  const selectedProjects = chosen.length > 0 ? chosen : projects.slice(0, 2)
+  const chosen = HOME_PROJECTS.flatMap(({ slug, kind }) => {
+    const project = projects.find((p) => slug.test(p.slug))
+    return project ? [{ project, kind }] : []
+  })
+  const selectedProjects =
+    chosen.length > 0
+      ? chosen
+      : projects.slice(0, 2).map((project, i) => ({ project, kind: HOME_PROJECTS[i].kind }))
 
   // Derived fallback metrics. Every number traces to a row that exists, so an
   // empty site_settings row cannot produce a claim the content does not back.
@@ -179,9 +177,9 @@ export default function HomeContent({ projects, experience, settings }: HomeCont
         </>
       ),
     },
-    ...selectedProjects.map((project, i) => ({
+    ...selectedProjects.map(({ project, kind }) => ({
       key: project.slug,
-      kind: PROJECT_LANDMARKS[project.slug] ?? SPARE_LANDMARKS[i % SPARE_LANDMARKS.length],
+      kind,
       label: copy.home.workLabel,
       title: project.title,
       children: (
@@ -296,7 +294,6 @@ export default function HomeContent({ projects, experience, settings }: HomeCont
       <div ref={heroRef}>
         <JourneyStage
           stations={stations}
-          projectCount={selectedProjects.length}
           services={services.services.map((service) => ({
             key: service.key,
             label: service.linkLabel,

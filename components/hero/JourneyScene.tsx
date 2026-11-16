@@ -37,6 +37,8 @@ const ASIDE: Record<LandmarkKind, [number, number]> = {
   observatory: [3.3, 2.9],
   airship: [1.8, 1.2],
   mountain: [4.2, 3.7],
+  bridge: [3.3, 2.9],
+  storehouses: [3.6, 3.2],
   tree: [3.1, 2.7],
   pagoda: [2.8, 2.4],
   lanterns: [2.8, 2.5],
