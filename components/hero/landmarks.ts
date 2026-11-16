@@ -14,6 +14,8 @@ export type LandmarkKind =
   | "observatory"
   | "airship"
   | "mountain"
+  | "bridge"
+  | "storehouses"
   | "tree"
   | "pagoda"
   | "lanterns"
@@ -373,6 +375,124 @@ function mountain(ctx: Ctx, time: number) {
   ctx.globalAlpha = 1
 }
 
+// ── An arched bridge over a flooded field: forms cross from one bank to
+//    the other, and each one lights the far lantern as it arrives. ─────
+function bridge(ctx: Ctx, time: number) {
+  const half = 2.3
+  const rise = 1.25
+  const deck = (x: number) => -0.12 - rise * (1 - (x / half) ** 2)
+  // Water under it, catching the sky.
+  ctx.fillStyle = R1
+  ctx.beginPath()
+  ctx.ellipse(0, 0.02, 1.9, 0.2, 0, 0, Math.PI * 2)
+  ctx.fill()
+  line(ctx, [[-1.2, 0.02], [0.9, 0.02]], R3, 0.025)
+  // The banks.
+  for (const side of [-1, 1]) {
+    ctx.save()
+    ctx.translate(side * 2.55, 0)
+    mound(ctx, 0.95, 0.42)
+    ctx.restore()
+  }
+  // The arch: deck, underside open to the water.
+  ctx.fillStyle = K
+  ctx.beginPath()
+  ctx.moveTo(-half, deck(-half))
+  ctx.quadraticCurveTo(0, deck(0) * 2 - deck(half), half, deck(half))
+  ctx.lineTo(half, deck(half) + 0.16)
+  ctx.quadraticCurveTo(0, (deck(0) + 0.16) * 2 - deck(half) - 0.16, -half, deck(-half) + 0.16)
+  ctx.fill()
+  // Piers.
+  for (const x of [-1.25, 0, 1.25]) line(ctx, [[x, deck(x) + 0.1], [x, 0]], K, 0.09)
+  // Railing: posts and the lit top rail.
+  const rail: Point[] = []
+  for (let i = 0; i <= 12; i++) {
+    const x = -half + (i / 12) * half * 2
+    rail.push([x, deck(x) - 0.32])
+    line(ctx, [[x, deck(x)], [x, deck(x) - 0.32]], K, 0.045)
+  }
+  line(ctx, rail, R3, 0.045)
+  // A lantern post at either end; the far one answers each arrival.
+  const arrived = (time * 0.16) % (1 / 4) < 0.05 ? 1 : 0.35
+  for (const side of [-1, 1]) {
+    const x = side * (half + 0.12)
+    line(ctx, [[x, deck(half) + 0.1], [x, deck(half) - 0.75]], K, 0.1)
+    poly(ctx, [[x - 0.2, deck(half) - 0.75], [x + 0.2, deck(half) - 0.75], [x, deck(half) - 1]], K)
+    lamp(ctx, x, deck(half) - 0.62, 0.07, side > 0 ? arrived : 0.6)
+  }
+  // Forms on their way across.
+  for (let i = 0; i < 4; i++) {
+    const t = (time * 0.16 + i / 4) % 1
+    const x = -half + t * half * 2
+    ctx.save()
+    ctx.translate(x, deck(x) - 0.62 + Math.sin(time * 3 + i * 2) * 0.03)
+    ctx.rotate(Math.atan2(deck(x + 0.1) - deck(x - 0.1), 0.2))
+    ctx.globalAlpha = Math.min(1, Math.sin(t * Math.PI) * 4)
+    poly(ctx, [[-0.14, -0.19], [0.14, -0.19], [0.14, 0.19], [-0.14, 0.19]], PAPER)
+    line(ctx, [[-0.07, -0.09], [0.07, -0.09]], K, 0.025)
+    line(ctx, [[-0.07, 0], [0.07, 0]], K, 0.025)
+    // Ticked on the second half of the way: checked as it passes over.
+    if (t > 0.5) line(ctx, [[-0.07, 0.09], [-0.02, 0.13], [0.07, 0.05]], R3, 0.035)
+    ctx.restore()
+  }
+  ctx.globalAlpha = 1
+}
+
+// ── Two storehouses: the old one empties, lights travel down the line to
+//    the new one, and the birds overhead move with them. ───────────────
+function storehouses(ctx: Ctx, time: number) {
+  mound(ctx, 2.9, 0.75)
+  const house = (x: number, foot: number, wide: number, high: number, lit: boolean) => {
+    ctx.save()
+    ctx.translate(x, foot)
+    poly(ctx, [[-wide / 2 - 0.06, 0], [-wide / 2, -high], [wide / 2, -high], [wide / 2 + 0.06, 0]], K)
+    line(ctx, [[wide / 2 + 0.06, 0], [wide / 2, -high]], R2, 0.03)
+    roof(ctx, -high, wide * 1.55, wide * 0.5, high * 0.42)
+    // Barred windows and the door.
+    for (let i = 0; i < 3; i++) {
+      const wx = -wide * 0.28 + i * wide * 0.28
+      poly(ctx, [[wx - 0.07, -high * 0.78], [wx + 0.07, -high * 0.78], [wx + 0.07, -high * 0.58], [wx - 0.07, -high * 0.58]], lit ? HOT : M)
+    }
+    poly(ctx, [[-0.16, 0], [-0.16, -high * 0.36], [0.16, -high * 0.36], [0.16, 0]], lit ? R3 : D)
+    ctx.restore()
+  }
+  house(-1.75, -0.5, 1.15, 1.25, false)
+  house(1.35, -0.62, 1.7, 1.75, true)
+  // The line between the gables, sagging.
+  const from: Point = [-1.75, -2.05]
+  const to: Point = [1.35, -2.85]
+  const sag = 0.55
+  const at = (t: number): Point => [
+    from[0] + (to[0] - from[0]) * t,
+    from[1] + (to[1] - from[1]) * t + Math.sin(t * Math.PI) * sag,
+  ]
+  line(ctx, Array.from({ length: 13 }, (_, i) => at(i / 12)), R2, 0.025)
+  for (let i = 0; i < 6; i++) {
+    const t = (time * 0.11 + i / 6) % 1
+    const [x, y] = at(t)
+    // A crate on a hook, lit from inside.
+    poly(ctx, [[x - 0.09, y + 0.05], [x + 0.09, y + 0.05], [x + 0.09, y + 0.23], [x - 0.09, y + 0.23]], K)
+    lamp(ctx, x, y + 0.14, 0.045, 0.4 + 0.6 * t)
+  }
+  // Birds on the move, the same way.
+  ctx.strokeStyle = K
+  ctx.lineWidth = 0.035
+  ctx.lineCap = "round"
+  const lead = ((time * 0.18) % 9) - 3.5
+  for (let i = 0; i < 7; i++) {
+    const row = Math.ceil(i / 2)
+    const side = i % 2 ? 1 : -1
+    const x = lead - row * 0.34
+    const y = -4.1 + side * row * 0.2 + Math.sin(time * 0.6 + i) * 0.04
+    const flap = Math.sin(time * 5 + i * 1.3) * 0.08
+    ctx.beginPath()
+    ctx.moveTo(x - 0.13, y - 0.04 + flap)
+    ctx.lineTo(x, y)
+    ctx.lineTo(x - 0.13, y + 0.1 - flap)
+    ctx.stroke()
+  }
+}
+
 // ── A great tree with a house under it. ───────────────────────────────
 function tree(ctx: Ctx, time: number, light: Point) {
   mound(ctx, 2.2, 0.7)
@@ -592,6 +712,13 @@ export function drawLandmark(
     case "mountain":
       ctx.scale(0.82, 0.82)
       mountain(ctx, time)
+      break
+    case "bridge":
+      ctx.scale(0.72, 0.72)
+      bridge(ctx, time)
+      break
+    case "storehouses":
+      storehouses(ctx, time)
       break
     case "tree":
       tree(ctx, time, local)

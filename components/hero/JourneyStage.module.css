@@ -32,7 +32,7 @@
   height: 100%;
 }
 
-/* ── The opening screen: count, services and the name, moved as one. ─ */
+/* ── The opening screen: services and the name, moved as one. ─────── */
 .intro {
   display: flex;
   flex: 1;
@@ -41,39 +41,29 @@
   will-change: transform;
 }
 
-.counter {
-  margin: 0 0 0 -0.04em;
-  font-size: min(11.5vw, 21svh);
-  font-weight: 500;
-  line-height: 0.86;
-  letter-spacing: -0.055em;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
 .meta {
   display: flex;
   flex-direction: column;
-  gap: 0.875rem;
-  margin-top: clamp(1rem, 3.5svh, 2.75rem);
-  max-width: 62rem;
+  gap: clamp(0.875rem, 2.5svh, 1.75rem);
 }
 
+/* What the business does, as the largest thing on the screen: one service
+   to a line, each a link to its page. */
 .services {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0 0.5em;
-  margin: 0;
+  flex-direction: column;
+  margin: 0 0 0 -0.04em;
   padding: 0;
   list-style: none;
-  font-size: clamp(1.125rem, 2.3vw, 2.125rem);
+  font-size: min(clamp(1.75rem, 5vw, 6rem), 8.5svh);
   font-weight: 500;
-  line-height: 1.15;
-  letter-spacing: -0.025em;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  text-wrap: balance;
 }
 .services li::before {
   content: "/ ";
-  opacity: 0.6;
+  color: var(--red);
 }
 .services a {
   text-decoration: underline;
@@ -389,12 +379,14 @@
 }
 
 @media (max-width: 760px) {
-  .counter {
-    font-size: min(17vw, 16svh);
-    white-space: normal;
+  /* A service that takes two lines hangs behind its slash. */
+  .services {
+    gap: 0.22em;
+    font-size: min(7.2vw, 5.4svh);
   }
-  .counter span {
-    display: block;
+  .services li {
+    padding-left: 0.62em;
+    text-indent: -0.62em;
   }
   .hint {
     display: none;
@@ -429,18 +421,10 @@
   }
 }
 
-/* Short windows: the count gives way so the name keeps its room. */
+/* Short windows: the name keeps its room. */
 @media (max-height: 700px) {
-  .counter {
-    font-size: min(11.5vw, 15svh);
-  }
   .lockup {
     --slab-cap: 21svh;
-  }
-}
-@media (max-height: 480px) {
-  .counter {
-    display: none;
   }
 }
 

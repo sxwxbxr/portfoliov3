@@ -35,8 +35,6 @@ export interface JourneyStation {
 interface JourneyStageProps {
   stations: JourneyStation[]
   services: StageService[]
-  /** The number counted on the opening screen. */
-  projectCount: number
   location: string
   /** Availability line from site settings; omitted when not available. */
   status?: string
@@ -68,7 +66,6 @@ const REST = [-1.6, 1.3, -0.9, 1.7, -1.2, 1]
 export default function JourneyStage({
   stations,
   services,
-  projectCount,
   location,
   status,
   email,
@@ -162,12 +159,6 @@ export default function JourneyStage({
         <JourneyScene className={s.scene} progress={p} velocity={speed} still={still} route={route} stations={scene} />
 
         <motion.div className={s.intro} style={still ? undefined : { y: introY }} inert={away}>
-          {projectCount > 0 && (
-            <p className={s.counter} aria-hidden="true">
-              {two(projectCount)} <span>{copy.projects.title}</span>
-            </p>
-          )}
-
           <div className={s.meta}>
             <ul className={s.services} aria-label={copy.nav.services}>
               {services.map((service) => (
