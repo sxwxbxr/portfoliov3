@@ -17,11 +17,11 @@ import type { MotionValue } from "framer-motion"
  * Purely decorative. With `still` it paints one frame and stops.
  */
 
-const INK = "#070304"
-const PAPER = "#f4f4f1"
+export const INK = "#070304"
+export const PAPER = "#f4f4f1"
 
 /** Small seeded generator, so the scene is the same on every visit. */
-function seeded(seed: number) {
+export function seeded(seed: number) {
   let a = seed >>> 0
   return () => {
     a = (a + 0x6d2b79f5) >>> 0
@@ -91,7 +91,7 @@ function bank(
   return { puffs, floor, rim: tones[0], fill: tones[1], drift, lift }
 }
 
-const BANKS: Bank[] = [
+export const BANKS: Bank[] = [
   bank(11, 0.66, 0.2, ["#5d0a0f", "#2b0608"], 0.004, 0.1),
   bank(23, 0.86, 0.26, ["#8f1016", "#3c070a"], -0.007, 0.24),
   bank(37, 1.08, 0.34, ["#4a080c", "#120405"], 0.011, 0.42),
@@ -128,48 +128,37 @@ const LINES = (() => {
   }))
 })()
 
-const wrap = (value: number, min: number, max: number) => {
+export const wrap = (value: number, min: number, max: number) => {
   const span = max - min
   return ((((value - min) % span) + span) % span) + min
 }
 
-function paint(
-  ctx: CanvasRenderingContext2D,
-  w: number,
-  h: number,
-  time: number,
-  progress: number,
-  velocity: number,
-) {
+export interface Disc {
+  x: number
+  y: number
+  r: number
+}
+
+/** The night sky with the disc and the cloud bars across its lower half. */
+export function paintSky(ctx: CanvasRenderingContext2D, w: number, h: number, disc: Disc, time: number) {
   ctx.fillStyle = INK
   ctx.fillRect(0, 0, w, h)
 
-  // The scene is composed for a frame about as tall as a window. In a
-  // much taller one (a footer on a phone) it keeps that size and stands on
-  // the bottom edge, under open sky.
-  const u = Math.min(h, w * 2.2)
-  const top = h - u
-
-  // The disc: low at rest, rising and growing along the journey.
-  const discX = w * 0.7
-  const discY = top + u * (0.47 - progress * 0.2)
-  const discR = Math.min(w, u) * (0.25 + progress * 0.12)
-
-  const glow = ctx.createRadialGradient(discX, discY, discR * 0.6, discX, discY, discR * 3.4)
+  const glow = ctx.createRadialGradient(disc.x, disc.y, disc.r * 0.6, disc.x, disc.y, disc.r * 3.4)
   glow.addColorStop(0, "rgba(120, 12, 18, 0.55)")
   glow.addColorStop(1, "rgba(120, 12, 18, 0)")
   ctx.fillStyle = glow
   ctx.fillRect(0, 0, w, h)
 
-  const face = ctx.createLinearGradient(0, discY - discR, 0, discY + discR)
+  const face = ctx.createLinearGradient(0, disc.y - disc.r, 0, disc.y + disc.r)
   face.addColorStop(0, "#c81e17")
   face.addColorStop(1, "#6f0b10")
   ctx.fillStyle = face
   ctx.beginPath()
-  ctx.arc(discX, discY, discR, 0, Math.PI * 2)
+  ctx.arc(disc.x, disc.y, disc.r, 0, Math.PI * 2)
   ctx.fill()
 
-  // Cloud bars across its lower half, drifting slowly against each other.
+  // Cloud bars, drifting slowly against each other.
   ctx.fillStyle = INK
   const bars = [
     [0.18, 0.05, 0.9],
@@ -177,46 +166,84 @@ function paint(
     [0.7, 0.14, 0.4],
   ]
   for (const [at, thick, pace] of bars) {
-    const shift = Math.sin(time * 0.12 * pace + at * 9) * discR * 0.18
-    const y = discY + discR * at
-    const half = discR * thick * 0.5
+    const shift = Math.sin(time * 0.12 * pace + at * 9) * disc.r * 0.18
+    const y = disc.y + disc.r * at
+    const half = disc.r * thick * 0.5
     ctx.beginPath()
-    ctx.roundRect(discX - discR * 1.5 + shift, y - half, discR * 3, half * 2, half)
+    ctx.roundRect(disc.x - disc.r * 1.5 + shift, y - half, disc.r * 3, half * 2, half)
     ctx.fill()
   }
+}
 
-  // Smoke, far to near. Each puff is two flat discs: a lit one, and the
-  // body pushed away from the disc so the light shows as a crescent on the
-  // side that faces it. Drawn back to front, so the lumps overlap like
-  // smoke in a drawn film.
-  for (const b of BANKS) {
-    const rise = progress * b.lift * u
+/** One lump of smoke: a lit disc, and the body pushed away from the light
+ *  so the light shows as a crescent on the side that faces it. */
+export function paintPuff(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  r: number,
+  rim: string,
+  fill: string,
+  light: { x: number; y: number },
+) {
+  const dx = x - light.x
+  const dy = y - light.y
+  const far = Math.hypot(dx, dy) || 1
+  ctx.fillStyle = rim
+  ctx.beginPath()
+  ctx.arc(x, y, r, 0, Math.PI * 2)
+  ctx.fill()
+  ctx.fillStyle = fill
+  ctx.beginPath()
+  ctx.arc(x + (dx / far) * r * 0.16, y + (dy / far) * r * 0.16, r * 0.95, 0, Math.PI * 2)
+  ctx.fill()
+}
+
+/**
+ * The banks of smoke, far to near, each lifted by `rise(index)` pixels.
+ * Drawn back to front, so the lumps overlap like smoke in a drawn film.
+ * `top` and `u` place the scene: see paint().
+ */
+export function paintBanks(
+  ctx: CanvasRenderingContext2D,
+  w: number,
+  h: number,
+  top: number,
+  u: number,
+  time: number,
+  rise: (index: number) => number,
+  light: { x: number; y: number },
+) {
+  BANKS.forEach((b, index) => {
+    const lifted = rise(index)
     for (const puff of b.puffs) {
       const x = wrap(puff.x + time * b.drift, -0.3, 1.3) * w
-      const y = top + puff.y * u - rise
+      const y = top + puff.y * u - lifted
       const r = puff.r * u * (1 + 0.06 * Math.sin(time * 0.5 + puff.phase))
-      const dx = x - discX
-      const dy = y - discY
-      const far = Math.hypot(dx, dy) || 1
-      ctx.fillStyle = b.rim
-      ctx.beginPath()
-      ctx.arc(x, y, r, 0, Math.PI * 2)
-      ctx.fill()
-      ctx.fillStyle = b.fill
-      ctx.beginPath()
-      ctx.arc(x + (dx / far) * r * 0.16, y + (dy / far) * r * 0.16, r * 0.95, 0, Math.PI * 2)
-      ctx.fill()
+      paintPuff(ctx, x, y, r, b.rim, b.fill, light)
     }
     ctx.fillStyle = b.fill
-    ctx.fillRect(0, top + b.floor * u - rise, w, h)
-  }
+    ctx.fillRect(0, top + b.floor * u - lifted, w, h + lifted)
+  })
+}
 
-  // Sparks: small diamonds that rise and, while the page moves, stretch
-  // into streaks against the direction of travel.
+/**
+ * Sparks: small diamonds that rise and, while the page moves, stretch into
+ * streaks against the direction of travel. `shift` moves them all up, in
+ * frame heights. Speed lines only while scrolling.
+ */
+export function paintAir(
+  ctx: CanvasRenderingContext2D,
+  w: number,
+  h: number,
+  time: number,
+  shift: number,
+  velocity: number,
+) {
   const pull = Math.max(-1, Math.min(1, velocity / 2400))
   for (const spark of SPARKS) {
     const x = (spark.x + Math.sin(time * 0.4 + spark.phase) * 0.012) * w
-    const y = wrap(spark.y - time * spark.rise - progress * 1.6, -0.05, 1.05) * h
+    const y = wrap(spark.y - time * spark.rise - shift, -0.05, 1.05) * h
     const flicker = 0.45 + 0.55 * Math.abs(Math.sin(time * 1.7 + spark.phase))
     const stretch = spark.size + Math.abs(pull) * 46
     ctx.globalAlpha = flicker
@@ -229,7 +256,6 @@ function paint(
     ctx.fill()
   }
 
-  // Speed lines, only while scrolling.
   const rush = Math.abs(pull)
   if (rush > 0.02) {
     ctx.strokeStyle = PAPER
@@ -248,18 +274,43 @@ function paint(
   ctx.globalAlpha = 1
 }
 
-export default function InkScene({
-  progress,
-  velocity,
-  still,
-  className,
-}: {
-  progress: MotionValue<number>
-  velocity: MotionValue<number>
-  still: boolean
-  className?: string
-}) {
-  const ref = useRef<HTMLCanvasElement>(null)
+function paint(
+  ctx: CanvasRenderingContext2D,
+  w: number,
+  h: number,
+  time: number,
+  progress: number,
+  velocity: number,
+) {
+  // The scene is composed for a frame about as tall as a window. In a
+  // much taller one (a footer on a phone) it keeps that size and stands on
+  // the bottom edge, under open sky.
+  const u = Math.min(h, w * 2.2)
+  const top = h - u
+
+  // The disc: low at rest, rising and growing along the journey.
+  const disc = {
+    x: w * 0.7,
+    y: top + u * (0.47 - progress * 0.2),
+    r: Math.min(w, u) * (0.25 + progress * 0.12),
+  }
+  paintSky(ctx, w, h, disc, time)
+  paintBanks(ctx, w, h, top, u, time, (i) => progress * BANKS[i].lift * u, disc)
+  paintAir(ctx, w, h, time, progress * 1.6, velocity)
+}
+
+/**
+ * Runs `frame` on the canvas: once per animation frame while it is on
+ * screen and the tab is visible, once only with `still`. Sizes the canvas
+ * to its box.
+ */
+export function useScene(
+  ref: React.RefObject<HTMLCanvasElement | null>,
+  frame: (ctx: CanvasRenderingContext2D, width: number, height: number, time: number) => void,
+  still: boolean,
+) {
+  const latest = useRef(frame)
+  latest.current = frame
 
   useEffect(() => {
     const canvas = ref.current
@@ -268,21 +319,18 @@ export default function InkScene({
 
     let width = 0
     let height = 0
-    let frame = 0
+    let raf = 0
     let onScreen = true
     const started = performance.now()
 
-    const draw = () => {
-      const time = still ? 0 : (performance.now() - started) / 1000
-      paint(ctx, width, height, time, still ? 0 : progress.get(), still ? 0 : velocity.get())
-    }
+    const draw = () => latest.current(ctx, width, height, still ? 0 : (performance.now() - started) / 1000)
     const loop = () => {
       draw()
-      frame = requestAnimationFrame(loop)
+      raf = requestAnimationFrame(loop)
     }
     const run = () => {
-      cancelAnimationFrame(frame)
-      if (!still && onScreen && !document.hidden) frame = requestAnimationFrame(loop)
+      cancelAnimationFrame(raf)
+      if (!still && onScreen && !document.hidden) raf = requestAnimationFrame(loop)
     }
 
     const fit = () => {
@@ -307,12 +355,32 @@ export default function InkScene({
     run()
 
     return () => {
-      cancelAnimationFrame(frame)
+      cancelAnimationFrame(raf)
       resize.disconnect()
       watch.disconnect()
       document.removeEventListener("visibilitychange", run)
     }
-  }, [progress, velocity, still])
+  }, [ref, still])
+}
+
+export default function InkScene({
+  progress,
+  velocity,
+  still,
+  className,
+}: {
+  progress: MotionValue<number>
+  velocity: MotionValue<number>
+  still: boolean
+  className?: string
+}) {
+  const ref = useRef<HTMLCanvasElement>(null)
+  useScene(
+    ref,
+    (ctx, width, height, time) =>
+      paint(ctx, width, height, time, still ? 0 : progress.get(), still ? 0 : velocity.get()),
+    still,
+  )
 
   return <canvas ref={ref} className={className} aria-hidden="true" />
 }

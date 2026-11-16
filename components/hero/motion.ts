@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useScroll, useSpring, useVelocity } from "framer-motion"
+import { useScroll, useSpring, useTransform, useVelocity } from "framer-motion"
 
 /**
  * Whether the visitor asked for reduced motion. Read after mount, so the
@@ -26,5 +26,7 @@ export function useStill() {
  */
 export function useScrollSpeed() {
   const { scrollY } = useScroll()
-  return useSpring(useVelocity(scrollY), { stiffness: 120, damping: 26, mass: 0.6 })
+  // A jump (an anchor, the home page starting over) is not travel.
+  const travel = useTransform(useVelocity(scrollY), (v) => (Math.abs(v) > 20000 ? 0 : v))
+  return useSpring(travel, { stiffness: 120, damping: 26, mass: 0.6 })
 }

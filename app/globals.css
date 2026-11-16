@@ -587,46 +587,10 @@ body:has([data-site="portfolio"]) {
 [data-site="portfolio"] .card-link:nth-child(3n)     { --tilt: -0.3deg; }
 [data-site="portfolio"] .card-link:is(:hover, :focus-visible, :focus-within) { --tilt: 0deg; }
 
-/* ── The band: two rows of very large type under the home stage that run
-      against each other as the page scrolls. Decoration; the same words
-      are links and headings elsewhere on the page. ──────────────────── */
-[data-site="portfolio"] .band {
-  display: flex;
-  flex-direction: column;
-  gap: 0.1em;
-  overflow: clip;
-  padding-block: clamp(2rem, 5vw, 4.5rem);
-  border-bottom: 1px solid var(--edge-soft);
-  font-size: clamp(3rem, 10.5vw, 10rem);
-  font-weight: 500;
-  line-height: 1;
-  letter-spacing: -0.05em;
-  white-space: nowrap;
-}
-[data-site="portfolio"] .band > * {
-  display: flex;
-  gap: 0.35em;
-  width: max-content;
-}
-[data-site="portfolio"] .band > * > * + *::before {
-  content: "/";
-  margin-right: 0.35em;
-  color: var(--signal);
-}
-[data-site="portfolio"] .band > :nth-child(2) {
-  align-self: flex-end;
-  /* Outlined. The stroke is painted under a paper fill, which hides the
-     overlapping contours inside the letters of a variable font. */
-  color: var(--ground);
-  -webkit-text-stroke: 3px var(--fg);
-  paint-order: stroke fill;
-}
-
 /* ── Motion while scrolling. Where the browser can tie an animation to an
       element's way through the window, nothing on the page stands still:
       headings slide in from one side and leave to the other, their second
-      line runs against them, rows and cards turn into place, the band
-      runs. Elsewhere, and under reduced motion, everything simply stands.
+      line runs against them, rows and cards turn into place. Elsewhere, and under reduced motion, everything simply stands.
       Only `translate`, `rotate` and `scale` move, so layout never does. ─ */
 [data-site="portfolio"] { overflow-x: clip; }
 
@@ -649,12 +613,6 @@ body:has([data-site="portfolio"]) {
     [data-site="portfolio"] .card-link:nth-child(3n + 2) { animation-range: entry 15% entry 110%; }
     [data-site="portfolio"] .card-link:nth-child(3n)     { animation-range: entry 30% entry 125%; }
     [data-site="portfolio"] .def-grid { --turn: 0deg; --rise: 0rem; --slide: 5rem; }
-
-    [data-site="portfolio"] .band > * {
-      animation: pf-run linear both;
-      animation-timeline: view();
-    }
-    [data-site="portfolio"] .band > :nth-child(2) { animation-name: pf-run-back; }
   }
 }
 
@@ -681,14 +639,6 @@ body:has([data-site="portfolio"]) {
     rotate: var(--tilt, 0deg);
     scale: 1;
   }
-}
-@keyframes pf-run {
-  from { translate: 4vw 0; }
-  to   { translate: -38% 0; }
-}
-@keyframes pf-run-back {
-  from { translate: 38% 0; }
-  to   { translate: -4vw 0; }
 }
 
 /* ── A page's opening: the night scene of the home stage at a smaller
