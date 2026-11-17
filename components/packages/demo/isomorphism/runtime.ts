@@ -9,7 +9,7 @@ import { useCallback, useState } from "react"
  */
 
 const PYODIDE_BASE = "https://cdn.jsdelivr.net/pyodide/v0.27.2/full/"
-export const WHEEL_URL = "/demos/isomorphism/isomorphism-0.2.0-py3-none-any.whl"
+export const WHEEL_URL = "/demos/isomorphism/isomorphism-0.4.0-py3-none-any.whl"
 
 export interface Finding {
   kind: string
