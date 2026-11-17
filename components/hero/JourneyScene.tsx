@@ -5,6 +5,7 @@ import type { MotionValue } from "framer-motion"
 import { BANKS, INK, paintAir, paintBanks, paintPuff, paintSky, seeded, useScene, wrap } from "./InkScene"
 import { flight, type Route } from "./journey"
 import { drawLandmark, drawLantern, drawTree, type LandmarkKind } from "./landmarks"
+import { cruiseAt, heightAt, rowAt, type Feature, type Land, type Row } from "./terrain"
 
 /**
  * The picture behind the home page's flight, drawn live on a canvas in the
@@ -25,10 +26,12 @@ export interface SceneStation {
 const CAMERA = 2
 /** Where the underside of the clouds rests, in frame heights. */
 const CEILING = 0.13
-const ROW = 2
 const CELL = 3
 const PATH = 0.75
 const HORIZON = 70
+/** How close the nearest row of land is drawn, and how many points make a row. */
+const NEAREST = 0.5
+const COLUMNS = 36
 
 /** How far to the side of the path each landmark stands: [wide, narrow]. */
 const ASIDE: Record<LandmarkKind, [number, number]> = {
@@ -44,6 +47,37 @@ const ASIDE: Record<LandmarkKind, [number, number]> = {
   lanterns: [2.8, 2.5],
   torii: [0, 0],
 }
+
+/** What the ground does around a landmark. */
+const RELIEF: Partial<Record<LandmarkKind, Feature["shape"]>> = {
+  windmill: "knoll",
+  observatory: "knoll",
+  storehouses: "knoll",
+  pagoda: "knoll",
+  tree: "knoll",
+  mountain: "massif",
+}
+
+/** Colour of the land `d` away: lit at the horizon, dark underfoot. */
+const SHADES: [number, number[]][] = [
+  [0, [122, 13, 18]],
+  [0.1, [43, 6, 8]],
+  [0.5, [28, 6, 7]],
+  [1, [13, 3, 4]],
+]
+function shade(d: number, dim: boolean): number[] {
+  const at = Math.min(1, 3.6 / d)
+  let i = 1
+  while (i < SHADES.length - 1 && SHADES[i][0] < at) i++
+  const [a, from] = SHADES[i - 1]
+  const [b, to] = SHADES[i]
+  const t = (at - a) / (b - a)
+  const k = dim ? 0.8 : 1
+  return from.map((v, c) => (v + (to[c] - v) * t) * k)
+}
+/** The light a crest catches. */
+const RIM = [143, 16, 22]
+const rgb = (c: number[]) => `rgb(${Math.round(c[0])},${Math.round(c[1])},${Math.round(c[2])})`
 
 function ridge(seed: number, points: number, rough: number) {
   const rand = seeded(seed)
@@ -151,12 +185,22 @@ function paintWorld(
   const focal = 0.9 * Math.min(h, w * 1.15)
   // On a narrow screen the sheets lie across the bottom, so the land sits higher.
   const yh = h * (wide ? 0.5 : 0.32)
-  const cam = CAMERA + (1 - low) * 2.6
+  const side = wide ? 0 : 1
+  const land: Land = {
+    shrine: route.shrine,
+    features: stations.map((station, i) => ({
+      z: route.stations[i],
+      x: ASIDE[station.kind][side],
+      shape: RELIEF[station.kind] ?? "level",
+    })),
+  }
+  // The camera keeps its height over the path, wherever the path goes.
+  const cam = cruiseAt(z, land, CAMERA) + (1 - low) * 2.6
   // The gate is flown through, so the view centres on it at the end.
   const toGate = route.shrine - z
   const centred = smooth((6 - toGate) / 5)
   const vpX = w * ((wide ? 0.62 : 0.38) * (1 - centred) + 0.5 * centred)
-  const yAt = (d: number) => yh + (focal * cam) / d
+  const yOf = (height: number, d: number) => yh + (focal * (cam - height)) / d
   const xAt = (x: number, d: number) => vpX + (focal * x) / d
 
   // ── Sky under the clouds, and the low sun.
@@ -216,107 +260,48 @@ function paintWorld(
   }
   ctx.stroke()
 
-  // ── Ground: fields in rows, lit along the horizon.
+  // ── Ground. Far away it is a lit plain; nearer, the land is drawn row by
+  //    row from the back, so every rise hides what lies behind it.
   const ground = ctx.createLinearGradient(0, yh, 0, h)
   ground.addColorStop(0, "#7a0d12")
   ground.addColorStop(0.1, "#2b0608")
-  ground.addColorStop(0.5, "#1c0607")
-  ground.addColorStop(1, "#0d0304")
+  ground.addColorStop(1, "#1c0607")
   ctx.fillStyle = ground
   ctx.fillRect(0, yh, w, h - yh)
 
-  const firstRow = Math.floor(z / ROW)
-  for (let row = firstRow + 34; row >= firstRow; row--) {
-    const dFar = (row + 1) * ROW - z
-    const dNear = row * ROW - z
-    const y0 = yAt(dFar)
-    if (y0 > h) continue
-    const y1 = dNear > 0.05 ? Math.min(h, yAt(dNear)) : h
-    if (row % 2 === 0) {
-      ctx.fillStyle = "rgba(0, 0, 0, 0.22)"
-      ctx.fillRect(0, y0, w, y1 - y0)
-    }
-    // Flooded fields mirror the sky.
-    for (let col = -9; col <= 9; col++) {
-      if (col === 0 || noise(col, row) > 0.24) continue
-      const x0 = col * CELL - CELL / 2
-      const x1 = x0 + CELL
-      const near = Math.max(dNear, 0.4)
-      ctx.globalAlpha = Math.min(1, 9 / dFar) * 0.7
-      ctx.fillStyle = "#5d0a0f"
-      ctx.beginPath()
-      ctx.moveTo(xAt(x0, dFar), y0)
-      ctx.lineTo(xAt(x1, dFar), y0)
-      ctx.lineTo(xAt(x1, near), yAt(near))
-      ctx.lineTo(xAt(x0, near), yAt(near))
-      ctx.fill()
-      ctx.fillStyle = "#c81e17"
-      ctx.fillRect(xAt(x0, dFar), y0, xAt(x1, dFar) - xAt(x0, dFar), Math.max(1, (focal * 0.05) / dFar))
-    }
-    ctx.globalAlpha = Math.min(1, 7 / dFar) * 0.7
-    ctx.fillStyle = "#5d0a0f"
-    ctx.fillRect(0, y0, w, Math.max(1, (focal * 0.03) / dFar))
-    ctx.globalAlpha = 1
+  // Rows stand on whole world units, so the land holds still as the camera
+  // moves over it. They thin out with distance.
+  const rows: Row[] = []
+  for (let r = Math.floor(z + HORIZON); r - z >= NEAREST; r--) {
+    const d = r - z
+    if ((d > 22 && r % 2) || (d > 42 && r % 4)) continue
+    rows.push(rowAt(r, land))
   }
+  // The last strip runs out under the camera.
+  rows.push(rowAt(z + NEAREST * 0.8, land))
 
-  // Field edges, running to the vanishing point.
-  const dBottom = (focal * cam) / (h - yh)
-  ctx.strokeStyle = "#5d0a0f"
-  ctx.lineWidth = 1
-  ctx.globalAlpha = 0.4
-  ctx.beginPath()
-  for (let col = -30; col <= 30; col++) {
-    const x = col * CELL - CELL / 2
-    ctx.moveTo(xAt(x, HORIZON), yAt(HORIZON))
-    ctx.lineTo(xAt(x, dBottom), h)
-  }
-  ctx.stroke()
-  ctx.globalAlpha = 1
-
-  // The path to the shrine.
-  ctx.fillStyle = "#3c070a"
-  ctx.beginPath()
-  ctx.moveTo(xAt(-PATH, HORIZON), yAt(HORIZON))
-  ctx.lineTo(xAt(PATH, HORIZON), yAt(HORIZON))
-  ctx.lineTo(xAt(PATH, dBottom), h)
-  ctx.lineTo(xAt(-PATH, dBottom), h)
-  ctx.fill()
-  ctx.strokeStyle = "#a8161a"
-  ctx.globalAlpha = 0.7
-  ctx.beginPath()
-  ctx.moveTo(xAt(-PATH, HORIZON), yAt(HORIZON))
-  ctx.lineTo(xAt(-PATH, dBottom), h)
-  ctx.moveTo(xAt(PATH, HORIZON), yAt(HORIZON))
-  ctx.lineTo(xAt(PATH, dBottom), h)
-  ctx.stroke()
-  ctx.fillStyle = INK
-  for (let slab = Math.ceil(z); slab < z + 40; slab++) {
-    const d = slab - z
-    if (d < 0.3 || d > toGate) continue
-    const half = (focal * PATH) / d
-    ctx.globalAlpha = Math.min(1, 8 / d) * 0.5
-    ctx.fillRect(vpX - half, yAt(d), half * 2, Math.max(1, (focal * 0.025) / d))
-  }
-  ctx.globalAlpha = 1
-
-  // ── Everything that stands on the ground, far to near.
+  // Everything that stands on the ground, far to near, drawn between the rows.
   type Item = { d: number; draw: () => void }
   const items: Item[] = []
-  const side = wide ? 0 : 1
+  const footAt = (x: number, at: number) => yOf(heightAt(x, rowAt(at, land)), at - z)
 
   stations.forEach((station, i) => {
-    const d = route.stations[i] - z
+    const at = route.stations[i]
+    const d = at - z
     if (d < 0.5 || d > HORIZON) return
     const x = ASIDE[station.kind][side]
     items.push({
       d,
-      draw: () => drawLandmark(ctx, station.kind, xAt(x, d), yAt(d), focal / d, time, sun, station.floors),
+      draw: () => drawLandmark(ctx, station.kind, xAt(x, d), footAt(x, at), focal / d, time, sun, station.floors),
     })
   })
   if (toGate > 0.3 && toGate < HORIZON) {
     // The rope is gone before the camera reaches it.
     const hang = smooth((toGate - 1.4) / 1.8)
-    items.push({ d: toGate, draw: () => drawLandmark(ctx, "torii", vpX, yAt(toGate), focal / toGate, time, sun, 4, hang) })
+    items.push({
+      d: toGate,
+      draw: () => drawLandmark(ctx, "torii", vpX, footAt(0, route.shrine), focal / toGate, time, sun, 4, hang),
+    })
   }
 
   const tile = Math.floor(z / TILE) * TILE
@@ -327,12 +312,12 @@ function paintWorld(
       if (d < 0.6 || d > 46) continue
       // Nothing grows where a landmark stands, or beyond the gate's steps.
       if (t.x > 0 && route.stations.some((s) => Math.abs(s - at) < 5)) continue
-      if (Math.abs(route.shrine - at) < 2.5 && Math.abs(t.x) < 4.5) continue
+      if (at > route.shrine - 2.5 && Math.abs(t.x) < 4.5) continue
       items.push({
         d,
         draw: () => {
           ctx.globalAlpha = smooth((46 - d) / 12)
-          drawTree(ctx, xAt(t.x, d), yAt(d), focal / d, t.size, t.pointed, sun)
+          drawTree(ctx, xAt(t.x, d), footAt(t.x, at), focal / d, t.size, t.pointed, sun)
           ctx.globalAlpha = 1
         },
       })
@@ -344,12 +329,116 @@ function paintWorld(
     for (const x of [-1.05, 1.05]) {
       items.push({
         d,
-        draw: () => drawLantern(ctx, xAt(x, d), yAt(d), focal / d, 0.5 + 0.5 * Math.sin(time * 2 + post + x)),
+        draw: () => drawLantern(ctx, xAt(x, d), footAt(x, post), focal / d, 0.5 + 0.5 * Math.sin(time * 2 + post + x)),
       })
     }
   }
   items.sort((a, b) => b.d - a.d)
-  for (const item of items) item.draw()
+  let next = 0
+
+  const left = -40
+  const step = (w + 80) / (COLUMNS - 1)
+  let line = new Float32Array(COLUMNS)
+  let under = new Float32Array(COLUMNS)
+  const trace = (row: Row, into: Float32Array) => {
+    const d = row.z - z
+    for (let i = 0; i < COLUMNS; i++) into[i] = yOf(heightAt(((left + i * step - vpX) * d) / focal, row), d)
+  }
+
+  for (let i = 0; i < rows.length - 1; i++) {
+    const far = rows[i]
+    const near = rows[i + 1]
+    const dFar = far.z - z
+    const dNear = near.z - z
+    // Each row is filled only down to where the next one takes over, so
+    // steep ground costs no more than flat ground.
+    if (i === 0) trace(far, line)
+    if (i === rows.length - 2) under.fill(h)
+    else trace(near, under)
+    const r = Math.round(far.z)
+
+    // The crest catches the light: the row is laid down once in that light
+    // and again, a little lower, in its own colour. Two fills cost far less
+    // than stroking the line.
+    const body = shade(dFar, dFar <= 42 && (r >> 1) % 2 === 0)
+    const lit = Math.max(0.22, Math.min(1, 9 / dFar) * 0.7)
+    const rim = Math.max(1, (focal * 0.03) / dFar)
+    for (const [colour, drop] of [
+      [rgb(body.map((v, c) => v + (RIM[c] - v) * lit)), 0],
+      [rgb(body), rim],
+    ] as const) {
+      ctx.fillStyle = colour
+      ctx.beginPath()
+      for (let c = 0; c < COLUMNS; c++) ctx.lineTo(left + c * step, line[c] + drop)
+      for (let c = COLUMNS - 1; c >= 0; c--) ctx.lineTo(left + c * step, Math.max(line[c] + drop, under[c] + 2))
+      ctx.fill()
+    }
+
+    // The valley floor between this row and the next.
+    const inner = Math.min(far.left, near.left)
+    const outer = Math.min(far.right, near.right)
+    const corner = (x: number, row: Row, d: number) => ctx.lineTo(xAt(x, d), yOf(heightAt(x, row), d))
+    // Flooded fields mirror the sky.
+    const field = Math.floor((r - 1) / 2)
+    for (let col = -1; col <= 2; col++) {
+      const x0 = col * CELL - CELL / 2
+      const x1 = x0 + CELL
+      if (col === 0 || x0 < -inner || x1 > outer || noise(col, field) > 0.4) continue
+      ctx.globalAlpha = Math.min(1, 9 / dFar) * 0.7
+      ctx.fillStyle = "#5d0a0f"
+      ctx.beginPath()
+      corner(x0, far, dFar)
+      corner(x1, far, dFar)
+      corner(x1, near, dNear)
+      corner(x0, near, dNear)
+      ctx.fill()
+    }
+    // Field edges, running away from the camera.
+    if (dFar < 30) {
+      ctx.strokeStyle = "#5d0a0f"
+      ctx.lineWidth = 1
+      ctx.globalAlpha = 0.4
+      ctx.beginPath()
+      for (let col = -1; col <= 3; col++) {
+        const x = col * CELL - CELL / 2
+        if (x < -inner || x > outer) continue
+        ctx.moveTo(xAt(x, dFar), yOf(heightAt(x, far), dFar))
+        corner(x, near, dNear)
+      }
+      ctx.stroke()
+    }
+
+    // The path to the shrine, as far as the gate's steps.
+    if (far.z <= route.shrine + 1) {
+      const yFar = yOf(far.floor, dFar)
+      const yNear = yOf(near.floor, dNear)
+      // Laid down twice: a hair wider in the colour of its lit edge, then itself.
+      ctx.globalAlpha = 1
+      for (const [colour, wider] of [
+        ["#75101a", 1.5],
+        ["#3c070a", 0],
+      ] as const) {
+        ctx.fillStyle = colour
+        ctx.beginPath()
+        ctx.moveTo(xAt(-PATH, dFar) - wider, yFar)
+        ctx.lineTo(xAt(PATH, dFar) + wider, yFar)
+        ctx.lineTo(xAt(PATH, dNear) + wider, yNear)
+        ctx.lineTo(xAt(-PATH, dNear) - wider, yNear)
+        ctx.fill()
+      }
+      if (dFar < 40) {
+        const half = (focal * PATH) / dFar
+        ctx.fillStyle = INK
+        ctx.globalAlpha = Math.min(1, 8 / dFar) * 0.5
+        ctx.fillRect(vpX - half, yFar, half * 2, Math.max(1, (focal * 0.025) / dFar))
+      }
+    }
+    ctx.globalAlpha = 1
+
+    while (next < items.length && items[next].d > dNear) items[next++].draw()
+    ;[line, under] = [under, line]
+  }
+  while (next < items.length) items[next++].draw()
 
   // A wash where the type stands.
   if (wide) {
