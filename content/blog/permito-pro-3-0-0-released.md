@@ -1,7 +1,7 @@
 ---
 title: "Permito Pro 3.0.0 released"
 excerpt: "Permito Pro 3.0 adds the hub: one server and Docker image for agencies that holds the banner, the consent log and the scans of all client sites, gives each site one script tag and produces the customer report as a PDF under your logo. Nothing from 2.x breaks, and we explain why it is still a major version."
-date: 2026-11-22
+date: 2026-11-20
 author: Seya Weber
 type: release
 packages: [permito]
