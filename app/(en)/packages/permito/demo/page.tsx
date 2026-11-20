@@ -160,6 +160,7 @@ export default function PermitoDemoPage() {
       </Block>
 
       <ProNewSection slug="permito" file="free-2-0" />
+      <ProNewSection slug="permito" file="pro-3-0" />
       <ProNewSection slug="permito" />
 
       <Block

@@ -1,0 +1,38 @@
+{
+  "label": "Pro 3.0.0",
+  "title": "One server for all your client sites",
+  "sub": "Permito Pro.",
+  "lede": "Pro 3.0.0 adds permito-hub: a server and Docker image for agencies. It holds the banner configuration, the consent log and the scans of all your client sites, gives each site one script tag, alerts you when a scan finds something new and produces the customer report as a PDF under your logo. Nothing from 2.x was removed.",
+  "items": [
+    {
+      "title": "Start it with environment variables",
+      "text": "The hub keeps its data in a SQLite file in the /data volume. It needs a secret (the salts and the keys of seals and exports derive from it) and a first admin. A wrong setting stops the container at start and names the setting. Put it behind a reverse proxy that terminates TLS.",
+      "codeTitle": "One container",
+      "code": "docker run -d --name permito-hub -p 8080:8080 -v permito-hub-data:/data \\\n  -e PERMITO_HUB_SECRET=\"$(openssl rand -hex 32)\" \\\n  -e PERMITO_HUB_ADMIN_USER=admin \\\n  -e PERMITO_HUB_ADMIN_PASSWORD='at-least-12-characters' \\\n  -e PERMITO_HUB_PUBLIC_URL=https://consent.agency.example \\\n  ghcr.io/weber-development/permito-hub:3"
+    },
+    {
+      "title": "A site is a document, its script tag is one line",
+      "text": "Each client site is a JSON document the hub validates strictly: an unknown field, a missing retention period or a private scan address is refused with the field named. The origins list says which sites may send decisions to the hub. Services come from the catalog or are described by you.",
+      "codeTitle": "acme-shop.json",
+      "code": "{\n  \"id\": \"acme-shop\",\n  \"name\": \"Acme Shop\",\n  \"url\": \"https://shop.acme.example/\",\n  \"origins\": [\"https://shop.acme.example\"],\n  \"language\": \"en\",\n  \"consentVersion\": \"2026-11\",\n  \"retentionDays\": 395,\n  \"services\": [{ \"catalog\": \"google-analytics-4\", \"category\": \"statistics\" }],\n  \"alerts\": { \"webhookUrl\": \"https://hooks.slack.com/services/…\", \"webhookFormat\": \"slack\" }\n}"
+    },
+    {
+      "title": "Decisions, scans and alerts, recorded",
+      "text": "Recorded from a real run of the built package folder (not the Docker image), with a stand-in page that sets a cookie and loads a pixel from a second host before consent. A decision from a foreign origin is refused. The scan finds two new things and the webhook names them; after the pixel is removed the next scan lists them as resolved.",
+      "outputTitle": "Recorded output",
+      "output": "$ curl -s -u admin:$PW -H \"X-Permito-Hub: 1\" -d @acme-shop.json https://consent.agency.example/api/sites | jq -r .tag\n<script src=\"https://consent.agency.example/c/acme-shop.js\"></script>\n\n$ # the script of the site posts each decision; a foreign origin is refused\nfrom https://evil.example           -> 403\nfrom https://shop.acme.example      -> 204\n\n$ curl -s -u admin:$PW .../api/sites/acme-shop/log/stats | jq \"{decisions, acceptedAll, rejectedAll, custom, statistics: .categories.statistics}\"\n{\n  \"decisions\": 2,\n  \"acceptedAll\": 0,\n  \"rejectedAll\": 1,\n  \"custom\": 1,\n  \"statistics\": {\n    \"granted\": 1,\n    \"declined\": 1,\n    \"rate\": 0.5\n  }\n}\n\n$ curl -s -u admin:$PW -H \"X-Permito-Hub: 1\" -X POST .../api/sites/acme-shop/scan | jq \"{status, newFindings, resolved}\"\n{\n  \"status\": \"findings\",\n  \"newFindings\": [\n    \"unconfigured|cookie|_fbp\",\n    \"unconfigured|host|127.0.0.2\"\n  ],\n  \"resolved\": []\n}\n\n$ # the webhook of the site got\n{\n  \"event\": \"permito.hub.alert\",\n  \"site\": \"acme-shop\",\n  \"kind\": \"new-findings\",\n  \"title\": \"Acme Shop: 2 new observation(s) in the scan\",\n  \"text\": \"- Not in the configuration: cookie _fbp\\n- Not in the configuration: host 127.0.0.2\\nhttps://shop.acme.example/\",\n  \"keys\": [\n    \"unconfigured|cookie|_fbp\",\n    \"unconfigured|host|127.0.0.2\"\n  ]\n}\n\n$ # the pixel is removed; scan again\n{\n  \"status\": \"clean\",\n  \"newFindings\": [],\n  \"resolved\": [\n    \"unconfigured|cookie|_fbp\",\n    \"unconfigured|host|127.0.0.2\"\n  ]\n}"
+    },
+    {
+      "title": "Seals, export and the report",
+      "text": "Closed months are sealed by the schedule; here a seal is made on demand. The export carries a manifest with a SHA-256 and an HMAC signature. The report is a PDF, HTML or Markdown document under your agency name, colour and logo. Then somebody edits the database, and the verify endpoint names the changed record.",
+      "outputTitle": "Recorded output",
+      "output": "$ curl -s -u admin:$PW -H \"X-Permito-Hub: 1\" -X POST .../api/sites/acme-shop/seals | jq \"{count: .seal.count, head: .seal.head[0:16], signature: .seal.signature[0:16]}\"\n{\n  \"count\": 2,\n  \"head\": \"9f8916bf7786984b…\",\n  \"signature\": \"adc66af54fb54edb…\"\n}\n\n$ curl -s -u admin:$PW .../api/sites/acme-shop/seals/verify | jq -c\n{\n  \"valid\": true,\n  \"problems\": [],\n  \"seals\": 1\n}\n\n$ curl -s -u admin:$PW \".../api/sites/acme-shop/log/export?format=ndjson\" | jq \".manifest | {records: .recordCount, format, sha256: .sha256[0:16], signature: .signature[0:16]}\"\n{\n  \"records\": 2,\n  \"format\": \"ndjson\",\n  \"sha256\": \"cbf638d7ee4a0f39…\",\n  \"signature\": \"81b03acf1238aae9…\"\n}\n\n$ curl -s -u admin:$PW \".../api/sites/acme-shop/report?lang=en\" -o acme-report.pdf -D -  | head -4\nHTTP 200\ncontent-type: application/pdf\nx-report-status: ok\n(PDF, 3 kB)\n\n$ sqlite3 /data/hub.db \"UPDATE log SET record = replace(record, 'statistics', 'marketing') WHERE seq = 1\"   # someone edits the database\n\n$ curl -s -u admin:$PW .../api/sites/acme-shop/seals/verify | jq -c\n{\n  \"valid\": false,\n  \"problems\": [\n    {\n      \"type\": \"changed\",\n      \"id\": \"2c93af71-2c5c-4a0a-864a-927082e37bfc\"\n    }\n  ],\n  \"seals\": 1\n}"
+    },
+    {
+      "title": "Roles and the web interface",
+      "text": "Viewers read, editors change sites, run scans and seal, admins also manage users, the agency branding and delete sites. Every change over HTTP needs the header X-Permito-Hub: 1, which a cross-site form cannot send. The web interface at / uses the same API."
+    }
+  ],
+  "note": "The demo cannot run the hub for you: it needs your own Docker host and your own client sites. Recorded without Docker; the image build and its smoke test run in the release pipeline. Not verified: alert mails through real SMTP servers, Slack and Teams webhooks against the live services, operation behind a real reverse proxy, load beyond an agency's normal traffic, several hub processes on one data folder (not supported), DNS rebinding on scan and webhook addresses, pulling the image with a customer account. The report states what was checked and is not legal advice.",
+  "docsPath": "/permito/docs"
+}

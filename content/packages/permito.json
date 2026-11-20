@@ -67,7 +67,8 @@
       "WordPress plugin generator: one JSON file becomes a plugin that loads the banner, blocks scripts that other plugins enqueue by handle (also WooCommerce) and adds shortcodes for the settings link and the cookie table",
       "Receiver for the Permito 2.0 consent webhook: writes each change to the consent log, passes withdrawals on to connected systems with retries, and keeps proof of which system confirmed what (since 2.0)",
       "Consent Mode check (beta): reads the consent state of Google tag requests while the page loads without interaction and reports tags that run granted or without a state, plus `permito gtm-template` for an importable Tag Manager container with the default consent state (beta) (since 2.1)",
-      "Alerts for new observations: the weekly monitor can post to a Slack or Teams webhook and names which observations are new per site, those active before consent first (since 2.1)"
+      "Alerts for new observations: the weekly monitor can post to a Slack or Teams webhook and names which observations are new per site, those active before consent first (since 2.1)",
+      "Hub for agencies (since 3.0): one server in a Docker image for many client sites. Each site is a validated JSON document and gets one script tag with its own banner configuration; decisions go to a consent log per site with a hashed visitor ID, are sealed month by month in a chain and can be exported with a signed manifest; the sites are scanned on a schedule with Chromium, each scan is compared with the last one and new findings go to a Slack, Teams or JSON webhook or by mail; the customer report is a PDF, HTML or Markdown document in German or English under your agency name, colour and logo. Roles viewer, editor and admin, a web interface, an HTTP API and settings by environment variables (SQLite in a volume; the settings, the API and the site document are stable from 3.0)"
     ]
   },
   "highlights": {
@@ -82,7 +83,7 @@
       "Service catalog with 71 sourced providers and a generated cookie table",
       "Scanner and GTM container check that find what loads before consent",
       "Self-hosted consent log with evidence export and audit report",
-      "Monitoring of many client sites with weekly alerts",
+      "Hub for agencies: many client sites on one server, central consent log, scheduled scans and a report with your logo",
       "Theme templates and a WordPress plugin generator"
     ]
   },
@@ -163,6 +164,11 @@
       "pro": true
     },
     {
+      "feature": "Hub for agencies: many sites on one server, report with your logo",
+      "free": false,
+      "pro": true
+    },
+    {
       "feature": "Catalog changes per project",
       "free": false,
       "pro": true
@@ -221,6 +227,10 @@
       {
         "name": "@weber-development/permito-themes",
         "description": "Theme templates and layouts for @permitojs/react."
+      },
+      {
+        "name": "@weber-development/permito-hub",
+        "description": "Permito Pro as a service for agencies: one server and Docker image for many client sites with one script tag each, a consent log per site with seals and export, scheduled scans with alerts and a customer report as a PDF under your logo."
       }
     ],
     "waitlistUrl": "mailto:info@sweber.dev?subject=Permito%20Pro%20waitlist",
@@ -304,6 +314,10 @@
     {
       "q": "Can I use the open-source part on its own?",
       "a": "Yes. @permitojs/core and @permitojs/react are MIT-licensed and complete without Pro."
+    },
+    {
+      "q": "Can I run Permito for all my clients from one place?",
+      "a": "Yes, with the hub in Permito Pro 3.0: a server you run yourself (a Docker image) that holds the banner configuration, the consent log and the scans of all your client sites and gives each site one script tag. It uses SQLite in a volume, so it fits an agency with dozens of sites, not millions of decisions a day, and it is not a hosted service: you operate, back up and secure it. It was tested with real browsers and two client sites; mail alerts through real SMTP servers and operation behind a real reverse proxy are not verified yet."
     }
   ],
   "videos": [],
