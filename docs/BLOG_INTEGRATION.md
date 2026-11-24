@@ -37,7 +37,7 @@ Server.
 - Ist die API nicht erreichbar, bleiben die zuletzt ausgelieferten Seiten stehen. Ein Build bricht
   deswegen nicht ab.
 
-**Einrichtung (Seya, in Vercel → Production):** `SCHULZ_MEDIA_API_KEY` mit dem `sm_live_…`-Schlüssel und
+**Einrichtung (Seya, in Vercel → Production):** `BLOGPILOT_API_KEY` mit dem `sm_live_…`-Schlüssel (früher `SCHULZ_MEDIA_API_KEY`, wird noch gelesen) und
 `BLOG_REVALIDATE_TOKEN` für den Build-Hook.
 
 ## Alternative: Push über die Ingest-API
