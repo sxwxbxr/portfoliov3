@@ -9,17 +9,27 @@ import {
 } from "@permitojs/react"
 import "@permitojs/react/styles.css"
 import { MAIN_ORIGIN } from "@/lib/packages/urls"
+import { GoogleTagManager } from "./GoogleTagManager"
 
 /**
  * The package site runs its own product. The portfolio sets no cookies and
  * Vercel Analytics is cookieless, so consent is mounted here only, in the
- * packages layout, for the one thing that needs it: embedded YouTube videos.
+ * packages layout, for the things that need it: embedded YouTube videos and
+ * Google Tag Manager (loaded after "statistics" consent, see GoogleTagManager).
+ * Bumping consentVersion asks returning visitors again after a change.
  */
 const config = {
-  consentVersion: "2026-10",
+  consentVersion: "2026-11",
   language: "en",
-  categories: [{ id: "necessary", required: true }, { id: "media" }],
+  categories: [{ id: "necessary", required: true }, { id: "statistics" }, { id: "media" }],
   services: [
+    {
+      id: "google-tag-manager",
+      name: "Google Tag Manager",
+      provider: "Google Ireland Ltd.",
+      category: "statistics",
+      privacyPolicyUrl: "https://policies.google.com/privacy",
+    },
     {
       id: "youtube",
       name: "YouTube",
@@ -49,8 +59,9 @@ const THEME = `:root{
 
 export function ConsentProvider({ children }: { children: ReactNode }) {
   return (
-    <PermitoProvider config={config} privacyPolicyUrl={`${MAIN_ORIGIN}/privacy`}>
+    <PermitoProvider config={config} privacyPolicyUrl={`${MAIN_ORIGIN}/privacy`} googleConsentMode>
       <style>{THEME}</style>
+      <GoogleTagManager />
       {children}
       <ConsentBanner />
       <PreferenceCenter />
