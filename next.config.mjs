@@ -1,3 +1,10 @@
+// Google Tag Manager / Google tag on the package pages (loaded only after consent,
+// see components/packages/GoogleTagManager.tsx). Tags inside the container may need
+// more hosts (e.g. Google Ads); add them here when a tag is blocked in the console.
+const GTM_SCRIPT = "https://www.googletagmanager.com"
+const GTM_CONNECT =
+  "https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://*.g.doubleclick.net"
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
@@ -75,10 +82,10 @@ const nextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com",
+              `script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com ${GTM_SCRIPT}`,
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https:",
-              "connect-src 'self' https://api.github.com https://va.vercel-scripts.com https://vitals.vercel-insights.com",
+              `connect-src 'self' https://api.github.com https://va.vercel-scripts.com ${GTM_CONNECT} https://vitals.vercel-insights.com`,
               "font-src 'self' https://fonts.gstatic.com",
               "frame-src https://www.youtube-nocookie.com",
               "frame-ancestors 'none'",
@@ -96,10 +103,10 @@ const nextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' https://va.vercel-scripts.com https://cdn.jsdelivr.net",
+              `script-src 'self' 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' https://va.vercel-scripts.com ${GTM_SCRIPT} https://cdn.jsdelivr.net`,
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https:",
-              "connect-src 'self' https://api.github.com https://va.vercel-scripts.com https://vitals.vercel-insights.com https://cdn.jsdelivr.net https://huggingface.co https://*.huggingface.co https://*.hf.co",
+              `connect-src 'self' https://api.github.com https://va.vercel-scripts.com ${GTM_CONNECT} https://vitals.vercel-insights.com https://cdn.jsdelivr.net https://huggingface.co https://*.huggingface.co https://*.hf.co`,
               "worker-src 'self' blob:",
               "font-src 'self' https://fonts.gstatic.com",
               "frame-src https://www.youtube-nocookie.com",
@@ -116,10 +123,10 @@ const nextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' https://va.vercel-scripts.com https://cdn.jsdelivr.net",
+              `script-src 'self' 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' https://va.vercel-scripts.com ${GTM_SCRIPT} https://cdn.jsdelivr.net`,
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https:",
-              "connect-src 'self' https://api.github.com https://va.vercel-scripts.com https://vitals.vercel-insights.com https://cdn.jsdelivr.net",
+              `connect-src 'self' https://api.github.com https://va.vercel-scripts.com ${GTM_CONNECT} https://vitals.vercel-insights.com https://cdn.jsdelivr.net`,
               "worker-src 'self' blob:",
               "font-src 'self' https://fonts.gstatic.com",
               "frame-src https://www.youtube-nocookie.com",
