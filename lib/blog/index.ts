@@ -9,16 +9,23 @@ export type { BlogSource, Post, PostQuery, PostType } from "./types"
 /**
  * Merges several sources into one. A slug that exists in more than one keeps
  * the entry from the earlier source, so a database post can replace a
- * Markdown file of the same name.
+ * Markdown file of the same name. Each conflict is logged, so it shows in the build log.
  */
 function combine(...sources: BlogSource[]): BlogSource {
+  const reported = new Set<string>()
   return {
     async getPosts(query?: PostQuery) {
       const seen = new Set<string>()
       const all: Post[] = []
       for (const list of await Promise.all(sources.map((s) => s.getPosts(query)))) {
         for (const p of list) {
-          if (seen.has(p.slug)) continue
+          if (seen.has(p.slug)) {
+            if (!reported.has(p.slug)) {
+              reported.add(p.slug)
+              console.warn(`[blog] Slug-Konflikt "${p.slug}": der Beitrag aus der früheren Quelle gewinnt, dieser wird ignoriert`)
+            }
+            continue
+          }
           seen.add(p.slug)
           all.push(p)
         }
@@ -36,14 +43,20 @@ function combine(...sources: BlogSource[]): BlogSource {
 }
 
 /**
- * Wraps a remote source (database, API) so its failure never takes a page or
- * the build down: it logs a warning and contributes no posts, and the
- * Markdown files in content/blog still render. The local source is not
- * wrapped, because a broken Markdown file is a bug that must fail loudly.
+ * Wraps a remote source (database, API) so its failure never takes a running
+ * site down: it logs a warning and contributes no posts, and the Markdown
+ * files in content/blog still render. With `failBuild` the build fails
+ * instead, so a revoked key or an API outage cannot ship a site without the
+ * posts unnoticed. The local source is not wrapped, because a broken Markdown
+ * file is a bug that must fail loudly.
  */
-function tolerant(name: string, source: BlogSource): BlogSource {
-  const warn = (err: unknown) =>
+function tolerant(name: string, source: BlogSource, { failBuild = false } = {}): BlogSource {
+  const warn = (err: unknown) => {
+    if (failBuild && process.env.NEXT_PHASE === "phase-production-build") {
+      throw new Error(`[blog] ${name} source failed during the build: ${err instanceof Error ? err.message : err}`)
+    }
     console.warn(`[blog] ${name} source failed, using the remaining sources: ${err instanceof Error ? err.message : err}`)
+  }
   return {
     getPosts: (query) => source.getPosts(query).catch((err) => (warn(err), [])),
     getPost: (slug) => source.getPost(slug).catch((err) => (warn(err), null)),
@@ -55,7 +68,8 @@ function tolerant(name: string, source: BlogSource): BlogSource {
  *
  * - package_posts in the database: written in /admin/news, or pushed by an
  *   external system through /api/packages/posts.
- * - The Schulz Media content API, when SCHULZ_MEDIA_API_KEY is set.
+ * - The BlogPilot content API, when BLOGPILOT_API_KEY is set. A production
+ *   build on Vercel without the key, or with a failing API, fails.
  * - Markdown in content/blog, for posts that live in the repository.
  *
  * The database and the API are optional at runtime: if one fails (Neon quota,
@@ -68,11 +82,15 @@ function createSource(): BlogSource {
   const kind = process.env.BLOG_SOURCE ?? "all"
   switch (kind) {
     case "all":
-      const schulz = createSchulzMediaSource()
+      const blogpilot = createSchulzMediaSource()
+      if (!blogpilot && process.env.VERCEL_ENV === "production" && process.env.NEXT_PHASE === "phase-production-build") {
+        throw new Error("[blog] BLOGPILOT_API_KEY is not set: the production build would ship without the BlogPilot posts")
+      }
+      // Own posts (database, Markdown) before BlogPilot: on a slug conflict the own post wins.
       return combine(
         tolerant("database", createDbSource()),
-        ...(schulz ? [tolerant("Schulz Media", schulz)] : []),
-        createLocalSource()
+        createLocalSource(),
+        ...(blogpilot ? [tolerant("BlogPilot", blogpilot, { failBuild: true })] : [])
       )
     case "local":
       return createLocalSource()
