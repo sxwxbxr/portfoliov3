@@ -13,10 +13,13 @@ import type { BlogSource, Post, PostType } from "./types"
  *   GET {base}/posts/?limit=&offset=   -> { posts, total, limit, offset }
  *   GET {base}/posts/<slug>/           -> { post } or 404
  * Paths need the trailing slash; without it the API answers with a redirect.
+ * The host moved from www.schulz-media.ch to www.blogpilot.ch. The old host
+ * answers 307, and fetch drops the Authorization header on a cross-origin
+ * redirect, so a call to the old host ends in 401. Always call blogpilot.ch.
  * Only approved posts are returned, so no draft filtering happens here.
  */
 
-const BASE = (process.env.SCHULZ_MEDIA_API_URL || "https://www.schulz-media.ch/api/content/v1").replace(/\/$/, "")
+const BASE = (process.env.SCHULZ_MEDIA_API_URL || "https://www.blogpilot.ch/api/content/v1").replace(/\/$/, "")
 const KEY = process.env.SCHULZ_MEDIA_API_KEY
 
 /** Seconds a fetched response is reused. Approval in Schulz Media calls /api/revalidate to skip the wait. */
